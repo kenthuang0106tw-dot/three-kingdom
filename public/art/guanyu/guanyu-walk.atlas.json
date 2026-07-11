@@ -1,0 +1,25 @@
+{
+  "frames": {
+    "walk-0": {
+      "frame": { "x": 43, "y": 82, "w": 394, "h": 658 }, "rotated": false, "trimmed": true,
+      "spriteSourceSize": { "x": 43, "y": 82, "w": 394, "h": 658 }, "sourceSize": { "w": 461, "h": 793 },
+      "pivot": { "x": 0.5, "y": 0.9319041614 }
+    },
+    "walk-1": {
+      "frame": { "x": 484, "y": 97, "w": 499, "h": 640 }, "rotated": false, "trimmed": true,
+      "spriteSourceSize": { "x": 23, "y": 97, "w": 499, "h": 640 }, "sourceSize": { "w": 565, "h": 793 },
+      "pivot": { "x": 0.5, "y": 0.9281210593 }
+    },
+    "walk-2": {
+      "frame": { "x": 1069, "y": 93, "w": 386, "h": 654 }, "rotated": false, "trimmed": true,
+      "spriteSourceSize": { "x": 43, "y": 93, "w": 386, "h": 654 }, "sourceSize": { "w": 467, "h": 793 },
+      "pivot": { "x": 0.5, "y": 0.9407313997 }
+    },
+    "walk-3": {
+      "frame": { "x": 1530, "y": 87, "w": 406, "h": 655 }, "rotated": false, "trimmed": true,
+      "spriteSourceSize": { "x": 37, "y": 87, "w": 406, "h": 655 }, "sourceSize": { "w": 490, "h": 793 },
+      "pivot": { "x": 0.5, "y": 0.9344262295 }
+    }
+  },
+  "meta": { "app": "Codex alpha-bounds analysis", "version": "1.0", "image": "guanyu-walk.png", "format": "RGBA8888", "size": { "w": 1983, "h": 793 }, "scale": "1" }
+}

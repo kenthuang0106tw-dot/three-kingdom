@@ -1,0 +1,11 @@
+{
+  "frames": {
+    "attack-0": { "frame": { "x": 0, "y": 0, "w": 512, "h": 724 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 512, "h": 724 }, "sourceSize": { "w": 512, "h": 724 }, "pivot": { "x": 0.5, "y": 0.8093922652 } },
+    "attack-1": { "frame": { "x": 512, "y": 0, "w": 512, "h": 724 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 512, "h": 724 }, "sourceSize": { "w": 512, "h": 724 }, "pivot": { "x": 0.5, "y": 0.8038674033 } },
+    "attack-2": { "frame": { "x": 1024, "y": 0, "w": 512, "h": 724 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 512, "h": 724 }, "sourceSize": { "w": 512, "h": 724 }, "pivot": { "x": 0.5, "y": 0.8093922652 } },
+    "attack-3": { "frame": { "x": 1536, "y": 0, "w": 512, "h": 724 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 512, "h": 724 }, "sourceSize": { "w": 512, "h": 724 }, "pivot": { "x": 0.5, "y": 0.8093922652 } },
+    "attack-4": { "frame": { "x": 2048, "y": 0, "w": 512, "h": 724 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 512, "h": 724 }, "sourceSize": { "w": 512, "h": 724 }, "pivot": { "x": 0.5, "y": 0.8093922652 } },
+    "attack-5": { "frame": { "x": 2560, "y": 0, "w": 512, "h": 724 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 512, "h": 724 }, "sourceSize": { "w": 512, "h": 724 }, "pivot": { "x": 0.5, "y": 0.8107734807 } }
+  },
+  "meta": { "app": "Codex connected-component extraction", "version": "2.0", "image": "guanyu-combo-frames.png", "format": "RGBA8888", "size": { "w": 3072, "h": 724 }, "scale": "1" }
+}

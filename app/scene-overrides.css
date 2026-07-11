@@ -1,0 +1,7 @@
+.side-art img{width:320%;left:-105%}.side-left img:first-child,.side-right img:first-child{top:-7%}.side-left img:last-child,.side-right img:last-child{bottom:-30%}.mounted{left:43%;bottom:2%;width:44%}
+.hero,.enemy,.mounted{will-change:transform,filter;transition:filter 50ms linear,opacity 180ms linear}
+.is-attacking{filter:brightness(1.18) drop-shadow(8px 0 0 rgba(255,238,80,.45))}
+.is-hit{filter:brightness(2.2) saturate(.35) drop-shadow(0 0 7px #fff)!important}
+.is-dead{opacity:0;pointer-events:none}
+.life-frame i,.enemy-life i,.boss-life i{display:block;transition:width 120ms linear}
+.game-screen{touch-action:none}

@@ -1,0 +1,13 @@
+{
+  "frames": {
+    "idle-0": {
+      "frame": { "x": 118, "y": 75, "w": 790, "h": 1314 },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": { "x": 118, "y": 75, "w": 790, "h": 1314 },
+      "sourceSize": { "w": 1024, "h": 1536 },
+      "pivot": { "x": 0.5, "y": 0.9036458333 }
+    }
+  },
+  "meta": { "app": "Codex alpha-bounds analysis", "version": "1.0", "image": "guanyu-master.png", "format": "RGBA8888", "size": { "w": 1024, "h": 1536 }, "scale": "1" }
+}
