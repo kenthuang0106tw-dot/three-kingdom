@@ -1,98 +1,130 @@
-# vinext-starter
+# 三國街機橫向動作遊戲
 
-A clean full-stack starter running on
-[vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and
-Drizzle support.
+一款使用 Phaser 3 製作、以三國為題材的 2.5D Pixel Art Beat 'em Up prototype。目標是建立接近 1990 年代 Capcom／IGS 街機的移動、對線、攻防與群戰手感，同時維持原創人物與素材。
 
-## Prerequisites
+## 五分鐘理解專案
+
+- **Runtime:** Phaser 3 + Arcade Physics。
+- **Web shell:** React 19 / Next-compatible Vinext。
+- **Rendering:** 1280×720、16:9、nearest-neighbor、腳底 Y depth sorting。
+- **Current player:** 關羽。
+- **Current combat:** 八方向移動、三段 Combo、Hurt、Hit Stop、Flash、Spark、Knockback、Camera Shake。
+- **Current enemies:** 三名相同近戰小兵、Formation Slot、單一 Attack Slot、獨立 HP/state/death cleanup。
+- **Current stage:** 單張竹林背景；尚未有捲軸 Camera 或正式關卡流程。
+- **Release target:** Desktop Web + Mobile landscape Web。
+- **First Vertical Slice:** 關羽、一完整關卡、2–3 種近戰小兵、一名 Boss。
+
+## Architecture
+
+```text
+React page shell
+  → PhaserGame instance lifecycle
+    → MainScene orchestration
+      → Player input/state/combat
+      → EnemyManager
+        → EnemyCombatant × 3
+      → Arcade Physics / Animations / Debug
+```
+
+React 不管理 gameplay state。所有角色、輸入、動畫、碰撞、AI、Camera 與 update loop 必須位於 Phaser。
+
+詳細說明：[ARCHITECTURE.md](ARCHITECTURE.md)
+
+## Requirements
 
 - Node.js `>=22.13.0`
+- pnpm
+- Windows 可使用 repository 根目錄的 `啟動遊戲.cmd`
 
-## Quick Start
+目前 repository 仍處於 Sprint 0 前的 prototype 狀態：build 可通過，但 lint、typecheck、test 與部分文字編碼仍列為技術債。第一次接手請先閱讀 [SPRINT.md](SPRINT.md)，不要直接新增功能。
 
-```bash
-npm install
-npm run dev
-npm run build
+## Run
+
+```powershell
+pnpm install
+pnpm dev
 ```
 
-This starter does not use `wrangler.jsonc`.
+或 Windows：
 
-## Included Shape
-
-- edit site code under `app/`
-- `.openai/hosting.json` declares optional Sites D1 and R2 bindings
-- `vite.config.ts` simulates declared bindings for local development
-- `db/schema.ts` starts intentionally empty
-- `examples/d1/` contains an optional D1 example surface
-- `drizzle.config.ts` supports local migration generation when needed
-
-## Workspace Auth Headers
-
-OpenAI workspace sites can read the current user's email from
-`oai-authenticated-user-email`.
-
-SIWC-authenticated workspace sites may also receive
-`oai-authenticated-user-full-name` when the user's SIWC profile has a non-empty
-`name` claim. The full-name value is percent-encoded UTF-8 and is accompanied by
-`oai-authenticated-user-full-name-encoding: percent-encoded-utf-8`.
-
-Treat the full name as optional and fall back to email when it is absent:
-
-```tsx
-import { headers } from "next/headers";
-
-export default async function Home() {
-  const requestHeaders = await headers();
-  const email = requestHeaders.get("oai-authenticated-user-email");
-  const encodedFullName = requestHeaders.get("oai-authenticated-user-full-name");
-  const fullName =
-    encodedFullName &&
-    requestHeaders.get("oai-authenticated-user-full-name-encoding") ===
-      "percent-encoded-utf-8"
-      ? decodeURIComponent(encodedFullName)
-      : null;
-
-  const displayName = fullName ?? email;
-  // ...
-}
+```powershell
+.\啟動遊戲.cmd
 ```
 
-## Optional Dispatch-Owned ChatGPT Sign-In
+開啟終端顯示的 Local URL。
 
-Import the ready-to-use helpers from `app/chatgpt-auth.ts` when the site needs
-optional or required ChatGPT sign-in:
+## Commands
 
-- Use `getChatGPTUser()` for optional signed-in UI.
-- Use `requireChatGPTUser(returnTo)` for server-rendered pages that should send
-  anonymous visitors through Sign in with ChatGPT.
-- Use `chatGPTSignInPath(returnTo)` and `chatGPTSignOutPath(returnTo)` for
-  browser links or actions.
-- Pass a same-origin relative `returnTo` path for the destination after sign-in
-  or sign-out. The helper validates and safely encodes it.
-- Mark protected pages with `export const dynamic = "force-dynamic"` because
-  they depend on per-request identity headers.
+```powershell
+pnpm dev        # Local development
+pnpm build      # Production build
+pnpm lint       # ESLint
+pnpm test       # Current test command
+```
 
-Dispatch owns `/signin-with-chatgpt`, `/signout-with-chatgpt`, `/callback`, the
-OAuth cookies, and identity header injection. Do not implement app routes for
-those reserved paths. Routes that do not import and call the helper remain
-anonymous-compatible.
+Sprint 0 會新增正式 `pnpm typecheck` 並替換已過期的 starter tests。在此之前，不可把 build 通過視為完整品質驗收。
 
-SIWC establishes identity only; it does not prove workspace membership. Use the
-Sites hosting platform's access policy controls for workspace-wide restrictions,
-or enforce explicit server-side membership or allowlist checks.
+## Controls
 
-Use SIWC for account pages, user-specific dashboards, saved records, and write
-actions tied to the current ChatGPT user. Leave public content anonymous.
+| Action | Keyboard |
+|---|---|
+| Move | WASD / Arrow keys |
+| Attack / Combo input | J |
 
-## Useful Commands
+Mobile Phaser touch controls 尚未完成，排在 Milestone 1。舊 Canvas runtime 的 DOM mobile controls 不是正式架構。
 
-- `npm run dev`: start local development
-- `npm run build`: verify the vinext build output
-- `npm test`: build the starter and verify its rendered loading skeleton
-- `npm run db:generate`: generate Drizzle migrations after schema changes
+## Debug Modes
 
-## Learn More
+Development only：
 
-- [vinext Documentation](https://github.com/cloudflare/vinext)
-- [Drizzle D1 Guide](https://orm.drizzle.team/docs/get-started/d1-new)
+- `?debugInput=1` — input、state、enemy/attack diagnostics。
+- `?previewAttack=1` — 關羽攻擊逐格預覽。
+- `?previewEnemy=1` — Enemy feet-anchor 對齊預覽。
+- Arcade Physics debug — Player/Enemy bodies 與 attack zones。
+
+Production build 必須關閉全部 debug 顯示。
+
+## Current Files
+
+```text
+app/page.tsx                 React arcade shell
+app/game/PhaserGame.tsx      Phaser instance lifecycle
+app/game/MainScene.ts        Current Scene/player/combat orchestration
+app/game/EnemyManager.ts     Multi-enemy manager and combatants
+public/art/                  Runtime/source art and metadata
+public/scene/                Stage/reference images
+tools/build_enemy_art.py     Enemy sheet/atlas rebuild pipeline
+```
+
+`app/game.tsx` 是未被正式頁面引用的舊 Canvas prototype，預定在 Sprint 0 審核後移除或封存。
+
+## Development Workflow
+
+每次開發必須依序：
+
+1. 閱讀 [GAME_ROADMAP.md](GAME_ROADMAP.md)。
+2. 確認 [SPRINT.md](SPRINT.md)。
+3. 只選一個未完成 Task。
+4. 定義重現方式與驗收條件。
+5. 實作最小必要修改。
+6. 執行 build、lint、typecheck、tests 與 [CHECKLIST.md](CHECKLIST.md)。
+7. 更新 Roadmap、Sprint、Debt、Asset 文件。
+8. 建立單一目的 commit。
+9. 再開始下一個 Task。
+
+禁止同時修改多個 Milestone，禁止未完成驗收就開始新功能。
+
+## Project Documents
+
+- [GAME_ROADMAP.md](GAME_ROADMAP.md) — Vision、Current Status、Milestones、Tasks。
+- [ARCHITECTURE.md](ARCHITECTURE.md) — Runtime、資料流、ownership 與模組邊界。
+- [DEVELOPMENT_RULES.md](DEVELOPMENT_RULES.md) — Coding、Phaser、State、Combat、Asset 規則。
+- [TECH_DEBT.md](TECH_DEBT.md) — Critical/High/Medium/Low 技術債。
+- [ASSET_PIPELINE.md](ASSET_PIPELINE.md) — 現有素材、metadata 與生成流程。
+- [BACKLOG.md](BACKLOG.md) — P0/P1/P2/Future 產品需求。
+- [SPRINT.md](SPRINT.md) — 當前兩週 Sprint。
+- [CHECKLIST.md](CHECKLIST.md) — 每個 Task 的驗收矩陣。
+
+## Current Priority
+
+先完成 Milestone 0：提交 baseline、修復 UTF-8、移除舊 runtime、統一 pnpm、修復 lint/typecheck/test 與 production asset routes。完成前不要新增 Stage、Boss、角色、招式或 Audio。
