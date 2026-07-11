@@ -15,11 +15,9 @@
 
 | Order | Task | Estimate | Deliverable | Verification |
 |---:|---|---:|---|---|
-| 1 | Audit and commit Phase 3/4 baseline | 3–5h | 可重現 commit | build + desktop combat smoke |
-| 2 | Recover UTF-8 text | 5–8h | 可讀 spec、art bible、UI、launch scripts | repository mojibake scan + visual check |
-| 3 | Remove/archive unused Canvas runtime | 4–6h | 單一 Phaser runtime | reference scan + build |
-| 4 | Standardize pnpm workflow | 2–3h | 單一 lockfile、更新 scripts | clean install/build in fresh checkout |
-| 5 | Repair lint and typecheck | 6–10h | `pnpm lint/typecheck` 通過 | commands exit 0 |
+| 1 | ✅ Audit and commit Phase 3/4 baseline | 3–5h | `bae05a1` baseline commit | build + desktop combat smoke passed |
+| 2 | ✅ M0 / Task 0.2 — Restore repository text and single runtime | 9–14h | UTF-8 evidence、可讀 launch scripts、單一 Phaser runtime | 30-file UTF-8 scan + reference scan + build + runtime smoke passed |
+| 3 | ▶ M0 / Task 0.3 — Package and Type Boundaries | 8–13h | 單一 pnpm lockfile、browser/worker type boundaries | clean install + build + lint + typecheck |
 | 6 | Replace starter tests | 10–14h | shell/lifecycle/combat minimum tests | `pnpm test` exit 0 |
 | 7 | Validate dev/start asset routes | 4–6h | 無 module/asset 404 | HTTP smoke + browser console |
 | 8 | Desktop/mobile smoke matrix | 4–6h | evidence-filled checklist | Chrome desktop + Android/iOS landscape |
@@ -29,9 +27,9 @@
 
 ### Baseline
 
-- [ ] Current Phaser multi-enemy prototype 有清楚 commit。
-- [ ] Worktree clean。
-- [ ] Checkout 後依 README 可重建。
+- [x] Current Phaser multi-enemy prototype 有清楚 commit：`bae05a1`。
+- [x] Worktree clean。
+- [x] Checkout 後依 README 可重建並通過 desktop combat smoke。
 
 ### Toolchain
 
@@ -45,19 +43,19 @@
 
 ### Repository
 
-- [ ] 正式 runtime 只有 Phaser。
-- [ ] 文件與 UI 沒有 mojibake。
+- [x] 正式 runtime 只有 Phaser。
+- [x] 文件與 UI 沒有 mojibake；30 個目標文字檔嚴格 UTF-8 解碼通過。
 - [ ] Starter tests、starter README、未使用 preview contract 已移除或重寫。
 - [ ] Cloudflare/browser TypeScript surface 正確隔離。
 
 ### Runtime Smoke
 
-- [ ] Phaser instance 只建立一次。
+- [x] Phaser instance 只建立一次；Task 0.2 smoke 的 Canvas count = 1。
 - [ ] Keyboard keyup 正常。
 - [ ] 三名 Enemy 可生成、移動、輪流攻擊、受擊、死亡。
 - [ ] Scene shutdown 無 listener/collider error。
 - [ ] Production HTML、JS、atlas、PNG route 都是 200。
-- [ ] Browser console 無 error。
+- [x] Browser console 無 error（Task 0.2 runtime smoke）。
 
 ## Risks
 

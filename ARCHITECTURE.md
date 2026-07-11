@@ -16,7 +16,7 @@ Next/Vinext page
                   └─ Animation preview modes
 ```
 
-React 不參與 gameplay update。`PhaserGame.tsx` 動態載入 Phaser 和 `MainScene`，確保 Fast Refresh／React remount 前銷毀舊 instance。正式頁面入口是 `app/page.tsx`；`app/game.tsx` 是未引用的舊 Canvas runtime。
+React 不參與 gameplay update。`PhaserGame.tsx` 動態載入 Phaser 和 `MainScene`，確保 Fast Refresh／React remount 前銷毀舊 instance。正式頁面入口是 `app/page.tsx`，gameplay runtime 只有 Phaser；舊 React Canvas runtime 已移除。
 
 ## 2. Current Data Flow
 

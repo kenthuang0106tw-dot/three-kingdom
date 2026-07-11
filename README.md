@@ -36,7 +36,7 @@ React 不管理 gameplay state。所有角色、輸入、動畫、碰撞、AI、
 - pnpm
 - Windows 可使用 repository 根目錄的 `啟動遊戲.cmd`
 
-目前 repository 仍處於 Sprint 0 前的 prototype 狀態：build 可通過，但 lint、typecheck、test 與部分文字編碼仍列為技術債。第一次接手請先閱讀 [SPRINT.md](SPRINT.md)，不要直接新增功能。
+目前 repository 位於 Sprint 0：baseline 與 UTF-8／單一 Phaser runtime 已建立，但 lint、typecheck、test 與 production asset routes 仍列為技術債。第一次接手請先閱讀 [SPRINT.md](SPRINT.md)，不要直接新增功能。
 
 ## Run
 
@@ -71,7 +71,7 @@ Sprint 0 會新增正式 `pnpm typecheck` 並替換已過期的 starter tests。
 | Move | WASD / Arrow keys |
 | Attack / Combo input | J |
 
-Mobile Phaser touch controls 尚未完成，排在 Milestone 1。舊 Canvas runtime 的 DOM mobile controls 不是正式架構。
+Mobile Phaser touch controls 尚未完成，排在 Milestone 1。正式 runtime 不包含 DOM gameplay controls。
 
 ## Debug Modes
 
@@ -96,7 +96,7 @@ public/scene/                Stage/reference images
 tools/build_enemy_art.py     Enemy sheet/atlas rebuild pipeline
 ```
 
-`app/game.tsx` 是未被正式頁面引用的舊 Canvas prototype，預定在 Sprint 0 審核後移除或封存。
+舊 React Canvas prototype 已在 M0 / Task 0.2 移除；正式 gameplay runtime 只有 Phaser。
 
 ## Development Workflow
 
@@ -127,4 +127,4 @@ tools/build_enemy_art.py     Enemy sheet/atlas rebuild pipeline
 
 ## Current Priority
 
-先完成 Milestone 0：提交 baseline、修復 UTF-8、移除舊 runtime、統一 pnpm、修復 lint/typecheck/test 與 production asset routes。完成前不要新增 Stage、Boss、角色、招式或 Audio。
+先完成 Milestone 0：下一步是統一 pnpm workflow，之後修復 lint/typecheck/test 與 production asset routes。完成前不要新增 Stage、Boss、角色、招式或 Audio。

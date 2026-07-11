@@ -82,6 +82,7 @@
 
 ### Task 0.1 — Freeze Current Prototype Baseline
 
+- **Status:** Completed (`bae05a1`)。
 - **Description:** 審核目前未提交 Phase 3／4 diff，記錄已知問題，驗證 build 與最小 combat smoke，建立單一 baseline commit。
 - **Priority:** P0
 - **Difficulty:** Medium
@@ -92,6 +93,7 @@
 
 ### Task 0.2 — Restore Repository Text and Single Runtime
 
+- **Status:** Completed（2026-07-12；commit 於本 Task closeout 建立）。
 - **Description:** 修復 UTF-8；確認無引用後移除／封存舊 Canvas runtime 與其 CSS。
 - **Priority:** P0
 - **Difficulty:** Medium
@@ -102,6 +104,7 @@
 
 ### Task 0.3 — Package and Type Boundaries
 
+- **Status:** Next。
 - **Description:** 統一 pnpm；增加獨立 browser/worker typecheck config；修復 lint/type errors。
 - **Priority:** P0
 - **Difficulty:** High

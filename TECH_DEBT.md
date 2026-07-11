@@ -4,27 +4,12 @@
 
 ## Critical
 
-### TD-C01 — Core prototype changes are uncommitted
-
-- **Evidence:** `MainScene.ts` modified；`EnemyManager.ts`、enemy assets、tool 未追蹤。
-- **Impact:** 無可重現 Phase 3／4 baseline，任何新修改都難以 review 或 rollback。
-- **Recommended Resolution:** 審核當前 diff、重跑 build/runtime smoke，建立 baseline commit。
-- **Target:** M0 / Task 0.1。
-- **Do Not Fix Yet:** 不在文件任務中自動 commit。
-
 ### TD-C02 — Test suite validates deleted starter content
 
 - **Evidence:** `tests/rendered-html.test.mjs` 要求 `_sites-preview`、starter title 與 `react-loading-skeleton`，repository 已無這些檔案。
 - **Impact:** `pnpm test` 無法反映遊戲品質；CI 信號失真。
 - **Recommended Resolution:** 替換為 app shell、Phaser lifecycle、asset route 與 gameplay contract tests。
 - **Target:** M0 / Task 0.4。
-
-### TD-C03 — Mojibake in product and design documents
-
-- **Evidence:** `GAME_SPEC.md`、`ART_BIBLE.md`、部分 page/layout 字串與 `.bat` 名稱內容損壞。
-- **Impact:** 需求不可讀、啟動體驗錯誤、後續 AI 可能從損壞文字推導錯誤規格。
-- **Recommended Resolution:** 從可確認來源重建 UTF-8 文件；無法還原處重新確認，不猜測。
-- **Target:** M0 / Task 0.2。
 
 ### TD-C04 — Production asset routing is unreliable
 
@@ -34,13 +19,6 @@
 - **Target:** M0 / Task 0.4；M9 再次驗證。
 
 ## High
-
-### TD-H01 — Legacy Canvas runtime remains in active TypeScript scope
-
-- **Evidence:** `app/game.tsx` 未被正式頁面引用，仍包含 window keyboard listeners、RAF loop、React UI state，並造成 lint/typecheck errors。
-- **Impact:** 混淆正式架構、增加 bundle/maintenance 風險、阻擋 quality gates。
-- **Resolution:** 證明無引用後刪除或移出 active source tree。
-- **Target:** M0 / Task 0.3。
 
 ### TD-H02 — Typecheck is not part of build and currently fails
 
@@ -132,4 +110,17 @@
 
 ## Resolved
 
-尚無。修復項目移至此區並記錄 commit、日期與驗證 evidence。
+### TD-C01 — Core prototype changes were uncommitted
+
+- **Resolved:** 2026-07-12，M0 / Task 0.1。
+- **Evidence:** `bae05a1` 保存 Phase 3／4 prototype；build、desktop combat smoke 與 clean worktree 通過。
+
+### TD-C03 — Suspected mojibake in product and design documents
+
+- **Resolved:** 2026-07-12，M0 / Task 0.2。
+- **Evidence:** 以 UTF-8 明確解碼 repository 文字檔，無 `U+FFFD` 或常見 mojibake；`GAME_SPEC.md`、`ART_BIBLE.md`、UI 與 launch scripts 可讀。先前異常來自 Windows PowerShell 5 `Get-Content` 的預設編碼。
+
+### TD-H01 — Legacy Canvas runtime remained in active TypeScript scope
+
+- **Resolved:** 2026-07-12，M0 / Task 0.2。
+- **Evidence:** 全 repository reference scan 證明 `app/game.tsx`、`game-extra.css`、`scene-overrides.css` 未被引用後移除；正式入口維持 `app/page.tsx → PhaserGame.tsx → MainScene.ts`。

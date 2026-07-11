@@ -2,52 +2,53 @@
 
 ## Task
 
-**M0 / Task 0.1 — Freeze Current Prototype Baseline**
+**M0 / Task 0.3 — Package and Type Boundaries**
 
-只能執行這一個 Task。不要修 bug、重構、改編碼、移除 legacy code 或新增功能。
+這是 Task 0.2 完成後唯一允許開始的 Task；本次 closeout 不執行它。
 
 ## 為什麼是它
 
-目前 Phase 3／4 的 `MainScene`、`EnemyManager`、enemy assets 與 asset tool 尚未提交。若先進行任何清理或架構修改，將無法可靠區分「既有 prototype 行為」與「後續修改造成的 regression」，也沒有可回退基準。
-
-這個 Task 的價值是保存現況並建立可重現起點，不是宣告現有 API 已經穩定。
+正式 gameplay runtime 已只剩 Phaser，文件與啟動腳本也具備可信 UTF-8 基準。現在最大的開發阻力是 npm／pnpm lockfile 並存、缺少正式 `typecheck` command，以及 browser app、Cloudflare worker 與範例程式共用同一型別邊界。若先寫 tests 或新功能，品質信號仍會混入不相關環境錯誤。
 
 ## 完成條件
 
-- 審核所有未提交檔案，確認每一項都屬於目前 Phase 3／4 prototype。
-- 記錄已知 build、lint、typecheck、test、runtime 與 asset-route 問題，但不在本 Task 修復。
-- `pnpm build` 通過。
-- Desktop combat room 可載入：關羽、三名小兵、背景與動畫資產正常。
-- 最小 smoke：玩家可移動／停止／攻擊；Enemy 可移動並受擊；browser console 無新增 runtime error。
-- 建立一個明確標記為 prototype baseline 的 commit。
-- Commit 後 worktree clean。
+- package manager 明確固定為 pnpm，repository 只保留 `pnpm-lock.yaml`。
+- `package.json` 的 commands 與 README 一致，新增正式 `pnpm typecheck`。
+- browser app 與 worker／範例型別邊界明確，不互相污染。
+- 修復正式 source 的 lint 與 type errors，不以 `skipLibCheck` 或排除正式程式掩蓋問題。
+- 從乾淨 dependency install 驗證 lockfile 可重現。
+- `pnpm build`、`pnpm lint`、`pnpm typecheck` 全部 exit code 0。
+- 不修改 gameplay 行為。
+- 更新 Sprint、Roadmap、README 與 Technical Debt。
+- 建立單一目的 commit，commit 後 worktree clean。
 
 ## 驗收方式
 
-1. `git diff --check` 無錯誤。
-2. `pnpm build` exit code 0。
-3. 從 commit checkout 後依 README 啟動，不依賴未追蹤檔案。
-4. 瀏覽器確認 Canvas、關羽、三名小兵與竹林背景載入。
-5. 執行一次移動、停止、攻擊與 Enemy 受擊 smoke。
-6. 檢查 browser console，記錄任何既有 warning/error。
-7. `git status --short` 無輸出。
-
-lint、typecheck、test 的既有失敗不阻擋 baseline commit，但必須逐項記錄於 `TECH_DEBT.md`；不得在本 Task 順手修復。
+1. `git status --short` 確認 Task scope。
+2. `pnpm install --frozen-lockfile` 通過且不改 lockfile。
+3. `pnpm build` exit code 0。
+4. `pnpm lint` exit code 0。
+5. `pnpm typecheck` exit code 0。
+6. Reference scan 證明正式 app source 沒有被 typecheck 排除。
+7. 最小 Phaser runtime smoke，browser console 無新增 error。
+8. Commit 後 `git status --short` 無輸出。
 
 ## 預估修改檔案
 
-預期不新增 gameplay 修改。Commit scope 應只包含目前已存在的未提交 prototype：
-
-- `app/game/MainScene.ts`
-- `app/game/EnemyManager.ts`
-- `public/art/enemy/*`
-- `tools/build_enemy_art.py`
-
-若審核發現其他檔案與 Phase 3／4 無直接關係，排除在 commit 外並停止確認來源。
+- `package.json`
+- `package-lock.json`（刪除）
+- `pnpm-lock.yaml`（只在必要的 lockfile 正規化時更新）
+- `tsconfig.json`
+- 可能新增 browser／worker 專用 tsconfig
+- 正式 source 中實際 lint/type errors 對應檔案
+- `README.md`
+- `SPRINT.md`
+- `GAME_ROADMAP.md`
+- `TECH_DEBT.md`
+- `NEXT_TASK.md`
 
 ## 預估風險
 
-- 未追蹤素材可能缺少來源或重建依賴，導致 checkout 後不可重現。
-- Production server asset-route 問題可能讓 build 成功但頁面白屏；必須實際 smoke，不可只看 build。
-- 將已知 bug 一起提交可能被誤認為正式完成；commit message 與 Technical Debt 必須明確標註 prototype baseline。
-- 現有文件變更若尚未 commit，不能混入此 gameplay baseline commit；文件應獨立 commit。
+- Vinext、Cloudflare 與 Next ambient types 可能互相衝突，必須用清楚 project boundary 解決。
+- 不可為了讓 typecheck 綠燈而排除 `app/game/**` 或關閉 strict 檢查。
+- clean install 可能需要網路與較長時間；不得在未驗證 frozen lockfile 的情況下宣告完成。
