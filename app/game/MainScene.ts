@@ -1,6 +1,7 @@
 import * as Phaser from "phaser";
+import { EnemyCombatant, EnemyManager, ENEMY_DISPLAY_SCALE } from "./EnemyManager";
 
-type PlayerState = "idle" | "walk" | "attack1" | "attack2" | "attack3";
+type PlayerState = "idle" | "walk" | "attack1" | "attack2" | "attack3" | "hurt";
 type AttackState = "attack1" | "attack2" | "attack3";
 type DirectionSnapshot = { moveX: number; moveY: number; up: boolean; down: boolean; left: boolean; right: boolean };
 type PreviewFrame = {
@@ -13,8 +14,17 @@ const HEIGHT = 720;
 const START_X = 180;
 const START_FOOT_Y = 602;
 const WALK_SPEED = 235;
+const PLAYER_MAX_HP = 10;
+const ENEMY_FRAME_SIZE = 384;
+const ENEMY_FEET_Y = 354;
+const HURT_MS = 300;
+const HIT_STOP_MS = (1000 / 60) * 4;
+const HIT_FLASH_MS = 90;
+const KNOCKBACK_DISTANCE = 26;
+const KNOCKBACK_MS = 120;
+const CAMERA_SHAKE_MS = 50;
+const CAMERA_SHAKE_INTENSITY = 0.003;
 const COMBO_WINDOW_MS = 360;
-const EARLY_BUFFER_MS = 160;
 const WALK_BOUNDS = new Phaser.Geom.Rectangle(70, 390, 1140, 245);
 const ATTACK_STATES: AttackState[] = ["attack1", "attack2", "attack3"];
 const ATTACK_ANIMATIONS: Record<AttackState, string> = {
@@ -22,12 +32,18 @@ const ATTACK_ANIMATIONS: Record<AttackState, string> = {
   attack2: "guanyu-attack2",
   attack3: "guanyu-attack3",
 };
+const ATTACK_ACTIVE_FRAME_INDEXES: Record<string, ReadonlySet<number>> = {
+  "guanyu-attack1": new Set([2]),
+  "guanyu-attack2": new Set([2]),
+  "guanyu-attack3": new Set([2]),
+};
 const ALLOWED_TRANSITIONS: Record<PlayerState, ReadonlySet<PlayerState>> = {
-  idle: new Set(["walk", "attack1"]),
-  walk: new Set(["idle", "attack1"]),
-  attack1: new Set(["idle", "attack2"]),
-  attack2: new Set(["idle", "attack3"]),
-  attack3: new Set(["idle"]),
+  idle: new Set(["walk", "attack1", "hurt"]),
+  walk: new Set(["idle", "attack1", "hurt"]),
+  attack1: new Set(["idle", "attack2", "hurt"]),
+  attack2: new Set(["idle", "attack3", "hurt"]),
+  attack3: new Set(["idle", "hurt"]),
+  hurt: new Set(["idle"]),
 };
 const FRAME_ORIGIN_Y: Record<string, number> = {
   "walk-0": 739 / 793, "walk-1": 736 / 793, "walk-2": 746 / 793, "walk-3": 741 / 793,
@@ -41,6 +57,11 @@ const PREVIEW_FRAMES: PreviewFrame[] = [
   { name: "attack-3", x: 1536, y: 0, width: 512, height: 724, originY: 586 / 724, offsetX: 97, offsetY: 148, classification: "attack2 active short punch" },
   { name: "attack-4", x: 2048, y: 0, width: 512, height: 724, originY: 586 / 724, offsetX: 86, offsetY: 130, classification: "attack3 startup / recovery raised arm" },
   { name: "attack-5", x: 2560, y: 0, width: 512, height: 724, originY: 587 / 724, offsetX: 30, offsetY: 165, classification: "attack3 active palm strike" },
+];
+const ENEMY_PREVIEW_FRAMES = [
+  "idle-0", "idle-1", "walk-0", "walk-1", "walk-2", "walk-3",
+  "attack-0", "attack-1", "attack-2", "hurt-0", "hurt-1",
+  "dead-0", "dead-1", "dead-2", "dead-3",
 ];
 
 class PlayerInputController {
@@ -72,24 +93,28 @@ export default class MainScene extends Phaser.Scene {
   private playerBody!: Phaser.Physics.Arcade.Body;
   private attackBody!: Phaser.Physics.Arcade.Body;
   private inputController!: PlayerInputController;
-  private developmentTarget?: Phaser.GameObjects.Zone;
+  private enemyManager!: EnemyManager;
   private debugText?: Phaser.GameObjects.Text;
   private state: PlayerState = "idle";
-  private facing: 1 | -1 = -1;
+  private facing: 1 | -1 = 1;
   private currentInput: DirectionSnapshot = { moveX: 0, moveY: 0, up: false, down: false, left: false, right: false };
+  private attackTriggerCount = 0;
+  private attackCompleteCount = 0;
   private comboStep = 0;
   private hitConfirmed = false;
   private comboBuffered = false;
-  private bufferedAt = -Infinity;
   private comboWindowOpen = false;
-  private comboWindowOpenedAt = 0;
   private comboWindowEndsAt = 0;
-  private attackAnimationComplete = false;
-  private attackTriggerCount = 0;
-  private attackCompleteCount = 0;
+  private playerHp = PLAYER_MAX_HP;
+  private hitCount = 0;
+  private totalDamage = 0;
+  private hitStopActive = false;
+  private playerAttackId = 0;
+  private defeatedText?: Phaser.GameObjects.Text;
   private readonly transitionLog: string[] = [];
   private diagnosticMode = false;
   private previewMode = false;
+  private enemyPreviewMode = false;
   private previewSprite?: Phaser.GameObjects.Sprite;
   private onionSprite?: Phaser.GameObjects.Sprite;
   private previewText?: Phaser.GameObjects.Text;
@@ -101,6 +126,10 @@ export default class MainScene extends Phaser.Scene {
   private previewLoop = false;
   private onionEnabled = false;
   private nextPreviewFrameAt = 0;
+  private enemyPreviewSprite?: Phaser.GameObjects.Sprite;
+  private enemyPreviewText?: Phaser.GameObjects.Text;
+  private enemyPreviewKeys?: Record<"left" | "right", Phaser.Input.Keyboard.Key>;
+  private enemyPreviewIndex = 0;
 
   constructor() { super("MainScene"); }
 
@@ -109,11 +138,15 @@ export default class MainScene extends Phaser.Scene {
     this.load.atlas("guanyu-idle", "/art/guanyu/guanyu-master.png", "/art/guanyu/guanyu-idle.atlas.json");
     this.load.atlas("guanyu-walk", "/art/guanyu/guanyu-walk.png", "/art/guanyu/guanyu-walk.atlas.json");
     this.load.atlas("guanyu-attack", "/art/guanyu/guanyu-combo-frames.png", "/art/guanyu/guanyu-attack.atlas.json");
+    this.load.atlas("enemy-soldier", "/art/enemy/enemy-soldier.png", "/art/enemy/enemy-soldier.atlas.json");
   }
 
   create() {
     const development = process.env.NODE_ENV !== "production";
-    this.previewMode = development && new URLSearchParams(window.location.search).get("previewAttack") === "1";
+    const query = new URLSearchParams(window.location.search);
+    this.enemyPreviewMode = development && query.get("previewEnemy") === "1";
+    this.previewMode = development && query.get("previewAttack") === "1";
+    if (this.enemyPreviewMode) { this.createEnemyAlignmentPreview(); return; }
     if (this.previewMode) { this.createPreviewMode(); return; }
 
     this.createCombatAnimations();
@@ -141,9 +174,13 @@ export default class MainScene extends Phaser.Scene {
     this.playerSprite.on(Phaser.Animations.Events.ANIMATION_UPDATE, this.handleAnimationUpdate, this);
     this.playerSprite.on(Phaser.Animations.Events.ANIMATION_COMPLETE, this.handleAnimationComplete, this);
 
+    this.enemyManager = new EnemyManager(this, this.playerBodyZone, {
+      onPlayerHit: enemy => this.applyHitToPlayer(enemy),
+      onAllDefeated: () => this.showAllEnemiesDefeated(),
+    }, development);
+    this.enemyManager.spawnAll();
+
     if (development) {
-      this.developmentTarget = this.add.zone(78, START_FOOT_Y, 56, 138).setOrigin(0.5, 1);
-      this.physics.add.existing(this.developmentTarget, true);
       this.diagnosticMode = new URLSearchParams(window.location.search).get("debugInput") === "1";
       this.debugText = this.add.text(12, 12, "", { fontFamily: "Consolas, monospace", fontSize: "15px", color: "#fff", backgroundColor: "rgba(0,0,0,.78)", padding: { x: 8, y: 7 } }).setDepth(10000);
     }
@@ -152,13 +189,24 @@ export default class MainScene extends Phaser.Scene {
       this.playerSprite.off(Phaser.Animations.Events.ANIMATION_UPDATE, this.handleAnimationUpdate, this);
       this.playerSprite.off(Phaser.Animations.Events.ANIMATION_COMPLETE, this.handleAnimationComplete, this);
       this.disableAttackHitbox();
+      this.enemyManager.destroy();
     });
   }
 
   update() {
+    if (this.enemyPreviewMode) { this.updateEnemyAlignmentPreview(); return; }
     if (this.previewMode) { this.updatePreviewMode(); return; }
+    if (this.hitStopActive) { this.updateDebugText(); return; }
     this.playerBody.setVelocity(0, 0);
     this.currentInput = this.inputController.readDirection();
+
+    this.enemyManager.update();
+
+    if (this.state === "hurt") {
+      this.syncVisualsToBody();
+      this.updateDebugText();
+      return;
+    }
 
     if (this.isAttackState(this.state)) {
       this.updateAttackState();
@@ -188,20 +236,34 @@ export default class MainScene extends Phaser.Scene {
 
   private createCombatAnimations() {
     this.anims.create({ key: "guanyu-walk", frames: [0, 1, 2, 3].map(i => ({ key: "guanyu-walk", frame: `walk-${i}` })), frameRate: 8, repeat: -1 });
-    const groups = [["attack-0", "attack-1", "attack-0"], ["attack-2", "attack-3", "attack-2"], ["attack-4", "attack-5", "attack-4"]];
-    groups.forEach((frames, index) => this.anims.create({ key: `guanyu-attack${index + 1}`, frames: frames.map(frame => ({ key: "guanyu-attack", frame })), frameRate: 8, repeat: 0 }));
+    this.anims.create({ key: "guanyu-attack1", frames: ["attack-0", "attack-1", "attack-0"].map(frame => ({ key: "guanyu-attack", frame })), frameRate: 8, repeat: 0 });
+    this.anims.create({ key: "guanyu-attack2", frames: ["attack-2", "attack-3", "attack-2"].map(frame => ({ key: "guanyu-attack", frame })), frameRate: 8, repeat: 0 });
+    this.anims.create({ key: "guanyu-attack3", frames: ["attack-4", "attack-5", "attack-4"].map(frame => ({ key: "guanyu-attack", frame })), frameRate: 8, repeat: 0 });
+    this.anims.create({ key: "enemy-idle", frames: ["idle-0", "idle-1"].map(frame => ({ key: "enemy-soldier", frame })), frameRate: 4, repeat: -1 });
+    this.anims.create({ key: "enemy-walk", frames: [0, 1, 2, 3].map(i => ({ key: "enemy-soldier", frame: `walk-${i}` })), frameRate: 8, repeat: -1 });
+    this.anims.create({ key: "enemy-attack", frames: [0, 1, 2].map(i => ({ key: "enemy-soldier", frame: `attack-${i}` })), frameRate: 8, repeat: 0 });
+    this.anims.create({ key: "enemy-hurt", frames: ["hurt-0", "hurt-1"].map(frame => ({ key: "enemy-soldier", frame })), frameRate: 8, repeat: 0 });
+    this.anims.create({ key: "enemy-dead", frames: [0, 1, 2, 3].map(i => ({ key: "enemy-soldier", frame: `dead-${i}` })), frameRate: 8, repeat: 0 });
+    this.createHitSparkAnimation();
   }
 
   private updateAttackState() {
-    if (this.inputController.attackJustPressed() && this.comboStep < 3) {
+    if (this.comboWindowOpen && this.time.now > this.comboWindowEndsAt) this.comboWindowOpen = false;
+    if (this.comboStep < 3 && this.comboWindowOpen && this.inputController.attackJustPressed()) {
       this.attackTriggerCount += 1;
-      this.bufferedAt = this.time.now;
-      this.comboBuffered = this.comboWindowOpen || this.time.now >= this.comboWindowOpenedAt - EARLY_BUFFER_MS;
+      this.comboBuffered = true;
+      this.comboWindowOpen = false;
     }
-    if (this.attackBody.enable && this.developmentTarget && !this.hitConfirmed && this.physics.overlap(this.attackZone, this.developmentTarget)) this.confirmHit();
-    if (!this.attackAnimationComplete) return;
-    if (!this.hitConfirmed || this.comboStep === 3 || this.time.now > this.comboWindowEndsAt) { this.finishCombo(); return; }
-    if (this.comboWindowOpen && this.comboBuffered) this.startAttack(this.comboStep + 1);
+    if (this.attackBody.enable) {
+      const hits = this.enemyManager.getLivingEnemies().filter(enemy =>
+        this.physics.overlap(this.attackZone, enemy.bodyZone) && this.enemyManager.markPlayerAttackHit(enemy, this.playerAttackId));
+      if (hits.length) {
+        this.hitConfirmed = true;
+        this.comboWindowOpen = this.comboStep < 3;
+        this.comboWindowEndsAt = this.time.now + COMBO_WINDOW_MS;
+        hits.forEach((enemy, index) => this.applyHitToEnemy(enemy, index === 0));
+      }
+    }
   }
 
   private startAttack(step: number) {
@@ -210,23 +272,30 @@ export default class MainScene extends Phaser.Scene {
     this.comboStep = step;
     this.hitConfirmed = false;
     this.comboBuffered = false;
-    this.bufferedAt = -Infinity;
     this.comboWindowOpen = false;
-    this.comboWindowOpenedAt = 0;
     this.comboWindowEndsAt = 0;
-    this.attackAnimationComplete = false;
+    this.playerAttackId += 1;
     this.playerBody.setVelocity(0, 0);
     this.disableAttackHitbox();
     const firstFrame = PREVIEW_FRAMES[(step - 1) * 2];
     this.playerSprite.setOrigin(0.5, firstFrame.originY).setScale(0.64).setFlipX(this.facing < 0).play(ATTACK_ANIMATIONS[nextState]);
   }
 
-  private confirmHit() {
-    this.hitConfirmed = true;
-    this.comboWindowOpen = true;
-    this.comboWindowOpenedAt = this.time.now;
-    this.comboWindowEndsAt = this.time.now + COMBO_WINDOW_MS;
-    this.comboBuffered = this.bufferedAt >= this.comboWindowOpenedAt - EARLY_BUFFER_MS;
+  private handleAnimationComplete(animation: Phaser.Animations.Animation) {
+    if (animation.key === "hit-spark") return;
+    if (!Object.values(ATTACK_ANIMATIONS).includes(animation.key)) return;
+    this.disableAttackHitbox();
+    this.attackCompleteCount += 1;
+    if (this.comboStep < 3 && this.hitConfirmed && this.comboBuffered) this.startAttack(this.comboStep + 1);
+    else this.finishCombo();
+  }
+
+  private handleAnimationUpdate(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
+    const frameName = String(frame.textureFrame);
+    this.playerSprite.setOrigin(0.5, FRAME_ORIGIN_Y[frameName] ?? this.playerSprite.originY);
+    const activeFrames = ATTACK_ACTIVE_FRAME_INDEXES[animation.key];
+    if (!activeFrames) return;
+    if (activeFrames.has(frame.index)) this.enableAttackHitbox(); else this.disableAttackHitbox();
   }
 
   private finishCombo() {
@@ -235,23 +304,118 @@ export default class MainScene extends Phaser.Scene {
     this.hitConfirmed = false;
     this.comboBuffered = false;
     this.comboWindowOpen = false;
-    this.attackAnimationComplete = false;
+    this.comboWindowEndsAt = 0;
     this.transitionTo("idle");
   }
 
-  private handleAnimationComplete(animation: Phaser.Animations.Animation) {
-    if (!Object.values(ATTACK_ANIMATIONS).includes(animation.key)) return;
-    this.disableAttackHitbox();
-    this.attackCompleteCount += 1;
-    this.attackAnimationComplete = true;
-    if (!this.hitConfirmed || this.comboStep === 3) this.finishCombo();
+  private applyHitToEnemy(enemy: EnemyCombatant, triggerGlobalEffects: boolean) {
+    this.hitCount += 1;
+    this.totalDamage += 1;
+
+    const left = Math.max(this.attackBody.x, enemy.body.x);
+    const right = Math.min(this.attackBody.right, enemy.body.right);
+    const top = Math.max(this.attackBody.y, enemy.body.y);
+    const bottom = Math.min(this.attackBody.bottom, enemy.body.bottom);
+    const hitX = Math.round((left + right) / 2);
+    const hitY = Math.round((top + bottom) / 2);
+
+    enemy.sprite.setTintFill(0xffffff);
+    const struckEnemy = enemy.sprite;
+    this.time.delayedCall(HIT_FLASH_MS, () => { if (struckEnemy.active) struckEnemy.clearTint(); });
+    this.createHitSpark(hitX, hitY);
+    if (triggerGlobalEffects) this.cameras.main.shake(CAMERA_SHAKE_MS, CAMERA_SHAKE_INTENSITY);
+
+    const targetX = Phaser.Math.Clamp(enemy.bodyZone.x + this.facing * KNOCKBACK_DISTANCE, WALK_BOUNDS.left, WALK_BOUNDS.right);
+    this.tweens.add({
+      targets: enemy.bodyZone,
+      x: targetX,
+      duration: KNOCKBACK_MS,
+      ease: "Cubic.Out",
+      onUpdate: () => this.enemyManager.syncPhysicsFromZone(enemy),
+      onComplete: () => this.enemyManager.syncPhysicsFromZone(enemy),
+    });
+
+    this.enemyManager.damage(enemy);
+    this.playHitSound();
+    if (triggerGlobalEffects) this.beginHitStop();
   }
 
-  private handleAnimationUpdate(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
-    const frameName = String(frame.textureFrame);
-    this.playerSprite.setOrigin(0.5, FRAME_ORIGIN_Y[frameName] ?? this.playerSprite.originY);
-    if (!Object.values(ATTACK_ANIMATIONS).includes(animation.key)) return;
-    if (frame.index === 2) this.enableAttackHitbox(); else this.disableAttackHitbox();
+  private beginHitStop() {
+    if (this.hitStopActive) return;
+    this.hitStopActive = true;
+    this.physics.world.pause();
+    this.anims.pauseAll();
+    this.tweens.pauseAll();
+    this.time.delayedCall(HIT_STOP_MS, () => {
+      this.physics.world.resume();
+      this.anims.resumeAll();
+      this.tweens.resumeAll();
+      this.hitStopActive = false;
+    });
+  }
+
+  private createHitSparkAnimation() {
+    const graphics = this.make.graphics({ x: 0, y: 0, add: false });
+    for (let frame = 0; frame < 5; frame += 1) {
+      const key = `hit-spark-${frame}`;
+      if (this.textures.exists(key)) continue;
+      const radius = 4 + frame * 4;
+      graphics.clear();
+      graphics.fillStyle(frame < 2 ? 0xffffff : 0xffd84a, 1);
+      graphics.fillRect(24 - radius, 22, radius * 2, 4);
+      graphics.fillRect(22, 24 - radius, 4, radius * 2);
+      graphics.fillStyle(0xff7b24, Math.max(0.25, 1 - frame * 0.17));
+      graphics.fillRect(24 - radius, 24 - radius, 4, 4);
+      graphics.fillRect(24 + radius - 4, 24 - radius, 4, 4);
+      graphics.fillRect(24 - radius, 24 + radius - 4, 4, 4);
+      graphics.fillRect(24 + radius - 4, 24 + radius - 4, 4, 4);
+      graphics.generateTexture(key, 48, 48);
+    }
+    graphics.destroy();
+    this.anims.create({ key: "hit-spark", frames: [0, 1, 2, 3, 4].map(frame => ({ key: `hit-spark-${frame}` })), frameRate: 24, repeat: 0 });
+  }
+
+  private createHitSpark(x: number, y: number) {
+    const spark = this.add.sprite(x, y, "hit-spark-0").setDepth(2000).play("hit-spark");
+    spark.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => spark.destroy());
+  }
+
+  private applyHitToPlayer(enemy: EnemyCombatant) {
+    if (this.state === "hurt") return;
+    this.playerHp = Math.max(0, this.playerHp - 1);
+    this.disableAttackHitbox();
+    this.comboStep = 0;
+    this.hitConfirmed = false;
+    this.comboBuffered = false;
+    this.comboWindowOpen = false;
+    this.transitionTo("hurt");
+    this.playerBody.setVelocity(0, 0);
+
+    this.playerSprite.setTintFill(0xffffff);
+    this.time.delayedCall(HIT_FLASH_MS, () => { if (this.playerSprite.active) this.playerSprite.clearTint(); });
+    const targetX = Phaser.Math.Clamp(this.playerBodyZone.x + enemy.facing * KNOCKBACK_DISTANCE, WALK_BOUNDS.left, WALK_BOUNDS.right);
+    this.tweens.add({
+      targets: this.playerBodyZone,
+      x: targetX,
+      duration: KNOCKBACK_MS,
+      ease: "Cubic.Out",
+      onUpdate: () => this.syncVisualsToBody(),
+      onComplete: () => this.syncVisualsToBody(),
+    });
+    this.beginHitStop();
+    this.time.delayedCall(HURT_MS, () => { if (this.state === "hurt") this.transitionTo("idle"); });
+  }
+
+  private playHitSound() {
+    // Interface reserved for a future hit sound asset.
+  }
+
+  private showAllEnemiesDefeated() {
+    if (this.defeatedText) return;
+    this.defeatedText = this.add.text(WIDTH / 2, HEIGHT / 2, "All Enemies Defeated", {
+      fontFamily: "Consolas, monospace", fontSize: "36px", color: "#ffffff",
+      backgroundColor: "rgba(0,0,0,.72)", padding: { x: 20, y: 12 },
+    }).setOrigin(0.5).setDepth(10000);
   }
 
   private transitionTo(next: PlayerState) {
@@ -259,8 +423,55 @@ export default class MainScene extends Phaser.Scene {
     if (!ALLOWED_TRANSITIONS[this.state].has(next)) throw new Error(`Invalid player transition: ${this.state} -> ${next}`);
     const previous = this.state; this.state = next;
     this.transitionLog.push(`${previous} -> ${next}`); if (this.transitionLog.length > 20) this.transitionLog.shift();
-    if (next === "idle") this.showIdleFrame();
+    if (next === "idle" || next === "hurt") this.showIdleFrame();
     else if (next === "walk") this.playerSprite.setOrigin(0.5, FRAME_ORIGIN_Y["walk-0"]).setScale(0.44).setFlipX(this.facing < 0).play("guanyu-walk");
+  }
+
+  private createEnemyAlignmentPreview() {
+    this.cameras.main.setBackgroundColor("#101512");
+    const keyboard = this.input.keyboard;
+    if (!keyboard) throw new Error("Keyboard input is unavailable");
+    this.enemyPreviewKeys = keyboard.addKeys({ left: "LEFT", right: "RIGHT" }) as typeof this.enemyPreviewKeys;
+    const groundY = 580;
+    const guide = this.add.graphics().setDepth(20);
+    guide.lineStyle(2, 0xff3b30, 1).lineBetween(100, groundY, WIDTH - 100, groundY);
+    guide.fillStyle(0x00ffff, 1).fillCircle(WIDTH / 2, groundY, 5);
+    this.enemyPreviewSprite = this.add.sprite(WIDTH / 2, groundY, "enemy-soldier", ENEMY_PREVIEW_FRAMES[0])
+      .setOrigin(0.5, ENEMY_FEET_Y / ENEMY_FRAME_SIZE)
+      .setScale(ENEMY_DISPLAY_SCALE);
+    this.enemyPreviewText = this.add.text(24, 22, "", {
+      fontFamily: "Consolas, monospace", fontSize: "18px", color: "#fff",
+      backgroundColor: "rgba(0,0,0,.8)", padding: { x: 12, y: 10 }, lineSpacing: 3,
+    }).setDepth(100);
+    this.showEnemyPreviewFrame(0);
+  }
+
+  private updateEnemyAlignmentPreview() {
+    const keys = this.enemyPreviewKeys!;
+    if (Phaser.Input.Keyboard.JustDown(keys.left)) this.showEnemyPreviewFrame(this.enemyPreviewIndex - 1);
+    if (Phaser.Input.Keyboard.JustDown(keys.right)) this.showEnemyPreviewFrame(this.enemyPreviewIndex + 1);
+  }
+
+  private showEnemyPreviewFrame(index: number) {
+    this.enemyPreviewIndex = Phaser.Math.Wrap(index, 0, ENEMY_PREVIEW_FRAMES.length);
+    const name = ENEMY_PREVIEW_FRAMES[this.enemyPreviewIndex];
+    const frame = this.textures.getFrame("enemy-soldier", name);
+    this.enemyPreviewSprite!.setTexture("enemy-soldier", name)
+      .setOrigin(0.5, ENEMY_FEET_Y / ENEMY_FRAME_SIZE)
+      .setScale(ENEMY_DISPLAY_SCALE)
+      .setPosition(WIDTH / 2, 580);
+    this.enemyPreviewText!.setText([
+      "ENEMY FEET ALIGNMENT PREVIEW",
+      `frame: ${this.enemyPreviewIndex} / ${ENEMY_PREVIEW_FRAMES.length - 1}`,
+      `name: ${name}`,
+      `source: ${frame.cutX}, ${frame.cutY}, ${frame.cutWidth}, ${frame.cutHeight}`,
+      `origin: 0.5, ${(ENEMY_FEET_Y / ENEMY_FRAME_SIZE).toFixed(6)}`,
+      `feet anchor: ${ENEMY_FRAME_SIZE / 2}, ${ENEMY_FEET_Y}`,
+      `display scale: ${ENEMY_DISPLAY_SCALE}`,
+      "",
+      "Left / Right: previous / next frame",
+      "Red line: fixed world ground  |  Cyan point: feet anchor",
+    ]);
   }
 
   private createPreviewMode() {
@@ -325,13 +536,36 @@ export default class MainScene extends Phaser.Scene {
   private updateDebugText() {
     if (!this.debugText) return;
     const v = this.playerBody.velocity, i = this.currentInput;
+    const enemies = this.enemyManager.getAllEnemies();
     const lines = [
-      `state: ${this.state}`, `velocity: ${v.x.toFixed(1)}, ${v.y.toFixed(1)}`, `keys UDLR: ${i.up} ${i.down} ${i.left} ${i.right}`,
-      `J down: ${this.inputController.attack.isDown}`, `attack trigger/complete: ${this.attackTriggerCount}/${this.attackCompleteCount}`,
-      `comboStep: ${this.comboStep}`, `hitConfirmed: ${this.hitConfirmed}`, `comboBuffered: ${this.comboBuffered}`, `comboWindowOpen: ${this.comboWindowOpen}`,
-      `animation: ${this.playerSprite.anims.currentAnim?.key ?? "idle"}`, `frame: ${this.playerSprite.anims.currentFrame?.index ?? 0}`,
+      `Alive Enemy Count: ${this.enemyManager.getLivingEnemies().length}`,
+      `Current Attacker ID: ${this.enemyManager.currentAttackerId ?? "none"}`,
+      `Player State: ${this.state}`,
+      ...enemies.map(enemy => {
+        const dx = enemy.bodyZone.x - this.playerBodyZone.x;
+        const dy = enemy.bodyZone.y - this.playerBodyZone.y;
+        return `E${enemy.id} ${enemy.state} HP:${enemy.hp} dX:${dx.toFixed(0)} dY:${dy.toFixed(0)} Slot:${enemy.slotName} Attack:${enemy.hasAttackSlot}`;
+      }),
     ];
-    if (this.diagnosticMode) lines.push("", "transitions:", ...this.transitionLog);
+    if (this.diagnosticMode) lines.push(
+      "",
+      `Hit Count: ${this.hitCount}`,
+      `Total Damage: ${this.totalDamage}`,
+      `Combo Step: ${this.comboStep}`,
+      `Hit Confirmed: ${this.hitConfirmed}`,
+      `Combo Buffered: ${this.comboBuffered}`,
+      `Combo Window: ${this.comboWindowOpen}`,
+      `velocity: ${v.x.toFixed(1)}, ${v.y.toFixed(1)}`,
+      `keys UDLR: ${i.up} ${i.down} ${i.left} ${i.right}`,
+      `J down: ${this.inputController.attack.isDown}`,
+      `attack trigger/complete: ${this.attackTriggerCount}/${this.attackCompleteCount}`,
+      `hit stop: ${this.hitStopActive}`,
+      `animation: ${this.playerSprite.anims.currentAnim?.key ?? "idle"}`,
+      `frame: ${this.playerSprite.anims.currentFrame?.index ?? 0}`,
+      "",
+      "transitions:",
+      ...this.transitionLog,
+    );
     this.debugText.setText(lines);
   }
 }
