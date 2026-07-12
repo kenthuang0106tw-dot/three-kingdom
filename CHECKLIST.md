@@ -179,6 +179,19 @@
 | Mobile smoke | Pending | Physical mobile deterministic timing not available in harness |
 | Known issues | Non-blocking | Full deterministic combat simulation deferred |
 
+## M1 / Task 1.7 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M1 / Task 1.7 — Responsive Mobile Landscape Contract |
+| Build | Pass | `pnpm build` |
+| Tests | Pass | `pnpm test` 14/14 |
+| Lint | Pass | `pnpm lint` 0 errors, existing `<img>` warnings only |
+| Typecheck | Pass | `pnpm typecheck` |
+| Browser viewport smoke | Pass | 844×390 and 390×844, one 1280×720 Canvas, fitted 16:9 style |
+| Physical mobile smoke | Pending | No physical iOS/Android device available in harness |
+| Known issues | Non-blocking | Device-specific orientation and visibility lifecycle remain release QA |
+
 ## M1 / Task 1.4 Evidence
 
 | Item | Result | Evidence |

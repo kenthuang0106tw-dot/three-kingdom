@@ -331,9 +331,10 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 - Evidence: touch adapter contract test, pointer release paths (`pointerupoutside`, `pointerout`, `pointercancel`, `gameout`), `pnpm test`, `pnpm build`, `pnpm lint`, `pnpm typecheck`, and local browser smoke with one Canvas and zero console errors.
 - M1 / Task 1.3 (Pause, Hit-Stop, and Visibility Clock Contract) completed in commit `5dc85b7`.
 - M1 / Task 1.4 (Readonly Gameplay Events and Snapshot) completed in commit `476f9fd`.
-- M1 / Task 1.6 (Deterministic Seed and Test Clock) completed in commit `af9241d`.
+- M1 / Task 1.6 (Deterministic Seed and Test Clock) completed in commit `9bf6119`.
 - Evidence: seeded RNG and test clock reproducibility tests, EnemyManager injection seams, `pnpm test`, `pnpm build`, `pnpm lint`, `pnpm typecheck`, and browser smoke with one Canvas and zero console errors.
-- Next eligible task: M1 / Task 1.7 (Responsive Mobile Landscape Contract).
+- M1 / Task 1.7 (Responsive Mobile Landscape Contract) completed in this closeout commit.
+- Next eligible task: M1 / Task 1.8 (Scene Reset Smoke Test).
 
 ## 4. Global Acceptance Rules
 

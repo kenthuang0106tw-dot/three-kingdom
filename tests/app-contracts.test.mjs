@@ -77,6 +77,21 @@ test("Touch input shares the action snapshot and releases pointer state", async 
   assert.match(scene, /readSnapshot\(this\.inputController\.readSnapshot\(\)\)/);
 });
 
+test("Mobile landscape keeps the Phaser canvas in a safe-area fitted contract", async () => {
+  const layout = await readFile(new URL("../app/layout.tsx", import.meta.url), "utf8");
+  const scene = await readFile(new URL("../app/game/PhaserGame.tsx", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(layout, /width: "device-width"/);
+  assert.match(layout, /viewportFit: "cover"/);
+  assert.match(scene, /mode: Phaser\.Scale\.FIT/);
+  assert.match(scene, /autoCenter: Phaser\.Scale\.CENTER_BOTH/);
+  assert.match(css, /100dvh/);
+  assert.match(css, /safe-area-inset-top/);
+  assert.match(css, /orientation:landscape/);
+  assert.match(css, /aspect-ratio:16\/9/);
+  assert.match(css, /touch-action:none/);
+});
+
 test("Clock pause reasons remain independent and resume only when all reasons clear", () => {
   const clock = new ClockState();
   assert.equal(clock.isPaused(), false);

@@ -111,6 +111,15 @@
 - [x] Browser smoke: one 1280×720 Canvas, touch attack interaction, and zero console errors.
 - [ ] Physical mobile deterministic-timing validation remains pending for release QA.
 
+## Task 1.7 Closeout
+
+- [x] Added the document mobile viewport contract with safe-area support.
+- [x] Phaser uses FIT/CENTER_BOTH for the fixed 1280×720 logical canvas; CSS preserves 16:9 and 32:15 ratios with dynamic viewport bounds.
+- [x] Touch controls remain in the Phaser coordinate space and lifecycle ownership is unchanged across resize/focus.
+- [x] `pnpm test` 14/14, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
+- [x] Browser viewport smoke passed at 844×390 and 390×844: one 1280×720 Canvas with fitted aspect ratio.
+- [ ] Physical phone LAN/hosted smoke remains pending because no physical device is available in the harness.
+
 ## Sprint Exit
 
 Task 1.1 已完成；下一步只執行 Task 1.2。Pause、visibility、deterministic clock 與其他未完成項目依 Roadmap 保留。

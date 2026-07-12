@@ -92,6 +92,16 @@ Phaser touch controls are now implemented through `TouchInputController` and mer
 
 EnemyManager now receives `GameplayClock` and `RandomSource` services. Runtime uses a fixed seed and Phaser clock; tests can reproduce director delays and recovery timing with `TestClock`. Full deterministic combat simulation remains future work.
 
+### TD-H05 Update — 2026-07-12
+
+The logical 1280×720 canvas now has a FIT/safe-area mobile landscape contract;
+physical iOS/Android smoke is still pending and remains a release-QA item.
+
+### TD-H07 Update — 2026-07-12
+
+Browser viewport resize smoke passed with one Canvas and no visible runtime error.
+Physical orientation and background-suspension behavior still need device validation.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

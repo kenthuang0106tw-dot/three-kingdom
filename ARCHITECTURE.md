@@ -142,6 +142,17 @@ Runtime 不猜測等寬切圖。任何 atlas 改動都必須重新產生 debug s
 
 `GameplayClock` and `RandomSource` are injectable interfaces. Runtime uses `PhaserGameplayClock` plus a seeded `SeededRandom`; tests use `TestClock` and the same seeded adapter. EnemyManager owns no global random state and no longer calls `Phaser.Math.Between` directly. Lifecycle hit-stop continues to use Phaser's real delayed call.
 
+## Responsive Mobile Landscape Contract (M1 / Task 1.7)
+
+The playable surface remains a logical 1280×720 Phaser canvas. `Phaser.Scale.FIT`
+and `CENTER_BOTH` fit that surface inside the available viewport without changing
+the scene coordinate system or stretching the canvas. The document viewport uses
+`device-width`, `initialScale: 1`, and `viewport-fit: cover`; the shell accounts for
+safe-area insets and uses `100dvh` bounds while preserving the 32:15 arcade shell
+and 16:9 playable stage ratios. Touch controls stay in the 1280×720 scene and are
+therefore scaled together with the canvas. React lifecycle ownership remains the
+same across resize, orientation, and focus changes.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。
