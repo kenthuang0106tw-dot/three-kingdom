@@ -217,6 +217,12 @@ M4 / Task 4.2 adds a real mauler sprite sheet, atlas metadata, debug sheet, and
 distinct config values. It is intentionally not mixed into the current room;
 encounter composition remains a later acceptance task.
 
+### TD-M04 Update — Third melee soldier assets
+
+M4 / Task 4.3 adds the real duelist sprite sheet, atlas metadata, debug sheet,
+and distinct config values. Both additional archetypes remain routed but not
+spawned until the mixed-composition task validates director fairness and cleanup.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

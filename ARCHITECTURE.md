@@ -319,6 +319,14 @@ rectangles with a shared 0.9 feet pivot; `EnemyConfig.ts` gives it a distinct
 through the manifest but is not yet placed into the current encounter; mixed
 composition is reserved for Task 4.4.
 
+## Third Melee Soldier (M4 / Task 4.3)
+
+The duelist asset set adds a real teal masked dual-blade soldier with 15 named
+frames, 313x313 atlas rectangles, shared 0.9 feet pivot, and a debug sheet.
+`DUELIST_ENEMY_CONFIG` gives it faster movement and recovery than the soldier
+and mauler, with a shorter attack range. Its asset is routed through the
+manifest but remains out of the current room until mixed-composition work.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

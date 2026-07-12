@@ -281,6 +281,16 @@
 - [x] Browser smoke verified one 1280x720 Canvas and zero page errors.
 - [ ] Mixed encounter wiring remains deferred to Task 4.4.
 
+## M4 / Task 4.3 Closeout
+
+- [x] Generated and committed a distinct teal dual-blade duelist sprite sheet with 15 real frames.
+- [x] Added chroma-key-removed PNG, atlas metadata, and red-box debug sheet.
+- [x] Added `DUELIST_ENEMY_CONFIG` with faster movement/recovery and shorter attack range.
+- [x] Added `enemy-duelist` asset manifest route without changing current encounter composition.
+- [x] `pnpm test` 38/38, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
+- [x] Browser smoke verified one 1280x720 Canvas and zero page errors.
+- [ ] Mixed encounter wiring remains deferred to Task 4.4.
+
 ## M3 / Task 3.2 Closeout
 
 - [x] Added deterministic Phaser-free X/Y and point clamping helpers.

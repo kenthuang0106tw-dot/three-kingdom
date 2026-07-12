@@ -462,3 +462,17 @@
 | Art/metadata | Pass | 15-frame mauler sheet, atlas, debug sheet, asset route |
 | Behavior config | Pass | Distinct attack range, walk speed, HP, and recovery |
 | Known issues | Non-blocking | Third soldier and mixed encounter wiring remain deferred |
+
+## M4 / Task 4.3 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M4 / Task 4.3 Third melee soldier |
+| Tests | Pass | `pnpm test` 38/38 |
+| Build | Pass | `pnpm build` |
+| Lint | Pass | 0 errors, existing 4 `<img>` warnings only |
+| Typecheck | Pass | `pnpm typecheck` |
+| Browser smoke | Pass | One 1280x720 Canvas, page errors 0 |
+| Art/metadata | Pass | 15-frame duelist sheet, atlas, debug sheet, asset route |
+| Behavior config | Pass | Faster movement/recovery and shorter attack range |
+| Known issues | Non-blocking | Mixed encounter wiring and physical mobile QA remain deferred |

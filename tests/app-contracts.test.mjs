@@ -19,7 +19,7 @@ import { calculateCameraScroll } from "../app/game/camera/CameraFollow.ts";
 import { createCameraLockState, isCameraLocked, lockCamera, unlockCamera } from "../app/game/camera/CameraLock.ts";
 import { beginEncounter, createEncounterFlow, isEncounterCleared, recordEnemyRemoved } from "../app/game/stage/EncounterFlow.ts";
 import { canRequestStageExit, createStageExitState, makeExitAvailable, requestStageExit, resetStageExit } from "../app/game/stage/StageExit.ts";
-import { MAULER_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, validateEnemyConfig } from "../app/game/enemy/EnemyConfig.ts";
+import { DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, validateEnemyConfig } from "../app/game/enemy/EnemyConfig.ts";
 
 test("React shell mounts only the Phaser lifecycle component", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
@@ -156,7 +156,7 @@ test("Runtime asset manifest preserves keys and reports missing required assets"
   assert.match(source, /load\.on\("loaderror"/);
   assert.match(source, /load\.off\("loaderror"/);
   assert.deepEqual(RUNTIME_ASSET_MANIFEST.map(asset => asset.key), [
-    "forest", "guanyu-idle", "guanyu-walk", "guanyu-attack", "enemy-soldier", "enemy-mauler",
+    "forest", "guanyu-idle", "guanyu-walk", "guanyu-attack", "enemy-soldier", "enemy-mauler", "enemy-duelist",
   ]);
   const messages = [];
   createAssetFailureReporter(RUNTIME_ASSET_MANIFEST, message => messages.push(message))("guanyu-walk");
@@ -502,4 +502,17 @@ test("Mauler asset routes and atlas metadata are present", async () => {
   ]);
   assert.equal(parsed.frames["attack-1"].frame.w, 313);
   assert.ok(metadata.length > 1000);
+});
+
+test("Duelist config and asset routes define a third distinct melee archetype", async () => {
+  const [manifest, atlas] = await Promise.all([
+    readFile(new URL("../app/game/assets/AssetManifest.ts", import.meta.url), "utf8"),
+    readFile(new URL("../public/art/enemy/duelist.atlas.json", import.meta.url), "utf8"),
+  ]);
+  assert.equal(DUELIST_ENEMY_CONFIG.id, "duelist");
+  assert.equal(DUELIST_ENEMY_CONFIG.assetKey, "enemy-duelist");
+  assert.ok(DUELIST_ENEMY_CONFIG.movement.walkSpeed > SOLDIER_ENEMY_CONFIG.movement.walkSpeed);
+  assert.ok(DUELIST_ENEMY_CONFIG.timing.recoveryMin < MAULER_ENEMY_CONFIG.timing.recoveryMin);
+  assert.match(manifest, /enemy-duelist/);
+  assert.equal(Object.keys(JSON.parse(atlas).frames).length, 15);
 });

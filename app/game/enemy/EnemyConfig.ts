@@ -84,3 +84,20 @@ export const MAULER_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
   combat: { attackXRange: 150, attackYRange: 48, minSpacing: 78 },
   timing: { hurtMs: 300, directorDelayMin: 500, directorDelayMax: 900, recoveryMin: 1000, recoveryMax: 1400 },
 });
+
+export const DUELIST_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
+  id: "duelist",
+  assetKey: "enemy-duelist",
+  animations: {
+    idle: ["idle-0", "idle-1"], walk: ["walk-0", "walk-1", "walk-2", "walk-3"],
+    attack: ["attack-0", "attack-1", "attack-2"], hurt: ["hurt-0", "hurt-1"], dead: ["dead-0", "dead-1", "dead-2", "dead-3"],
+  },
+  animationRates: { idle: 6, walk: 10, attack: 10, hurt: 8, dead: 8 },
+  maxHp: 2,
+  displayScale: 1.4,
+  frameSize: 313,
+  feetY: 282,
+  movement: { walkSpeed: 96, detectionDistance: 560, verticalScale: 0.8 },
+  combat: { attackXRange: 92, attackYRange: 40, minSpacing: 64 },
+  timing: { hurtMs: 300, directorDelayMin: 300, directorDelayMax: 600, recoveryMin: 600, recoveryMax: 900 },
+});

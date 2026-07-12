@@ -11,6 +11,7 @@ export const RUNTIME_ASSET_MANIFEST: readonly RuntimeAsset[] = [
   { kind: "atlas", key: "guanyu-attack", textureURL: "/art/guanyu/guanyu-combo-frames.png", atlasURL: "/art/guanyu/guanyu-attack.atlas.json" },
   { kind: "atlas", key: "enemy-soldier", textureURL: "/art/enemy/enemy-soldier.png", atlasURL: "/art/enemy/enemy-soldier.atlas.json" },
   { kind: "atlas", key: "enemy-mauler", textureURL: "/art/enemy/mauler.png", atlasURL: "/art/enemy/mauler.atlas.json" },
+  { kind: "atlas", key: "enemy-duelist", textureURL: "/art/enemy/duelist.png", atlasURL: "/art/enemy/duelist.atlas.json" },
 ];
 
 export function queueRuntimeAssets(loader: Phaser.Loader.LoaderPlugin, manifest = RUNTIME_ASSET_MANIFEST) {
