@@ -93,6 +93,15 @@
 - [x] Browser smoke: focus-change navigation retained one Canvas and zero console errors.
 - [ ] Physical mobile visibility lifecycle remains pending for release QA.
 
+## Task 1.4 Closeout
+
+- [x] `GameplaySnapshot` exposes only frozen primitive player, enemy, and lifecycle observations.
+- [x] `GameplayEventHub` supports typed subscriptions and unsubscribe without actor references.
+- [x] MainScene publishes player state, attack, hit, and lifecycle events plus the latest snapshot.
+- [x] `pnpm test` 11/11, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
+- [x] Browser smoke: one 1280×720 Canvas, touch attack interaction, and zero console errors.
+- [ ] Physical mobile event-consumer validation remains pending for release QA.
+
 ## Sprint Exit
 
 Task 1.1 已完成；下一步只執行 Task 1.2。Pause、visibility、deterministic clock 與其他未完成項目依 Roadmap 保留。

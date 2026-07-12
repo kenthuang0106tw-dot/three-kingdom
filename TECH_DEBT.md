@@ -84,6 +84,10 @@ Phaser touch controls are now implemented through `TouchInputController` and mer
 - **Resolution:** Validate on physical devices during M1.7 responsive mobile acceptance.
 - **Target:** M1.7
 
+### TD-H08 Update — Gameplay observation boundary added
+
+`GameplayEventHub` now provides frozen primitive snapshots and typed events without actor references. UI/Audio/Debug consumers can be migrated incrementally; MainScene remains the current publisher until later ownership extraction.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

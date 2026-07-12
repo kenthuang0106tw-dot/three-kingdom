@@ -1,28 +1,30 @@
 # Next Task
 
-## M1 / Task 1.4 — Readonly Gameplay Events and Snapshot
+## M1 / Task 1.6 — Deterministic Seed and Test Clock
 
 ### Why this is next
 
-Input and lifecycle timing now have explicit boundaries. The next P0 foundation is a readonly gameplay event/snapshot contract so Debug, future UI, and future Audio can observe gameplay without coupling to actor internals.
+Readonly gameplay observations now provide a stable boundary for consumers. The next P0 foundation is deterministic randomness and time injection for reproducible enemy-director and combat tests; the P1 asset manifest can follow without blocking gameplay determinism.
 
 ### Completion criteria
 
-- Define minimal readonly event and snapshot types for player, enemy, combat, and lifecycle observations.
-- MainScene publishes snapshots/events without exposing mutable actor objects.
-- Existing gameplay behavior remains unchanged.
-- No HUD, audio, React state, or new gameplay feature is added.
-- Add contract tests proving payloads are readonly-by-convention and actor internals are not leaked.
+- Add a small seeded RNG adapter for gameplay randomness.
+- Add a test-clock adapter for code that currently reads gameplay time directly.
+- Migrate only the existing random/recovery timing seams needed by EnemyManager and lifecycle tests.
+- Existing gameplay behavior remains unchanged in normal runtime.
+- Add deterministic tests proving the same seed and clock produce the same results.
+- Do not add new gameplay, enemies, UI, audio, or release hosting.
 
 ### Validation
 
 - Run `pnpm test`, `pnpm build`, `pnpm lint`, and `pnpm typecheck`.
 - Browser smoke: load the combat room, verify one Canvas and zero console errors.
-- Confirm existing keyboard/touch input and hit-stop behavior still work.
+- Confirm keyboard/touch input, hit-stop, enemy timing, and readonly snapshots still work.
 
 ### Expected files
 
-- `app/game/events/` or the smallest existing contract module
+- `app/game/time/` or the smallest RNG/clock contract modules
+- `app/game/EnemyManager.ts`
 - `app/game/MainScene.ts`
 - `tests/**`
 - `ARCHITECTURE.md`
@@ -34,6 +36,6 @@ Input and lifecycle timing now have explicit boundaries. The next P0 foundation 
 
 ### Risks
 
-- A broad event bus could recreate global coupling; keep the contract minimal and typed.
-- Snapshot frequency may create unnecessary allocations if not bounded.
-- Existing debug text must remain a consumer, not an owner, of gameplay state.
+- Replacing Phaser runtime time globally could break hit-stop; inject only the required seams.
+- Seeded randomness must not leak mutable global state.
+- Test-only clock behavior must remain identical to normal Phaser time in production.

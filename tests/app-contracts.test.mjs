@@ -8,6 +8,7 @@ import {
 } from "../app/game/phaserLifecycle.ts";
 import { createActionSnapshot } from "../app/game/input/ActionSnapshot.ts";
 import { ClockState } from "../app/game/time/ClockState.ts";
+import { GameplayEventHub } from "../app/game/events/GameplayEvents.ts";
 
 test("React shell mounts only the Phaser lifecycle component", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
@@ -98,4 +99,34 @@ test("Lifecycle clock owns Phaser blur/focus and hit-stop timing", async () => {
   assert.match(scene, /new LifecycleClock\(this\)/);
   assert.match(scene, /lifecycleClock\.beginHitStop/);
   assert.doesNotMatch(source, /setTimeout|setInterval/);
+});
+
+test("Gameplay event hub publishes frozen snapshots without actor references", () => {
+  const hub = new GameplayEventHub();
+  const events = [];
+  const unsubscribe = hub.subscribe(event => events.push(event));
+  hub.publishSnapshot({
+    player: { state: "idle", hp: 10, x: 1, y: 2 },
+    enemies: [{ id: 1, state: "idle", hp: 3, x: 4, y: 5 }],
+    lifecycle: { paused: false, visibilityPaused: false },
+  });
+  hub.publish({ type: "enemy-hit", enemyId: 1, damage: 1, at: 12 });
+  const snapshot = hub.getSnapshot();
+  assert.equal(Object.isFrozen(snapshot), true);
+  assert.equal(Object.isFrozen(snapshot.enemies[0]), true);
+  assert.equal(Object.isFrozen(events[0]), true);
+  assert.equal(snapshot.enemies[0].sprite, undefined);
+  unsubscribe();
+  hub.publish({ type: "lifecycle-changed", paused: true, at: 13 });
+  assert.equal(events.length, 1);
+});
+
+test("MainScene publishes readonly gameplay observations", async () => {
+  const source = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
+  assert.match(source, /GameplayEventHub/);
+  assert.match(source, /getGameplayEvents\(\)/);
+  assert.match(source, /publishGameplaySnapshot\(\)/);
+  assert.match(source, /player-state-changed/);
+  assert.match(source, /enemy-hit/);
+  assert.doesNotMatch(source, /publishSnapshot\([^\n]*enemyManager/);
 });

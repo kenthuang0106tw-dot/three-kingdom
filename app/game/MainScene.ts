@@ -3,6 +3,7 @@ import { EnemyCombatant, EnemyManager, ENEMY_DISPLAY_SCALE } from "./EnemyManage
 import { createActionSnapshot, type ActionSnapshot } from "./input/ActionSnapshot";
 import { TouchInputController } from "./input/TouchInputController";
 import { LifecycleClock } from "./time/LifecycleClock";
+import { GameplayEventHub, type GameplaySnapshot } from "./events/GameplayEvents";
 
 type PlayerState = "idle" | "walk" | "attack1" | "attack2" | "attack3" | "hurt";
 type AttackState = "attack1" | "attack2" | "attack3";
@@ -95,6 +96,8 @@ export default class MainScene extends Phaser.Scene {
   private inputController!: PlayerInputController;
   private touchInputController!: TouchInputController;
   private lifecycleClock!: LifecycleClock;
+  private readonly gameplayEvents = new GameplayEventHub();
+  private lastLifecyclePaused = false;
   private enemyManager!: EnemyManager;
   private debugText?: Phaser.GameObjects.Text;
   private state: PlayerState = "idle";
@@ -134,6 +137,8 @@ export default class MainScene extends Phaser.Scene {
   private enemyPreviewIndex = 0;
 
   constructor() { super("MainScene"); }
+
+  getGameplayEvents() { return this.gameplayEvents; }
 
   preload() {
     this.load.image("forest", "/scene/forest-camp.png");
@@ -281,6 +286,7 @@ export default class MainScene extends Phaser.Scene {
     this.comboWindowOpen = false;
     this.comboWindowEndsAt = 0;
     this.playerAttackId += 1;
+    this.gameplayEvents.publish({ type: "player-attack-started", step, at: this.time.now });
     this.playerBody.setVelocity(0, 0);
     this.disableAttackHitbox();
     const firstFrame = PREVIEW_FRAMES[(step - 1) * 2];
@@ -342,6 +348,7 @@ export default class MainScene extends Phaser.Scene {
     });
 
     this.enemyManager.damage(enemy);
+    this.gameplayEvents.publish({ type: "enemy-hit", enemyId: enemy.id, damage: 1, at: this.time.now });
     this.playHitSound();
     if (triggerGlobalEffects) this.beginHitStop();
   }
@@ -384,6 +391,7 @@ export default class MainScene extends Phaser.Scene {
   private applyHitToPlayer(enemy: EnemyCombatant) {
     if (this.state === "hurt") return;
     this.playerHp = Math.max(0, this.playerHp - 1);
+    this.gameplayEvents.publish({ type: "player-hit", enemyId: enemy.id, at: this.time.now });
     this.disableAttackHitbox();
     this.comboStep = 0;
     this.hitConfirmed = false;
@@ -423,6 +431,7 @@ export default class MainScene extends Phaser.Scene {
     if (next === this.state) return;
     if (!ALLOWED_TRANSITIONS[this.state].has(next)) throw new Error(`Invalid player transition: ${this.state} -> ${next}`);
     const previous = this.state; this.state = next;
+    this.gameplayEvents.publish({ type: "player-state-changed", previous, next, at: this.time.now });
     this.transitionLog.push(`${previous} -> ${next}`); if (this.transitionLog.length > 20) this.transitionLog.shift();
     if (next === "idle" || next === "hurt") this.showIdleFrame();
     else if (next === "walk") this.playerSprite.setOrigin(0.5, FRAME_ORIGIN_Y["walk-0"]).setScale(0.44).setFlipX(this.facing < 0).play("guanyu-walk");
@@ -535,6 +544,7 @@ export default class MainScene extends Phaser.Scene {
   private disableAttackHitbox() { if (!this.attackBody) return; this.attackBody.stop(); this.attackBody.enable = false; this.attackZone.setActive(false); }
 
   private updateDebugText() {
+    this.publishGameplaySnapshot();
     if (!this.debugText) return;
     const v = this.playerBody.velocity, i = this.currentInput;
     const enemies = this.enemyManager.getAllEnemies();
@@ -568,5 +578,22 @@ export default class MainScene extends Phaser.Scene {
       ...this.transitionLog,
     );
     this.debugText.setText(lines);
+  }
+
+  private publishGameplaySnapshot() {
+    if (!this.enemyManager || !this.playerBodyZone || !this.lifecycleClock) return;
+    const snapshot: GameplaySnapshot = {
+      player: { state: this.state, hp: this.playerHp, x: this.playerBodyZone.x, y: this.playerBodyZone.y },
+      enemies: this.enemyManager.getAllEnemies().map(enemy => ({
+        id: enemy.id, state: enemy.state, hp: enemy.hp, x: enemy.bodyZone.x, y: enemy.bodyZone.y,
+      })),
+      lifecycle: { paused: this.lifecycleClock.isPaused(), visibilityPaused: this.lifecycleClock.isVisibilityPaused() },
+    };
+    this.gameplayEvents.publishSnapshot(snapshot);
+    const paused = snapshot.lifecycle.paused;
+    if (paused !== this.lastLifecyclePaused) {
+      this.lastLifecyclePaused = paused;
+      this.gameplayEvents.publish({ type: "lifecycle-changed", paused, at: this.time.now });
+    }
   }
 }
