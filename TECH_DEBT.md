@@ -168,6 +168,12 @@ M3 / Task 3.1 now provides a Phaser-free, validated configuration for the
 current bamboo room. Camera movement, encounter gates, and full stage flow are
 intentionally deferred to later tasks; no new runtime behavior was introduced.
 
+### TD-M03 Update — Shared walk bounds
+
+M3 / Task 3.2 now centralizes coordinate clamping in the Phaser-free StageConfig
+helper and applies it to player/enemy room movement and knockback. Camera
+viewport policy is intentionally deferred to the next Stage task.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

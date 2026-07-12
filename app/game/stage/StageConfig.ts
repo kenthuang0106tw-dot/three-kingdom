@@ -5,6 +5,11 @@ export type StageRect = {
   readonly height: number;
 };
 
+export type StagePoint = {
+  readonly x: number;
+  readonly y: number;
+};
+
 export type StageSpawnPoint = {
   readonly id: string;
   readonly x: number;
@@ -33,6 +38,23 @@ export type StageConfig = {
 };
 
 const isFiniteNumber = (value: number) => Number.isFinite(value);
+
+export function clampStageX(x: number, bounds: StageRect): number {
+  return Math.min(Math.max(x, bounds.x), bounds.x + bounds.width);
+}
+
+export function clampStageY(y: number, bounds: StageRect): number {
+  return Math.min(Math.max(y, bounds.y), bounds.y + bounds.height);
+}
+
+export function clampStagePoint(point: StagePoint, bounds: StageRect): StagePoint {
+  return { x: clampStageX(point.x, bounds), y: clampStageY(point.y, bounds) };
+}
+
+export function isStagePointWithin(point: StagePoint, bounds: StageRect): boolean {
+  return point.x >= bounds.x && point.x <= bounds.x + bounds.width &&
+    point.y >= bounds.y && point.y <= bounds.y + bounds.height;
+}
 
 function assertRect(name: string, rect: StageRect) {
   if (![rect.x, rect.y, rect.width, rect.height].every(isFiniteNumber) || rect.width <= 0 || rect.height <= 0) {
@@ -90,4 +112,3 @@ export const BAMBOO_COMBAT_ROOM: StageConfig = validateStageConfig({
   encounters: [{ id: "opening-combat", spawnPointIds: ["enemy-front", "enemy-upper-rear", "enemy-lower-front"] }],
   exits: [],
 });
-

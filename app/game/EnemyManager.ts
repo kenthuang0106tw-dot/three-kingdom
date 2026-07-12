@@ -1,6 +1,6 @@
 import * as Phaser from "phaser";
 import { PhaserGameplayClock, SeededRandom, type GameplayClock, type RandomSource } from "./time/GameplayTime";
-import { BAMBOO_COMBAT_ROOM, type StageSpawnPoint } from "./stage/StageConfig";
+import { BAMBOO_COMBAT_ROOM, clampStageX, clampStageY, type StageSpawnPoint } from "./stage/StageConfig";
 
 export type EnemyState = "idle" | "walk" | "attack" | "hurt" | "dead";
 
@@ -19,12 +19,6 @@ const RECOVERY_MIN = 800;
 const RECOVERY_MAX = 1200;
 const FRAME_SIZE = 384;
 const FEET_Y = 354;
-const WALK_BOUNDS = new Phaser.Geom.Rectangle(
-  BAMBOO_COMBAT_ROOM.walkBounds.x,
-  BAMBOO_COMBAT_ROOM.walkBounds.y,
-  BAMBOO_COMBAT_ROOM.walkBounds.width,
-  BAMBOO_COMBAT_ROOM.walkBounds.height,
-);
 
 const FORMATION_SLOTS = [
   { name: "front", x: 135, y: 0 },
@@ -171,8 +165,8 @@ export class EnemyManager {
   private updateFormationMovement(enemy: EnemyCombatant) {
     if (this.clock.now() < enemy.cooldownUntil) { this.setState(enemy, "idle"); return; }
     const slot = FORMATION_SLOTS[enemy.assignedSlot];
-    const targetX = Phaser.Math.Clamp(this.playerBodyZone.x + slot.x, WALK_BOUNDS.left, WALK_BOUNDS.right);
-    const targetY = Phaser.Math.Clamp(this.playerBodyZone.y + slot.y, WALK_BOUNDS.top, WALK_BOUNDS.bottom);
+    const targetX = clampStageX(this.playerBodyZone.x + slot.x, BAMBOO_COMBAT_ROOM.walkBounds);
+    const targetY = clampStageY(this.playerBodyZone.y + slot.y, BAMBOO_COMBAT_ROOM.walkBounds);
     const distance = Phaser.Math.Distance.Between(enemy.bodyZone.x, enemy.bodyZone.y, this.playerBodyZone.x, this.playerBodyZone.y);
     if (distance > DETECTION_DISTANCE) { this.setState(enemy, "idle"); return; }
     this.moveToward(enemy, targetX, targetY);
@@ -342,8 +336,8 @@ export class EnemyManager {
     this.slotGraphics.clear().lineStyle(2, 0x00ffff, 0.7);
     for (const enemy of alive) {
       const slot = FORMATION_SLOTS[enemy.assignedSlot];
-      const x = Phaser.Math.Clamp(this.playerBodyZone.x + slot.x, WALK_BOUNDS.left, WALK_BOUNDS.right);
-      const y = Phaser.Math.Clamp(this.playerBodyZone.y + slot.y, WALK_BOUNDS.top, WALK_BOUNDS.bottom);
+      const x = clampStageX(this.playerBodyZone.x + slot.x, BAMBOO_COMBAT_ROOM.walkBounds);
+      const y = clampStageY(this.playerBodyZone.y + slot.y, BAMBOO_COMBAT_ROOM.walkBounds);
       this.slotGraphics.strokeCircle(x, y, 10);
     }
   }

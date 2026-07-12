@@ -1,33 +1,33 @@
 # Next Task
 
-## M3 / Task 3.2 — World/walk bounds contract
+## M3 / Task 3.3 — Camera follow
 
 ### Why this is next
 
-StageConfig now provides one validated source for the current room geometry.
-The next smallest step is to make gameplay actors and knockback use that
-contract consistently, before adding camera movement or encounter flow.
+The room geometry and actor movement now use a shared bounds contract. The next
+smallest playable Stage step is to follow the player within the existing room
+without adding encounter locks, scrolling content, or stage flow.
 
 ### Completion criteria
 
-- Define a Phaser-free bounds helper for world and walkable rectangles.
-- Make MainScene and EnemyManager consume the shared bounds contract.
-- Preserve the current 1280×720 bamboo room and actor positions.
-- Clamp player and enemy movement plus horizontal knockback to walk bounds.
-- Do not add camera follow, scrolling, encounter gates, or new content.
+- Add a Phaser camera controller for the current MainScene.
+- Follow the player only within the configured world bounds.
+- Preserve the existing 1280×720 logical canvas and pixel-art rounding.
+- Keep camera ownership separate from Player, EnemyManager, and Combat effects.
+- Do not add encounter camera locks, parallax, new stage content, or UI.
 
 ### Validation
 
 - Run `pnpm test`, `pnpm build`, `pnpm lint`, and `pnpm typecheck`.
-- Add deterministic tests for containment and edge clamping.
-- Browser smoke verifies one Canvas, current combat room rendering, and no
-  visible runtime errors.
+- Add deterministic camera-bound tests without importing Phaser into pure helpers.
+- Browser smoke verifies one Canvas, no visible runtime errors, and stable
+  rendering after player movement.
 
 ### Expected files
 
-- `app/game/stage/StageConfig.ts`
+- `app/game/camera/**`
 - `app/game/MainScene.ts`
-- `app/game/EnemyManager.ts`
+- `app/game/stage/StageConfig.ts`
 - `tests/**`
 - `ARCHITECTURE.md`
 - `SPRINT.md`
@@ -37,5 +37,6 @@ contract consistently, before adding camera movement or encounter flow.
 
 ### Risks
 
-- Duplicated Phaser rectangles could drift from StageConfig.
-- Keep the helper small and data-driven; defer camera and stage-flow policy.
+- Camera movement can introduce pixel shimmer or alter the fixed combat-room feel.
+- Keep the first controller bounded and minimal; defer encounter locks and
+  visual parallax until later Stage tasks.

@@ -252,6 +252,15 @@ IDs, and encounter references deterministically. MainScene and EnemyManager
 consume the configuration without adding camera, scrolling, gates, or stage
 flow; those behaviors remain later Stage tasks.
 
+## World/Walk Bounds Contract (M3 / Task 3.2)
+
+`clampStageX`, `clampStageY`, and `clampStagePoint` provide the shared
+Phaser-free edge policy. MainScene uses the configured walk rectangle for the
+Arcade world bounds and horizontal player/enemy knockback. EnemyManager uses
+the same rectangle for formation targets and debug slot markers. No actor owns
+a second numeric bounds policy; camera and stage-flow bounds remain separate
+future responsibilities.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

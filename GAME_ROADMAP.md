@@ -345,7 +345,8 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 - M2 / Task 2.7 (EnemyManager Cleanup and Director Tests) completed in this closeout commit.
 - M2 / Task 2.8 (Combat-Room Acceptance) completed in this closeout commit.
 - M3 / Task 3.1 (StageConfig) completed in the current sprint.
-- Next eligible task: M3 / Task 3.2 (World/walk bounds contract).
+- M3 / Task 3.2 (World/walk bounds contract) completed in the current sprint.
+- Next eligible task: M3 / Task 3.3 (Camera follow).
 
 ## 4. Global Acceptance Rules
 

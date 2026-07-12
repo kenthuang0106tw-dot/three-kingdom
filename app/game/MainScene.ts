@@ -12,7 +12,7 @@ import { PlayerActor } from "./player/PlayerActor";
 import { PLAYER_ATTACKS, PlayerAttackController, type AttackStep } from "./player/PlayerAttackController";
 import { resolveAttack } from "./combat/CombatResolver";
 import { EffectDirector, EFFECT_PARAMS } from "./combat/EffectDirector";
-import { BAMBOO_COMBAT_ROOM } from "./stage/StageConfig";
+import { BAMBOO_COMBAT_ROOM, clampStageX } from "./stage/StageConfig";
 
 type AttackState = "attack1" | "attack2" | "attack3";
 type PreviewFrame = {
@@ -30,12 +30,6 @@ const ENEMY_FRAME_SIZE = 384;
 const ENEMY_FEET_Y = 354;
 const HURT_MS = 300;
 const COMBO_WINDOW_MS = 360;
-const WALK_BOUNDS = new Phaser.Geom.Rectangle(
-  BAMBOO_COMBAT_ROOM.walkBounds.x,
-  BAMBOO_COMBAT_ROOM.walkBounds.y,
-  BAMBOO_COMBAT_ROOM.walkBounds.width,
-  BAMBOO_COMBAT_ROOM.walkBounds.height,
-);
 const ATTACK_STATES: AttackState[] = ["attack1", "attack2", "attack3"];
 const FRAME_ORIGIN_Y: Record<string, number> = {
   "walk-0": 739 / 793, "walk-1": 736 / 793, "walk-2": 746 / 793, "walk-3": 741 / 793,
@@ -165,7 +159,12 @@ export default class MainScene extends Phaser.Scene {
     this.effectDirector = new EffectDirector(this, this.lifecycleClock);
     this.createCombatAnimations();
     this.cameras.main.setRoundPixels(true);
-    this.physics.world.setBounds(WALK_BOUNDS.x, WALK_BOUNDS.y, WALK_BOUNDS.width, WALK_BOUNDS.height);
+    this.physics.world.setBounds(
+      BAMBOO_COMBAT_ROOM.walkBounds.x,
+      BAMBOO_COMBAT_ROOM.walkBounds.y,
+      BAMBOO_COMBAT_ROOM.walkBounds.width,
+      BAMBOO_COMBAT_ROOM.walkBounds.height,
+    );
     const background = this.add.image(WIDTH / 2, HEIGHT / 2, "forest");
     background.setScale(Math.max(WIDTH / background.width, HEIGHT / background.height)).setDepth(0);
 
@@ -369,7 +368,7 @@ export default class MainScene extends Phaser.Scene {
     this.effectDirector.createHitSpark(hitX, hitY);
     if (triggerGlobalEffects) this.effectDirector.cameraShake();
 
-    const targetX = Phaser.Math.Clamp(enemy.bodyZone.x + this.facing * EFFECT_PARAMS.knockbackDistance, WALK_BOUNDS.left, WALK_BOUNDS.right);
+    const targetX = clampStageX(enemy.bodyZone.x + this.facing * EFFECT_PARAMS.knockbackDistance, BAMBOO_COMBAT_ROOM.walkBounds);
     this.effectDirector.knockback(enemy.bodyZone, targetX, () => this.enemyManager.syncPhysicsFromZone(enemy));
 
     this.enemyManager.damage(enemy);
@@ -392,7 +391,7 @@ export default class MainScene extends Phaser.Scene {
     this.playerBody.setVelocity(0, 0);
 
     this.effectDirector.flash(this.playerSprite);
-    const targetX = Phaser.Math.Clamp(this.playerBodyZone.x + enemy.facing * EFFECT_PARAMS.knockbackDistance, WALK_BOUNDS.left, WALK_BOUNDS.right);
+    const targetX = clampStageX(this.playerBodyZone.x + enemy.facing * EFFECT_PARAMS.knockbackDistance, BAMBOO_COMBAT_ROOM.walkBounds);
     this.effectDirector.knockback(this.playerBodyZone, targetX, () => this.syncVisualsToBody());
     this.effectDirector.beginHitStop();
     if (damage.becameDead) {

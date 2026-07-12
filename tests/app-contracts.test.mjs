@@ -14,7 +14,7 @@ import { createAssetFailureReporter, RUNTIME_ASSET_MANIFEST } from "../app/game/
 import { PlayerStateMachine } from "../app/game/player/PlayerStateMachine.ts";
 import { PlayerLifecycle } from "../app/game/player/PlayerLifecycle.ts";
 import { resolveAttack } from "../app/game/combat/CombatResolver.ts";
-import { BAMBOO_COMBAT_ROOM, validateStageConfig } from "../app/game/stage/StageConfig.ts";
+import { BAMBOO_COMBAT_ROOM, clampStagePoint, clampStageX, clampStageY, validateStageConfig } from "../app/game/stage/StageConfig.ts";
 
 test("React shell mounts only the Phaser lifecycle component", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
@@ -333,4 +333,18 @@ test("StageConfig remains Phaser-free and validates the bamboo combat room", asy
     ...BAMBOO_COMBAT_ROOM,
     spawnPoints: [...BAMBOO_COMBAT_ROOM.spawnPoints, { id: "enemy-front", x: 900, y: 560 }],
   }), /Duplicate spawn point id/);
+});
+
+test("Stage bounds clamp movement and knockback deterministically", async () => {
+  const source = await readFile(new URL("../app/game/stage/StageConfig.ts", import.meta.url), "utf8");
+  const bounds = BAMBOO_COMBAT_ROOM.walkBounds;
+  assert.equal(clampStageX(-10, bounds), bounds.x);
+  assert.equal(clampStageX(9999, bounds), bounds.x + bounds.width);
+  assert.equal(clampStageY(-10, bounds), bounds.y);
+  assert.equal(clampStageY(9999, bounds), bounds.y + bounds.height);
+  assert.deepEqual(clampStagePoint({ x: -10, y: 9999 }, bounds), {
+    x: bounds.x,
+    y: bounds.y + bounds.height,
+  });
+  assert.match(source, /clampStagePoint/);
 });

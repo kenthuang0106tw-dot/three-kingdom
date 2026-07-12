@@ -218,4 +218,13 @@
 - [x] Browser smoke verified one 1280x720 Canvas, ten reset cycles, and zero page errors.
 - [ ] Physical mobile and long-session validation remain deferred.
 
+## M3 / Task 3.2 Closeout
+
+- [x] Added deterministic Phaser-free X/Y and point clamping helpers.
+- [x] MainScene uses StageConfig walk bounds for Arcade world bounds and horizontal knockback.
+- [x] EnemyManager uses the same contract for formation targets and slot markers.
+- [x] `pnpm test` 26/26, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
+- [x] Browser smoke verified one 1280x720 Canvas, ten reset cycles, and zero page errors.
+- [ ] Physical mobile and long-session validation remain deferred.
+
 Task 1.1 已完成；下一步只執行 Task 1.2。Pause、visibility、deterministic clock 與其他未完成項目依 Roadmap 保留。

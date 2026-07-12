@@ -357,3 +357,16 @@
 | Browser smoke | Pass | One 1280x720 Canvas, reset count 10, page errors 0 |
 | Schema validation | Pass | Bounds containment, unique IDs, and encounter references |
 | Known issues | Non-blocking | Stage camera, gates, and physical mobile QA remain deferred |
+
+## M3 / Task 3.2 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M3 / Task 3.2 World/walk bounds contract |
+| Tests | Pass | `pnpm test` 26/26 |
+| Build | Pass | `pnpm build` |
+| Lint | Pass | 0 errors, existing 4 `<img>` warnings only |
+| Typecheck | Pass | `pnpm typecheck` |
+| Browser smoke | Pass | One 1280x720 Canvas, reset count 10, page errors 0 |
+| Edge clamping | Pass | Deterministic X/Y/point boundary tests |
+| Known issues | Non-blocking | Camera follow and physical mobile QA remain deferred |
