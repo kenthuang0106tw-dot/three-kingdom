@@ -271,6 +271,16 @@
 - [x] Browser smoke verified one 1280x720 Canvas and zero page errors.
 - [ ] Physical mobile and long-session validation remain deferred.
 
+## M4 / Task 4.2 Closeout
+
+- [x] Generated and committed a distinct red-armored mauler sprite sheet with 15 real frames.
+- [x] Added chroma-key-removed PNG, atlas metadata, and red-box debug sheet.
+- [x] Added `MAULER_ENEMY_CONFIG` with distinct attack range, movement speed, and recovery timing.
+- [x] Added `enemy-mauler` asset manifest route without changing the current encounter composition.
+- [x] `pnpm test` 37/37, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
+- [x] Browser smoke verified one 1280x720 Canvas and zero page errors.
+- [ ] Mixed encounter wiring remains deferred to Task 4.4.
+
 ## M3 / Task 3.2 Closeout
 
 - [x] Added deterministic Phaser-free X/Y and point clamping helpers.

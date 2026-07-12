@@ -448,3 +448,17 @@
 | Browser smoke | Pass | One 1280x720 Canvas, page errors 0 |
 | Config parity | Pass | Current soldier HP, movement, ranges, spacing, timing, and anchors |
 | Known issues | Non-blocking | Second soldier art/behavior and physical mobile QA remain deferred |
+
+## M4 / Task 4.2 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M4 / Task 4.2 Second melee soldier |
+| Tests | Pass | `pnpm test` 37/37 |
+| Build | Pass | `pnpm build` |
+| Lint | Pass | 0 errors, existing 4 `<img>` warnings only |
+| Typecheck | Pass | `pnpm typecheck` |
+| Browser smoke | Pass | One 1280x720 Canvas, page errors 0 |
+| Art/metadata | Pass | 15-frame mauler sheet, atlas, debug sheet, asset route |
+| Behavior config | Pass | Distinct attack range, walk speed, HP, and recovery |
+| Known issues | Non-blocking | Third soldier and mixed encounter wiring remain deferred |

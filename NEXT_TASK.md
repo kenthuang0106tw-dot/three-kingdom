@@ -1,32 +1,30 @@
 # Next Task
 
-## M4 / Task 4.2 — Second melee soldier
+## M4 / Task 4.3 — Third melee soldier
 
 ### Why this is next
 
-The existing soldier tuning now has a clean boundary. The next content task is
-to add one genuinely different melee opponent, proving the config seam with
-real behavior rather than speculative framework code.
+The second melee archetype now proves that real assets and per-archetype tuning
+can coexist without changing the current room. The next bounded content task is
+one more genuinely different close-range opponent before composition work.
 
 ### Completion criteria
 
-- Add exactly one second melee soldier archetype with distinct attack distance or rhythm.
-- Provide real sprite/animation assets and metadata before wiring the archetype.
-- Reuse only stable shared contracts; keep per-archetype tuning in config.
-- Preserve the current soldier, combat effects, attack director, and cleanup behavior.
-- Do not add a third enemy, ranged attacks, Boss, or new stage content.
+- Add exactly one third melee soldier archetype with real distinct behavior.
+- Provide real sprite/animation assets and atlas metadata before wiring it.
+- Keep the existing soldier and mauler assets/configs unchanged.
+- Do not add mixed encounters, ranged attacks, Boss, or new stage content.
 
 ### Validation
 
 - Run `pnpm test`, `pnpm build`, `pnpm lint`, and `pnpm typecheck`.
-- Add deterministic config, animation metadata, and mixed-soldier behavior tests.
+- Add deterministic config, metadata, and asset-route tests.
 - Browser smoke verifies the current room still renders without runtime errors.
 
 ### Expected files
 
 - `app/game/enemy/**`
 - `public/art/enemy/**`
-- `app/game/EnemyManager.ts`
 - `app/game/assets/AssetManifest.ts`
 - `tests/**`
 - `ARCHITECTURE.md`
@@ -37,5 +35,5 @@ real behavior rather than speculative framework code.
 
 ### Risks
 
-- Missing or weak art may make the behavioral difference unverifiable.
-- Stop and report asset gaps instead of recoloring or faking animation with transforms.
+- Third-archetype art may not have enough distinct poses or consistent feet anchors.
+- Stop and report asset gaps instead of reusing or faking existing animations.

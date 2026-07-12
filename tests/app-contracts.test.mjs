@@ -19,7 +19,7 @@ import { calculateCameraScroll } from "../app/game/camera/CameraFollow.ts";
 import { createCameraLockState, isCameraLocked, lockCamera, unlockCamera } from "../app/game/camera/CameraLock.ts";
 import { beginEncounter, createEncounterFlow, isEncounterCleared, recordEnemyRemoved } from "../app/game/stage/EncounterFlow.ts";
 import { canRequestStageExit, createStageExitState, makeExitAvailable, requestStageExit, resetStageExit } from "../app/game/stage/StageExit.ts";
-import { SOLDIER_ENEMY_CONFIG, validateEnemyConfig } from "../app/game/enemy/EnemyConfig.ts";
+import { MAULER_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, validateEnemyConfig } from "../app/game/enemy/EnemyConfig.ts";
 
 test("React shell mounts only the Phaser lifecycle component", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
@@ -156,7 +156,7 @@ test("Runtime asset manifest preserves keys and reports missing required assets"
   assert.match(source, /load\.on\("loaderror"/);
   assert.match(source, /load\.off\("loaderror"/);
   assert.deepEqual(RUNTIME_ASSET_MANIFEST.map(asset => asset.key), [
-    "forest", "guanyu-idle", "guanyu-walk", "guanyu-attack", "enemy-soldier",
+    "forest", "guanyu-idle", "guanyu-walk", "guanyu-attack", "enemy-soldier", "enemy-mauler",
   ]);
   const messages = [];
   createAssetFailureReporter(RUNTIME_ASSET_MANIFEST, message => messages.push(message))("guanyu-walk");
@@ -462,6 +462,7 @@ test("Single-room traversal acceptance composes spawn, clear, camera, exit, and 
 test("Soldier EnemyConfig validates stable tuning and preserves current values", async () => {
   const source = await readFile(new URL("../app/game/enemy/EnemyConfig.ts", import.meta.url), "utf8");
   assert.equal(SOLDIER_ENEMY_CONFIG.id, "soldier");
+  assert.equal(SOLDIER_ENEMY_CONFIG.assetKey, "enemy-soldier");
   assert.equal(SOLDIER_ENEMY_CONFIG.maxHp, 3);
   assert.equal(SOLDIER_ENEMY_CONFIG.movement.walkSpeed, 70);
   assert.equal(SOLDIER_ENEMY_CONFIG.movement.detectionDistance, 500);
@@ -472,6 +473,10 @@ test("Soldier EnemyConfig validates stable tuning and preserves current values",
   assert.equal(validateEnemyConfig(SOLDIER_ENEMY_CONFIG), SOLDIER_ENEMY_CONFIG);
   assert.throws(() => validateEnemyConfig({ ...SOLDIER_ENEMY_CONFIG, maxHp: 0 }), /Invalid enemy config/);
   assert.doesNotMatch(source, /from ["']phaser["']/);
+  assert.equal(MAULER_ENEMY_CONFIG.id, "mauler");
+  assert.equal(MAULER_ENEMY_CONFIG.assetKey, "enemy-mauler");
+  assert.ok(MAULER_ENEMY_CONFIG.combat.attackXRange > SOLDIER_ENEMY_CONFIG.combat.attackXRange);
+  assert.ok(MAULER_ENEMY_CONFIG.timing.recoveryMin > SOLDIER_ENEMY_CONFIG.timing.recoveryMin);
 });
 
 test("EnemyManager consumes the soldier config instead of owning tuning literals", async () => {
@@ -481,4 +486,20 @@ test("EnemyManager consumes the soldier config instead of owning tuning literals
   assert.match(source, /SOLDIER_ENEMY_CONFIG\.combat\.attackXRange/);
   assert.match(source, /SOLDIER_ENEMY_CONFIG\.timing\.recoveryMin/);
   assert.doesNotMatch(source, /const WALK_SPEED = 70/);
+});
+
+test("Mauler asset routes and atlas metadata are present", async () => {
+  const [manifest, atlas, metadata] = await Promise.all([
+    readFile(new URL("../app/game/assets/AssetManifest.ts", import.meta.url), "utf8"),
+    readFile(new URL("../public/art/enemy/mauler.atlas.json", import.meta.url), "utf8"),
+    readFile(new URL("../public/art/enemy/mauler-debug.png", import.meta.url)),
+  ]);
+  assert.match(manifest, /enemy-mauler/);
+  const parsed = JSON.parse(atlas);
+  assert.deepEqual(Object.keys(parsed.frames), [
+    "idle-0", "idle-1", "walk-0", "walk-1", "walk-2", "walk-3",
+    "attack-0", "attack-1", "attack-2", "hurt-0", "hurt-1", "dead-0", "dead-1", "dead-2", "dead-3",
+  ]);
+  assert.equal(parsed.frames["attack-1"].frame.w, 313);
+  assert.ok(metadata.length > 1000);
 });

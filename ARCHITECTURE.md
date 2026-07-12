@@ -310,6 +310,15 @@ spacing, timing, frame anchor, and display scale. `EnemyManager` consumes the
 validated `SOLDIER_ENEMY_CONFIG`; no AI or visual behavior changed. The schema
 is intentionally limited to values already used by one archetype.
 
+## Second Melee Soldier (M4 / Task 4.2)
+
+The mauler asset set is a real 4×4 sheet with 15 named frames: idle, walk,
+three-stage attack, hurt, and dead. `mauler.atlas.json` records 313×313 frame
+rectangles with a shared 0.9 feet pivot; `EnemyConfig.ts` gives it a distinct
+150px attack range, 62px walk speed, and longer recovery. The asset is routed
+through the manifest but is not yet placed into the current encounter; mixed
+composition is reserved for Task 4.4.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

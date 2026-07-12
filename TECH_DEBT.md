@@ -211,6 +211,12 @@ M4 / Task 4.1 centralizes the existing soldier's stable tuning in a validated,
 Phaser-free config. It intentionally does not introduce an archetype framework;
 the next task must prove a real second-melee difference before generalizing.
 
+### TD-M04 Update — Second melee soldier assets
+
+M4 / Task 4.2 adds a real mauler sprite sheet, atlas metadata, debug sheet, and
+distinct config values. It is intentionally not mixed into the current room;
+encounter composition remains a later acceptance task.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

@@ -352,7 +352,8 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 - M3 / Task 3.6 (Stage exit and restart) completed in the current sprint.
 - M3 / Task 3.7 (Stage traversal acceptance) completed in the current sprint.
 - M4 / Task 4.1 (EnemyConfig boundary) completed in the current sprint.
-- Next eligible task: M4 / Task 4.2 (Second melee soldier).
+- M4 / Task 4.2 (Second melee soldier) completed in the current sprint.
+- Next eligible task: M4 / Task 4.3 (Third melee soldier).
 
 ## 4. Global Acceptance Rules
 

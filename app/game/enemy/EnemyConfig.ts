@@ -1,5 +1,14 @@
 export type EnemyConfig = {
   readonly id: string;
+  readonly assetKey: string;
+  readonly animations: {
+    readonly idle: readonly string[];
+    readonly walk: readonly string[];
+    readonly attack: readonly string[];
+    readonly hurt: readonly string[];
+    readonly dead: readonly string[];
+  };
+  readonly animationRates: { readonly idle: number; readonly walk: number; readonly attack: number; readonly hurt: number; readonly dead: number };
   readonly maxHp: number;
   readonly displayScale: number;
   readonly frameSize: number;
@@ -24,7 +33,11 @@ export type EnemyConfig = {
 };
 
 export function validateEnemyConfig(config: EnemyConfig): EnemyConfig {
-  if (!config.id) throw new Error("Enemy config id is required");
+  if (!config.id || !config.assetKey) throw new Error("Enemy config id and asset key are required");
+  if (Object.values(config.animations).some(frames => frames.length === 0) ||
+    Object.values(config.animationRates).some(rate => !Number.isFinite(rate) || rate <= 0)) {
+    throw new Error(`Invalid enemy animation config: ${config.id}`);
+  }
   const positive = [config.maxHp, config.displayScale, config.frameSize, config.feetY,
     config.movement.walkSpeed, config.movement.detectionDistance, config.movement.verticalScale,
     config.combat.attackXRange, config.combat.attackYRange, config.combat.minSpacing,
@@ -40,6 +53,12 @@ export function validateEnemyConfig(config: EnemyConfig): EnemyConfig {
 
 export const SOLDIER_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
   id: "soldier",
+  assetKey: "enemy-soldier",
+  animations: {
+    idle: ["idle-0", "idle-1"], walk: ["walk-0", "walk-1", "walk-2", "walk-3"],
+    attack: ["attack-0", "attack-1", "attack-2"], hurt: ["hurt-0", "hurt-1"], dead: ["dead-0", "dead-1", "dead-2", "dead-3"],
+  },
+  animationRates: { idle: 4, walk: 8, attack: 8, hurt: 8, dead: 8 },
   maxHp: 3,
   displayScale: 1.4,
   frameSize: 384,
@@ -47,4 +66,21 @@ export const SOLDIER_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
   movement: { walkSpeed: 70, detectionDistance: 500, verticalScale: 0.7 },
   combat: { attackXRange: 110, attackYRange: 45, minSpacing: 72 },
   timing: { hurtMs: 300, directorDelayMin: 400, directorDelayMax: 800, recoveryMin: 800, recoveryMax: 1200 },
+});
+
+export const MAULER_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
+  id: "mauler",
+  assetKey: "enemy-mauler",
+  animations: {
+    idle: ["idle-0", "idle-1"], walk: ["walk-0", "walk-1", "walk-2", "walk-3"],
+    attack: ["attack-0", "attack-1", "attack-2"], hurt: ["hurt-0", "hurt-1"], dead: ["dead-0", "dead-1", "dead-2", "dead-3"],
+  },
+  animationRates: { idle: 4, walk: 8, attack: 8, hurt: 8, dead: 8 },
+  maxHp: 4,
+  displayScale: 1.4,
+  frameSize: 313,
+  feetY: 282,
+  movement: { walkSpeed: 62, detectionDistance: 500, verticalScale: 0.7 },
+  combat: { attackXRange: 150, attackYRange: 48, minSpacing: 78 },
+  timing: { hurtMs: 300, directorDelayMin: 500, directorDelayMax: 900, recoveryMin: 1000, recoveryMax: 1400 },
 });

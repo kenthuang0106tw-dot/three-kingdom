@@ -128,6 +128,6 @@ tools/build_enemy_art.py     Enemy sheet/atlas rebuild pipeline
 
 ## Current Priority
 
-M4 / Task 4.1 EnemyConfig boundary is complete. The next single task is M4 / Task 4.2, Second melee soldier.
+M4 / Task 4.2 Second melee soldier is complete. The next single task is M4 / Task 4.3, Third melee soldier.
 
 Milestone 0、M1 與 M2 已完成；目前進入 M3 Stage 基礎建設。完成下一個 Task 前不要新增 Boss、角色、招式或 Audio。
