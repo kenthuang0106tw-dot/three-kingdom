@@ -230,6 +230,19 @@
 | Transition coverage | Pass | Valid idle/walk/attack/hurt paths and invalid transition rejection |
 | Known issues | Non-blocking | Actor visual/physics ownership remains in MainScene for Task 2.2 |
 
+## M2 / Task 2.5 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M2 / Task 2.5 — Effect Director |
+| Build | Pass | `pnpm build` |
+| Tests | Pass | `pnpm test` 21/21 |
+| Lint | Pass | `pnpm lint` 0 errors, existing `<img>` warnings only |
+| Typecheck | Pass | `pnpm typecheck` |
+| Browser smoke | Pass | Updated route, one 1280x720 Canvas, no visible runtime error |
+| Effect ownership | Pass | Flash, spark, knockback, shake, and hit-stop use EffectDirector |
+| Known issues | Non-blocking | Player hurt/dead/restart flow remains for Task 2.6 |
+
 ## M2 / Task 2.4 Evidence
 
 | Item | Result | Evidence |

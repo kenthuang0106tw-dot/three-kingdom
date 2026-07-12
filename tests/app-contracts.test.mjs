@@ -72,6 +72,20 @@ test("CombatResolver resolves each target once without Phaser or effect coupling
   assert.deepEqual([...second.hitTargetIds].sort(), [1, 2]);
 });
 
+test("EffectDirector preserves the established hit timing parameters", async () => {
+  const source = await readFile(new URL("../app/game/combat/EffectDirector.ts", import.meta.url), "utf8");
+  assert.match(source, /beginHitStop\(\)/);
+  assert.match(source, /createHitSpark\(x: number, y: number\)/);
+  assert.match(source, /knockback\(target/);
+  assert.match(source, /hitStopMs: \(1000 \/ 60\) \* 4/);
+  assert.match(source, /hitFlashMs: 90/);
+  assert.match(source, /knockbackDistance: 26/);
+  assert.match(source, /knockbackMs: 120/);
+  assert.match(source, /cameraShakeMs: 50/);
+  assert.match(source, /cameraShakeIntensity: 0\.003/);
+  assert.match(source, /hitSparkFrameRate: 24/);
+});
+
 test("Action snapshot releases movement and normalizes diagonal input", () => {
   const stopped = createActionSnapshot({ up: false, down: false, left: false, right: false });
   assert.deepEqual({ moveX: stopped.moveX, moveY: stopped.moveY }, { moveX: 0, moveY: 0 });
@@ -207,7 +221,7 @@ test("Lifecycle clock owns Phaser blur/focus and hit-stop timing", async () => {
   assert.match(source, /scene\.scene\.pause\(\)/);
   assert.match(source, /scene\.scene\.resume\(\)/);
   assert.match(scene, /new LifecycleClock\(this\)/);
-  assert.match(scene, /lifecycleClock\.beginHitStop/);
+  assert.match(scene, /effectDirector\.beginHitStop/);
   assert.doesNotMatch(source, /setTimeout|setInterval/);
 });
 

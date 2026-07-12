@@ -139,6 +139,15 @@
 - [x] `pnpm test` 17/17, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
 - [x] Browser smoke loaded the updated route with one 1280×720 Canvas and no visible runtime error.
 
+## Task 2.5 Closeout
+
+- [x] Added `EffectDirector` for existing hit flash, hit spark, knockback, camera shake, and hit-stop orchestration.
+- [x] Effect parameters remain unchanged: 4-frame hit-stop, 90ms flash, 26px/120ms knockback, 50ms shake at 0.003, and 24 FPS five-frame spark.
+- [x] Director tracks timers/tweens and is destroyed with the Scene; damage, target resolution, EnemyManager state, and Combo remain outside it.
+- [x] `pnpm test` 21/21, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
+- [x] Browser smoke loaded the updated route with one 1280x720 Canvas and no visible runtime error.
+- [ ] Physical mobile effect timing remains pending for release QA.
+
 ## Task 2.4 Closeout
 
 - [x] Added pure Phaser-free `resolveAttack` CombatResolver for target eligibility, damage, and per-attack hit records.

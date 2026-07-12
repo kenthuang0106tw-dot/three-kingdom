@@ -208,6 +208,14 @@ visual effects; EnemyManager still owns enemy state transitions and cleanup.
 This keeps camera, flash, spark, knockback, and hit-stop timing out of damage
 resolution and leaves those effects for the next extraction.
 
+## Effect Director Contract (M2 / Task 2.5)
+
+`EffectDirector` owns the existing hit presentation and timing effects: white
+flash, five-frame hit spark, knockback tween, camera shake, and hit-stop
+request. It tracks its timers and tweens for Scene shutdown cleanup and keeps
+the established parameters in `EFFECT_PARAMS`. It does not resolve damage,
+select targets, transition actors, or own Combo state.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

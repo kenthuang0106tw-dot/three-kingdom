@@ -10,6 +10,7 @@ import { PlayerStateMachine, type PlayerState } from "./player/PlayerStateMachin
 import { PlayerActor } from "./player/PlayerActor";
 import { PLAYER_ATTACKS, PlayerAttackController, type AttackStep } from "./player/PlayerAttackController";
 import { resolveAttack } from "./combat/CombatResolver";
+import { EffectDirector, EFFECT_PARAMS } from "./combat/EffectDirector";
 
 type AttackState = "attack1" | "attack2" | "attack3";
 type PreviewFrame = {
@@ -26,12 +27,6 @@ const PLAYER_MAX_HP = 10;
 const ENEMY_FRAME_SIZE = 384;
 const ENEMY_FEET_Y = 354;
 const HURT_MS = 300;
-const HIT_STOP_MS = (1000 / 60) * 4;
-const HIT_FLASH_MS = 90;
-const KNOCKBACK_DISTANCE = 26;
-const KNOCKBACK_MS = 120;
-const CAMERA_SHAKE_MS = 50;
-const CAMERA_SHAKE_INTENSITY = 0.003;
 const COMBO_WINDOW_MS = 360;
 const WALK_BOUNDS = new Phaser.Geom.Rectangle(70, 390, 1140, 245);
 const ATTACK_STATES: AttackState[] = ["attack1", "attack2", "attack3"];
@@ -84,6 +79,7 @@ export default class MainScene extends Phaser.Scene {
   private inputController!: PlayerInputController;
   private touchInputController!: TouchInputController;
   private lifecycleClock!: LifecycleClock;
+  private effectDirector!: EffectDirector;
   private readonly gameplayEvents = new GameplayEventHub();
   private lastLifecyclePaused = false;
   private enemyManager!: EnemyManager;
@@ -103,7 +99,6 @@ export default class MainScene extends Phaser.Scene {
   private playerHp = PLAYER_MAX_HP;
   private hitCount = 0;
   private totalDamage = 0;
-  private hitStopActive = false;
   private playerAttackId = 0;
   private playerHitTargetIds: ReadonlySet<number> = new Set();
   private defeatedText?: Phaser.GameObjects.Text;
@@ -157,8 +152,9 @@ export default class MainScene extends Phaser.Scene {
     if (this.enemyPreviewMode) { this.createEnemyAlignmentPreview(); return; }
     if (this.previewMode) { this.createPreviewMode(); return; }
 
-    this.createCombatAnimations();
     this.lifecycleClock = new LifecycleClock(this);
+    this.effectDirector = new EffectDirector(this, this.lifecycleClock);
+    this.createCombatAnimations();
     this.cameras.main.setRoundPixels(true);
     this.physics.world.setBounds(WALK_BOUNDS.x, WALK_BOUNDS.y, WALK_BOUNDS.width, WALK_BOUNDS.height);
     const background = this.add.image(WIDTH / 2, HEIGHT / 2, "forest");
@@ -196,6 +192,7 @@ export default class MainScene extends Phaser.Scene {
       this.playerSprite.off(Phaser.Animations.Events.ANIMATION_COMPLETE, this.handleAnimationComplete, this);
       this.disableAttackHitbox();
       this.touchInputController.destroy();
+      this.effectDirector.destroy();
       this.lifecycleClock.destroy();
       this.enemyManager.destroy();
       this.playerActor.destroy();
@@ -267,7 +264,7 @@ export default class MainScene extends Phaser.Scene {
     this.anims.create({ key: "enemy-attack", frames: [0, 1, 2].map(i => ({ key: "enemy-soldier", frame: `attack-${i}` })), frameRate: 8, repeat: 0 });
     this.anims.create({ key: "enemy-hurt", frames: ["hurt-0", "hurt-1"].map(frame => ({ key: "enemy-soldier", frame })), frameRate: 8, repeat: 0 });
     this.anims.create({ key: "enemy-dead", frames: [0, 1, 2, 3].map(i => ({ key: "enemy-soldier", frame: `dead-${i}` })), frameRate: 8, repeat: 0 });
-    this.createHitSparkAnimation();
+    this.effectDirector.createHitSparkAnimation();
   }
 
   private updateAttackState() {
@@ -353,61 +350,17 @@ export default class MainScene extends Phaser.Scene {
     const hitX = Math.round((left + right) / 2);
     const hitY = Math.round((top + bottom) / 2);
 
-    enemy.sprite.setTintFill(0xffffff);
-    const struckEnemy = enemy.sprite;
-    this.time.delayedCall(HIT_FLASH_MS, () => { if (struckEnemy.active) struckEnemy.clearTint(); });
-    this.createHitSpark(hitX, hitY);
-    if (triggerGlobalEffects) this.cameras.main.shake(CAMERA_SHAKE_MS, CAMERA_SHAKE_INTENSITY);
+    this.effectDirector.flash(enemy.sprite);
+    this.effectDirector.createHitSpark(hitX, hitY);
+    if (triggerGlobalEffects) this.effectDirector.cameraShake();
 
-    const targetX = Phaser.Math.Clamp(enemy.bodyZone.x + this.facing * KNOCKBACK_DISTANCE, WALK_BOUNDS.left, WALK_BOUNDS.right);
-    this.tweens.add({
-      targets: enemy.bodyZone,
-      x: targetX,
-      duration: KNOCKBACK_MS,
-      ease: "Cubic.Out",
-      onUpdate: () => this.enemyManager.syncPhysicsFromZone(enemy),
-      onComplete: () => this.enemyManager.syncPhysicsFromZone(enemy),
-    });
+    const targetX = Phaser.Math.Clamp(enemy.bodyZone.x + this.facing * EFFECT_PARAMS.knockbackDistance, WALK_BOUNDS.left, WALK_BOUNDS.right);
+    this.effectDirector.knockback(enemy.bodyZone, targetX, () => this.enemyManager.syncPhysicsFromZone(enemy));
 
     this.enemyManager.damage(enemy);
     this.gameplayEvents.publish({ type: "enemy-hit", enemyId: enemy.id, damage: 1, at: this.time.now });
     this.playHitSound();
-    if (triggerGlobalEffects) this.beginHitStop();
-  }
-
-  private beginHitStop() {
-    if (this.lifecycleClock.isPaused()) return;
-    this.hitStopActive = true;
-    this.lifecycleClock.beginHitStop(HIT_STOP_MS);
-    this.time.delayedCall(HIT_STOP_MS, () => {
-      this.hitStopActive = false;
-    });
-  }
-
-  private createHitSparkAnimation() {
-    const graphics = new Phaser.GameObjects.Graphics(this);
-    for (let frame = 0; frame < 5; frame += 1) {
-      const key = `hit-spark-${frame}`;
-      if (this.textures.exists(key)) continue;
-      const radius = 4 + frame * 4;
-      graphics.clear();
-      graphics.fillStyle(frame < 2 ? 0xffffff : 0xffd84a, 1);
-      graphics.fillRect(24 - radius, 22, radius * 2, 4);
-      graphics.fillRect(22, 24 - radius, 4, radius * 2);
-      graphics.fillStyle(0xff7b24, Math.max(0.25, 1 - frame * 0.17));
-      graphics.fillRect(24 - radius, 24 - radius, 4, 4);
-      graphics.fillRect(24 + radius - 4, 24 - radius, 4, 4);
-      graphics.fillRect(24 - radius, 24 + radius - 4, 4, 4);
-      graphics.fillRect(24 + radius - 4, 24 + radius - 4, 4, 4);
-      graphics.generateTexture(key, 48, 48);
-    }
-    graphics.destroy();
-    this.anims.create({ key: "hit-spark", frames: [0, 1, 2, 3, 4].map(frame => ({ key: `hit-spark-${frame}` })), frameRate: 24, repeat: 0 });
-  }
-
-  private createHitSpark(x: number, y: number) {
-    const spark = this.add.sprite(x, y, "hit-spark-0").setDepth(2000).play("hit-spark");
-    spark.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => spark.destroy());
+    if (triggerGlobalEffects) this.effectDirector.beginHitStop();
   }
 
   private applyHitToPlayer(enemy: EnemyCombatant) {
@@ -422,18 +375,10 @@ export default class MainScene extends Phaser.Scene {
     this.transitionTo("hurt");
     this.playerBody.setVelocity(0, 0);
 
-    this.playerSprite.setTintFill(0xffffff);
-    this.time.delayedCall(HIT_FLASH_MS, () => { if (this.playerSprite.active) this.playerSprite.clearTint(); });
-    const targetX = Phaser.Math.Clamp(this.playerBodyZone.x + enemy.facing * KNOCKBACK_DISTANCE, WALK_BOUNDS.left, WALK_BOUNDS.right);
-    this.tweens.add({
-      targets: this.playerBodyZone,
-      x: targetX,
-      duration: KNOCKBACK_MS,
-      ease: "Cubic.Out",
-      onUpdate: () => this.syncVisualsToBody(),
-      onComplete: () => this.syncVisualsToBody(),
-    });
-    this.beginHitStop();
+    this.effectDirector.flash(this.playerSprite);
+    const targetX = Phaser.Math.Clamp(this.playerBodyZone.x + enemy.facing * EFFECT_PARAMS.knockbackDistance, WALK_BOUNDS.left, WALK_BOUNDS.right);
+    this.effectDirector.knockback(this.playerBodyZone, targetX, () => this.syncVisualsToBody());
+    this.effectDirector.beginHitStop();
     this.time.delayedCall(HURT_MS, () => { if (this.state === "hurt") this.transitionTo("idle"); });
   }
 
@@ -592,7 +537,7 @@ export default class MainScene extends Phaser.Scene {
       `keys UDLR: ${i.up} ${i.down} ${i.left} ${i.right}`,
       `J down: ${this.inputController.attack.isDown}`,
       `attack trigger/complete: ${this.attackTriggerCount}/${this.attackCompleteCount}`,
-      `hit stop: ${this.hitStopActive}`,
+      `hit stop: ${this.effectDirector?.isHitStopActive() ?? false}`,
       `animation: ${this.playerSprite.anims.currentAnim?.key ?? "idle"}`,
       `frame: ${this.playerSprite.anims.currentFrame?.index ?? 0}`,
       "",

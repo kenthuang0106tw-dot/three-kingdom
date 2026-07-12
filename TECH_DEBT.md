@@ -137,6 +137,12 @@ Player attack target selection, damage calculation, and per-attack hit records
 now pass through a pure `CombatResolver`. Hit presentation and timing effects
 remain in MainScene until the planned EffectDirector extraction.
 
+### TD-M02 Update — 2026-07-12
+
+Hit presentation and timing effects now have an `EffectDirector` boundary with
+explicit shutdown cleanup. Actor state and combat resolution remain separate;
+player hurt/dead/restart behavior is the next M2 extraction.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content
