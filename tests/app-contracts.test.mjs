@@ -299,3 +299,25 @@ test("EnemyManager cleanup cancels state timers and releases combat ownership", 
   assert.match(source, /this\.currentAttacker = null/);
   assert.match(source, /enemy\.state === "dead" \|\| enemy\.state === "hurt"/);
 });
+
+test("Combat room acceptance covers formation, attack director, alignment, and survivors", async () => {
+  const [manager, scene] = await Promise.all([
+    readFile(new URL("../app/game/EnemyManager.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8"),
+  ]);
+  const spawns = manager.match(/const spawns = \[([\s\S]*?)\n    \];/)?.[1] ?? "";
+  const spawnCoordinates = [...spawns.matchAll(/\{ x: (\d+), y: (\d+) \}/g)].map(match => [Number(match[1]), Number(match[2])]);
+  assert.equal(spawnCoordinates.length, 3);
+  assert.equal(new Set(spawnCoordinates.map(([, y]) => y)).size, 3);
+  assert.match(manager, /ENEMY_ATTACK_X_RANGE = 110/);
+  assert.match(manager, /ENEMY_ATTACK_Y_RANGE = 45/);
+  assert.match(manager, /ENEMY_MIN_SPACING = 72/);
+  assert.match(manager, /if \(this\.currentAttacker \|\| this\.clock\.now\(\) < this\.directorReadyAt\) return/);
+  assert.match(manager, /this\.currentAttacker = enemy/);
+  assert.match(manager, /Math\.abs\(dy\) < ENEMY_ATTACK_Y_RANGE/);
+  assert.match(manager, /getLivingEnemies\(\)/);
+  assert.match(manager, /onAllDefeated\(\)/);
+  assert.match(scene, /this\.enemyManager\.spawnAll\(\)/);
+  assert.match(scene, /resolveAttack\(\{/);
+  assert.match(scene, /this\.playerHitTargetIds/);
+});

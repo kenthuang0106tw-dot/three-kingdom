@@ -230,6 +230,19 @@
 | Transition coverage | Pass | Valid idle/walk/attack/hurt paths and invalid transition rejection |
 | Known issues | Non-blocking | Actor visual/physics ownership remains in MainScene for Task 2.2 |
 
+## M2 / Task 2.8 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M2 / Task 2.8 — Combat-Room Acceptance |
+| Build | Pass | `pnpm build` |
+| Tests | Pass | `pnpm test` 24/24 |
+| Lint | Pass | `pnpm lint` 0 errors, existing `<img>` warnings only |
+| Typecheck | Pass | `pnpm typecheck` |
+| Browser smoke | Pass | `?resetSmoke=1`, one 1280x720 Canvas, reset count 10 |
+| Combat-room contracts | Pass | Formation, director, alignment, spacing, multi-target, cleanup and survivor coverage |
+| Known issues | Non-blocking | Physical device and long-session QA remain deferred |
+
 ## M2 / Task 2.7 Evidence
 
 | Item | Result | Evidence |

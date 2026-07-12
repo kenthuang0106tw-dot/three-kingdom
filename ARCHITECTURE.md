@@ -233,6 +233,15 @@ removes animation listeners, destroys owned colliders and GameObjects, clears
 manager references, and releases the attack slot. Director timing continues to
 use injected `GameplayClock` and `RandomSource` services for deterministic tests.
 
+## Combat Room Acceptance Contract (M2 / Task 2.8)
+
+The M2 combat room is accepted through deterministic contracts covering three
+formation spawns, attack-slot exclusivity, X/Y attack alignment, minimum enemy
+spacing, multi-target resolution, hurt/death cleanup, and surviving-enemy
+continuity. Browser smoke additionally verifies one Canvas and ten Scene reset
+cycles without duplicate runtime ownership. No StageConfig or camera behavior
+is included in this acceptance boundary.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

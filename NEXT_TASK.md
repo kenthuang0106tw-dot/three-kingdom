@@ -1,37 +1,37 @@
 # Next Task
 
-## M2 / Task 2.8 — Combat-Room Acceptance
+## M3 / Task 3.1 — StageConfig
 
 ### Why this is next
 
-The player lifecycle, attack timing, combat resolution, hit effects, and
-EnemyManager cleanup seams are now in place. The next task is a behavior-only
-acceptance pass that verifies the complete three-enemy combat room before Stage
-work begins.
+The M2 combat room is accepted and stable. StageConfig is the smallest M3
+foundation for moving from a static room to data-driven bounds, spawns,
+encounters, and exits without changing current combat behavior.
 
 ### Completion criteria
 
-- Add deterministic acceptance coverage for three-enemy formation, attack-slot exclusivity, Y alignment, multi-target hit records, hurt lockout, death cleanup, and surviving-enemy continuity.
-- Preserve all current gameplay parameters and visuals; do not add new content.
-- Add a development-only combat-room smoke path if needed, without adding production UI or stage flow.
-- Document any remaining non-blocking issues with evidence.
+- Define a Phaser-free StageConfig schema for world bounds, walk bounds, spawn points, encounter definitions, and exit metadata.
+- Add a configuration for the current bamboo combat room with no visual or gameplay changes.
+- Validate the schema deterministically and keep MainScene as the current consumer until later Stage tasks.
+- Do not add camera follow, encounter gates, scrolling, new enemies, or stage flow.
 
 ### Validation
 
 - Run `pnpm test`, `pnpm build`, `pnpm lint`, and `pnpm typecheck`.
-- Browser smoke verifies the full combat-room loop with one Canvas, no visible runtime errors, and no duplicate Phaser instances after reset.
+- Browser smoke verifies the current combat room still renders one Canvas with no visible runtime errors.
 
 ### Expected files
 
-- `app/game/EnemyManager.ts`
+- `app/game/stage/**`
 - `app/game/MainScene.ts`
 - `tests/**`
-- `CHECKLIST.md`
+- `ARCHITECTURE.md`
 - `SPRINT.md`
 - `GAME_ROADMAP.md`
+- `CHECKLIST.md`
 - `README.md`
 
 ### Risks
 
-- Browser input and Phaser timing make full combat interaction difficult to automate reliably.
-- Keep this as an acceptance/test task; do not begin StageConfig, camera follow, or new gameplay content.
+- An over-specified schema could force rework when encounter gates and camera rules arrive.
+- Keep the first contract minimal, data-only, and behavior-preserving.

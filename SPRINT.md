@@ -139,6 +139,14 @@
 - [x] `pnpm test` 17/17, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
 - [x] Browser smoke loaded the updated route with one 1280×720 Canvas and no visible runtime error.
 
+## Task 2.8 Closeout
+
+- [x] Added deterministic combat-room acceptance coverage for three-enemy formation, attack-slot exclusivity, Y alignment, spacing, multi-target records, and surviving-enemy continuity.
+- [x] Existing cleanup, player lifecycle, resolver, and effect contracts remain covered without adding gameplay content.
+- [x] `pnpm test` 24/24, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
+- [x] Browser smoke loaded one 1280x720 Canvas, completed 10 Scene resets, and showed no visible runtime error.
+- [ ] Physical device combat and long-session QA remain release follow-ups.
+
 ## Task 2.7 Closeout
 
 - [x] EnemyManager tracks and cancels per-enemy hurt timers on state changes, removal, and shutdown.

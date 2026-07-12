@@ -156,6 +156,12 @@ hitbox, listener, collider, and GameObject cleanup on removal and shutdown.
 Director timing remains injectable and deterministic; full combat-room
 acceptance is the next milestone gate.
 
+### TD-M02 Update — 2026-07-12
+
+M2 combat-room acceptance now covers the three-enemy runtime contracts and
+reset smoke. Remaining physical-device and long-session QA is deferred before
+Stage work; the next implementation task is StageConfig.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content
