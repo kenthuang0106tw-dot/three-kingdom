@@ -102,6 +102,12 @@ physical iOS/Android smoke is still pending and remains a release-QA item.
 Browser viewport resize smoke passed with one Canvas and no visible runtime error.
 Physical orientation and background-suspension behavior still need device validation.
 
+### TD-H09 Resolved — 2026-07-12
+
+Scene reset cleanup is now exercised by a ten-cycle development smoke path. Phaser
+animation definitions are idempotent and Scene shutdown removes runtime listeners,
+timers, colliders, touch input, and enemy resources.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

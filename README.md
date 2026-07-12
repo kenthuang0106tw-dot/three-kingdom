@@ -128,6 +128,6 @@ tools/build_enemy_art.py     Enemy sheet/atlas rebuild pipeline
 
 ## Current Priority
 
-M1 / Task 1.7 responsive mobile landscape contract is complete. The next single task is M1 / Task 1.8, Scene reset smoke test.
+M1 / Task 1.8 Scene reset smoke test is complete. The next single task is M1 / Task 1.5, asset manifest and preload failure policy.
 
 Milestone 0 與 M1 / Task 1.1 已完成；下一步進入 M1 / Task 1.2，接入 Phaser touch controls。完成前不要新增 Stage、Boss、角色、招式或 Audio。

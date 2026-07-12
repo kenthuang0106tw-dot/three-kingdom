@@ -121,6 +121,8 @@ export default class MainScene extends Phaser.Scene {
   private diagnosticMode = false;
   private previewMode = false;
   private enemyPreviewMode = false;
+  private resetSmokeMode = false;
+  private resetSmokeIteration = 0;
   private previewSprite?: Phaser.GameObjects.Sprite;
   private onionSprite?: Phaser.GameObjects.Sprite;
   private previewText?: Phaser.GameObjects.Text;
@@ -154,6 +156,7 @@ export default class MainScene extends Phaser.Scene {
     const query = new URLSearchParams(window.location.search);
     this.enemyPreviewMode = development && query.get("previewEnemy") === "1";
     this.previewMode = development && query.get("previewAttack") === "1";
+    this.resetSmokeMode = development && query.get("resetSmoke") === "1";
     if (this.enemyPreviewMode) { this.createEnemyAlignmentPreview(); return; }
     if (this.previewMode) { this.createPreviewMode(); return; }
 
@@ -203,6 +206,14 @@ export default class MainScene extends Phaser.Scene {
       this.lifecycleClock.destroy();
       this.enemyManager.destroy();
     });
+
+    if (this.resetSmokeMode) {
+      this.resetSmokeIteration += 1;
+      this.game.canvas.dataset.resetSmokeCount = String(this.resetSmokeIteration);
+      this.time.delayedCall(20, () => {
+        if (this.resetSmokeIteration < 10 && this.scene.isActive()) this.scene.restart();
+      });
+    }
   }
 
   update() {
@@ -247,6 +258,7 @@ export default class MainScene extends Phaser.Scene {
   }
 
   private createCombatAnimations() {
+    if (this.anims.exists("guanyu-walk")) return;
     this.anims.create({ key: "guanyu-walk", frames: [0, 1, 2, 3].map(i => ({ key: "guanyu-walk", frame: `walk-${i}` })), frameRate: 8, repeat: -1 });
     this.anims.create({ key: "guanyu-attack1", frames: ["attack-0", "attack-1", "attack-0"].map(frame => ({ key: "guanyu-attack", frame })), frameRate: 8, repeat: 0 });
     this.anims.create({ key: "guanyu-attack2", frames: ["attack-2", "attack-3", "attack-2"].map(frame => ({ key: "guanyu-attack", frame })), frameRate: 8, repeat: 0 });

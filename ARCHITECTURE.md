@@ -153,6 +153,15 @@ and 16:9 playable stage ratios. Touch controls stay in the 1280×720 scene and a
 therefore scaled together with the canvas. React lifecycle ownership remains the
 same across resize, orientation, and focus changes.
 
+## Scene Reset Contract (M1 / Task 1.8)
+
+Development query `?resetSmoke=1` restarts `MainScene` ten times through Phaser's
+Scene lifecycle. The Scene `SHUTDOWN` handler removes animation listeners,
+disables the attack body, destroys touch input, lifecycle clock, enemy manager,
+colliders, and owned GameObjects before the next create. Global animation keys are
+created only once, so a restart cannot duplicate animation definitions. The smoke
+path is development-only and does not alter production gameplay.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

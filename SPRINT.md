@@ -122,4 +122,13 @@
 
 ## Sprint Exit
 
+## Task 1.8 Closeout
+
+- [x] Added development-only `?resetSmoke=1` Scene restart smoke path.
+- [x] Each restart runs the existing shutdown cleanup for input, lifecycle clock, enemy manager, colliders, and animation listeners.
+- [x] Animation definitions are guarded against duplicate creation across restarts.
+- [x] `pnpm test` 15/15, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
+- [x] Browser smoke completed 10 Scene restarts with one 1280×720 Canvas and reset count 10.
+- [x] No new gameplay or production UI was added.
+
 Task 1.1 已完成；下一步只執行 Task 1.2。Pause、visibility、deterministic clock 與其他未完成項目依 Roadmap 保留。

@@ -92,6 +92,18 @@ test("Mobile landscape keeps the Phaser canvas in a safe-area fitted contract", 
   assert.match(css, /touch-action:none/);
 });
 
+test("MainScene exposes a development-only reset smoke path with shutdown cleanup", async () => {
+  const source = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
+  assert.match(source, /query\.get\("resetSmoke"\)/);
+  assert.match(source, /resetSmokeIteration < 10/);
+  assert.match(source, /this\.scene\.restart\(\)/);
+  assert.match(source, /events\.once\(Phaser\.Scenes\.Events\.SHUTDOWN/);
+  assert.match(source, /touchInputController\.destroy\(\)/);
+  assert.match(source, /lifecycleClock\.destroy\(\)/);
+  assert.match(source, /enemyManager\.destroy\(\)/);
+  assert.match(source, /this\.anims\.exists\("guanyu-walk"\)/);
+});
+
 test("Clock pause reasons remain independent and resume only when all reasons clear", () => {
   const clock = new ClockState();
   assert.equal(clock.isPaused(), false);
