@@ -262,6 +262,15 @@
 - [x] Browser smoke verified one 1280x720 Canvas, ten reset cycles, and zero page errors.
 - [ ] Physical mobile and long-session validation remain deferred.
 
+## M4 / Task 4.1 Closeout
+
+- [x] Added Phaser-free validated `SOLDIER_ENEMY_CONFIG` for existing tuning values.
+- [x] EnemyManager and enemy preview consume config values without gameplay or art changes.
+- [x] Added parity and validation tests for HP, movement, attack ranges, spacing, and timing.
+- [x] `pnpm test` 36/36, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
+- [x] Browser smoke verified one 1280x720 Canvas and zero page errors.
+- [ ] Physical mobile and long-session validation remain deferred.
+
 ## M3 / Task 3.2 Closeout
 
 - [x] Added deterministic Phaser-free X/Y and point clamping helpers.

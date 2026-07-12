@@ -435,3 +435,16 @@
 | Browser smoke | Pass | One 1280x720 Canvas, reset count 10, page errors 0 |
 | Traversal path | Pass | Spawn → clear → camera unlock → exit request → reset |
 | Known issues | Non-blocking | M4 enemy variety and physical mobile QA remain deferred |
+
+## M4 / Task 4.1 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M4 / Task 4.1 EnemyConfig boundary |
+| Tests | Pass | `pnpm test` 36/36 |
+| Build | Pass | `pnpm build` |
+| Lint | Pass | 0 errors, existing 4 `<img>` warnings only |
+| Typecheck | Pass | `pnpm typecheck` |
+| Browser smoke | Pass | One 1280x720 Canvas, page errors 0 |
+| Config parity | Pass | Current soldier HP, movement, ranges, spacing, timing, and anchors |
+| Known issues | Non-blocking | Second soldier art/behavior and physical mobile QA remain deferred |

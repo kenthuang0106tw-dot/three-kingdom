@@ -302,6 +302,14 @@ the configured exit becomes requestable, and all contracts reset to their
 initial states. Browser smoke additionally verifies ten Scene restarts with a
 single Canvas and no page errors. M4 content work starts only after this gate.
 
+## EnemyConfig Boundary (M4 / Task 4.1)
+
+`app/game/enemy/EnemyConfig.ts` is a Phaser-free data boundary for the current
+soldier's stable tuning: health, movement, detection, attack alignment,
+spacing, timing, frame anchor, and display scale. `EnemyManager` consumes the
+validated `SOLDIER_ENEMY_CONFIG`; no AI or visual behavior changed. The schema
+is intentionally limited to values already used by one archetype.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

@@ -205,6 +205,12 @@ M3 / Task 3.7 validates the complete current-room contract path and reset
 behavior. Future content can build on the accepted boundaries without changing
 the existing combat-room ownership model.
 
+### TD-M04 Update — EnemyConfig boundary
+
+M4 / Task 4.1 centralizes the existing soldier's stable tuning in a validated,
+Phaser-free config. It intentionally does not introduce an archetype framework;
+the next task must prove a real second-melee difference before generalizing.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

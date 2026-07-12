@@ -2,24 +2,9 @@ import * as Phaser from "phaser";
 import { PhaserGameplayClock, SeededRandom, type GameplayClock, type RandomSource } from "./time/GameplayTime";
 import { BAMBOO_COMBAT_ROOM, clampStageX, clampStageY, type StageSpawnPoint } from "./stage/StageConfig";
 import { beginEncounter, createEncounterFlow, isEncounterCleared, recordEnemyRemoved, type EncounterFlowState } from "./stage/EncounterFlow";
+import { SOLDIER_ENEMY_CONFIG } from "./enemy/EnemyConfig";
 
 export type EnemyState = "idle" | "walk" | "attack" | "hurt" | "dead";
-
-export const ENEMY_MAX_HP = 3;
-export const ENEMY_ATTACK_X_RANGE = 110;
-export const ENEMY_ATTACK_Y_RANGE = 45;
-export const ENEMY_MIN_SPACING = 72;
-export const ENEMY_DISPLAY_SCALE = 1.4;
-
-const WALK_SPEED = 70;
-const DETECTION_DISTANCE = 500;
-const HURT_MS = 300;
-const DIRECTOR_DELAY_MIN = 400;
-const DIRECTOR_DELAY_MAX = 800;
-const RECOVERY_MIN = 800;
-const RECOVERY_MAX = 1200;
-const FRAME_SIZE = 384;
-const FEET_Y = 354;
 
 const FORMATION_SLOTS = [
   { name: "front", x: 135, y: 0 },
@@ -42,7 +27,7 @@ export class EnemyCombatant {
   readonly attackBody: Phaser.Physics.Arcade.Body;
   readonly sprite: Phaser.GameObjects.Sprite;
   state: EnemyState = "idle";
-  hp = ENEMY_MAX_HP;
+  hp = SOLDIER_ENEMY_CONFIG.maxHp;
   facing: 1 | -1 = -1;
   cooldownUntil = 0;
   attackHitPlayer = false;
@@ -61,8 +46,8 @@ export class EnemyCombatant {
     this.attackZone.setActive(false);
 
     this.sprite = scene.add.sprite(x, y, "enemy-soldier", "idle-0")
-      .setOrigin(0.5, FEET_Y / FRAME_SIZE)
-      .setScale(ENEMY_DISPLAY_SCALE)
+      .setOrigin(0.5, SOLDIER_ENEMY_CONFIG.feetY / SOLDIER_ENEMY_CONFIG.frameSize)
+      .setScale(SOLDIER_ENEMY_CONFIG.displayScale)
       .setDepth(y)
       .play("enemy-idle");
   }
@@ -158,11 +143,11 @@ export class EnemyManager {
     const dy = this.playerBodyZone.y - enemy.bodyZone.y;
     enemy.facing = dx >= 0 ? 1 : -1;
     enemy.sprite.setFlipX(enemy.facing > 0);
-    if (Math.abs(dx) <= ENEMY_ATTACK_X_RANGE && Math.abs(dy) < ENEMY_ATTACK_Y_RANGE && this.clock.now() >= enemy.cooldownUntil) {
+    if (Math.abs(dx) <= SOLDIER_ENEMY_CONFIG.combat.attackXRange && Math.abs(dy) < SOLDIER_ENEMY_CONFIG.combat.attackYRange && this.clock.now() >= enemy.cooldownUntil) {
       this.setState(enemy, "attack");
       return;
     }
-    const attackX = this.playerBodyZone.x - enemy.facing * ENEMY_ATTACK_X_RANGE * 0.82;
+    const attackX = this.playerBodyZone.x - enemy.facing * SOLDIER_ENEMY_CONFIG.combat.attackXRange * 0.82;
     this.moveToward(enemy, attackX, this.playerBodyZone.y);
   }
 
@@ -172,7 +157,7 @@ export class EnemyManager {
     const targetX = clampStageX(this.playerBodyZone.x + slot.x, BAMBOO_COMBAT_ROOM.walkBounds);
     const targetY = clampStageY(this.playerBodyZone.y + slot.y, BAMBOO_COMBAT_ROOM.walkBounds);
     const distance = Phaser.Math.Distance.Between(enemy.bodyZone.x, enemy.bodyZone.y, this.playerBodyZone.x, this.playerBodyZone.y);
-    if (distance > DETECTION_DISTANCE) { this.setState(enemy, "idle"); return; }
+    if (distance > SOLDIER_ENEMY_CONFIG.movement.detectionDistance) { this.setState(enemy, "idle"); return; }
     this.moveToward(enemy, targetX, targetY);
   }
 
@@ -185,15 +170,15 @@ export class EnemyManager {
       enemy.facing = dx > 0 ? 1 : -1;
       enemy.sprite.setFlipX(enemy.facing > 0);
     }
-    const velocity = new Phaser.Math.Vector2(dx, dy * 0.7).normalize().scale(WALK_SPEED);
+    const velocity = new Phaser.Math.Vector2(dx, dy * SOLDIER_ENEMY_CONFIG.movement.verticalScale).normalize().scale(SOLDIER_ENEMY_CONFIG.movement.walkSpeed);
     for (const other of this.getLivingEnemies()) {
       if (other === enemy) continue;
       const ox = enemy.bodyZone.x - other.bodyZone.x;
       const oy = enemy.bodyZone.y - other.bodyZone.y;
       const separation = Math.hypot(ox, oy);
-      if (separation > 0 && separation < ENEMY_MIN_SPACING) velocity.add(new Phaser.Math.Vector2(ox, oy).normalize().scale(18));
+      if (separation > 0 && separation < SOLDIER_ENEMY_CONFIG.combat.minSpacing) velocity.add(new Phaser.Math.Vector2(ox, oy).normalize().scale(18));
     }
-    velocity.limit(WALK_SPEED);
+    velocity.limit(SOLDIER_ENEMY_CONFIG.movement.walkSpeed);
     enemy.body.setVelocity(velocity.x, velocity.y);
   }
 
@@ -216,7 +201,7 @@ export class EnemyManager {
     if (this.currentAttacker !== enemy) return;
     this.currentAttacker = null;
     this.lastAttackerId = enemy.id;
-    this.directorReadyAt = this.clock.now() + this.random.between(DIRECTOR_DELAY_MIN, DIRECTOR_DELAY_MAX);
+    this.directorReadyAt = this.clock.now() + this.random.between(SOLDIER_ENEMY_CONFIG.timing.directorDelayMin, SOLDIER_ENEMY_CONFIG.timing.directorDelayMax);
   }
 
   damage(enemy: EnemyCombatant) {
@@ -241,10 +226,10 @@ export class EnemyManager {
       enemy.sprite.play("enemy-attack", true);
     } else if (next === "hurt") {
       enemy.sprite.play("enemy-hurt", true);
-      const timer = this.scene.time.delayedCall(HURT_MS, () => {
+      const timer = this.scene.time.delayedCall(SOLDIER_ENEMY_CONFIG.timing.hurtMs, () => {
         this.stateTimers.delete(enemy);
         if (enemy.sprite.active && enemy.state === "hurt") {
-          enemy.cooldownUntil = this.clock.now() + this.random.between(RECOVERY_MIN, RECOVERY_MAX);
+          enemy.cooldownUntil = this.clock.now() + this.random.between(SOLDIER_ENEMY_CONFIG.timing.recoveryMin, SOLDIER_ENEMY_CONFIG.timing.recoveryMax);
           this.setState(enemy, "idle");
         }
       });
@@ -259,7 +244,7 @@ export class EnemyManager {
     if (!enemy.sprite.active) return;
     if (animation.key === "enemy-attack" && enemy.state === "attack") {
       this.releaseAttackSlot(enemy);
-      enemy.cooldownUntil = this.clock.now() + this.random.between(RECOVERY_MIN, RECOVERY_MAX);
+      enemy.cooldownUntil = this.clock.now() + this.random.between(SOLDIER_ENEMY_CONFIG.timing.recoveryMin, SOLDIER_ENEMY_CONFIG.timing.recoveryMax);
       this.setState(enemy, "idle");
     } else if (animation.key === "enemy-dead" && enemy.state === "dead") {
       enemy.sprite.setFrame("dead-3");

@@ -1,5 +1,5 @@
 import * as Phaser from "phaser";
-import { EnemyCombatant, EnemyManager, ENEMY_DISPLAY_SCALE } from "./EnemyManager";
+import { EnemyCombatant, EnemyManager } from "./EnemyManager";
 import { createActionSnapshot, type ActionSnapshot } from "./input/ActionSnapshot";
 import { TouchInputController } from "./input/TouchInputController";
 import { LifecycleClock } from "./time/LifecycleClock";
@@ -16,6 +16,7 @@ import { BAMBOO_COMBAT_ROOM, clampStageX } from "./stage/StageConfig";
 import { calculateCameraScroll } from "./camera/CameraFollow";
 import { createCameraLockState, isCameraLocked, lockCamera, unlockCamera, type CameraLockState } from "./camera/CameraLock";
 import { createStageExitState, makeExitAvailable, resetStageExit, type StageExitState } from "./stage/StageExit";
+import { SOLDIER_ENEMY_CONFIG } from "./enemy/EnemyConfig";
 
 type AttackState = "attack1" | "attack2" | "attack3";
 type PreviewFrame = {
@@ -469,7 +470,7 @@ export default class MainScene extends Phaser.Scene {
     guide.fillStyle(0x00ffff, 1).fillCircle(WIDTH / 2, groundY, 5);
     this.enemyPreviewSprite = this.add.sprite(WIDTH / 2, groundY, "enemy-soldier", ENEMY_PREVIEW_FRAMES[0])
       .setOrigin(0.5, ENEMY_FEET_Y / ENEMY_FRAME_SIZE)
-      .setScale(ENEMY_DISPLAY_SCALE);
+      .setScale(SOLDIER_ENEMY_CONFIG.displayScale);
     this.enemyPreviewText = this.add.text(24, 22, "", {
       fontFamily: "Consolas, monospace", fontSize: "18px", color: "#fff",
       backgroundColor: "rgba(0,0,0,.8)", padding: { x: 12, y: 10 }, lineSpacing: 3,
@@ -489,7 +490,7 @@ export default class MainScene extends Phaser.Scene {
     const frame = this.textures.getFrame("enemy-soldier", name);
     this.enemyPreviewSprite!.setTexture("enemy-soldier", name)
       .setOrigin(0.5, ENEMY_FEET_Y / ENEMY_FRAME_SIZE)
-      .setScale(ENEMY_DISPLAY_SCALE)
+      .setScale(SOLDIER_ENEMY_CONFIG.displayScale)
       .setPosition(WIDTH / 2, 580);
     this.enemyPreviewText!.setText([
       "ENEMY FEET ALIGNMENT PREVIEW",
@@ -498,7 +499,7 @@ export default class MainScene extends Phaser.Scene {
       `source: ${frame.cutX}, ${frame.cutY}, ${frame.cutWidth}, ${frame.cutHeight}`,
       `origin: 0.5, ${(ENEMY_FEET_Y / ENEMY_FRAME_SIZE).toFixed(6)}`,
       `feet anchor: ${ENEMY_FRAME_SIZE / 2}, ${ENEMY_FEET_Y}`,
-      `display scale: ${ENEMY_DISPLAY_SCALE}`,
+      `display scale: ${SOLDIER_ENEMY_CONFIG.displayScale}`,
       "",
       "Left / Right: previous / next frame",
       "Red line: fixed world ground  |  Cyan point: feet anchor",

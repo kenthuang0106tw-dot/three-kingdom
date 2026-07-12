@@ -1,30 +1,33 @@
 # Next Task
 
-## M4 / Task 4.1 — EnemyConfig boundary
+## M4 / Task 4.2 — Second melee soldier
 
 ### Why this is next
 
-Milestone 3 now has a validated single-room traversal path. The next smallest
-content foundation is to separate enemy tuning data from EnemyManager before
-adding additional archetypes or encounter compositions.
+The existing soldier tuning now has a clean boundary. The next content task is
+to add one genuinely different melee opponent, proving the config seam with
+real behavior rather than speculative framework code.
 
 ### Completion criteria
 
-- Define a minimal Phaser-free EnemyConfig for the existing soldier.
-- Move only stable tuning values: HP, movement speed, detection, attack ranges, and timing.
-- Keep EnemyManager behavior and current enemy visuals unchanged.
-- Do not add a second enemy type, new AI, new assets, or encounter content.
+- Add exactly one second melee soldier archetype with distinct attack distance or rhythm.
+- Provide real sprite/animation assets and metadata before wiring the archetype.
+- Reuse only stable shared contracts; keep per-archetype tuning in config.
+- Preserve the current soldier, combat effects, attack director, and cleanup behavior.
+- Do not add a third enemy, ranged attacks, Boss, or new stage content.
 
 ### Validation
 
 - Run `pnpm test`, `pnpm build`, `pnpm lint`, and `pnpm typecheck`.
-- Add deterministic config validation and current-soldier parity tests.
-- Browser smoke verifies one Canvas, no runtime errors, and unchanged combat-room behavior.
+- Add deterministic config, animation metadata, and mixed-soldier behavior tests.
+- Browser smoke verifies the current room still renders without runtime errors.
 
 ### Expected files
 
 - `app/game/enemy/**`
+- `public/art/enemy/**`
 - `app/game/EnemyManager.ts`
+- `app/game/assets/AssetManifest.ts`
 - `tests/**`
 - `ARCHITECTURE.md`
 - `SPRINT.md`
@@ -34,5 +37,5 @@ adding additional archetypes or encounter compositions.
 
 ### Risks
 
-- Over-generalizing EnemyConfig could force premature archetype abstractions.
-- Keep the schema data-only and limited to values already used by the soldier.
+- Missing or weak art may make the behavioral difference unverifiable.
+- Stop and report asset gaps instead of recoloring or faking animation with transforms.

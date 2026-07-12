@@ -19,6 +19,7 @@ import { calculateCameraScroll } from "../app/game/camera/CameraFollow.ts";
 import { createCameraLockState, isCameraLocked, lockCamera, unlockCamera } from "../app/game/camera/CameraLock.ts";
 import { beginEncounter, createEncounterFlow, isEncounterCleared, recordEnemyRemoved } from "../app/game/stage/EncounterFlow.ts";
 import { canRequestStageExit, createStageExitState, makeExitAvailable, requestStageExit, resetStageExit } from "../app/game/stage/StageExit.ts";
+import { SOLDIER_ENEMY_CONFIG, validateEnemyConfig } from "../app/game/enemy/EnemyConfig.ts";
 
 test("React shell mounts only the Phaser lifecycle component", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
@@ -312,12 +313,13 @@ test("Combat room acceptance covers formation, attack director, alignment, and s
   const spawnCoordinates = BAMBOO_COMBAT_ROOM.spawnPoints.map(({ x, y }) => [x, y]);
   assert.equal(spawnCoordinates.length, 3);
   assert.equal(new Set(spawnCoordinates.map(([, y]) => y)).size, 3);
-  assert.match(manager, /ENEMY_ATTACK_X_RANGE = 110/);
-  assert.match(manager, /ENEMY_ATTACK_Y_RANGE = 45/);
-  assert.match(manager, /ENEMY_MIN_SPACING = 72/);
+  assert.match(scene, /SOLDIER_ENEMY_CONFIG/);
+  assert.equal(SOLDIER_ENEMY_CONFIG.combat.attackXRange, 110);
+  assert.equal(SOLDIER_ENEMY_CONFIG.combat.attackYRange, 45);
+  assert.equal(SOLDIER_ENEMY_CONFIG.combat.minSpacing, 72);
   assert.match(manager, /if \(this\.currentAttacker \|\| this\.clock\.now\(\) < this\.directorReadyAt\) return/);
   assert.match(manager, /this\.currentAttacker = enemy/);
-  assert.match(manager, /Math\.abs\(dy\) < ENEMY_ATTACK_Y_RANGE/);
+  assert.match(manager, /Math\.abs\(dy\) < SOLDIER_ENEMY_CONFIG\.combat\.attackYRange/);
   assert.match(manager, /getLivingEnemies\(\)/);
   assert.match(manager, /onAllDefeated\(\)/);
   assert.match(scene, /this\.enemyManager\.spawnAll\(BAMBOO_COMBAT_ROOM\.spawnPoints\)/);
@@ -455,4 +457,28 @@ test("Single-room traversal acceptance composes spawn, clear, camera, exit, and 
   assert.deepEqual(createEncounterFlow(), { status: "ready", spawnedCount: 0, removedEnemyIds: [] });
   assert.deepEqual(createCameraLockState(), { reason: null });
   assert.deepEqual(resetStageExit(), { status: "locked", exitId: null });
+});
+
+test("Soldier EnemyConfig validates stable tuning and preserves current values", async () => {
+  const source = await readFile(new URL("../app/game/enemy/EnemyConfig.ts", import.meta.url), "utf8");
+  assert.equal(SOLDIER_ENEMY_CONFIG.id, "soldier");
+  assert.equal(SOLDIER_ENEMY_CONFIG.maxHp, 3);
+  assert.equal(SOLDIER_ENEMY_CONFIG.movement.walkSpeed, 70);
+  assert.equal(SOLDIER_ENEMY_CONFIG.movement.detectionDistance, 500);
+  assert.deepEqual(SOLDIER_ENEMY_CONFIG.combat, { attackXRange: 110, attackYRange: 45, minSpacing: 72 });
+  assert.deepEqual(SOLDIER_ENEMY_CONFIG.timing, {
+    hurtMs: 300, directorDelayMin: 400, directorDelayMax: 800, recoveryMin: 800, recoveryMax: 1200,
+  });
+  assert.equal(validateEnemyConfig(SOLDIER_ENEMY_CONFIG), SOLDIER_ENEMY_CONFIG);
+  assert.throws(() => validateEnemyConfig({ ...SOLDIER_ENEMY_CONFIG, maxHp: 0 }), /Invalid enemy config/);
+  assert.doesNotMatch(source, /from ["']phaser["']/);
+});
+
+test("EnemyManager consumes the soldier config instead of owning tuning literals", async () => {
+  const source = await readFile(new URL("../app/game/EnemyManager.ts", import.meta.url), "utf8");
+  assert.match(source, /SOLDIER_ENEMY_CONFIG\.maxHp/);
+  assert.match(source, /SOLDIER_ENEMY_CONFIG\.movement\.walkSpeed/);
+  assert.match(source, /SOLDIER_ENEMY_CONFIG\.combat\.attackXRange/);
+  assert.match(source, /SOLDIER_ENEMY_CONFIG\.timing\.recoveryMin/);
+  assert.doesNotMatch(source, /const WALK_SPEED = 70/);
 });
