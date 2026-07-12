@@ -12,6 +12,7 @@ import { GameplayEventHub } from "../app/game/events/GameplayEvents.ts";
 import { SeededRandom, TestClock } from "../app/game/time/GameplayTime.ts";
 import { createAssetFailureReporter, RUNTIME_ASSET_MANIFEST } from "../app/game/assets/AssetManifest.ts";
 import { PlayerStateMachine } from "../app/game/player/PlayerStateMachine.ts";
+import { resolveAttack } from "../app/game/combat/CombatResolver.ts";
 
 test("React shell mounts only the Phaser lifecycle component", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
@@ -43,9 +44,32 @@ test("Enemy and combat source retain the current three-enemy contracts", async (
   const spawnBlock = manager.match(/const spawns = \[([\s\S]*?)\n    \];/)?.[1] ?? "";
   assert.equal([...spawnBlock.matchAll(/\{ x: \d+, y: \d+ \}/g)].length, 3);
   assert.match(manager, /get currentAttackerId\(\)/);
-  assert.match(manager, /markPlayerAttackHit/);
   assert.match(scene, /this\.physics\.overlap\(this\.attackZone, enemy\.bodyZone\)/);
-  assert.match(scene, /this\.enemyManager\.markPlayerAttackHit\(enemy, this\.playerAttackId\)/);
+  assert.match(scene, /resolveAttack\(\{/);
+});
+
+test("CombatResolver resolves each target once without Phaser or effect coupling", () => {
+  const first = resolveAttack({
+    attackId: 7,
+    damage: 1,
+    targets: [
+      { id: 1, hp: 3, active: true },
+      { id: 2, hp: 1, active: true },
+      { id: 3, hp: 3, active: false },
+    ],
+    hitTargetIds: new Set([2]),
+  });
+  assert.equal(first.attackId, 7);
+  assert.deepEqual(first.hits, [{ targetId: 1, damage: 1, remainingHp: 2 }]);
+
+  const second = resolveAttack({
+    attackId: 7,
+    damage: 1,
+    targets: [{ id: 1, hp: 2, active: true }],
+    hitTargetIds: first.hitTargetIds,
+  });
+  assert.deepEqual(second.hits, []);
+  assert.deepEqual([...second.hitTargetIds].sort(), [1, 2]);
 });
 
 test("Action snapshot releases movement and normalizes diagonal input", () => {

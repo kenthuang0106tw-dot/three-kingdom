@@ -9,6 +9,7 @@ import { createAssetFailureReporter, queueRuntimeAssets } from "./assets/AssetMa
 import { PlayerStateMachine, type PlayerState } from "./player/PlayerStateMachine";
 import { PlayerActor } from "./player/PlayerActor";
 import { PLAYER_ATTACKS, PlayerAttackController, type AttackStep } from "./player/PlayerAttackController";
+import { resolveAttack } from "./combat/CombatResolver";
 
 type AttackState = "attack1" | "attack2" | "attack3";
 type PreviewFrame = {
@@ -104,6 +105,7 @@ export default class MainScene extends Phaser.Scene {
   private totalDamage = 0;
   private hitStopActive = false;
   private playerAttackId = 0;
+  private playerHitTargetIds: ReadonlySet<number> = new Set();
   private defeatedText?: Phaser.GameObjects.Text;
   private readonly transitionLog: string[] = [];
   private diagnosticMode = false;
@@ -276,8 +278,17 @@ export default class MainScene extends Phaser.Scene {
       this.comboWindowOpen = false;
     }
     if (this.attackBody.enable) {
-      const hits = this.enemyManager.getLivingEnemies().filter(enemy =>
-        this.physics.overlap(this.attackZone, enemy.bodyZone) && this.enemyManager.markPlayerAttackHit(enemy, this.playerAttackId));
+      const overlapping = this.enemyManager.getLivingEnemies().filter(enemy => this.physics.overlap(this.attackZone, enemy.bodyZone));
+      const resolution = resolveAttack({
+        attackId: this.playerAttackId,
+        damage: 1,
+        targets: overlapping.map(enemy => ({ id: enemy.id, hp: enemy.hp, active: enemy.state !== "dead" })),
+        hitTargetIds: this.playerHitTargetIds,
+      });
+      this.playerHitTargetIds = resolution.hitTargetIds;
+      const hits = resolution.hits
+        .map(hit => overlapping.find(enemy => enemy.id === hit.targetId))
+        .filter((enemy): enemy is EnemyCombatant => enemy !== undefined);
       if (hits.length) {
         this.hitConfirmed = true;
         this.comboWindowOpen = this.comboStep < 3;
@@ -297,6 +308,7 @@ export default class MainScene extends Phaser.Scene {
     this.comboWindowOpen = false;
     this.comboWindowEndsAt = 0;
     this.playerAttackId += 1;
+    this.playerHitTargetIds = new Set();
     this.gameplayEvents.publish({ type: "player-attack-started", step, at: this.time.now });
     this.playerBody.setVelocity(0, 0);
     this.disableAttackHitbox();

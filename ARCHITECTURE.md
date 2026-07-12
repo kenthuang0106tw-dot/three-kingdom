@@ -198,6 +198,16 @@ whether the current frame enables the independent attack hitbox. It has no
 Scene, sprite, camera, UI, or effect references, so timing metadata is tested
 without a renderer and can later feed a dedicated combat resolver.
 
+## Combat Resolver Contract (M2 / Task 2.4)
+
+`resolveAttack` is a pure, Phaser-free boundary that receives the current
+attack id, damage value, overlapping target snapshots, and the immutable set of
+targets already hit by that attack. It returns hit records, remaining HP
+values, and a new hit-target set. MainScene still owns overlap detection and
+visual effects; EnemyManager still owns enemy state transitions and cleanup.
+This keeps camera, flash, spark, knockback, and hit-stop timing out of damage
+resolution and leaves those effects for the next extraction.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

@@ -1,24 +1,24 @@
 # Next Task
 
-## M2 / Task 2.4 — Combat Resolver
+## M2 / Task 2.5 — Effect Director
 
 ### Why this is next
 
-Attack timing and active-frame metadata are now isolated from actor ownership.
-The next smallest seam is to isolate hit resolution before adding more combat
-content or another enemy type.
+Combat resolution is now Phaser-free and isolated. The next smallest seam is
+to move hit presentation and timing orchestration out of MainScene without
+changing combat rules or adding new effects.
 
 ### Completion criteria
 
-- Add a pure CombatResolver for attack hit targets, damage, and per-attack hit records.
-- Keep camera shake, hit stop, flash, spark, and knockback effects outside the resolver.
-- Preserve current player Combo behavior and multi-enemy hit behavior.
-- Add focused resolver tests without adding attacks, enemies, UI, or damage rules.
+- Add an EffectDirector that owns existing hit flash, hit spark, knockback, camera shake, and hit-stop orchestration.
+- Keep damage, target selection, enemy state transitions, and Combo rules outside the director.
+- Preserve current effect parameters and multi-target behavior; coalesce one hit-stop and camera shake per attack update.
+- Add focused effect timing tests without adding new visual effects, enemies, UI, or audio.
 
 ### Validation
 
 - Run `pnpm test`, `pnpm build`, `pnpm lint`, and `pnpm typecheck`.
-- Browser smoke verifies the existing three-stage attack and hit effects with one Canvas and zero visible runtime errors.
+- Browser smoke verifies the existing hit flash, spark, knockback, camera shake, and hit-stop with one Canvas and zero visible runtime errors.
 
 ### Expected files
 
@@ -33,5 +33,5 @@ content or another enemy type.
 
 ### Risks
 
-- Existing multi-enemy hit records and effects are coupled to MainScene.
-- Keep the extraction behavior-preserving; do not introduce new combat rules.
+- Phaser tween, timer, camera, and lifecycle-clock ownership is currently coupled to MainScene.
+- Keep the extraction behavior-preserving and do not let the director calculate damage or own actor state.

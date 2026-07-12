@@ -139,6 +139,15 @@
 - [x] `pnpm test` 17/17, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
 - [x] Browser smoke loaded the updated route with one 1280×720 Canvas and no visible runtime error.
 
+## Task 2.4 Closeout
+
+- [x] Added pure Phaser-free `resolveAttack` CombatResolver for target eligibility, damage, and per-attack hit records.
+- [x] MainScene now resolves overlapping enemies through the resolver; existing hit flash, spark, knockback, camera shake, hit-stop, Combo, and EnemyManager transitions remain unchanged.
+- [x] Multi-target attacks preserve one hit per target per attack while allowing different enemies to be hit in the same active frame.
+- [x] `pnpm test` 20/20, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
+- [x] Browser smoke loaded the updated route with one 1280x720 Canvas and no visible runtime error.
+- [ ] Physical mobile combat timing remains pending for release QA.
+
 ## Task 2.3 Closeout
 
 - [x] Added pure `PlayerAttackController` metadata for attack1, attack2, and attack3.

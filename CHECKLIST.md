@@ -230,6 +230,19 @@
 | Transition coverage | Pass | Valid idle/walk/attack/hurt paths and invalid transition rejection |
 | Known issues | Non-blocking | Actor visual/physics ownership remains in MainScene for Task 2.2 |
 
+## M2 / Task 2.4 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M2 / Task 2.4 — Combat Resolver |
+| Build | Pass | `pnpm build` |
+| Tests | Pass | `pnpm test` 20/20 |
+| Lint | Pass | `pnpm lint` 0 errors, existing `<img>` warnings only |
+| Typecheck | Pass | `pnpm typecheck` |
+| Browser smoke | Pass | Updated route, one 1280x720 Canvas, no visible runtime error |
+| Resolver behavior | Pass | Pure resolver returns one hit per target and preserves multi-target resolution |
+| Known issues | Non-blocking | Hit effects remain in MainScene for Task 2.5 |
+
 ## M2 / Task 2.3 Evidence
 
 | Item | Result | Evidence |

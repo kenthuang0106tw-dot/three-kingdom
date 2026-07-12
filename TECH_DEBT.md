@@ -131,6 +131,12 @@ Player attack frame timing is now isolated in a pure controller and consumed by
 MainScene. Combo input and combat resolution remain orchestration concerns;
 CombatResolver extraction is the next M2 task.
 
+### TD-M02 Update — 2026-07-12
+
+Player attack target selection, damage calculation, and per-attack hit records
+now pass through a pure `CombatResolver`. Hit presentation and timing effects
+remain in MainScene until the planned EffectDirector extraction.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

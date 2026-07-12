@@ -45,7 +45,6 @@ export class EnemyCombatant {
   facing: 1 | -1 = -1;
   cooldownUntil = 0;
   attackHitPlayer = false;
-  lastPlayerAttackId = -1;
   hasAttackSlot = false;
 
   constructor(readonly id: number, readonly assignedSlot: number, scene: Phaser.Scene, x: number, y: number) {
@@ -218,12 +217,6 @@ export class EnemyManager {
     this.currentAttacker = null;
     this.lastAttackerId = enemy.id;
     this.directorReadyAt = this.clock.now() + this.random.between(DIRECTOR_DELAY_MIN, DIRECTOR_DELAY_MAX);
-  }
-
-  markPlayerAttackHit(enemy: EnemyCombatant, attackId: number) {
-    if (enemy.state === "dead" || enemy.lastPlayerAttackId === attackId) return false;
-    enemy.lastPlayerAttackId = attackId;
-    return true;
   }
 
   damage(enemy: EnemyCombatant) {
