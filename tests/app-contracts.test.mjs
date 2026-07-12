@@ -15,6 +15,7 @@ import { PlayerStateMachine } from "../app/game/player/PlayerStateMachine.ts";
 import { PlayerLifecycle } from "../app/game/player/PlayerLifecycle.ts";
 import { resolveAttack } from "../app/game/combat/CombatResolver.ts";
 import { BAMBOO_COMBAT_ROOM, clampStagePoint, clampStageX, clampStageY, validateStageConfig } from "../app/game/stage/StageConfig.ts";
+import { calculateCameraScroll } from "../app/game/camera/CameraFollow.ts";
 
 test("React shell mounts only the Phaser lifecycle component", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
@@ -347,4 +348,14 @@ test("Stage bounds clamp movement and knockback deterministically", async () => 
     y: bounds.y + bounds.height,
   });
   assert.match(source, /clampStagePoint/);
+});
+
+test("Camera follow clamps scroll to world bounds without Phaser coupling", async () => {
+  const source = await readFile(new URL("../app/game/camera/CameraFollow.ts", import.meta.url), "utf8");
+  const world = { x: 0, y: 0, width: 2000, height: 1200 };
+  const viewport = { width: 1280, height: 720 };
+  assert.deepEqual(calculateCameraScroll({ x: 100, y: 100 }, world, viewport), { x: 0, y: 0 });
+  assert.deepEqual(calculateCameraScroll({ x: 1000, y: 700 }, world, viewport), { x: 360, y: 340 });
+  assert.deepEqual(calculateCameraScroll({ x: 1999, y: 1199 }, world, viewport), { x: 720, y: 480 });
+  assert.doesNotMatch(source, /from ["']phaser["']/);
 });

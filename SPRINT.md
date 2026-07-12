@@ -218,6 +218,15 @@
 - [x] Browser smoke verified one 1280x720 Canvas, ten reset cycles, and zero page errors.
 - [ ] Physical mobile and long-session validation remain deferred.
 
+## M3 / Task 3.3 Closeout
+
+- [x] Added pure camera scroll calculation with world and viewport bounds.
+- [x] MainScene configures camera bounds, preserves round pixels, and applies integer scroll.
+- [x] Current 1280x720 room remains visually unchanged because its world equals the viewport.
+- [x] `pnpm test` 27/27, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
+- [x] Browser smoke verified one 1280x720 Canvas, ten reset cycles, and zero page errors.
+- [ ] Physical mobile and long-session validation remain deferred.
+
 ## M3 / Task 3.2 Closeout
 
 - [x] Added deterministic Phaser-free X/Y and point clamping helpers.

@@ -1,27 +1,27 @@
 # Next Task
 
-## M3 / Task 3.3 — Camera follow
+## M3 / Task 3.4 — Encounter camera lock/unlock
 
 ### Why this is next
 
-The room geometry and actor movement now use a shared bounds contract. The next
-smallest playable Stage step is to follow the player within the existing room
-without adding encounter locks, scrolling content, or stage flow.
+Camera follow and bounded world scrolling are now isolated and validated. The
+next Stage step is to pause camera movement during a combat encounter without
+coupling camera code to EnemyManager or actor internals.
 
 ### Completion criteria
 
-- Add a Phaser camera controller for the current MainScene.
-- Follow the player only within the configured world bounds.
-- Preserve the existing 1280×720 logical canvas and pixel-art rounding.
-- Keep camera ownership separate from Player, EnemyManager, and Combat effects.
-- Do not add encounter camera locks, parallax, new stage content, or UI.
+- Define a minimal camera lock contract with explicit lock and unlock reasons.
+- Keep the camera bounded by StageConfig world bounds in both modes.
+- Integrate only the existing combat-room encounter; do not add new gates or content.
+- Preserve player, enemy, combat, and camera-shake behavior.
+- Do not add parallax, stage exits, or new UI.
 
 ### Validation
 
 - Run `pnpm test`, `pnpm build`, `pnpm lint`, and `pnpm typecheck`.
-- Add deterministic camera-bound tests without importing Phaser into pure helpers.
-- Browser smoke verifies one Canvas, no visible runtime errors, and stable
-  rendering after player movement.
+- Add deterministic lock/unlock transition tests without Phaser imports.
+- Browser smoke verifies combat-room rendering, one Canvas, no runtime errors,
+  and camera lock release after the encounter clears.
 
 ### Expected files
 
@@ -37,6 +37,6 @@ without adding encounter locks, scrolling content, or stage flow.
 
 ### Risks
 
-- Camera movement can introduce pixel shimmer or alter the fixed combat-room feel.
-- Keep the first controller bounded and minimal; defer encounter locks and
-  visual parallax until later Stage tasks.
+- A lock tied directly to enemy internals could make restart and cleanup brittle.
+- Keep the contract event-driven and minimal; defer full encounter gates to the
+  later Stage flow tasks.

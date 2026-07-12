@@ -174,6 +174,13 @@ M3 / Task 3.2 now centralizes coordinate clamping in the Phaser-free StageConfig
 helper and applies it to player/enemy room movement and knockback. Camera
 viewport policy is intentionally deferred to the next Stage task.
 
+### TD-M03 Update — Bounded camera follow
+
+M3 / Task 3.3 now calculates bounded, integer camera scroll through a pure
+helper and applies it from MainScene. The current room is the same size as the
+logical viewport, so no visible scroll is introduced; encounter lock behavior
+remains deferred.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

@@ -13,6 +13,7 @@ import { PLAYER_ATTACKS, PlayerAttackController, type AttackStep } from "./playe
 import { resolveAttack } from "./combat/CombatResolver";
 import { EffectDirector, EFFECT_PARAMS } from "./combat/EffectDirector";
 import { BAMBOO_COMBAT_ROOM, clampStageX } from "./stage/StageConfig";
+import { calculateCameraScroll } from "./camera/CameraFollow";
 
 type AttackState = "attack1" | "attack2" | "attack3";
 type PreviewFrame = {
@@ -159,6 +160,12 @@ export default class MainScene extends Phaser.Scene {
     this.effectDirector = new EffectDirector(this, this.lifecycleClock);
     this.createCombatAnimations();
     this.cameras.main.setRoundPixels(true);
+    this.cameras.main.setBounds(
+      BAMBOO_COMBAT_ROOM.worldBounds.x,
+      BAMBOO_COMBAT_ROOM.worldBounds.y,
+      BAMBOO_COMBAT_ROOM.worldBounds.width,
+      BAMBOO_COMBAT_ROOM.worldBounds.height,
+    );
     this.physics.world.setBounds(
       BAMBOO_COMBAT_ROOM.walkBounds.x,
       BAMBOO_COMBAT_ROOM.walkBounds.y,
@@ -226,12 +233,14 @@ export default class MainScene extends Phaser.Scene {
 
     if (this.state === "hurt") {
       this.syncVisualsToBody();
+      this.updateCamera();
       this.updateDebugText();
       return;
     }
     if (this.state === "dead") {
       this.playerBody.setVelocity(0, 0);
       this.syncVisualsToBody();
+      this.updateCamera();
       this.updateDebugText();
       return;
     }
@@ -239,6 +248,7 @@ export default class MainScene extends Phaser.Scene {
     if (this.isAttackState(this.state)) {
       this.updateAttackState();
       this.syncVisualsToBody();
+      this.updateCamera();
       this.updateDebugText();
       return;
     }
@@ -247,6 +257,7 @@ export default class MainScene extends Phaser.Scene {
       this.attackTriggerCount += 1;
       this.startAttack(1);
       this.syncVisualsToBody();
+      this.updateCamera();
       this.updateDebugText();
       return;
     }
@@ -259,7 +270,17 @@ export default class MainScene extends Phaser.Scene {
       this.transitionTo("walk");
     } else this.transitionTo("idle");
     this.syncVisualsToBody();
+    this.updateCamera();
     this.updateDebugText();
+  }
+
+  private updateCamera() {
+    const scroll = calculateCameraScroll(
+      { x: this.playerBodyZone.x, y: this.playerBodyZone.y },
+      BAMBOO_COMBAT_ROOM.worldBounds,
+      { width: this.cameras.main.width, height: this.cameras.main.height },
+    );
+    this.cameras.main.setScroll(Math.round(scroll.x), Math.round(scroll.y));
   }
 
   private createCombatAnimations() {

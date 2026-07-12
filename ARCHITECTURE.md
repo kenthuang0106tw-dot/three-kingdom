@@ -261,6 +261,14 @@ the same rectangle for formation targets and debug slot markers. No actor owns
 a second numeric bounds policy; camera and stage-flow bounds remain separate
 future responsibilities.
 
+## Camera Follow Contract (M3 / Task 3.3)
+
+`app/game/camera/CameraFollow.ts` owns the Phaser-free calculation of camera
+scroll from a target, world rectangle, and viewport. MainScene applies the
+bounded integer scroll and configures camera world bounds while preserving
+round-pixel rendering. The current 1280x720 room intentionally resolves to a
+zero scroll range; encounter locks and camera policy remain separate tasks.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

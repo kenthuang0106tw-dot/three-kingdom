@@ -370,3 +370,16 @@
 | Browser smoke | Pass | One 1280x720 Canvas, reset count 10, page errors 0 |
 | Edge clamping | Pass | Deterministic X/Y/point boundary tests |
 | Known issues | Non-blocking | Camera follow and physical mobile QA remain deferred |
+
+## M3 / Task 3.3 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M3 / Task 3.3 Camera follow |
+| Tests | Pass | `pnpm test` 27/27 |
+| Build | Pass | `pnpm build` |
+| Lint | Pass | 0 errors, existing 4 `<img>` warnings only |
+| Typecheck | Pass | `pnpm typecheck` |
+| Browser smoke | Pass | One 1280x720 Canvas, reset count 10, page errors 0 |
+| Camera bounds | Pass | Pure helper clamps target scroll to world limits |
+| Known issues | Non-blocking | Encounter camera lock and physical mobile QA remain deferred |
