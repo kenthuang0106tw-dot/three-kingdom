@@ -269,6 +269,14 @@ bounded integer scroll and configures camera world bounds while preserving
 round-pixel rendering. The current 1280x720 room intentionally resolves to a
 zero scroll range; encounter locks and camera policy remain separate tasks.
 
+## Encounter Camera Lock Contract (M3 / Task 3.4)
+
+`CameraLock.ts` is a Phaser-free state contract with an explicit `encounter`
+reason. MainScene locks it when the existing combat-room enemies are spawned,
+skips follow updates while locked, and unlocks it from the existing all-clear
+callback. EnemyManager is not imported by the camera contract; restart resets
+the lock state with the Scene lifecycle.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

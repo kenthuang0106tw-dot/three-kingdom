@@ -1,33 +1,33 @@
 # Next Task
 
-## M3 / Task 3.4 — Encounter camera lock/unlock
+## M3 / Task 3.5 — Spawn and all-clear flow
 
 ### Why this is next
 
-Camera follow and bounded world scrolling are now isolated and validated. The
-next Stage step is to pause camera movement during a combat encounter without
-coupling camera code to EnemyManager or actor internals.
+The current combat room has a validated camera lock lifecycle, but its spawn
+and all-clear behavior is still embedded in MainScene and EnemyManager. The
+next smallest Stage step is to make the existing room's spawn/clear contract
+explicit without adding a new level or respawn behavior.
 
 ### Completion criteria
 
-- Define a minimal camera lock contract with explicit lock and unlock reasons.
-- Keep the camera bounded by StageConfig world bounds in both modes.
-- Integrate only the existing combat-room encounter; do not add new gates or content.
-- Preserve player, enemy, combat, and camera-shake behavior.
-- Do not add parallax, stage exits, or new UI.
+- Define a minimal Phaser-free spawn/all-clear contract for the current room.
+- Preserve the existing three enemy spawn points and single-room behavior.
+- Publish clear only after all living enemies are removed.
+- Keep EnemyManager responsible for enemy cleanup and MainScene responsible for presentation.
+- Do not add stage exits, encounter gates, respawns, or new content.
 
 ### Validation
 
 - Run `pnpm test`, `pnpm build`, `pnpm lint`, and `pnpm typecheck`.
-- Add deterministic lock/unlock transition tests without Phaser imports.
-- Browser smoke verifies combat-room rendering, one Canvas, no runtime errors,
-  and camera lock release after the encounter clears.
+- Add deterministic tests for spawn counts, all-clear transition, and reset.
+- Browser smoke verifies one Canvas, no runtime errors, and the existing clear text path.
 
 ### Expected files
 
-- `app/game/camera/**`
+- `app/game/stage/**`
+- `app/game/EnemyManager.ts`
 - `app/game/MainScene.ts`
-- `app/game/stage/StageConfig.ts`
 - `tests/**`
 - `ARCHITECTURE.md`
 - `SPRINT.md`
@@ -37,6 +37,5 @@ coupling camera code to EnemyManager or actor internals.
 
 ### Risks
 
-- A lock tied directly to enemy internals could make restart and cleanup brittle.
-- Keep the contract event-driven and minimal; defer full encounter gates to the
-  later Stage flow tasks.
+- Moving clear ownership could regress enemy cleanup or camera unlock timing.
+- Keep the contract limited to the existing room; defer full StageDirector flow.

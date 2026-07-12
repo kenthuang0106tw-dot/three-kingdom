@@ -14,6 +14,7 @@ import { resolveAttack } from "./combat/CombatResolver";
 import { EffectDirector, EFFECT_PARAMS } from "./combat/EffectDirector";
 import { BAMBOO_COMBAT_ROOM, clampStageX } from "./stage/StageConfig";
 import { calculateCameraScroll } from "./camera/CameraFollow";
+import { createCameraLockState, isCameraLocked, lockCamera, unlockCamera, type CameraLockState } from "./camera/CameraLock";
 
 type AttackState = "attack1" | "attack2" | "attack3";
 type PreviewFrame = {
@@ -127,6 +128,7 @@ export default class MainScene extends Phaser.Scene {
   private enemyPreviewKeys?: Record<"left" | "right", Phaser.Input.Keyboard.Key>;
   private enemyPreviewIndex = 0;
   private assetFailureListener?: (file: Phaser.Loader.File) => void;
+  private cameraLockState: CameraLockState = createCameraLockState();
 
   constructor() { super("MainScene"); }
 
@@ -153,6 +155,7 @@ export default class MainScene extends Phaser.Scene {
     this.resetSmokeMode = development && query.get("resetSmoke") === "1";
     this.playerStateMachine.reset();
     this.playerLifecycle.reset();
+    this.cameraLockState = createCameraLockState();
     if (this.enemyPreviewMode) { this.createEnemyAlignmentPreview(); return; }
     if (this.previewMode) { this.createPreviewMode(); return; }
 
@@ -196,6 +199,7 @@ export default class MainScene extends Phaser.Scene {
       onAllDefeated: () => this.showAllEnemiesDefeated(),
     }, development, { clock: new PhaserGameplayClock(this), random: new SeededRandom(0x3a6f2d1) });
     this.enemyManager.spawnAll(BAMBOO_COMBAT_ROOM.spawnPoints);
+    this.cameraLockState = lockCamera(this.cameraLockState, "encounter");
 
     if (development) {
       this.diagnosticMode = new URLSearchParams(window.location.search).get("debugInput") === "1";
@@ -275,6 +279,7 @@ export default class MainScene extends Phaser.Scene {
   }
 
   private updateCamera() {
+    if (isCameraLocked(this.cameraLockState)) return;
     const scroll = calculateCameraScroll(
       { x: this.playerBodyZone.x, y: this.playerBodyZone.y },
       BAMBOO_COMBAT_ROOM.worldBounds,
@@ -427,6 +432,7 @@ export default class MainScene extends Phaser.Scene {
   }
 
   private showAllEnemiesDefeated() {
+    this.cameraLockState = unlockCamera(this.cameraLockState, "encounter");
     if (this.defeatedText) return;
     this.defeatedText = this.add.text(WIDTH / 2, HEIGHT / 2, "All Enemies Defeated", {
       fontFamily: "Consolas, monospace", fontSize: "36px", color: "#ffffff",

@@ -383,3 +383,16 @@
 | Browser smoke | Pass | One 1280x720 Canvas, reset count 10, page errors 0 |
 | Camera bounds | Pass | Pure helper clamps target scroll to world limits |
 | Known issues | Non-blocking | Encounter camera lock and physical mobile QA remain deferred |
+
+## M3 / Task 3.4 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M3 / Task 3.4 Encounter camera lock/unlock |
+| Tests | Pass | `pnpm test` 29/29 |
+| Build | Pass | `pnpm build` |
+| Lint | Pass | 0 errors, existing 4 `<img>` warnings only |
+| Typecheck | Pass | `pnpm typecheck` |
+| Browser smoke | Pass | One 1280x720 Canvas, reset count 10, page errors 0 |
+| Lock lifecycle | Pass | Explicit encounter lock, all-clear unlock, restart reset |
+| Known issues | Non-blocking | Full encounter gates and physical mobile QA remain deferred |

@@ -181,6 +181,12 @@ helper and applies it from MainScene. The current room is the same size as the
 logical viewport, so no visible scroll is introduced; encounter lock behavior
 remains deferred.
 
+### TD-M03 Update — Encounter camera lock
+
+M3 / Task 3.4 adds an explicit Phaser-free encounter lock reason owned by
+MainScene. The existing combat room locks follow while enemies are active and
+releases it through the all-clear callback; full encounter gates remain deferred.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

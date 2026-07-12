@@ -227,6 +227,15 @@
 - [x] Browser smoke verified one 1280x720 Canvas, ten reset cycles, and zero page errors.
 - [ ] Physical mobile and long-session validation remain deferred.
 
+## M3 / Task 3.4 Closeout
+
+- [x] Added a Phaser-free camera lock state with explicit `encounter` reason.
+- [x] Existing combat-room spawn locks camera follow; all-clear unlocks it.
+- [x] Restart resets camera lock state and no camera/enemy ownership coupling was added.
+- [x] `pnpm test` 29/29, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
+- [x] Browser smoke verified one 1280x720 Canvas, ten reset cycles, and zero page errors.
+- [ ] Physical mobile and long-session validation remain deferred.
+
 ## M3 / Task 3.2 Closeout
 
 - [x] Added deterministic Phaser-free X/Y and point clamping helpers.

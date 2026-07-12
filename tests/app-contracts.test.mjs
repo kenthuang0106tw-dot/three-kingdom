@@ -16,6 +16,7 @@ import { PlayerLifecycle } from "../app/game/player/PlayerLifecycle.ts";
 import { resolveAttack } from "../app/game/combat/CombatResolver.ts";
 import { BAMBOO_COMBAT_ROOM, clampStagePoint, clampStageX, clampStageY, validateStageConfig } from "../app/game/stage/StageConfig.ts";
 import { calculateCameraScroll } from "../app/game/camera/CameraFollow.ts";
+import { createCameraLockState, isCameraLocked, lockCamera, unlockCamera } from "../app/game/camera/CameraLock.ts";
 
 test("React shell mounts only the Phaser lifecycle component", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
@@ -358,4 +359,23 @@ test("Camera follow clamps scroll to world bounds without Phaser coupling", asyn
   assert.deepEqual(calculateCameraScroll({ x: 1000, y: 700 }, world, viewport), { x: 360, y: 340 });
   assert.deepEqual(calculateCameraScroll({ x: 1999, y: 1199 }, world, viewport), { x: 720, y: 480 });
   assert.doesNotMatch(source, /from ["']phaser["']/);
+});
+
+test("Camera lock contract transitions by explicit encounter reason", async () => {
+  const source = await readFile(new URL("../app/game/camera/CameraLock.ts", import.meta.url), "utf8");
+  const initial = createCameraLockState();
+  const locked = lockCamera(initial, "encounter");
+  assert.equal(isCameraLocked(initial), false);
+  assert.equal(isCameraLocked(locked), true);
+  assert.deepEqual(unlockCamera(locked, "encounter"), initial);
+  assert.equal(unlockCamera(locked, "encounter").reason, null);
+  assert.match(source, /CameraLockReason/);
+  assert.doesNotMatch(source, /from ["']phaser["']/);
+});
+
+test("MainScene owns encounter camera lock lifecycle without enemy internals", async () => {
+  const source = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
+  assert.match(source, /lockCamera\(this\.cameraLockState, "encounter"\)/);
+  assert.match(source, /unlockCamera\(this\.cameraLockState, "encounter"\)/);
+  assert.match(source, /if \(isCameraLocked\(this\.cameraLockState\)\) return/);
 });
