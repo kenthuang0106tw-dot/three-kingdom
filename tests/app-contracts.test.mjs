@@ -7,6 +7,7 @@ import {
   releasePhaserGame,
 } from "../app/game/phaserLifecycle.ts";
 import { createActionSnapshot } from "../app/game/input/ActionSnapshot.ts";
+import { ClockState } from "../app/game/time/ClockState.ts";
 
 test("React shell mounts only the Phaser lifecycle component", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
@@ -72,4 +73,29 @@ test("Touch input shares the action snapshot and releases pointer state", async 
   assert.match(source, /createActionSnapshot/);
   assert.match(scene, /new TouchInputController\(this\)/);
   assert.match(scene, /readSnapshot\(this\.inputController\.readSnapshot\(\)\)/);
+});
+
+test("Clock pause reasons remain independent and resume only when all reasons clear", () => {
+  const clock = new ClockState();
+  assert.equal(clock.isPaused(), false);
+  clock.setPaused("visibility", true);
+  clock.setPaused("hitStop", true);
+  assert.equal(clock.isPaused(), true);
+  clock.setPaused("hitStop", false);
+  assert.equal(clock.isPaused(), true);
+  clock.setPaused("visibility", false);
+  assert.equal(clock.isPaused(), false);
+});
+
+test("Lifecycle clock owns Phaser blur/focus and hit-stop timing", async () => {
+  const source = await readFile(new URL("../app/game/time/LifecycleClock.ts", import.meta.url), "utf8");
+  const scene = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
+  assert.match(source, /game\.events\.on\("blur"/);
+  assert.match(source, /game\.events\.on\("focus"/);
+  assert.match(source, /delayedCall/);
+  assert.match(source, /scene\.scene\.pause\(\)/);
+  assert.match(source, /scene\.scene\.resume\(\)/);
+  assert.match(scene, /new LifecycleClock\(this\)/);
+  assert.match(scene, /lifecycleClock\.beginHitStop/);
+  assert.doesNotMatch(source, /setTimeout|setInterval/);
 });

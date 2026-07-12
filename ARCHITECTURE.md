@@ -130,6 +130,10 @@ Runtime 不猜測等寬切圖。任何 atlas 改動都必須重新產生 debug s
 
 `TouchInputController` owns Phaser interactive touch buttons and pointer lifecycle only. It merges current touch direction state and one-shot attack presses with the keyboard snapshot, then emits the same `ActionSnapshot` consumed by `MainScene`. It does not own player state, combat, or React state. All touch objects and listeners are destroyed during Scene shutdown.
 
+## Lifecycle Clock Contract (M1 / Task 1.3)
+
+`LifecycleClock` owns only the `visibility` and `hitStop` pause reasons. It listens to Phaser game `blur`/`focus` events, pauses/resumes the Scene for visibility changes, and pauses Arcade Physics, animations, and tweens during hit-stop. A Phaser `delayedCall` clears hit-stop; no DOM listener, timeout, or interval is used. Gameplay reads the readonly pause state and does not own clock transitions.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

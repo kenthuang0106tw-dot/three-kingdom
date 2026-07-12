@@ -149,6 +149,20 @@
 | Mobile smoke | Pending | Physical mobile device not available in harness |
 | Known issues | None blocking | Physical-device pointer lifecycle still needs M1.7 validation |
 
+## M1 / Task 1.3 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M1 / Task 1.3 — Pause, Hit-Stop, and Visibility Clock Contract |
+| Commit | Pending | Closeout commit created after final diff review |
+| Build | Pass | `pnpm build` |
+| Tests | Pass | `pnpm test` 9/9 |
+| Lint | Pass | `pnpm lint` 0 errors, existing `<img>` warnings only |
+| Typecheck | Pass | `pnpm typecheck` |
+| Browser smoke | Pass | Focus-change navigation, one Canvas, zero console errors |
+| Mobile smoke | Pending | Physical mobile visibility lifecycle not available in harness |
+| Known issues | Non-blocking | Physical Safari/Android lifecycle validation deferred to M1.7 |
+
 ## Task Evidence
 
 | Item | Result | Evidence |

@@ -77,6 +77,13 @@
 
 Phaser touch controls are now implemented through `TouchInputController` and merged into the shared action snapshot. Desktop/browser smoke passed; physical iOS/Android validation remains part of M1 / Task 1.7.
 
+### TD-H07 — Physical visibility lifecycle not yet validated
+
+- **Evidence:** Browser focus-change smoke passed, but no physical mobile browser is available in the current harness.
+- **Impact:** Safari/Android background suspension behavior still needs release validation.
+- **Resolution:** Validate on physical devices during M1.7 responsive mobile acceptance.
+- **Target:** M1.7
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

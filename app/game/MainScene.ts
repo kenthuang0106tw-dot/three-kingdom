@@ -2,6 +2,7 @@ import * as Phaser from "phaser";
 import { EnemyCombatant, EnemyManager, ENEMY_DISPLAY_SCALE } from "./EnemyManager";
 import { createActionSnapshot, type ActionSnapshot } from "./input/ActionSnapshot";
 import { TouchInputController } from "./input/TouchInputController";
+import { LifecycleClock } from "./time/LifecycleClock";
 
 type PlayerState = "idle" | "walk" | "attack1" | "attack2" | "attack3" | "hurt";
 type AttackState = "attack1" | "attack2" | "attack3";
@@ -93,6 +94,7 @@ export default class MainScene extends Phaser.Scene {
   private attackBody!: Phaser.Physics.Arcade.Body;
   private inputController!: PlayerInputController;
   private touchInputController!: TouchInputController;
+  private lifecycleClock!: LifecycleClock;
   private enemyManager!: EnemyManager;
   private debugText?: Phaser.GameObjects.Text;
   private state: PlayerState = "idle";
@@ -150,6 +152,7 @@ export default class MainScene extends Phaser.Scene {
     if (this.previewMode) { this.createPreviewMode(); return; }
 
     this.createCombatAnimations();
+    this.lifecycleClock = new LifecycleClock(this);
     this.cameras.main.setRoundPixels(true);
     this.physics.world.setBounds(WALK_BOUNDS.x, WALK_BOUNDS.y, WALK_BOUNDS.width, WALK_BOUNDS.height);
     const background = this.add.image(WIDTH / 2, HEIGHT / 2, "forest");
@@ -191,6 +194,7 @@ export default class MainScene extends Phaser.Scene {
       this.playerSprite.off(Phaser.Animations.Events.ANIMATION_COMPLETE, this.handleAnimationComplete, this);
       this.disableAttackHitbox();
       this.touchInputController.destroy();
+      this.lifecycleClock.destroy();
       this.enemyManager.destroy();
     });
   }
@@ -198,7 +202,7 @@ export default class MainScene extends Phaser.Scene {
   update() {
     if (this.enemyPreviewMode) { this.updateEnemyAlignmentPreview(); return; }
     if (this.previewMode) { this.updatePreviewMode(); return; }
-    if (this.hitStopActive) { this.updateDebugText(); return; }
+    if (this.lifecycleClock.isPaused()) { this.updateDebugText(); return; }
     this.playerBody.setVelocity(0, 0);
     this.currentInput = this.touchInputController.readSnapshot(this.inputController.readSnapshot());
 
@@ -343,15 +347,10 @@ export default class MainScene extends Phaser.Scene {
   }
 
   private beginHitStop() {
-    if (this.hitStopActive) return;
+    if (this.lifecycleClock.isPaused()) return;
     this.hitStopActive = true;
-    this.physics.world.pause();
-    this.anims.pauseAll();
-    this.tweens.pauseAll();
+    this.lifecycleClock.beginHitStop(HIT_STOP_MS);
     this.time.delayedCall(HIT_STOP_MS, () => {
-      this.physics.world.resume();
-      this.anims.resumeAll();
-      this.tweens.resumeAll();
       this.hitStopActive = false;
     });
   }

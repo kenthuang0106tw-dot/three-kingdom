@@ -84,6 +84,15 @@
 - [x] Browser smoke: production route loaded with one 1280×720 Canvas and zero console errors; touch attack button interaction completed.
 - [ ] Mobile device smoke remains pending outside the browser harness.
 
+## Task 1.3 Closeout
+
+- [x] Pause reasons are explicit and independent (`visibility`, `hitStop`).
+- [x] Phaser `blur` pauses the Scene; `focus` resumes it exactly once.
+- [x] Hit-stop uses Phaser `delayedCall`, and managers resume only after all pause reasons clear.
+- [x] `pnpm test` 9/9, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
+- [x] Browser smoke: focus-change navigation retained one Canvas and zero console errors.
+- [ ] Physical mobile visibility lifecycle remains pending for release QA.
+
 ## Sprint Exit
 
 Task 1.1 已完成；下一步只執行 Task 1.2。Pause、visibility、deterministic clock 與其他未完成項目依 Roadmap 保留。

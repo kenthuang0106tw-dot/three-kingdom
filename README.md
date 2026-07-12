@@ -128,6 +128,6 @@ tools/build_enemy_art.py     Enemy sheet/atlas rebuild pipeline
 
 ## Current Priority
 
-M1 / Task 1.2 Phaser touch controls is complete. The next single task is M1 / Task 1.3, the pause, hit-stop, and visibility clock contract.
+M1 / Task 1.3 pause, hit-stop, and visibility clock contract is complete. The next single task is M1 / Task 1.4, readonly gameplay events and snapshot.
 
 Milestone 0 與 M1 / Task 1.1 已完成；下一步進入 M1 / Task 1.2，接入 Phaser touch controls。完成前不要新增 Stage、Boss、角色、招式或 Audio。

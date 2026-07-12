@@ -329,7 +329,9 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 
 - M1 / Task 1.2 (Phaser Touch Controls) completed in commit `5746f97`.
 - Evidence: touch adapter contract test, pointer release paths (`pointerupoutside`, `pointerout`, `pointercancel`, `gameout`), `pnpm test`, `pnpm build`, `pnpm lint`, `pnpm typecheck`, and local browser smoke with one Canvas and zero console errors.
-- Next eligible task: M1 / Task 1.3 (Pause, Hit-Stop, and Visibility Clock Contract).
+- M1 / Task 1.3 (Pause, Hit-Stop, and Visibility Clock Contract) completed in commit `f72ed91`.
+- Evidence: pure pause-reason tests, Phaser blur/focus lifecycle adapter, hit-stop timer integration, `pnpm test`, `pnpm build`, `pnpm lint`, `pnpm typecheck`, and browser focus-change smoke with one Canvas and zero console errors.
+- Next eligible task: M1 / Task 1.4 (Readonly Gameplay Events and Snapshot).
 
 ## 4. Global Acceptance Rules
 
