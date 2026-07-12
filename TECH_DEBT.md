@@ -125,6 +125,12 @@ Player sprite, feet anchor, and Arcade body ownership are now isolated in
 `PlayerActor`. MainScene still owns input and combat orchestration until the next
 M2 extraction.
 
+### TD-M05 Update — 2026-07-12
+
+Player attack frame timing is now isolated in a pure controller and consumed by
+MainScene. Combo input and combat resolution remain orchestration concerns;
+CombatResolver extraction is the next M2 task.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

@@ -139,6 +139,15 @@
 - [x] `pnpm test` 17/17, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
 - [x] Browser smoke loaded the updated route with one 1280×720 Canvas and no visible runtime error.
 
+## Task 2.3 Closeout
+
+- [x] Added pure `PlayerAttackController` metadata for attack1, attack2, and attack3.
+- [x] Each stage has an independent frame sequence, 8 FPS rate, startup, active, and recovery frame indexes.
+- [x] MainScene animation creation and active hitbox decisions consume the controller metadata; existing Combo and hit effects remain unchanged.
+- [x] `pnpm test` 19/19, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
+- [x] Browser smoke loaded the updated route with one 1280x720 Canvas and no visible runtime error.
+- [ ] Physical mobile attack timing remains pending for release QA.
+
 ## Task 2.2 Closeout
 
 - [x] Added `PlayerActor` ownership for sprite, feet-anchored body zone, body configuration, facing, and visual synchronization.

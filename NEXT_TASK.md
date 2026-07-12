@@ -1,26 +1,28 @@
 # Next Task
 
-## M2 / Task 2.3 — Player Attack Controller and Metadata
+## M2 / Task 2.4 — Combat Resolver
 
 ### Why this is next
 
-Player state transitions and actor visual/physics ownership are now isolated. The next P0 extraction can move startup, active, recovery, attack IDs, and hitbox timing into a dedicated attack controller without mixing actor ownership with combat resolution.
+Attack timing and active-frame metadata are now isolated from actor ownership.
+The next smallest seam is to isolate hit resolution before adding more combat
+content or another enemy type.
 
 ### Completion criteria
 
-- Define attack metadata for attack1, attack2, and attack3: frame sequence, startup, active, recovery, and hitbox timing.
-- Add a PlayerAttackController that owns attack progression and active-frame decisions.
-- Preserve current Combo input rules, hit effects, enemy hit records, and animation visuals.
-- Add focused metadata/timing tests without adding new attacks, enemies, UI, or damage rules.
+- Add a pure CombatResolver for attack hit targets, damage, and per-attack hit records.
+- Keep camera shake, hit stop, flash, spark, and knockback effects outside the resolver.
+- Preserve current player Combo behavior and multi-enemy hit behavior.
+- Add focused resolver tests without adding attacks, enemies, UI, or damage rules.
 
 ### Validation
 
 - Run `pnpm test`, `pnpm build`, `pnpm lint`, and `pnpm typecheck`.
-- Browser smoke verifies each existing attack stage and active hitbox timing with one Canvas and zero console errors.
+- Browser smoke verifies the existing three-stage attack and hit effects with one Canvas and zero visible runtime errors.
 
 ### Expected files
 
-- `app/game/player/**`
+- `app/game/combat/**`
 - `app/game/MainScene.ts`
 - `tests/**`
 - `ARCHITECTURE.md`
@@ -31,5 +33,5 @@ Player state transitions and actor visual/physics ownership are now isolated. Th
 
 ### Risks
 
-- Moving frame timing can desynchronize Phaser animation events and existing Combo buffering.
-- Keep combat resolution and hit effects in MainScene until a later dedicated task.
+- Existing multi-enemy hit records and effects are coupled to MainScene.
+- Keep the extraction behavior-preserving; do not introduce new combat rules.

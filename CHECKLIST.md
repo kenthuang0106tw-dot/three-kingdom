@@ -230,6 +230,19 @@
 | Transition coverage | Pass | Valid idle/walk/attack/hurt paths and invalid transition rejection |
 | Known issues | Non-blocking | Actor visual/physics ownership remains in MainScene for Task 2.2 |
 
+## M2 / Task 2.3 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M2 / Task 2.3 — Player Attack Controller and Metadata |
+| Build | Pass | `pnpm build` |
+| Tests | Pass | `pnpm test` 19/19 |
+| Lint | Pass | `pnpm lint` 0 errors, existing `<img>` warnings only |
+| Typecheck | Pass | `pnpm typecheck` |
+| Browser smoke | Pass | Updated route, one 1280x720 Canvas, no visible runtime error |
+| Attack metadata | Pass | Three independent animation keys and timing metadata consumed by MainScene |
+| Known issues | Non-blocking | Combat resolution remains in MainScene for Task 2.4 |
+
 ## M2 / Task 2.2 Evidence
 
 | Item | Result | Evidence |

@@ -8,6 +8,7 @@ import { GameplayEventHub, type GameplaySnapshot } from "./events/GameplayEvents
 import { createAssetFailureReporter, queueRuntimeAssets } from "./assets/AssetManifest";
 import { PlayerStateMachine, type PlayerState } from "./player/PlayerStateMachine";
 import { PlayerActor } from "./player/PlayerActor";
+import { PLAYER_ATTACKS, PlayerAttackController, type AttackStep } from "./player/PlayerAttackController";
 
 type AttackState = "attack1" | "attack2" | "attack3";
 type PreviewFrame = {
@@ -33,16 +34,6 @@ const CAMERA_SHAKE_INTENSITY = 0.003;
 const COMBO_WINDOW_MS = 360;
 const WALK_BOUNDS = new Phaser.Geom.Rectangle(70, 390, 1140, 245);
 const ATTACK_STATES: AttackState[] = ["attack1", "attack2", "attack3"];
-const ATTACK_ANIMATIONS: Record<AttackState, string> = {
-  attack1: "guanyu-attack1",
-  attack2: "guanyu-attack2",
-  attack3: "guanyu-attack3",
-};
-const ATTACK_ACTIVE_FRAME_INDEXES: Record<string, ReadonlySet<number>> = {
-  "guanyu-attack1": new Set([2]),
-  "guanyu-attack2": new Set([2]),
-  "guanyu-attack3": new Set([2]),
-};
 const FRAME_ORIGIN_Y: Record<string, number> = {
   "walk-0": 739 / 793, "walk-1": 736 / 793, "walk-2": 746 / 793, "walk-3": 741 / 793,
   "attack-0": 586 / 724, "attack-1": 582 / 724, "attack-2": 586 / 724,
@@ -96,6 +87,7 @@ export default class MainScene extends Phaser.Scene {
   private lastLifecyclePaused = false;
   private enemyManager!: EnemyManager;
   private readonly playerStateMachine = new PlayerStateMachine();
+  private readonly attackController = new PlayerAttackController();
   private debugText?: Phaser.GameObjects.Text;
   private get state(): PlayerState { return this.playerStateMachine.state; }
   private facing: 1 | -1 = 1;
@@ -260,9 +252,14 @@ export default class MainScene extends Phaser.Scene {
   private createCombatAnimations() {
     if (this.anims.exists("guanyu-walk")) return;
     this.anims.create({ key: "guanyu-walk", frames: [0, 1, 2, 3].map(i => ({ key: "guanyu-walk", frame: `walk-${i}` })), frameRate: 8, repeat: -1 });
-    this.anims.create({ key: "guanyu-attack1", frames: ["attack-0", "attack-1", "attack-0"].map(frame => ({ key: "guanyu-attack", frame })), frameRate: 8, repeat: 0 });
-    this.anims.create({ key: "guanyu-attack2", frames: ["attack-2", "attack-3", "attack-2"].map(frame => ({ key: "guanyu-attack", frame })), frameRate: 8, repeat: 0 });
-    this.anims.create({ key: "guanyu-attack3", frames: ["attack-4", "attack-5", "attack-4"].map(frame => ({ key: "guanyu-attack", frame })), frameRate: 8, repeat: 0 });
+    for (const attack of Object.values(PLAYER_ATTACKS)) {
+      this.anims.create({
+        key: attack.animationKey,
+        frames: attack.frames.map(frame => ({ key: "guanyu-attack", frame })),
+        frameRate: attack.frameRate,
+        repeat: 0,
+      });
+    }
     this.anims.create({ key: "enemy-idle", frames: ["idle-0", "idle-1"].map(frame => ({ key: "enemy-soldier", frame })), frameRate: 4, repeat: -1 });
     this.anims.create({ key: "enemy-walk", frames: [0, 1, 2, 3].map(i => ({ key: "enemy-soldier", frame: `walk-${i}` })), frameRate: 8, repeat: -1 });
     this.anims.create({ key: "enemy-attack", frames: [0, 1, 2].map(i => ({ key: "enemy-soldier", frame: `attack-${i}` })), frameRate: 8, repeat: 0 });
@@ -292,6 +289,7 @@ export default class MainScene extends Phaser.Scene {
 
   private startAttack(step: number) {
     const nextState = ATTACK_STATES[step - 1];
+    const attack = this.attackController.begin(step as AttackStep);
     this.transitionTo(nextState);
     this.comboStep = step;
     this.hitConfirmed = false;
@@ -303,12 +301,12 @@ export default class MainScene extends Phaser.Scene {
     this.playerBody.setVelocity(0, 0);
     this.disableAttackHitbox();
     const firstFrame = PREVIEW_FRAMES[(step - 1) * 2];
-    this.playerActor.playAttack(ATTACK_ANIMATIONS[nextState], firstFrame.originY);
+    this.playerActor.playAttack(attack.animationKey, firstFrame.originY);
   }
 
   private handleAnimationComplete(animation: Phaser.Animations.Animation) {
     if (animation.key === "hit-spark") return;
-    if (!Object.values(ATTACK_ANIMATIONS).includes(animation.key)) return;
+    if (!this.attackController.isAttackAnimation(animation.key)) return;
     this.disableAttackHitbox();
     this.attackCompleteCount += 1;
     if (this.comboStep < 3 && this.hitConfirmed && this.comboBuffered) this.startAttack(this.comboStep + 1);
@@ -318,9 +316,7 @@ export default class MainScene extends Phaser.Scene {
   private handleAnimationUpdate(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
     const frameName = String(frame.textureFrame);
     this.playerActor.setAnimationOrigin(FRAME_ORIGIN_Y[frameName] ?? this.playerSprite.originY);
-    const activeFrames = ATTACK_ACTIVE_FRAME_INDEXES[animation.key];
-    if (!activeFrames) return;
-    if (activeFrames.has(frame.index)) this.enableAttackHitbox(); else this.disableAttackHitbox();
+    if (this.attackController.isActiveFrame(animation.key, frame.index)) this.enableAttackHitbox(); else this.disableAttackHitbox();
   }
 
   private finishCombo() {
@@ -330,6 +326,7 @@ export default class MainScene extends Phaser.Scene {
     this.comboBuffered = false;
     this.comboWindowOpen = false;
     this.comboWindowEndsAt = 0;
+    this.attackController.finish();
     this.transitionTo("idle");
   }
 

@@ -128,6 +128,6 @@ tools/build_enemy_art.py     Enemy sheet/atlas rebuild pipeline
 
 ## Current Priority
 
-M2 / Task 2.2 Player Actor Visual and Physics Ownership is complete. The next single task is M2 / Task 2.3, Player Attack Controller and Metadata.
+M2 / Task 2.3 Player Attack Controller and Metadata is complete. The next single task is M2 / Task 2.4, Combat Resolver.
 
 Milestone 0 與 M1 / Task 1.1 已完成；下一步進入 M1 / Task 1.2，接入 Phaser touch controls。完成前不要新增 Stage、Boss、角色、招式或 Audio。

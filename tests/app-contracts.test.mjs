@@ -146,6 +146,22 @@ test("PlayerActor owns sprite, feet anchor, and Arcade body responsibilities", a
   assert.match(actor, /setDepth\(y\)/);
 });
 
+test("PlayerAttackController defines independent three-stage timing metadata", async () => {
+  const source = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
+  const controller = await readFile(new URL("../app/game/player/PlayerAttackController.ts", import.meta.url), "utf8");
+  assert.match(source, /new PlayerAttackController\(\)/);
+  assert.match(source, /this\.attackController\.begin/);
+  assert.match(source, /this\.attackController\.isActiveFrame/);
+  assert.match(source, /this\.attackController\.finish\(\)/);
+  assert.match(controller, /guanyu-attack1/);
+  assert.match(controller, /guanyu-attack2/);
+  assert.match(controller, /guanyu-attack3/);
+  assert.match(controller, /startupFrames/);
+  assert.match(controller, /activeFrames/);
+  assert.match(controller, /recoveryFrames/);
+  assert.match(controller, /frameRate: 8/);
+});
+
 test("Clock pause reasons remain independent and resume only when all reasons clear", () => {
   const clock = new ClockState();
   assert.equal(clock.isPaused(), false);

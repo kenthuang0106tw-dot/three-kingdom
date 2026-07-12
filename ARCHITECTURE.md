@@ -188,6 +188,16 @@ synchronization. `MainScene` retains orchestration responsibilities and asks the
 actor to move visuals, play the existing animations, or sync depth; attack hitbox
 and combat effects remain outside the actor for the next M2 tasks.
 
+## Player Attack Controller Contract (M2 / Task 2.3)
+
+`PlayerAttackController` owns immutable metadata for the three existing attack
+stages: Phaser animation key, frame sequence, 8 FPS rate, and startup, active,
+and recovery frame indexes. `MainScene` remains responsible for combo input and
+state transitions, while the controller answers which animation is active and
+whether the current frame enables the independent attack hitbox. It has no
+Scene, sprite, camera, UI, or effect references, so timing metadata is tested
+without a renderer and can later feed a dedicated combat resolver.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

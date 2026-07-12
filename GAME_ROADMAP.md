@@ -338,7 +338,8 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 - M1 / Task 1.5 (Asset Manifest and Preload Failure Policy) completed in this closeout commit.
 - M2 / Task 2.1 (Player State Machine) completed in this closeout commit.
 - M2 / Task 2.2 (Player Actor Visual and Physics Ownership) completed in this closeout commit.
-- Next eligible task: M2 / Task 2.3 (Player Attack Controller and Metadata).
+- M2 / Task 2.3 (Player Attack Controller and Metadata) completed in this closeout commit.
+- Next eligible task: M2 / Task 2.4 (Combat Resolver).
 
 ## 4. Global Acceptance Rules
 
