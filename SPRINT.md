@@ -209,4 +209,13 @@
 - [x] Browser smoke completed 10 Scene restarts with one 1280×720 Canvas and reset count 10.
 - [x] No new gameplay or production UI was added.
 
+## M3 / Task 3.1 Closeout
+
+- [x] Added Phaser-free `StageConfig` types for world/walk bounds, spawns, encounters, and exits.
+- [x] Added validated `BAMBOO_COMBAT_ROOM` data preserving the current room dimensions and three enemy positions.
+- [x] MainScene and EnemyManager consume the room configuration without adding stage flow or camera behavior.
+- [x] `pnpm test` 25/25, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
+- [x] Browser smoke verified one 1280x720 Canvas, ten reset cycles, and zero page errors.
+- [ ] Physical mobile and long-session validation remain deferred.
+
 Task 1.1 已完成；下一步只執行 Task 1.2。Pause、visibility、deterministic clock 與其他未完成項目依 Roadmap 保留。

@@ -242,6 +242,16 @@ continuity. Browser smoke additionally verifies one Canvas and ten Scene reset
 cycles without duplicate runtime ownership. No StageConfig or camera behavior
 is included in this acceptance boundary.
 
+## StageConfig Contract (M3 / Task 3.1)
+
+`app/game/stage/StageConfig.ts` is a Phaser-free, data-only boundary for world
+bounds, walk bounds, player and enemy spawn points, encounter references, and
+future exit metadata. `BAMBOO_COMBAT_ROOM` preserves the current 1280x720 room
+and three enemy coordinates. `validateStageConfig` checks containment, unique
+IDs, and encounter references deterministically. MainScene and EnemyManager
+consume the configuration without adding camera, scrolling, gates, or stage
+flow; those behaviors remain later Stage tasks.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

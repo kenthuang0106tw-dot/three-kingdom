@@ -12,6 +12,7 @@ import { PlayerActor } from "./player/PlayerActor";
 import { PLAYER_ATTACKS, PlayerAttackController, type AttackStep } from "./player/PlayerAttackController";
 import { resolveAttack } from "./combat/CombatResolver";
 import { EffectDirector, EFFECT_PARAMS } from "./combat/EffectDirector";
+import { BAMBOO_COMBAT_ROOM } from "./stage/StageConfig";
 
 type AttackState = "attack1" | "attack2" | "attack3";
 type PreviewFrame = {
@@ -19,17 +20,22 @@ type PreviewFrame = {
   originY: number; offsetX: number; offsetY: number; classification: string;
 };
 
-const WIDTH = 1280;
-const HEIGHT = 720;
-const START_X = 180;
-const START_FOOT_Y = 602;
+const WIDTH = BAMBOO_COMBAT_ROOM.worldBounds.width;
+const HEIGHT = BAMBOO_COMBAT_ROOM.worldBounds.height;
+const START_X = BAMBOO_COMBAT_ROOM.playerSpawn.x;
+const START_FOOT_Y = BAMBOO_COMBAT_ROOM.playerSpawn.y;
 const WALK_SPEED = 235;
 const PLAYER_MAX_HP = 10;
 const ENEMY_FRAME_SIZE = 384;
 const ENEMY_FEET_Y = 354;
 const HURT_MS = 300;
 const COMBO_WINDOW_MS = 360;
-const WALK_BOUNDS = new Phaser.Geom.Rectangle(70, 390, 1140, 245);
+const WALK_BOUNDS = new Phaser.Geom.Rectangle(
+  BAMBOO_COMBAT_ROOM.walkBounds.x,
+  BAMBOO_COMBAT_ROOM.walkBounds.y,
+  BAMBOO_COMBAT_ROOM.walkBounds.width,
+  BAMBOO_COMBAT_ROOM.walkBounds.height,
+);
 const ATTACK_STATES: AttackState[] = ["attack1", "attack2", "attack3"];
 const FRAME_ORIGIN_Y: Record<string, number> = {
   "walk-0": 739 / 793, "walk-1": 736 / 793, "walk-2": 746 / 793, "walk-3": 741 / 793,
@@ -183,7 +189,7 @@ export default class MainScene extends Phaser.Scene {
       onPlayerHit: enemy => this.applyHitToPlayer(enemy),
       onAllDefeated: () => this.showAllEnemiesDefeated(),
     }, development, { clock: new PhaserGameplayClock(this), random: new SeededRandom(0x3a6f2d1) });
-    this.enemyManager.spawnAll();
+    this.enemyManager.spawnAll(BAMBOO_COMBAT_ROOM.spawnPoints);
 
     if (development) {
       this.diagnosticMode = new URLSearchParams(window.location.search).get("debugInput") === "1";

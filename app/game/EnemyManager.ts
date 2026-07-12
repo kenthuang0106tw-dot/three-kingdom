@@ -1,5 +1,6 @@
 import * as Phaser from "phaser";
 import { PhaserGameplayClock, SeededRandom, type GameplayClock, type RandomSource } from "./time/GameplayTime";
+import { BAMBOO_COMBAT_ROOM, type StageSpawnPoint } from "./stage/StageConfig";
 
 export type EnemyState = "idle" | "walk" | "attack" | "hurt" | "dead";
 
@@ -18,7 +19,12 @@ const RECOVERY_MIN = 800;
 const RECOVERY_MAX = 1200;
 const FRAME_SIZE = 384;
 const FEET_Y = 354;
-const WALK_BOUNDS = new Phaser.Geom.Rectangle(70, 390, 1140, 245);
+const WALK_BOUNDS = new Phaser.Geom.Rectangle(
+  BAMBOO_COMBAT_ROOM.walkBounds.x,
+  BAMBOO_COMBAT_ROOM.walkBounds.y,
+  BAMBOO_COMBAT_ROOM.walkBounds.width,
+  BAMBOO_COMBAT_ROOM.walkBounds.height,
+);
 
 const FORMATION_SLOTS = [
   { name: "front", x: 135, y: 0 },
@@ -98,12 +104,7 @@ export class EnemyManager {
     if (development) this.slotGraphics = scene.add.graphics().setDepth(9000);
   }
 
-  spawnAll() {
-    const spawns = [
-      { x: 900, y: 560 },
-      { x: 830, y: 455 },
-      { x: 850, y: 625 },
-    ];
+  spawnAll(spawns: readonly StageSpawnPoint[] = BAMBOO_COMBAT_ROOM.spawnPoints) {
     spawns.forEach((spawn, index) => this.addEnemy(new EnemyCombatant(index + 1, index, this.scene, spawn.x, spawn.y)));
   }
 

@@ -14,6 +14,7 @@ import { createAssetFailureReporter, RUNTIME_ASSET_MANIFEST } from "../app/game/
 import { PlayerStateMachine } from "../app/game/player/PlayerStateMachine.ts";
 import { PlayerLifecycle } from "../app/game/player/PlayerLifecycle.ts";
 import { resolveAttack } from "../app/game/combat/CombatResolver.ts";
+import { BAMBOO_COMBAT_ROOM, validateStageConfig } from "../app/game/stage/StageConfig.ts";
 
 test("React shell mounts only the Phaser lifecycle component", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
@@ -42,8 +43,7 @@ test("Enemy and combat source retain the current three-enemy contracts", async (
     readFile(new URL("../app/game/EnemyManager.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8"),
   ]);
-  const spawnBlock = manager.match(/const spawns = \[([\s\S]*?)\n    \];/)?.[1] ?? "";
-  assert.equal([...spawnBlock.matchAll(/\{ x: \d+, y: \d+ \}/g)].length, 3);
+  assert.equal(BAMBOO_COMBAT_ROOM.spawnPoints.length, 3);
   assert.match(manager, /get currentAttackerId\(\)/);
   assert.match(scene, /this\.physics\.overlap\(this\.attackZone, enemy\.bodyZone\)/);
   assert.match(scene, /resolveAttack\(\{/);
@@ -305,8 +305,7 @@ test("Combat room acceptance covers formation, attack director, alignment, and s
     readFile(new URL("../app/game/EnemyManager.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8"),
   ]);
-  const spawns = manager.match(/const spawns = \[([\s\S]*?)\n    \];/)?.[1] ?? "";
-  const spawnCoordinates = [...spawns.matchAll(/\{ x: (\d+), y: (\d+) \}/g)].map(match => [Number(match[1]), Number(match[2])]);
+  const spawnCoordinates = BAMBOO_COMBAT_ROOM.spawnPoints.map(({ x, y }) => [x, y]);
   assert.equal(spawnCoordinates.length, 3);
   assert.equal(new Set(spawnCoordinates.map(([, y]) => y)).size, 3);
   assert.match(manager, /ENEMY_ATTACK_X_RANGE = 110/);
@@ -317,7 +316,21 @@ test("Combat room acceptance covers formation, attack director, alignment, and s
   assert.match(manager, /Math\.abs\(dy\) < ENEMY_ATTACK_Y_RANGE/);
   assert.match(manager, /getLivingEnemies\(\)/);
   assert.match(manager, /onAllDefeated\(\)/);
-  assert.match(scene, /this\.enemyManager\.spawnAll\(\)/);
+  assert.match(scene, /this\.enemyManager\.spawnAll\(BAMBOO_COMBAT_ROOM\.spawnPoints\)/);
   assert.match(scene, /resolveAttack\(\{/);
   assert.match(scene, /this\.playerHitTargetIds/);
+});
+
+test("StageConfig remains Phaser-free and validates the bamboo combat room", async () => {
+  const source = await readFile(new URL("../app/game/stage/StageConfig.ts", import.meta.url), "utf8");
+  assert.doesNotMatch(source, /from ["']phaser["']/);
+  assert.equal(BAMBOO_COMBAT_ROOM.worldBounds.width, 1280);
+  assert.equal(BAMBOO_COMBAT_ROOM.worldBounds.height, 720);
+  assert.deepEqual(BAMBOO_COMBAT_ROOM.walkBounds, { x: 70, y: 390, width: 1140, height: 245 });
+  assert.equal(BAMBOO_COMBAT_ROOM.spawnPoints.length, 3);
+  assert.equal(validateStageConfig(BAMBOO_COMBAT_ROOM), BAMBOO_COMBAT_ROOM);
+  assert.throws(() => validateStageConfig({
+    ...BAMBOO_COMBAT_ROOM,
+    spawnPoints: [...BAMBOO_COMBAT_ROOM.spawnPoints, { id: "enemy-front", x: 900, y: 560 }],
+  }), /Duplicate spawn point id/);
 });

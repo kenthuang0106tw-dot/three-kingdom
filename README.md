@@ -128,6 +128,6 @@ tools/build_enemy_art.py     Enemy sheet/atlas rebuild pipeline
 
 ## Current Priority
 
-M2 / Task 2.8 Combat-Room Acceptance is complete. The next single task is M3 / Task 3.1, StageConfig.
+M3 / Task 3.1 StageConfig is complete. The next single task is M3 / Task 3.2, World/walk bounds contract.
 
-Milestone 0 與 M1 / Task 1.1 已完成；下一步進入 M1 / Task 1.2，接入 Phaser touch controls。完成前不要新增 Stage、Boss、角色、招式或 Audio。
+Milestone 0、M1 與 M2 已完成；目前進入 M3 Stage 基礎建設。完成下一個 Task 前不要新增 Boss、角色、招式或 Audio。

@@ -162,6 +162,12 @@ M2 combat-room acceptance now covers the three-enemy runtime contracts and
 reset smoke. Remaining physical-device and long-session QA is deferred before
 Stage work; the next implementation task is StageConfig.
 
+### TD-M03 Update — Stage configuration boundary
+
+M3 / Task 3.1 now provides a Phaser-free, validated configuration for the
+current bamboo room. Camera movement, encounter gates, and full stage flow are
+intentionally deferred to later tasks; no new runtime behavior was introduced.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

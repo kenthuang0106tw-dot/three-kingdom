@@ -1,29 +1,33 @@
 # Next Task
 
-## M3 / Task 3.1 — StageConfig
+## M3 / Task 3.2 — World/walk bounds contract
 
 ### Why this is next
 
-The M2 combat room is accepted and stable. StageConfig is the smallest M3
-foundation for moving from a static room to data-driven bounds, spawns,
-encounters, and exits without changing current combat behavior.
+StageConfig now provides one validated source for the current room geometry.
+The next smallest step is to make gameplay actors and knockback use that
+contract consistently, before adding camera movement or encounter flow.
 
 ### Completion criteria
 
-- Define a Phaser-free StageConfig schema for world bounds, walk bounds, spawn points, encounter definitions, and exit metadata.
-- Add a configuration for the current bamboo combat room with no visual or gameplay changes.
-- Validate the schema deterministically and keep MainScene as the current consumer until later Stage tasks.
-- Do not add camera follow, encounter gates, scrolling, new enemies, or stage flow.
+- Define a Phaser-free bounds helper for world and walkable rectangles.
+- Make MainScene and EnemyManager consume the shared bounds contract.
+- Preserve the current 1280×720 bamboo room and actor positions.
+- Clamp player and enemy movement plus horizontal knockback to walk bounds.
+- Do not add camera follow, scrolling, encounter gates, or new content.
 
 ### Validation
 
 - Run `pnpm test`, `pnpm build`, `pnpm lint`, and `pnpm typecheck`.
-- Browser smoke verifies the current combat room still renders one Canvas with no visible runtime errors.
+- Add deterministic tests for containment and edge clamping.
+- Browser smoke verifies one Canvas, current combat room rendering, and no
+  visible runtime errors.
 
 ### Expected files
 
-- `app/game/stage/**`
+- `app/game/stage/StageConfig.ts`
 - `app/game/MainScene.ts`
+- `app/game/EnemyManager.ts`
 - `tests/**`
 - `ARCHITECTURE.md`
 - `SPRINT.md`
@@ -33,5 +37,5 @@ encounters, and exits without changing current combat behavior.
 
 ### Risks
 
-- An over-specified schema could force rework when encounter gates and camera rules arrive.
-- Keep the first contract minimal, data-only, and behavior-preserving.
+- Duplicated Phaser rectangles could drift from StageConfig.
+- Keep the helper small and data-driven; defer camera and stage-flow policy.
