@@ -1,9 +1,9 @@
 import * as Phaser from "phaser";
 import { EnemyCombatant, EnemyManager, ENEMY_DISPLAY_SCALE } from "./EnemyManager";
+import { createActionSnapshot, type ActionSnapshot } from "./input/ActionSnapshot";
 
 type PlayerState = "idle" | "walk" | "attack1" | "attack2" | "attack3" | "hurt";
 type AttackState = "attack1" | "attack2" | "attack3";
-type DirectionSnapshot = { moveX: number; moveY: number; up: boolean; down: boolean; left: boolean; right: boolean };
 type PreviewFrame = {
   name: string; x: number; y: number; width: number; height: number;
   originY: number; offsetX: number; offsetY: number; classification: string;
@@ -75,15 +75,13 @@ class PlayerInputController {
     this.attack = keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J);
   }
 
-  readDirection(): DirectionSnapshot {
+  readSnapshot(): ActionSnapshot {
     const up = this.cursors.up.isDown || this.wasd.up.isDown;
     const down = this.cursors.down.isDown || this.wasd.down.isDown;
     const left = this.cursors.left.isDown || this.wasd.left.isDown;
     const right = this.cursors.right.isDown || this.wasd.right.isDown;
-    return { moveX: Number(right) - Number(left), moveY: Number(down) - Number(up), up, down, left, right };
+    return createActionSnapshot({ up, down, left, right }, Phaser.Input.Keyboard.JustDown(this.attack));
   }
-
-  attackJustPressed() { return Phaser.Input.Keyboard.JustDown(this.attack); }
 }
 
 export default class MainScene extends Phaser.Scene {
@@ -97,7 +95,7 @@ export default class MainScene extends Phaser.Scene {
   private debugText?: Phaser.GameObjects.Text;
   private state: PlayerState = "idle";
   private facing: 1 | -1 = 1;
-  private currentInput: DirectionSnapshot = { moveX: 0, moveY: 0, up: false, down: false, left: false, right: false };
+  private currentInput: ActionSnapshot = createActionSnapshot({ up: false, down: false, left: false, right: false });
   private attackTriggerCount = 0;
   private attackCompleteCount = 0;
   private comboStep = 0;
@@ -198,7 +196,7 @@ export default class MainScene extends Phaser.Scene {
     if (this.previewMode) { this.updatePreviewMode(); return; }
     if (this.hitStopActive) { this.updateDebugText(); return; }
     this.playerBody.setVelocity(0, 0);
-    this.currentInput = this.inputController.readDirection();
+    this.currentInput = this.inputController.readSnapshot();
 
     this.enemyManager.update();
 
@@ -215,7 +213,7 @@ export default class MainScene extends Phaser.Scene {
       return;
     }
 
-    if (this.inputController.attackJustPressed()) {
+    if (this.currentInput.attackPressed) {
       this.attackTriggerCount += 1;
       this.startAttack(1);
       this.syncVisualsToBody();
@@ -249,7 +247,7 @@ export default class MainScene extends Phaser.Scene {
 
   private updateAttackState() {
     if (this.comboWindowOpen && this.time.now > this.comboWindowEndsAt) this.comboWindowOpen = false;
-    if (this.comboStep < 3 && this.comboWindowOpen && this.inputController.attackJustPressed()) {
+    if (this.comboStep < 3 && this.comboWindowOpen && this.currentInput.attackPressed) {
       this.attackTriggerCount += 1;
       this.comboBuffered = true;
       this.comboWindowOpen = false;

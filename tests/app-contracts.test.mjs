@@ -6,6 +6,7 @@ import {
   registerPhaserGame,
   releasePhaserGame,
 } from "../app/game/phaserLifecycle.ts";
+import { createActionSnapshot } from "../app/game/input/ActionSnapshot.ts";
 
 test("React shell mounts only the Phaser lifecycle component", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
@@ -40,4 +41,24 @@ test("Enemy and combat source retain the current three-enemy contracts", async (
   assert.match(manager, /markPlayerAttackHit/);
   assert.match(scene, /this\.physics\.overlap\(this\.attackZone, enemy\.bodyZone\)/);
   assert.match(scene, /this\.enemyManager\.markPlayerAttackHit\(enemy, this\.playerAttackId\)/);
+});
+
+test("Action snapshot releases movement and normalizes diagonal input", () => {
+  const stopped = createActionSnapshot({ up: false, down: false, left: false, right: false });
+  assert.deepEqual({ moveX: stopped.moveX, moveY: stopped.moveY }, { moveX: 0, moveY: 0 });
+
+  const diagonal = createActionSnapshot({ up: true, down: false, left: false, right: true });
+  assert.ok(Math.abs(Math.hypot(diagonal.moveX, diagonal.moveY) - 1) < 1e-9);
+  assert.equal(diagonal.attackPressed, false);
+
+  const attack = createActionSnapshot({ up: false, down: false, left: false, right: false }, true);
+  assert.equal(attack.attackPressed, true);
+});
+
+test("MainScene reads keyboard edge-trigger through the snapshot boundary", async () => {
+  const source = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
+  assert.match(source, /readSnapshot\(\)/);
+  assert.match(source, /Phaser\.Input\.Keyboard\.JustDown\(this\.attack\)/);
+  assert.doesNotMatch(source, /window\.addEventListener|document\.addEventListener/);
+  assert.doesNotMatch(source, /attackJustPressed\(\)/);
 });

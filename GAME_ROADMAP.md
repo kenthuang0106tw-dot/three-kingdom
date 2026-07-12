@@ -23,7 +23,7 @@
 | Enemy | Playable prototype | 三名相同小兵、Formation、Attack Slot、hurt/dead/cleanup |
 | Stage | Static room | 單張竹林背景與固定 walk bounds |
 | Camera | Missing | 無 world scroll、follow、encounter lock |
-| Mobile | Missing | 無正式 Phaser touch input |
+| Mobile | Missing | 無正式 Phaser touch input；下一步 Task 1.2 |
 | UI | Debug only | 無 HUD、pause、continue、result |
 | Audio | Missing | 無 runtime assets |
 | Tests | Contract baseline | app shell、lifecycle、route 與 multi-enemy source contracts 已建立 |
@@ -135,6 +135,8 @@
 **Dependencies:** M0。
 
 ### Tasks
+
+Task 1.1 completed in the current sprint; Task 1.2 is next.
 
 | ID | Description | Priority | Difficulty | Dependencies | Acceptance Criteria | Expected Files | Risk |
 |---|---|---:|---:|---|---|---|---|

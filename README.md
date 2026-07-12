@@ -128,4 +128,4 @@ tools/build_enemy_art.py     Enemy sheet/atlas rebuild pipeline
 
 ## Current Priority
 
-Milestone 0 已完成；下一步進入 M1 / Task 1.1，先定義 action snapshot。完成前不要新增 Stage、Boss、角色、招式或 Audio。
+Milestone 0 與 M1 / Task 1.1 已完成；下一步進入 M1 / Task 1.2，接入 Phaser touch controls。完成前不要新增 Stage、Boss、角色、招式或 Audio。

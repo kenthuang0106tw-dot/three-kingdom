@@ -22,10 +22,11 @@ React 不參與 gameplay update。`PhaserGame.tsx` 動態載入 Phaser 和 `Main
 
 ### Player input
 
-1. `PlayerInputController` 在 Scene `create()` 建立 keyboard keys。
-2. `MainScene.update()` 每幀讀取 `isDown`／`JustDown`。
-3. Player body velocity 由當前輸入重算。
-4. Sprite 跟隨 body zone，腳底 Y 同時決定 depth。
+1. `PlayerInputController` 在 Scene `create()` 建立 keyboard keys 一次。
+2. `readSnapshot()` 每幀讀取 `isDown`，並以 `JustDown` 產生 edge-trigger `attackPressed`。
+3. `ActionSnapshot` 提供方向按鈕、normalized movement vector 與攻擊 edge；後續 touch 必須寫入同一 contract。
+4. Player body velocity 由當前 snapshot 重算；無輸入下一幀為零。
+5. Sprite 跟隨 body zone，腳底 Y 同時決定 depth。
 
 ### Player attack
 

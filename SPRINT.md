@@ -1,29 +1,29 @@
-# Current Sprint — Sprint 0: Trusted Development Baseline
+# Current Sprint — Sprint 1: Runtime Input Contract
 
 ## Sprint Goal
 
-在不增加 gameplay 的前提下，將目前 prototype 整理成可安全繼續開發的 baseline：可提交、可啟動、可 typecheck、可測試、文件可讀。
+在不增加新 gameplay 的前提下，固定 keyboard action snapshot 與輸入邊界，讓後續 touch、pause 與 visibility contract 有單一輸入來源。
 
 ## Cadence
 
 - Duration：2 weeks
 - Capacity：1 developer + AI，約 40–55 hours
-- Milestone：M0 only
-- Scope rule：禁止加入 Stage、Boss、新角色、新招式、Audio 或 Mobile controls
+- Milestone：M1 — Runtime Contracts and Mobile Input
+- Scope rule：本 Sprint 只做 keyboard action snapshot；禁止加入 touch、pause、Stage、Boss、新角色、新招式或 Audio
 
 ## Task List
 
 | Order | Task | Estimate | Deliverable | Verification |
 |---:|---|---:|---|---|
-| 1 | ✅ Audit and commit Phase 3/4 baseline | 3–5h | `bae05a1` baseline commit | build + desktop combat smoke passed |
-| 2 | ✅ M0 / Task 0.2 — Restore repository text and single runtime | 9–14h | UTF-8 evidence、可讀 launch scripts、單一 Phaser runtime | 30-file UTF-8 scan + reference scan + build + runtime smoke passed |
-| 3 | ✅ M0 / Task 0.3 — Package and Type Boundaries | 8–13h | 單一 pnpm lockfile、browser/worker type boundaries | frozen install + build + lint + typecheck passed |
-| 4 | ✅ M0 / Task 0.4 — Replace Invalid Tests and Verify Production Routes | 14–20h | 有效 app/lifecycle/route tests | tests 4/4 + production HTTP/browser smoke passed |
-| 5 | ✅ Sprint 0 closeout documentation | 2–3h | Roadmap/Debt/Assets/Checklist updated | review + single-purpose commit |
+| 1 | ✅ M1 / Task 1.1 — Define Action Snapshot and Keyboard Input Boundary | 6–10h | `ActionSnapshot`、keyboard contract tests | tests + browser keyboard smoke passed |
+| 2 | ▶ M1 / Task 1.2 — Phaser Touch Controls | 10–16h | touch action adapter | pointer/multi-touch smoke |
+| 3 | Pause/hit-stop/visibility clock contract | 8–12h | lifecycle clock contract | deterministic time tests |
+| 4 | Readonly gameplay events/snapshot | 6–10h | event/snapshot types | consumer contract tests |
+| 5 | Deterministic seed/test clock | 6–10h | RNG/time adapter | repeatable director tests |
 
 ## Detailed Acceptance
 
-### Baseline
+### Previous baseline
 
 - [x] Current Phaser multi-enemy prototype 有清楚 commit：`bae05a1`。
 - [x] Worktree clean。
@@ -38,6 +38,16 @@
 - [x] `pnpm lint` 通過（0 errors；4 個既有 `<img>` warnings）。
 - [x] `pnpm typecheck` 通過（app + worker）。
 - [x] `pnpm test` 通過（4 tests passed）。
+
+### Current Sprint
+
+- [x] Action snapshot reads current key state each frame.
+- [x] Keyup／無輸入 produces zero movement vector.
+- [x] WASD／方向鍵 diagonal vector normalized.
+- [x] J edge-trigger is read through `Phaser.Input.Keyboard.JustDown` once per snapshot.
+- [x] No DOM keyboard listener or React gameplay state.
+- [x] Tests 6/6、build、lint、typecheck passed.
+- [x] Browser keyboard smoke completed with console error count 0.
 
 ### Repository
 
@@ -67,4 +77,4 @@
 
 ## Sprint Exit
 
-Sprint 0 Acceptance 已完成；Task 0.4 commit 後進入 M1 / Task 1.1。Mobile touch、full gameplay regression 與其他未完成項目依 Roadmap 保留，不在本 Sprint 偷加範圍。
+Task 1.1 已完成；下一步只執行 Task 1.2。Pause、visibility、deterministic clock 與其他未完成項目依 Roadmap 保留。

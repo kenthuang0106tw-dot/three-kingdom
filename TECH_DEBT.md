@@ -114,3 +114,8 @@
 
 - **Resolved:** 2026-07-12，M0 / Task 0.3。
 - **Evidence:** package manager 固定為 pnpm 11.7.0、刪除 `package-lock.json`，`pnpm install --frozen-lockfile` 通過且未修改 lockfile。
+
+### TD-H06 — Keyboard input was not exposed as a shared action contract
+
+- **Resolved:** 2026-07-12，M1 / Task 1.1。
+- **Evidence:** `app/game/input/ActionSnapshot.ts` 統一方向與 edge-trigger attack；6 tests、browser keyboard smoke、build、lint、typecheck 通過。
