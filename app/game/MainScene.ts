@@ -6,8 +6,8 @@ import { LifecycleClock } from "./time/LifecycleClock";
 import { PhaserGameplayClock, SeededRandom } from "./time/GameplayTime";
 import { GameplayEventHub, type GameplaySnapshot } from "./events/GameplayEvents";
 import { createAssetFailureReporter, queueRuntimeAssets } from "./assets/AssetManifest";
+import { PlayerStateMachine, type PlayerState } from "./player/PlayerStateMachine";
 
-type PlayerState = "idle" | "walk" | "attack1" | "attack2" | "attack3" | "hurt";
 type AttackState = "attack1" | "attack2" | "attack3";
 type PreviewFrame = {
   name: string; x: number; y: number; width: number; height: number;
@@ -41,14 +41,6 @@ const ATTACK_ACTIVE_FRAME_INDEXES: Record<string, ReadonlySet<number>> = {
   "guanyu-attack1": new Set([2]),
   "guanyu-attack2": new Set([2]),
   "guanyu-attack3": new Set([2]),
-};
-const ALLOWED_TRANSITIONS: Record<PlayerState, ReadonlySet<PlayerState>> = {
-  idle: new Set(["walk", "attack1", "hurt"]),
-  walk: new Set(["idle", "attack1", "hurt"]),
-  attack1: new Set(["idle", "attack2", "hurt"]),
-  attack2: new Set(["idle", "attack3", "hurt"]),
-  attack3: new Set(["idle", "hurt"]),
-  hurt: new Set(["idle"]),
 };
 const FRAME_ORIGIN_Y: Record<string, number> = {
   "walk-0": 739 / 793, "walk-1": 736 / 793, "walk-2": 746 / 793, "walk-3": 741 / 793,
@@ -101,8 +93,9 @@ export default class MainScene extends Phaser.Scene {
   private readonly gameplayEvents = new GameplayEventHub();
   private lastLifecyclePaused = false;
   private enemyManager!: EnemyManager;
+  private readonly playerStateMachine = new PlayerStateMachine();
   private debugText?: Phaser.GameObjects.Text;
-  private state: PlayerState = "idle";
+  private get state(): PlayerState { return this.playerStateMachine.state; }
   private facing: 1 | -1 = 1;
   private currentInput: ActionSnapshot = createActionSnapshot({ up: false, down: false, left: false, right: false });
   private attackTriggerCount = 0;
@@ -164,6 +157,7 @@ export default class MainScene extends Phaser.Scene {
     this.enemyPreviewMode = development && query.get("previewEnemy") === "1";
     this.previewMode = development && query.get("previewAttack") === "1";
     this.resetSmokeMode = development && query.get("resetSmoke") === "1";
+    this.playerStateMachine.reset();
     if (this.enemyPreviewMode) { this.createEnemyAlignmentPreview(); return; }
     if (this.previewMode) { this.createPreviewMode(); return; }
 
@@ -448,9 +442,9 @@ export default class MainScene extends Phaser.Scene {
   }
 
   private transitionTo(next: PlayerState) {
-    if (next === this.state) return;
-    if (!ALLOWED_TRANSITIONS[this.state].has(next)) throw new Error(`Invalid player transition: ${this.state} -> ${next}`);
-    const previous = this.state; this.state = next;
+    const transition = this.playerStateMachine.transition(next);
+    if (!transition) return;
+    const { previous } = transition;
     this.gameplayEvents.publish({ type: "player-state-changed", previous, next, at: this.time.now });
     this.transitionLog.push(`${previous} -> ${next}`); if (this.transitionLog.length > 20) this.transitionLog.shift();
     if (next === "idle" || next === "hurt") this.showIdleFrame();

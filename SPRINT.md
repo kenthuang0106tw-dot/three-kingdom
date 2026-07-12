@@ -131,6 +131,14 @@
 - [x] Browser smoke loaded the manifest-backed game with one 1280×720 Canvas and no visible runtime error.
 - [x] Missing-asset fixture contract test passed without modifying production assets.
 
+## Task 2.1 Closeout
+
+- [x] Added pure `PlayerStateMachine` coverage for idle, walk, attack1/2/3, and hurt.
+- [x] Invalid transitions are rejected deterministically; reset returns to idle.
+- [x] MainScene delegates state transitions to the machine without changing input, combo, animation, or hit effects.
+- [x] `pnpm test` 17/17, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
+- [x] Browser smoke loaded the updated route with one 1280×720 Canvas and no visible runtime error.
+
 ## Task 1.8 Closeout
 
 - [x] Added development-only `?resetSmoke=1` Scene restart smoke path.

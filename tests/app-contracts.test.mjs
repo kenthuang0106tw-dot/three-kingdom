@@ -11,6 +11,7 @@ import { ClockState } from "../app/game/time/ClockState.ts";
 import { GameplayEventHub } from "../app/game/events/GameplayEvents.ts";
 import { SeededRandom, TestClock } from "../app/game/time/GameplayTime.ts";
 import { createAssetFailureReporter, RUNTIME_ASSET_MANIFEST } from "../app/game/assets/AssetManifest.ts";
+import { PlayerStateMachine } from "../app/game/player/PlayerStateMachine.ts";
 
 test("React shell mounts only the Phaser lifecycle component", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
@@ -116,6 +117,20 @@ test("Runtime asset manifest preserves keys and reports missing required assets"
   const messages = [];
   createAssetFailureReporter(RUNTIME_ASSET_MANIFEST, message => messages.push(message))("guanyu-walk");
   assert.deepEqual(messages, ["Required runtime asset failed to load: guanyu-walk"]);
+});
+
+test("Player state machine enforces explicit transitions and reset", () => {
+  const machine = new PlayerStateMachine();
+  assert.equal(machine.state, "idle");
+  assert.equal(machine.canTransition("walk"), true);
+  assert.deepEqual(machine.transition("walk"), { previous: "idle", next: "walk" });
+  assert.deepEqual(machine.transition("attack1"), { previous: "walk", next: "attack1" });
+  assert.deepEqual(machine.transition("attack2"), { previous: "attack1", next: "attack2" });
+  assert.throws(() => machine.transition("walk"), /Invalid player transition: attack2 -> walk/);
+  machine.transition("hurt");
+  assert.deepEqual(machine.transition("idle"), { previous: "hurt", next: "idle" });
+  machine.reset();
+  assert.equal(machine.state, "idle");
 });
 
 test("Clock pause reasons remain independent and resume only when all reasons clear", () => {

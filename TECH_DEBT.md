@@ -114,6 +114,11 @@ Runtime asset ownership is now explicit through a typed manifest and determinist
 development load-error reporting. Character expansion and full asset QA metadata
 remain future work.
 
+### TD-M05 Update — 2026-07-12
+
+Player transition rules are now isolated and tested. MainScene still owns actor
+visuals, physics, input, and combat orchestration until the next M2 extraction.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

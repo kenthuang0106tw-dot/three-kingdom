@@ -217,6 +217,19 @@
 | Missing asset fixture | Pass | Reporter emits deterministic required-key message |
 | Known issues | Non-blocking | Full asset content/metadata expansion remains future work |
 
+## M2 / Task 2.1 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M2 / Task 2.1 — Player State Machine |
+| Build | Pass | `pnpm build` |
+| Tests | Pass | `pnpm test` 17/17 |
+| Lint | Pass | `pnpm lint` 0 errors, existing `<img>` warnings only |
+| Typecheck | Pass | `pnpm typecheck` |
+| Browser smoke | Pass | Updated route, one 1280×720 Canvas, no visible runtime error |
+| Transition coverage | Pass | Valid idle/walk/attack/hurt paths and invalid transition rejection |
+| Known issues | Non-blocking | Actor visual/physics ownership remains in MainScene for Task 2.2 |
+
 ## M1 / Task 1.4 Evidence
 
 | Item | Result | Evidence |

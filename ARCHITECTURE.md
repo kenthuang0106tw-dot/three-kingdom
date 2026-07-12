@@ -171,6 +171,15 @@ development, Phaser's loader `loaderror` event is mapped to a deterministic
 required-asset message and removed during Scene shutdown. Production does not
 install the reporting listener or add an error UI.
 
+## Player State Machine Contract (M2 / Task 2.1)
+
+`app/game/player/PlayerStateMachine.ts` is a pure transition boundary for
+`idle`, `walk`, `attack1`, `attack2`, `attack3`, and `hurt`. It owns only the
+current state and allowed transitions; input, animation, physics, combo timing,
+and gameplay event publication remain in `MainScene` until later extraction
+tasks. Invalid transitions throw deterministic errors, while `reset()` returns
+the machine to `idle` for Scene lifecycle reuse.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。
