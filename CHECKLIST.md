@@ -135,6 +135,20 @@
 - [ ] Hit Spark／damage effects 不造成明顯 GC spike。
 - [ ] Initial load size 與時間已記錄。
 
+## M1 / Task 1.2 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M1 / Task 1.2 — Phaser Touch Controls |
+| Commit | Pending | Closeout commit created after final diff review |
+| Build | Pass | `pnpm build` (sandbox escalation required for Vite child process) |
+| Tests | Pass | `pnpm test` 7/7 |
+| Lint | Pass | `pnpm lint` 0 errors, existing `<img>` warnings only |
+| Typecheck | Pass | `pnpm typecheck` |
+| Browser smoke | Pass | One 1280×720 Canvas, touch attack interaction, zero console errors |
+| Mobile smoke | Pending | Physical mobile device not available in harness |
+| Known issues | None blocking | Physical-device pointer lifecycle still needs M1.7 validation |
+
 ## Task Evidence
 
 | Item | Result | Evidence |

@@ -73,6 +73,10 @@
 - **Resolution:** Asset inventory 標示 reference/source/runtime；確認後清理。
 - **Target:** M0/M8。
 
+### TD-H05 Update — 2026-07-12
+
+Phaser touch controls are now implemented through `TouchInputController` and merged into the shared action snapshot. Desktop/browser smoke passed; physical iOS/Android validation remains part of M1 / Task 1.7.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

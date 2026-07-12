@@ -75,6 +75,15 @@
 | Tests 過度依賴 Phaser renderer | 優先測 state/config/manager contracts；renderer 用 smoke test |
 | Production asset route 只在特定 server 失敗 | 對實際 `start`/hosting route 建 HTTP integration test |
 
+## Task 1.2 Closeout
+
+- [x] Phaser touch controls render inside the Phaser canvas and feed the shared `ActionSnapshot`.
+- [x] Direction buttons support multi-touch pointer ownership and release on `pointerup`, `pointerupoutside`, `pointerout`, `pointercancel`, and `gameout`.
+- [x] Touch attack is edge-triggered and consumed once per snapshot.
+- [x] `pnpm test` 7/7, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
+- [x] Browser smoke: production route loaded with one 1280×720 Canvas and zero console errors; touch attack button interaction completed.
+- [ ] Mobile device smoke remains pending outside the browser harness.
+
 ## Sprint Exit
 
 Task 1.1 已完成；下一步只執行 Task 1.2。Pause、visibility、deterministic clock 與其他未完成項目依 Roadmap 保留。

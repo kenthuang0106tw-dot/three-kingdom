@@ -325,6 +325,12 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 | 9.4 | Rollback drill | P0 | Low | 9.2 | 可在 15 分鐘內回退上一版 | release docs | artifact retention |
 | 9.5 | Release and defect triage | P0 | Medium | 9.3, 9.4 | 無 Critical/High defect；問題進 Backlog | release/backlog | 發布後 scope 膨脹 |
 
+## Task Status Update — 2026-07-12
+
+- M1 / Task 1.2 (Phaser Touch Controls) completed in commit `5746f97`.
+- Evidence: touch adapter contract test, pointer release paths (`pointerupoutside`, `pointerout`, `pointercancel`, `gameout`), `pnpm test`, `pnpm build`, `pnpm lint`, `pnpm typecheck`, and local browser smoke with one Canvas and zero console errors.
+- Next eligible task: M1 / Task 1.3 (Pause, Hit-Stop, and Visibility Clock Contract).
+
 ## 4. Global Acceptance Rules
 
 每個 Milestone 必須同時滿足：

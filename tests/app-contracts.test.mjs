@@ -62,3 +62,14 @@ test("MainScene reads keyboard edge-trigger through the snapshot boundary", asyn
   assert.doesNotMatch(source, /window\.addEventListener|document\.addEventListener/);
   assert.doesNotMatch(source, /attackJustPressed\(\)/);
 });
+
+test("Touch input shares the action snapshot and releases pointer state", async () => {
+  const source = await readFile(new URL("../app/game/input/TouchInputController.ts", import.meta.url), "utf8");
+  const scene = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
+  assert.match(source, /pointercancel/);
+  assert.match(source, /pointerupoutside/);
+  assert.match(source, /pointerout/);
+  assert.match(source, /createActionSnapshot/);
+  assert.match(scene, /new TouchInputController\(this\)/);
+  assert.match(scene, /readSnapshot\(this\.inputController\.readSnapshot\(\)\)/);
+});

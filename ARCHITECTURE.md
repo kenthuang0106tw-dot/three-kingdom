@@ -126,6 +126,10 @@ source image
 
 Runtime 不猜測等寬切圖。任何 atlas 改動都必須重新產生 debug sheet 並人工確認。
 
+## Touch Input Contract (M1 / Task 1.2)
+
+`TouchInputController` owns Phaser interactive touch buttons and pointer lifecycle only. It merges current touch direction state and one-shot attack presses with the keyboard snapshot, then emits the same `ActionSnapshot` consumed by `MainScene`. It does not own player state, combat, or React state. All touch objects and listeners are destroyed during Scene shutdown.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

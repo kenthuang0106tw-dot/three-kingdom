@@ -1,6 +1,7 @@
 import * as Phaser from "phaser";
 import { EnemyCombatant, EnemyManager, ENEMY_DISPLAY_SCALE } from "./EnemyManager";
 import { createActionSnapshot, type ActionSnapshot } from "./input/ActionSnapshot";
+import { TouchInputController } from "./input/TouchInputController";
 
 type PlayerState = "idle" | "walk" | "attack1" | "attack2" | "attack3" | "hurt";
 type AttackState = "attack1" | "attack2" | "attack3";
@@ -91,6 +92,7 @@ export default class MainScene extends Phaser.Scene {
   private playerBody!: Phaser.Physics.Arcade.Body;
   private attackBody!: Phaser.Physics.Arcade.Body;
   private inputController!: PlayerInputController;
+  private touchInputController!: TouchInputController;
   private enemyManager!: EnemyManager;
   private debugText?: Phaser.GameObjects.Text;
   private state: PlayerState = "idle";
@@ -169,6 +171,7 @@ export default class MainScene extends Phaser.Scene {
     const keyboard = this.input.keyboard;
     if (!keyboard) throw new Error("Keyboard input is unavailable");
     this.inputController = new PlayerInputController(keyboard);
+    this.touchInputController = new TouchInputController(this);
     this.playerSprite.on(Phaser.Animations.Events.ANIMATION_UPDATE, this.handleAnimationUpdate, this);
     this.playerSprite.on(Phaser.Animations.Events.ANIMATION_COMPLETE, this.handleAnimationComplete, this);
 
@@ -187,6 +190,7 @@ export default class MainScene extends Phaser.Scene {
       this.playerSprite.off(Phaser.Animations.Events.ANIMATION_UPDATE, this.handleAnimationUpdate, this);
       this.playerSprite.off(Phaser.Animations.Events.ANIMATION_COMPLETE, this.handleAnimationComplete, this);
       this.disableAttackHitbox();
+      this.touchInputController.destroy();
       this.enemyManager.destroy();
     });
   }
@@ -196,7 +200,7 @@ export default class MainScene extends Phaser.Scene {
     if (this.previewMode) { this.updatePreviewMode(); return; }
     if (this.hitStopActive) { this.updateDebugText(); return; }
     this.playerBody.setVelocity(0, 0);
-    this.currentInput = this.inputController.readSnapshot();
+    this.currentInput = this.touchInputController.readSnapshot(this.inputController.readSnapshot());
 
     this.enemyManager.update();
 
