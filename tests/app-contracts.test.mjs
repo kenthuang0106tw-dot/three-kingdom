@@ -133,6 +133,19 @@ test("Player state machine enforces explicit transitions and reset", () => {
   assert.equal(machine.state, "idle");
 });
 
+test("PlayerActor owns sprite, feet anchor, and Arcade body responsibilities", async () => {
+  const source = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
+  const actor = await readFile(new URL("../app/game/player/PlayerActor.ts", import.meta.url), "utf8");
+  assert.match(source, /new PlayerActor\(this, START_X, START_FOOT_Y\)/);
+  assert.match(source, /this\.playerActor\.syncVisuals\(\)/);
+  assert.match(source, /this\.playerActor\.destroy\(\)/);
+  assert.match(actor, /readonly bodyZone/);
+  assert.match(actor, /readonly sprite/);
+  assert.match(actor, /readonly body:/);
+  assert.match(actor, /setOrigin\(0\.5, 1\)/);
+  assert.match(actor, /setDepth\(y\)/);
+});
+
 test("Clock pause reasons remain independent and resume only when all reasons clear", () => {
   const clock = new ClockState();
   assert.equal(clock.isPaused(), false);

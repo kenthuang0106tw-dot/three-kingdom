@@ -1,22 +1,22 @@
 # Next Task
 
-## M2 / Task 2.2 — Player Actor Visual and Physics Ownership
+## M2 / Task 2.3 — Player Attack Controller and Metadata
 
 ### Why this is next
 
-The player transition rules are now pure and tested. The next P0 extraction should give the player actor explicit ownership of its sprite, feet anchor, and Arcade body before attack metadata and combat resolution are separated.
+Player state transitions and actor visual/physics ownership are now isolated. The next P0 extraction can move startup, active, recovery, attack IDs, and hitbox timing into a dedicated attack controller without mixing actor ownership with combat resolution.
 
 ### Completion criteria
 
-- Define a player actor boundary that owns the current sprite, feet alignment, display scale, and physics body.
-- Keep `MainScene` as orchestration only; do not move input, combo rules, or combat resolution yet.
-- Preserve current idle/walk/attack/hurt visuals, movement, depth sorting, hit effects, and reset cleanup.
-- Add focused actor alignment/ownership tests without new gameplay features.
+- Define attack metadata for attack1, attack2, and attack3: frame sequence, startup, active, recovery, and hitbox timing.
+- Add a PlayerAttackController that owns attack progression and active-frame decisions.
+- Preserve current Combo input rules, hit effects, enemy hit records, and animation visuals.
+- Add focused metadata/timing tests without adding new attacks, enemies, UI, or damage rules.
 
 ### Validation
 
 - Run `pnpm test`, `pnpm build`, `pnpm lint`, and `pnpm typecheck`.
-- Browser smoke verifies player movement, feet alignment, attack, and hurt with one Canvas and zero console errors.
+- Browser smoke verifies each existing attack stage and active hitbox timing with one Canvas and zero console errors.
 
 ### Expected files
 
@@ -31,5 +31,5 @@ The player transition rules are now pure and tested. The next P0 extraction shou
 
 ### Risks
 
-- Moving sprite/body ownership can change feet anchoring or depth ordering if coordinate synchronization is duplicated.
-- Do not extract attack metadata, combat effects, or input in the same task.
+- Moving frame timing can desynchronize Phaser animation events and existing Combo buffering.
+- Keep combat resolution and hit effects in MainScene until a later dedicated task.

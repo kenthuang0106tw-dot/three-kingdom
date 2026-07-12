@@ -230,6 +230,19 @@
 | Transition coverage | Pass | Valid idle/walk/attack/hurt paths and invalid transition rejection |
 | Known issues | Non-blocking | Actor visual/physics ownership remains in MainScene for Task 2.2 |
 
+## M2 / Task 2.2 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M2 / Task 2.2 — Player Actor Visual and Physics Ownership |
+| Build | Pass | `pnpm build` |
+| Tests | Pass | `pnpm test` 18/18 |
+| Lint | Pass | `pnpm lint` 0 errors, existing `<img>` warnings only |
+| Typecheck | Pass | `pnpm typecheck` |
+| Browser smoke | Pass | Updated route, one 1280×720 Canvas, no visible runtime error |
+| Actor ownership | Pass | Sprite/body/feet synchronization contract test |
+| Known issues | Non-blocking | Attack controller and metadata remain for Task 2.3 |
+
 ## M1 / Task 1.4 Evidence
 
 | Item | Result | Evidence |

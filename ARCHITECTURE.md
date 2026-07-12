@@ -180,6 +180,14 @@ and gameplay event publication remain in `MainScene` until later extraction
 tasks. Invalid transitions throw deterministic errors, while `reset()` returns
 the machine to `idle` for Scene lifecycle reuse.
 
+## Player Actor Contract (M2 / Task 2.2)
+
+`PlayerActor` owns the player sprite, feet-anchored Arcade body zone, body
+configuration, facing, display scale, animation frame origin, and sprite/body
+synchronization. `MainScene` retains orchestration responsibilities and asks the
+actor to move visuals, play the existing animations, or sync depth; attack hitbox
+and combat effects remain outside the actor for the next M2 tasks.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

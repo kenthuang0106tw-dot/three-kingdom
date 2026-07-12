@@ -119,6 +119,12 @@ remain future work.
 Player transition rules are now isolated and tested. MainScene still owns actor
 visuals, physics, input, and combat orchestration until the next M2 extraction.
 
+### TD-M05 Update — 2026-07-12
+
+Player sprite, feet anchor, and Arcade body ownership are now isolated in
+`PlayerActor`. MainScene still owns input and combat orchestration until the next
+M2 extraction.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

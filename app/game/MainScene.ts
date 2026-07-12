@@ -7,6 +7,7 @@ import { PhaserGameplayClock, SeededRandom } from "./time/GameplayTime";
 import { GameplayEventHub, type GameplaySnapshot } from "./events/GameplayEvents";
 import { createAssetFailureReporter, queueRuntimeAssets } from "./assets/AssetManifest";
 import { PlayerStateMachine, type PlayerState } from "./player/PlayerStateMachine";
+import { PlayerActor } from "./player/PlayerActor";
 
 type AttackState = "attack1" | "attack2" | "attack3";
 type PreviewFrame = {
@@ -82,10 +83,11 @@ class PlayerInputController {
 }
 
 export default class MainScene extends Phaser.Scene {
-  private playerSprite!: Phaser.GameObjects.Sprite;
-  private playerBodyZone!: Phaser.GameObjects.Zone;
+  private playerActor!: PlayerActor;
   private attackZone!: Phaser.GameObjects.Zone;
-  private playerBody!: Phaser.Physics.Arcade.Body;
+  private get playerSprite() { return this.playerActor.sprite; }
+  private get playerBodyZone() { return this.playerActor.bodyZone; }
+  private get playerBody() { return this.playerActor.body; }
   private attackBody!: Phaser.Physics.Arcade.Body;
   private inputController!: PlayerInputController;
   private touchInputController!: TouchInputController;
@@ -168,11 +170,7 @@ export default class MainScene extends Phaser.Scene {
     const background = this.add.image(WIDTH / 2, HEIGHT / 2, "forest");
     background.setScale(Math.max(WIDTH / background.width, HEIGHT / background.height)).setDepth(0);
 
-    this.playerBodyZone = this.add.zone(START_X, START_FOOT_Y, 86, 54).setOrigin(0.5, 1);
-    this.physics.add.existing(this.playerBodyZone);
-    this.playerBody = this.playerBodyZone.body as Phaser.Physics.Arcade.Body;
-    this.playerBody.setCollideWorldBounds(true).setAllowGravity(false);
-    this.playerSprite = this.add.sprite(START_X, START_FOOT_Y, "guanyu-idle", "idle-0");
+    this.playerActor = new PlayerActor(this, START_X, START_FOOT_Y);
     this.showIdleFrame();
 
     this.attackZone = this.add.zone(START_X, START_FOOT_Y - 92, 142, 86).setOrigin(0.5);
@@ -206,6 +204,7 @@ export default class MainScene extends Phaser.Scene {
       this.touchInputController.destroy();
       this.lifecycleClock.destroy();
       this.enemyManager.destroy();
+      this.playerActor.destroy();
     });
 
     if (this.resetSmokeMode) {
@@ -304,7 +303,7 @@ export default class MainScene extends Phaser.Scene {
     this.playerBody.setVelocity(0, 0);
     this.disableAttackHitbox();
     const firstFrame = PREVIEW_FRAMES[(step - 1) * 2];
-    this.playerSprite.setOrigin(0.5, firstFrame.originY).setScale(0.64).setFlipX(this.facing < 0).play(ATTACK_ANIMATIONS[nextState]);
+    this.playerActor.playAttack(ATTACK_ANIMATIONS[nextState], firstFrame.originY);
   }
 
   private handleAnimationComplete(animation: Phaser.Animations.Animation) {
@@ -318,7 +317,7 @@ export default class MainScene extends Phaser.Scene {
 
   private handleAnimationUpdate(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
     const frameName = String(frame.textureFrame);
-    this.playerSprite.setOrigin(0.5, FRAME_ORIGIN_Y[frameName] ?? this.playerSprite.originY);
+    this.playerActor.setAnimationOrigin(FRAME_ORIGIN_Y[frameName] ?? this.playerSprite.originY);
     const activeFrames = ATTACK_ACTIVE_FRAME_INDEXES[animation.key];
     if (!activeFrames) return;
     if (activeFrames.has(frame.index)) this.enableAttackHitbox(); else this.disableAttackHitbox();
@@ -447,8 +446,8 @@ export default class MainScene extends Phaser.Scene {
     const { previous } = transition;
     this.gameplayEvents.publish({ type: "player-state-changed", previous, next, at: this.time.now });
     this.transitionLog.push(`${previous} -> ${next}`); if (this.transitionLog.length > 20) this.transitionLog.shift();
-    if (next === "idle" || next === "hurt") this.showIdleFrame();
-    else if (next === "walk") this.playerSprite.setOrigin(0.5, FRAME_ORIGIN_Y["walk-0"]).setScale(0.44).setFlipX(this.facing < 0).play("guanyu-walk");
+    if (next === "idle" || next === "hurt") this.playerActor.showIdleFrame();
+    else if (next === "walk") this.playerActor.playWalk(FRAME_ORIGIN_Y["walk-0"]);
   }
 
   private createEnemyAlignmentPreview() {
@@ -550,9 +549,9 @@ export default class MainScene extends Phaser.Scene {
   }
 
   private isAttackState(state: PlayerState): state is AttackState { return ATTACK_STATES.includes(state as AttackState); }
-  private showIdleFrame() { this.playerSprite.stop().setTexture("guanyu-idle", "idle-0").setOrigin(0.5, 1388 / 1536).setScale(0.22).setFlipX(this.facing < 0); }
-  private setFacing(direction: 1 | -1) { this.facing = direction; this.playerSprite.setFlipX(direction < 0); }
-  private syncVisualsToBody() { const x = Math.round(this.playerBodyZone.x), y = Math.round(this.playerBodyZone.y); this.playerSprite.setPosition(x, y).setDepth(y); if (this.attackBody.enable) this.positionAttackHitbox(); }
+  private showIdleFrame() { this.playerActor.showIdleFrame(); }
+  private setFacing(direction: 1 | -1) { this.facing = direction; this.playerActor.setFacing(direction); }
+  private syncVisualsToBody() { this.playerActor.syncVisuals(); if (this.attackBody.enable) this.positionAttackHitbox(); }
   private positionAttackHitbox() { const x = Math.round(this.playerBodyZone.x + this.facing * 104), y = Math.round(this.playerBodyZone.y - 94); this.attackZone.setPosition(x, y); this.attackBody.reset(x, y); }
   private enableAttackHitbox() { this.attackZone.setActive(true); this.attackBody.enable = true; this.positionAttackHitbox(); }
   private disableAttackHitbox() { if (!this.attackBody) return; this.attackBody.stop(); this.attackBody.enable = false; this.attackZone.setActive(false); }

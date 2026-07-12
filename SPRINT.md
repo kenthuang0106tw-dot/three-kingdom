@@ -139,6 +139,14 @@
 - [x] `pnpm test` 17/17, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
 - [x] Browser smoke loaded the updated route with one 1280×720 Canvas and no visible runtime error.
 
+## Task 2.2 Closeout
+
+- [x] Added `PlayerActor` ownership for sprite, feet-anchored body zone, body configuration, facing, and visual synchronization.
+- [x] MainScene no longer constructs a parallel player sprite/body; existing input, Combo, attack hitbox, hurt effects, and event flow remain in place.
+- [x] Player actor ownership/alignment contract tests passed.
+- [x] `pnpm test` 18/18, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
+- [x] Browser smoke loaded the updated route with one 1280×720 Canvas and no visible runtime error.
+
 ## Task 1.8 Closeout
 
 - [x] Added development-only `?resetSmoke=1` Scene restart smoke path.
