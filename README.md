@@ -128,6 +128,6 @@ tools/build_enemy_art.py     Enemy sheet/atlas rebuild pipeline
 
 ## Current Priority
 
-M3 / Task 3.6 Stage exit and restart is complete. The next single task is M3 / Task 3.7, Stage traversal acceptance.
+M3 / Task 3.7 Stage traversal acceptance is complete. The next single task is M4 / Task 4.1, EnemyConfig boundary.
 
 Milestone 0、M1 與 M2 已完成；目前進入 M3 Stage 基礎建設。完成下一個 Task 前不要新增 Boss、角色、招式或 Audio。

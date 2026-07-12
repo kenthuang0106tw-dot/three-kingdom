@@ -432,3 +432,27 @@ test("MainScene only makes the configured exit available after all-clear", async
   assert.match(scene, /private restartStage\(\)/);
   assert.match(scene, /this\.restartStage\(\)/);
 });
+
+test("Single-room traversal acceptance composes spawn, clear, camera, exit, and reset", () => {
+  const exits = [{ id: "room-exit", bounds: { x: 1140, y: 390, width: 70, height: 245 }, targetStageId: null }];
+  let encounter = beginEncounter(createEncounterFlow(), 3);
+  let camera = lockCamera(createCameraLockState(), "encounter");
+  let exit = createStageExitState(exits);
+
+  encounter = recordEnemyRemoved(encounter, 1);
+  assert.equal(isEncounterCleared(encounter), false);
+  encounter = recordEnemyRemoved(encounter, 2);
+  assert.equal(isEncounterCleared(encounter), false);
+  encounter = recordEnemyRemoved(encounter, 3);
+  assert.equal(isEncounterCleared(encounter), true);
+
+  camera = unlockCamera(camera, "encounter");
+  exit = makeExitAvailable(exit, exits, "room-exit");
+  assert.equal(isCameraLocked(camera), false);
+  assert.equal(canRequestStageExit(exit), true);
+  assert.deepEqual(requestStageExit(exit), { status: "requested", exitId: "room-exit" });
+
+  assert.deepEqual(createEncounterFlow(), { status: "ready", spawnedCount: 0, removedEnemyIds: [] });
+  assert.deepEqual(createCameraLockState(), { reason: null });
+  assert.deepEqual(resetStageExit(), { status: "locked", exitId: null });
+});

@@ -254,6 +254,14 @@
 - [x] Browser smoke verified one 1280x720 Canvas, ten reset cycles, and zero page errors.
 - [ ] Physical mobile and long-session validation remain deferred.
 
+## M3 / Task 3.7 Closeout
+
+- [x] Added deterministic traversal acceptance from spawn through clear, camera unlock, exit request, and reset.
+- [x] Verified bounds, three-enemy spawn count, duplicate-safe removal, exit eligibility, and lifecycle reset together.
+- [x] `pnpm test` 34/34, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
+- [x] Browser smoke verified one 1280x720 Canvas, ten reset cycles, and zero page errors.
+- [ ] Physical mobile and long-session validation remain deferred.
+
 ## M3 / Task 3.2 Closeout
 
 - [x] Added deterministic Phaser-free X/Y and point clamping helpers.

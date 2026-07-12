@@ -199,6 +199,12 @@ M3 / Task 3.6 now models the current room's exit eligibility separately from
 presentation and routes restart through Scene lifecycle cleanup. There is still
 no second stage or automatic transition, by design.
 
+### TD-M03 Resolved — Stage traversal acceptance
+
+M3 / Task 3.7 validates the complete current-room contract path and reset
+behavior. Future content can build on the accepted boundaries without changing
+the existing combat-room ownership model.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

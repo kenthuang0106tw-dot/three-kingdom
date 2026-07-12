@@ -294,6 +294,14 @@ requested. MainScene resets this state with Scene creation and routes the
 existing development reset smoke through one `restartStage` lifecycle method.
 No second stage, save data, or automatic respawn is introduced.
 
+## Stage Traversal Acceptance (M3 / Task 3.7)
+
+The M3 gate now composes the Phaser-free contracts in one deterministic path:
+room encounter starts, three enemies are removed once each, camera unlocks,
+the configured exit becomes requestable, and all contracts reset to their
+initial states. Browser smoke additionally verifies ten Scene restarts with a
+single Canvas and no page errors. M4 content work starts only after this gate.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

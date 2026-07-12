@@ -1,30 +1,30 @@
 # Next Task
 
-## M3 / Task 3.7 — Stage traversal acceptance
+## M4 / Task 4.1 — EnemyConfig boundary
 
 ### Why this is next
 
-The current room now has explicit geometry, camera, encounter, clear, exit,
-and restart contracts. The final M3 task is to validate the complete single-room
-traversal path without adding a second stage or new gameplay content.
+Milestone 3 now has a validated single-room traversal path. The next smallest
+content foundation is to separate enemy tuning data from EnemyManager before
+adding additional archetypes or encounter compositions.
 
 ### Completion criteria
 
-- Add one deterministic acceptance path from room start through combat clear to exit eligibility and restart.
-- Verify camera lock/unlock, bounds, spawn count, all-clear, exit state, and Scene cleanup together.
-- Preserve the existing 1280×720 bamboo room and combat behavior.
-- Do not add a second stage, new enemies, parallax, or product UI.
+- Define a minimal Phaser-free EnemyConfig for the existing soldier.
+- Move only stable tuning values: HP, movement speed, detection, attack ranges, and timing.
+- Keep EnemyManager behavior and current enemy visuals unchanged.
+- Do not add a second enemy type, new AI, new assets, or encounter content.
 
 ### Validation
 
 - Run `pnpm test`, `pnpm build`, `pnpm lint`, and `pnpm typecheck`.
-- Add deterministic traversal acceptance tests with no Phaser imports in pure contracts.
-- Browser smoke verifies one Canvas, no runtime errors, ten restart cycles, and no stale exit/encounter state.
+- Add deterministic config validation and current-soldier parity tests.
+- Browser smoke verifies one Canvas, no runtime errors, and unchanged combat-room behavior.
 
 ### Expected files
 
-- `app/game/stage/**`
-- `app/game/MainScene.ts`
+- `app/game/enemy/**`
+- `app/game/EnemyManager.ts`
 - `tests/**`
 - `ARCHITECTURE.md`
 - `SPRINT.md`
@@ -34,5 +34,5 @@ traversal path without adding a second stage or new gameplay content.
 
 ### Risks
 
-- An end-to-end contract could accidentally duplicate actor ownership or timers.
-- Keep it acceptance-focused and data-driven; defer M4 content and full game flow.
+- Over-generalizing EnemyConfig could force premature archetype abstractions.
+- Keep the schema data-only and limited to values already used by the soldier.
