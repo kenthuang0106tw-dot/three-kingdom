@@ -1,31 +1,31 @@
 # Next Task
 
-## M1 / Task 1.6 — Deterministic Seed and Test Clock
+## M1 / Task 1.7 — Responsive Mobile Landscape Contract
 
 ### Why this is next
 
-Readonly gameplay observations now provide a stable boundary for consumers. The next P0 foundation is deterministic randomness and time injection for reproducible enemy-director and combat tests; the P1 asset manifest can follow without blocking gameplay determinism.
+The input, lifecycle, event, and deterministic-time boundaries are now explicit. The next P0 task validates the actual mobile landscape viewport, safe-area behavior, and touch canvas scaling so the game can be tested on a phone instead of only in a desktop browser harness.
 
 ### Completion criteria
 
-- Add a small seeded RNG adapter for gameplay randomness.
-- Add a test-clock adapter for code that currently reads gameplay time directly.
-- Migrate only the existing random/recovery timing seams needed by EnemyManager and lifecycle tests.
-- Existing gameplay behavior remains unchanged in normal runtime.
-- Add deterministic tests proving the same seed and clock produce the same results.
-- Do not add new gameplay, enemies, UI, audio, or release hosting.
+- Define the mobile landscape viewport and safe-area contract for the 1280×720 Phaser canvas.
+- Canvas preserves aspect ratio without stretching or CSS animation.
+- Touch controls remain inside the playable canvas and have usable hit areas.
+- Orientation/resize and focus changes do not create duplicate Phaser instances or stuck input.
+- Add a documented LAN or hosted smoke path for a physical phone.
+- Do not add new gameplay, enemies, UI systems, or deployment platform configuration.
 
 ### Validation
 
 - Run `pnpm test`, `pnpm build`, `pnpm lint`, and `pnpm typecheck`.
-- Browser smoke: load the combat room, verify one Canvas and zero console errors.
-- Confirm keyboard/touch input, hit-stop, enemy timing, and readonly snapshots still work.
+- Browser viewport smoke at a mobile landscape size with one Canvas and zero console errors.
+- Physical phone smoke over a reachable URL: touch movement, attack, orientation/resize, and focus recovery.
 
 ### Expected files
 
-- `app/game/time/` or the smallest RNG/clock contract modules
-- `app/game/EnemyManager.ts`
-- `app/game/MainScene.ts`
+- `app/globals.css`
+- `app/game/PhaserGame.tsx`
+- `app/game/input/TouchInputController.ts`
 - `tests/**`
 - `ARCHITECTURE.md`
 - `SPRINT.md`
@@ -36,6 +36,6 @@ Readonly gameplay observations now provide a stable boundary for consumers. The 
 
 ### Risks
 
-- Replacing Phaser runtime time globally could break hit-stop; inject only the required seams.
-- Seeded randomness must not leak mutable global state.
-- Test-only clock behavior must remain identical to normal Phaser time in production.
+- Mobile browser viewport units and safe areas differ across iOS Safari and Android Chrome.
+- CSS scaling can introduce pixel shimmer or move Phaser pointer coordinates.
+- Physical-device validation needs a LAN or hosted URL; localhost alone is insufficient.

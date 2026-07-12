@@ -1,4 +1,5 @@
 import * as Phaser from "phaser";
+import { PhaserGameplayClock, SeededRandom, type GameplayClock, type RandomSource } from "./time/GameplayTime";
 
 export type EnemyState = "idle" | "walk" | "attack" | "hurt" | "dead";
 
@@ -82,13 +83,18 @@ export class EnemyManager {
   private currentAttacker: EnemyCombatant | null = null;
   private lastAttackerId: number | null = null;
   private directorReadyAt = 0;
+  private readonly clock: GameplayClock;
+  private readonly random: RandomSource;
 
   constructor(
     private readonly scene: Phaser.Scene,
     private readonly playerBodyZone: Phaser.GameObjects.Zone,
     private readonly callbacks: ManagerCallbacks,
     development: boolean,
+    services: { clock?: GameplayClock; random?: RandomSource } = {},
   ) {
+    this.clock = services.clock ?? new PhaserGameplayClock(scene);
+    this.random = services.random ?? new SeededRandom(0x3a6f2d1);
     if (development) this.slotGraphics = scene.add.graphics().setDepth(9000);
   }
 
@@ -153,7 +159,7 @@ export class EnemyManager {
     const dy = this.playerBodyZone.y - enemy.bodyZone.y;
     enemy.facing = dx >= 0 ? 1 : -1;
     enemy.sprite.setFlipX(enemy.facing > 0);
-    if (Math.abs(dx) <= ENEMY_ATTACK_X_RANGE && Math.abs(dy) < ENEMY_ATTACK_Y_RANGE && this.scene.time.now >= enemy.cooldownUntil) {
+    if (Math.abs(dx) <= ENEMY_ATTACK_X_RANGE && Math.abs(dy) < ENEMY_ATTACK_Y_RANGE && this.clock.now() >= enemy.cooldownUntil) {
       this.setState(enemy, "attack");
       return;
     }
@@ -162,7 +168,7 @@ export class EnemyManager {
   }
 
   private updateFormationMovement(enemy: EnemyCombatant) {
-    if (this.scene.time.now < enemy.cooldownUntil) { this.setState(enemy, "idle"); return; }
+    if (this.clock.now() < enemy.cooldownUntil) { this.setState(enemy, "idle"); return; }
     const slot = FORMATION_SLOTS[enemy.assignedSlot];
     const targetX = Phaser.Math.Clamp(this.playerBodyZone.x + slot.x, WALK_BOUNDS.left, WALK_BOUNDS.right);
     const targetY = Phaser.Math.Clamp(this.playerBodyZone.y + slot.y, WALK_BOUNDS.top, WALK_BOUNDS.bottom);
@@ -193,8 +199,8 @@ export class EnemyManager {
   }
 
   private assignAttackSlot(alive: EnemyCombatant[]) {
-    if (this.currentAttacker || this.scene.time.now < this.directorReadyAt) return;
-    const candidates = alive.filter(enemy => enemy.state !== "hurt" && enemy.state !== "dead" && this.scene.time.now >= enemy.cooldownUntil &&
+    if (this.currentAttacker || this.clock.now() < this.directorReadyAt) return;
+    const candidates = alive.filter(enemy => enemy.state !== "hurt" && enemy.state !== "dead" && this.clock.now() >= enemy.cooldownUntil &&
       Math.abs(enemy.bodyZone.x - this.playerBodyZone.x) < 220 && Math.abs(enemy.bodyZone.y - this.playerBodyZone.y) < 140);
     if (!candidates.length) return;
     candidates.sort((a, b) => a.id - b.id);
@@ -211,7 +217,7 @@ export class EnemyManager {
     if (this.currentAttacker !== enemy) return;
     this.currentAttacker = null;
     this.lastAttackerId = enemy.id;
-    this.directorReadyAt = this.scene.time.now + Phaser.Math.Between(DIRECTOR_DELAY_MIN, DIRECTOR_DELAY_MAX);
+    this.directorReadyAt = this.clock.now() + this.random.between(DIRECTOR_DELAY_MIN, DIRECTOR_DELAY_MAX);
   }
 
   markPlayerAttackHit(enemy: EnemyCombatant, attackId: number) {
@@ -243,7 +249,7 @@ export class EnemyManager {
       enemy.sprite.play("enemy-hurt", true);
       this.scene.time.delayedCall(HURT_MS, () => {
         if (enemy.sprite.active && enemy.state === "hurt") {
-          enemy.cooldownUntil = this.scene.time.now + Phaser.Math.Between(RECOVERY_MIN, RECOVERY_MAX);
+          enemy.cooldownUntil = this.clock.now() + this.random.between(RECOVERY_MIN, RECOVERY_MAX);
           this.setState(enemy, "idle");
         }
       });
@@ -257,7 +263,7 @@ export class EnemyManager {
     if (!enemy.sprite.active) return;
     if (animation.key === "enemy-attack" && enemy.state === "attack") {
       this.releaseAttackSlot(enemy);
-      enemy.cooldownUntil = this.scene.time.now + Phaser.Math.Between(RECOVERY_MIN, RECOVERY_MAX);
+      enemy.cooldownUntil = this.clock.now() + this.random.between(RECOVERY_MIN, RECOVERY_MAX);
       this.setState(enemy, "idle");
     } else if (animation.key === "enemy-dead" && enemy.state === "dead") {
       enemy.sprite.setFrame("dead-3");

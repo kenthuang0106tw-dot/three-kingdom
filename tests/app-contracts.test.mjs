@@ -9,6 +9,7 @@ import {
 import { createActionSnapshot } from "../app/game/input/ActionSnapshot.ts";
 import { ClockState } from "../app/game/time/ClockState.ts";
 import { GameplayEventHub } from "../app/game/events/GameplayEvents.ts";
+import { SeededRandom, TestClock } from "../app/game/time/GameplayTime.ts";
 
 test("React shell mounts only the Phaser lifecycle component", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
@@ -129,4 +130,27 @@ test("MainScene publishes readonly gameplay observations", async () => {
   assert.match(source, /player-state-changed/);
   assert.match(source, /enemy-hit/);
   assert.doesNotMatch(source, /publishSnapshot\([^\n]*enemyManager/);
+});
+
+test("Seeded random and test clock are reproducible", () => {
+  const first = new SeededRandom(12345);
+  const second = new SeededRandom(12345);
+  assert.deepEqual(
+    Array.from({ length: 8 }, () => first.between(400, 800)),
+    Array.from({ length: 8 }, () => second.between(400, 800)),
+  );
+  const clock = new TestClock(100);
+  assert.equal(clock.now(), 100);
+  clock.advance(250);
+  assert.equal(clock.now(), 350);
+});
+
+test("EnemyManager uses injectable gameplay time and randomness", async () => {
+  const source = await readFile(new URL("../app/game/EnemyManager.ts", import.meta.url), "utf8");
+  const scene = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
+  assert.match(source, /GameplayClock/);
+  assert.match(source, /this\.clock\.now\(\)/);
+  assert.match(source, /this\.random\.between/);
+  assert.doesNotMatch(source, /Phaser\.Math\.Between/);
+  assert.match(scene, /new SeededRandom\(0x3a6f2d1\)/);
 });

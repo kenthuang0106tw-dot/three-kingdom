@@ -88,6 +88,10 @@ Phaser touch controls are now implemented through `TouchInputController` and mer
 
 `GameplayEventHub` now provides frozen primitive snapshots and typed events without actor references. UI/Audio/Debug consumers can be migrated incrementally; MainScene remains the current publisher until later ownership extraction.
 
+### TD-M09 Update — Deterministic timing seams added
+
+EnemyManager now receives `GameplayClock` and `RandomSource` services. Runtime uses a fixed seed and Phaser clock; tests can reproduce director delays and recovery timing with `TestClock`. Full deterministic combat simulation remains future work.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

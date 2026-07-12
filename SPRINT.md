@@ -102,6 +102,15 @@
 - [x] Browser smoke: one 1280×720 Canvas, touch attack interaction, and zero console errors.
 - [ ] Physical mobile event-consumer validation remains pending for release QA.
 
+## Task 1.6 Closeout
+
+- [x] Added `SeededRandom` with repeatable inclusive ranges.
+- [x] Added `TestClock` and Phaser runtime clock adapter.
+- [x] EnemyManager recovery/director timing uses injected clock and random services.
+- [x] `pnpm test` 13/13, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
+- [x] Browser smoke: one 1280×720 Canvas, touch attack interaction, and zero console errors.
+- [ ] Physical mobile deterministic-timing validation remains pending for release QA.
+
 ## Sprint Exit
 
 Task 1.1 已完成；下一步只執行 Task 1.2。Pause、visibility、deterministic clock 與其他未完成項目依 Roadmap 保留。

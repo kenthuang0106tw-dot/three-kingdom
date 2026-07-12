@@ -3,6 +3,7 @@ import { EnemyCombatant, EnemyManager, ENEMY_DISPLAY_SCALE } from "./EnemyManage
 import { createActionSnapshot, type ActionSnapshot } from "./input/ActionSnapshot";
 import { TouchInputController } from "./input/TouchInputController";
 import { LifecycleClock } from "./time/LifecycleClock";
+import { PhaserGameplayClock, SeededRandom } from "./time/GameplayTime";
 import { GameplayEventHub, type GameplaySnapshot } from "./events/GameplayEvents";
 
 type PlayerState = "idle" | "walk" | "attack1" | "attack2" | "attack3" | "hurt";
@@ -186,7 +187,7 @@ export default class MainScene extends Phaser.Scene {
     this.enemyManager = new EnemyManager(this, this.playerBodyZone, {
       onPlayerHit: enemy => this.applyHitToPlayer(enemy),
       onAllDefeated: () => this.showAllEnemiesDefeated(),
-    }, development);
+    }, development, { clock: new PhaserGameplayClock(this), random: new SeededRandom(0x3a6f2d1) });
     this.enemyManager.spawnAll();
 
     if (development) {

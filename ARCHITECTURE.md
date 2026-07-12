@@ -138,6 +138,10 @@ Runtime 不猜測等寬切圖。任何 atlas 改動都必須重新產生 debug s
 
 `GameplayEventHub` is a narrow observation boundary owned by `MainScene`. It publishes frozen primitive snapshots and typed events; player/enemy sprites, bodies, timers, and managers never cross the boundary. Consumers receive an unsubscribe function and cannot mutate the stored snapshot. Debug remains a consumer of Scene state for now and is not an event producer.
 
+## Deterministic Time and Randomness Contract (M1 / Task 1.6)
+
+`GameplayClock` and `RandomSource` are injectable interfaces. Runtime uses `PhaserGameplayClock` plus a seeded `SeededRandom`; tests use `TestClock` and the same seeded adapter. EnemyManager owns no global random state and no longer calls `Phaser.Math.Between` directly. Lifecycle hit-stop continues to use Phaser's real delayed call.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

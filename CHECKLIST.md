@@ -165,6 +165,20 @@
 
 ## Task Evidence
 
+## M1 / Task 1.6 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M1 / Task 1.6 — Deterministic Seed and Test Clock |
+| Commit | Pending | Closeout commit created after final diff review |
+| Build | Pass | `pnpm build` |
+| Tests | Pass | `pnpm test` 13/13 |
+| Lint | Pass | `pnpm lint` 0 errors, existing `<img>` warnings only |
+| Typecheck | Pass | `pnpm typecheck` |
+| Browser smoke | Pass | One 1280×720 Canvas, touch attack interaction, zero console errors |
+| Mobile smoke | Pending | Physical mobile deterministic timing not available in harness |
+| Known issues | Non-blocking | Full deterministic combat simulation deferred |
+
 ## M1 / Task 1.4 Evidence
 
 | Item | Result | Evidence |
