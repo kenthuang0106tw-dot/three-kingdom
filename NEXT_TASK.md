@@ -1,33 +1,32 @@
 # Next Task
 
-## M3 / Task 3.5 — Spawn and all-clear flow
+## M3 / Task 3.6 — Stage exit and restart
 
 ### Why this is next
 
-The current combat room has a validated camera lock lifecycle, but its spawn
-and all-clear behavior is still embedded in MainScene and EnemyManager. The
-next smallest Stage step is to make the existing room's spawn/clear contract
-explicit without adding a new level or respawn behavior.
+The current room now has explicit StageConfig, bounds, camera lock, spawn, and
+all-clear contracts. The next smallest playable Stage step is to define a
+single exit/restart transition without adding a second level or content.
 
 ### Completion criteria
 
-- Define a minimal Phaser-free spawn/all-clear contract for the current room.
-- Preserve the existing three enemy spawn points and single-room behavior.
-- Publish clear only after all living enemies are removed.
-- Keep EnemyManager responsible for enemy cleanup and MainScene responsible for presentation.
-- Do not add stage exits, encounter gates, respawns, or new content.
+- Define a minimal Phaser-free stage exit and restart contract.
+- Trigger the existing room's exit only after its encounter is clear.
+- Reset player, enemies, camera lock, timers, and listeners through the existing Scene lifecycle.
+- Preserve the current combat room and avoid adding a second stage.
+- Do not add title flow, save data, respawn waves, or new UI.
 
 ### Validation
 
 - Run `pnpm test`, `pnpm build`, `pnpm lint`, and `pnpm typecheck`.
-- Add deterministic tests for spawn counts, all-clear transition, and reset.
-- Browser smoke verifies one Canvas, no runtime errors, and the existing clear text path.
+- Add deterministic tests for exit eligibility, restart transition, and reset.
+- Browser smoke verifies one Canvas, no runtime errors, and a clean restart path.
 
 ### Expected files
 
 - `app/game/stage/**`
-- `app/game/EnemyManager.ts`
 - `app/game/MainScene.ts`
+- `app/game/EnemyManager.ts`
 - `tests/**`
 - `ARCHITECTURE.md`
 - `SPRINT.md`
@@ -37,5 +36,5 @@ explicit without adding a new level or respawn behavior.
 
 ### Risks
 
-- Moving clear ownership could regress enemy cleanup or camera unlock timing.
-- Keep the contract limited to the existing room; defer full StageDirector flow.
+- Exit eligibility could become coupled to presentation text or camera state.
+- Keep the contract data-driven and limited to one room; defer full game-flow UI.

@@ -396,3 +396,16 @@
 | Browser smoke | Pass | One 1280x720 Canvas, reset count 10, page errors 0 |
 | Lock lifecycle | Pass | Explicit encounter lock, all-clear unlock, restart reset |
 | Known issues | Non-blocking | Full encounter gates and physical mobile QA remain deferred |
+
+## M3 / Task 3.5 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M3 / Task 3.5 Spawn and all-clear flow |
+| Tests | Pass | `pnpm test` 31/31 |
+| Build | Pass | `pnpm build` |
+| Lint | Pass | 0 errors, existing 4 `<img>` warnings only |
+| Typecheck | Pass | `pnpm typecheck` |
+| Browser smoke | Pass | One 1280x720 Canvas, reset count 10, page errors 0 |
+| Spawn/clear contract | Pass | Spawn count, duplicate guards, all-clear, and reset tests |
+| Known issues | Non-blocking | Stage exits, respawn, and physical mobile QA remain deferred |

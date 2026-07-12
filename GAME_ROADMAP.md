@@ -348,7 +348,8 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 - M3 / Task 3.2 (World/walk bounds contract) completed in the current sprint.
 - M3 / Task 3.3 (Camera follow) completed in the current sprint.
 - M3 / Task 3.4 (Encounter camera lock/unlock) completed in the current sprint.
-- Next eligible task: M3 / Task 3.5 (Spawn and all-clear flow).
+- M3 / Task 3.5 (Spawn and all-clear flow) completed in the current sprint.
+- Next eligible task: M3 / Task 3.6 (Stage exit and restart).
 
 ## 4. Global Acceptance Rules
 

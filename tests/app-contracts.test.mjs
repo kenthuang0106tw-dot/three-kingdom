@@ -17,6 +17,7 @@ import { resolveAttack } from "../app/game/combat/CombatResolver.ts";
 import { BAMBOO_COMBAT_ROOM, clampStagePoint, clampStageX, clampStageY, validateStageConfig } from "../app/game/stage/StageConfig.ts";
 import { calculateCameraScroll } from "../app/game/camera/CameraFollow.ts";
 import { createCameraLockState, isCameraLocked, lockCamera, unlockCamera } from "../app/game/camera/CameraLock.ts";
+import { beginEncounter, createEncounterFlow, isEncounterCleared, recordEnemyRemoved } from "../app/game/stage/EncounterFlow.ts";
 
 test("React shell mounts only the Phaser lifecycle component", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
@@ -378,4 +379,31 @@ test("MainScene owns encounter camera lock lifecycle without enemy internals", a
   assert.match(source, /lockCamera\(this\.cameraLockState, "encounter"\)/);
   assert.match(source, /unlockCamera\(this\.cameraLockState, "encounter"\)/);
   assert.match(source, /if \(isCameraLocked\(this\.cameraLockState\)\) return/);
+});
+
+test("Encounter flow tracks spawn count, all-clear, duplicate removal, and reset", async () => {
+  const source = await readFile(new URL("../app/game/stage/EncounterFlow.ts", import.meta.url), "utf8");
+  const ready = createEncounterFlow();
+  const active = beginEncounter(ready, 3);
+  const afterFirst = recordEnemyRemoved(active, 1);
+  const afterDuplicate = recordEnemyRemoved(afterFirst, 1);
+  const cleared = recordEnemyRemoved(recordEnemyRemoved(afterDuplicate, 2), 3);
+  assert.equal(ready.status, "ready");
+  assert.equal(afterFirst.status, "active");
+  assert.deepEqual(afterDuplicate.removedEnemyIds, [1]);
+  assert.equal(isEncounterCleared(cleared), true);
+  assert.deepEqual(createEncounterFlow(), { status: "ready", spawnedCount: 0, removedEnemyIds: [] });
+  assert.match(source, /spawnedCount/);
+  assert.match(source, /removedEnemyIds/);
+});
+
+test("EnemyManager owns spawn and all-clear contract while MainScene owns presentation", async () => {
+  const [manager, scene] = await Promise.all([
+    readFile(new URL("../app/game/EnemyManager.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8"),
+  ]);
+  assert.match(manager, /beginEncounter\(this\.encounterFlow, spawns\.length\)/);
+  assert.match(manager, /recordEnemyRemoved\(this\.encounterFlow, enemy\.id\)/);
+  assert.match(manager, /isEncounterCleared\(this\.encounterFlow\)/);
+  assert.match(scene, /onAllDefeated: \(\) => this\.showAllEnemiesDefeated\(\)/);
 });

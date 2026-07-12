@@ -277,6 +277,15 @@ skips follow updates while locked, and unlocks it from the existing all-clear
 callback. EnemyManager is not imported by the camera contract; restart resets
 the lock state with the Scene lifecycle.
 
+## Spawn and All-Clear Contract (M3 / Task 3.5)
+
+`EncounterFlow.ts` is the Phaser-free state contract for the current room's
+spawn count and removed enemy IDs. EnemyManager starts one encounter, ignores
+duplicate spawn requests, records removals after cleanup, and emits the
+all-clear callback only when every spawned enemy is removed. MainScene owns the
+clear presentation and camera unlock; respawn and stage transitions remain
+outside this contract.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

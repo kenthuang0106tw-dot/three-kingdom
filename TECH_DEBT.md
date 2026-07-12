@@ -187,6 +187,12 @@ M3 / Task 3.4 adds an explicit Phaser-free encounter lock reason owned by
 MainScene. The existing combat room locks follow while enemies are active and
 releases it through the all-clear callback; full encounter gates remain deferred.
 
+### TD-M03 Update — Spawn and all-clear contract
+
+M3 / Task 3.5 now makes the current room's single spawn and all-clear lifecycle
+explicit and deterministic. Duplicate spawn requests and duplicate removal
+notifications are ignored; respawn and stage transitions remain deferred.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

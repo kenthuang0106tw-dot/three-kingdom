@@ -1,6 +1,7 @@
 import * as Phaser from "phaser";
 import { PhaserGameplayClock, SeededRandom, type GameplayClock, type RandomSource } from "./time/GameplayTime";
 import { BAMBOO_COMBAT_ROOM, clampStageX, clampStageY, type StageSpawnPoint } from "./stage/StageConfig";
+import { beginEncounter, createEncounterFlow, isEncounterCleared, recordEnemyRemoved, type EncounterFlowState } from "./stage/EncounterFlow";
 
 export type EnemyState = "idle" | "walk" | "attack" | "hurt" | "dead";
 
@@ -81,6 +82,7 @@ export class EnemyManager {
   private readonly stateTimers = new Map<EnemyCombatant, Phaser.Time.TimerEvent>();
   private readonly slotGraphics?: Phaser.GameObjects.Graphics;
   private currentAttacker: EnemyCombatant | null = null;
+  private encounterFlow: EncounterFlowState = createEncounterFlow();
   private lastAttackerId: number | null = null;
   private directorReadyAt = 0;
   private readonly clock: GameplayClock;
@@ -99,6 +101,8 @@ export class EnemyManager {
   }
 
   spawnAll(spawns: readonly StageSpawnPoint[] = BAMBOO_COMBAT_ROOM.spawnPoints) {
+    if (this.enemies.length > 0 || this.encounterFlow.status === "active") return;
+    this.encounterFlow = beginEncounter(this.encounterFlow, spawns.length);
     spawns.forEach((spawn, index) => this.addEnemy(new EnemyCombatant(index + 1, index, this.scene, spawn.x, spawn.y)));
   }
 
@@ -278,7 +282,8 @@ export class EnemyManager {
     this.cleanupEnemy(enemy);
     const index = this.enemies.indexOf(enemy);
     if (index >= 0) this.enemies.splice(index, 1);
-    if (this.enemies.length === 0) this.callbacks.onAllDefeated();
+    this.encounterFlow = recordEnemyRemoved(this.encounterFlow, enemy.id);
+    if (isEncounterCleared(this.encounterFlow)) this.callbacks.onAllDefeated();
   }
 
   private cleanupEnemy(enemy: EnemyCombatant) {
@@ -354,6 +359,7 @@ export class EnemyManager {
     this.colliderOwners.clear();
     this.stateTimers.clear();
     this.currentAttacker = null;
+    this.encounterFlow = createEncounterFlow();
     this.slotGraphics?.destroy();
   }
 }

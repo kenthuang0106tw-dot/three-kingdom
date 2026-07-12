@@ -236,6 +236,15 @@
 - [x] Browser smoke verified one 1280x720 Canvas, ten reset cycles, and zero page errors.
 - [ ] Physical mobile and long-session validation remain deferred.
 
+## M3 / Task 3.5 Closeout
+
+- [x] Added a Phaser-free spawn/all-clear state contract with reset semantics.
+- [x] EnemyManager starts one three-enemy encounter and ignores duplicate spawns/removals.
+- [x] All-clear is emitted only after every spawned enemy is removed; MainScene owns presentation.
+- [x] `pnpm test` 31/31, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
+- [x] Browser smoke verified one 1280x720 Canvas, ten reset cycles, and zero page errors.
+- [ ] Physical mobile and long-session validation remain deferred.
+
 ## M3 / Task 3.2 Closeout
 
 - [x] Added deterministic Phaser-free X/Y and point clamping helpers.
