@@ -230,6 +230,19 @@
 | Transition coverage | Pass | Valid idle/walk/attack/hurt paths and invalid transition rejection |
 | Known issues | Non-blocking | Actor visual/physics ownership remains in MainScene for Task 2.2 |
 
+## M2 / Task 2.7 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M2 / Task 2.7 — EnemyManager Cleanup and Director Tests |
+| Build | Pass | `pnpm build` |
+| Tests | Pass | `pnpm test` 23/23 |
+| Lint | Pass | `pnpm lint` 0 errors, existing `<img>` warnings only |
+| Typecheck | Pass | `pnpm typecheck` |
+| Browser smoke | Pass | `?resetSmoke=1`, one 1280x720 Canvas, reset count 10 |
+| Cleanup contract | Pass | Timer cancellation, body/hitbox/listener cleanup, attack-slot release tests |
+| Known issues | Non-blocking | Full combat-room acceptance remains for Task 2.8 |
+
 ## M2 / Task 2.6 Evidence
 
 | Item | Result | Evidence |

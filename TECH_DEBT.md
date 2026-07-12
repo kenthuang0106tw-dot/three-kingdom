@@ -149,6 +149,13 @@ Player HP, terminal death, and Scene reset now use a Phaser-free lifecycle
 contract. Game Over presentation remains intentionally deferred; EnemyManager
 cleanup and director test coverage is next.
 
+### TD-M05 Update — 2026-07-12
+
+EnemyManager now cancels per-enemy state timers and performs explicit body,
+hitbox, listener, collider, and GameObject cleanup on removal and shutdown.
+Director timing remains injectable and deterministic; full combat-room
+acceptance is the next milestone gate.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

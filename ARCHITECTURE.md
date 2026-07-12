@@ -225,6 +225,14 @@ presentation effects, blocks input while dead, and resets the lifecycle during
 Scene creation/restart. Game Over UI and continue flow remain outside this
 contract.
 
+## EnemyManager Cleanup Contract (M2 / Task 2.7)
+
+EnemyManager now tracks per-enemy hurt timers and cancels them on state changes,
+death, removal, or Scene shutdown. Cleanup disables bodies and attack hitboxes,
+removes animation listeners, destroys owned colliders and GameObjects, clears
+manager references, and releases the attack slot. Director timing continues to
+use injected `GameplayClock` and `RandomSource` services for deterministic tests.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

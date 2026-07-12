@@ -78,6 +78,7 @@ export class EnemyManager {
   private readonly enemies: EnemyCombatant[] = [];
   private readonly colliders: Phaser.Physics.Arcade.Collider[] = [];
   private readonly colliderOwners = new Map<EnemyCombatant, Phaser.Physics.Arcade.Collider[]>();
+  private readonly stateTimers = new Map<EnemyCombatant, Phaser.Time.TimerEvent>();
   private readonly slotGraphics?: Phaser.GameObjects.Graphics;
   private currentAttacker: EnemyCombatant | null = null;
   private lastAttackerId: number | null = null;
@@ -220,7 +221,7 @@ export class EnemyManager {
   }
 
   damage(enemy: EnemyCombatant) {
-    if (enemy.state === "dead") return;
+    if (enemy.state === "dead" || enemy.state === "hurt") return;
     enemy.hp = Math.max(0, enemy.hp - 1);
     this.releaseAttackSlot(enemy);
     if (enemy.hp === 0) this.setState(enemy, "dead");
@@ -230,6 +231,7 @@ export class EnemyManager {
   private setState(enemy: EnemyCombatant, next: EnemyState) {
     if (next === enemy.state) return;
     if (!TRANSITIONS[enemy.state].has(next)) throw new Error(`Invalid enemy transition: ${enemy.state} -> ${next}`);
+    this.clearStateTimer(enemy);
     enemy.state = next;
     enemy.body.setVelocity(0, 0);
     this.disableAttackHitbox(enemy);
@@ -240,12 +242,14 @@ export class EnemyManager {
       enemy.sprite.play("enemy-attack", true);
     } else if (next === "hurt") {
       enemy.sprite.play("enemy-hurt", true);
-      this.scene.time.delayedCall(HURT_MS, () => {
+      const timer = this.scene.time.delayedCall(HURT_MS, () => {
+        this.stateTimers.delete(enemy);
         if (enemy.sprite.active && enemy.state === "hurt") {
           enemy.cooldownUntil = this.clock.now() + this.random.between(RECOVERY_MIN, RECOVERY_MAX);
           this.setState(enemy, "idle");
         }
       });
+      this.stateTimers.set(enemy, timer);
     } else {
       enemy.body.enable = false;
       enemy.sprite.play("enemy-dead", true);
@@ -276,6 +280,17 @@ export class EnemyManager {
       }
     }
     this.colliderOwners.delete(enemy);
+    this.cleanupEnemy(enemy);
+    const index = this.enemies.indexOf(enemy);
+    if (index >= 0) this.enemies.splice(index, 1);
+    if (this.enemies.length === 0) this.callbacks.onAllDefeated();
+  }
+
+  private cleanupEnemy(enemy: EnemyCombatant) {
+    this.clearStateTimer(enemy);
+    enemy.body.setVelocity(0, 0);
+    enemy.body.enable = false;
+    this.disableAttackHitbox(enemy);
     const update = enemy.sprite.getData("animationUpdate");
     const complete = enemy.sprite.getData("animationComplete");
     enemy.sprite.off(Phaser.Animations.Events.ANIMATION_UPDATE, update);
@@ -283,9 +298,13 @@ export class EnemyManager {
     enemy.sprite.destroy();
     enemy.bodyZone.destroy();
     enemy.attackZone.destroy();
-    const index = this.enemies.indexOf(enemy);
-    if (index >= 0) this.enemies.splice(index, 1);
-    if (this.enemies.length === 0) this.callbacks.onAllDefeated();
+  }
+
+  private clearStateTimer(enemy: EnemyCombatant) {
+    const timer = this.stateTimers.get(enemy);
+    if (!timer) return;
+    timer.remove(false);
+    this.stateTimers.delete(enemy);
   }
 
   syncSprite(enemy: EnemyCombatant) {
@@ -335,11 +354,11 @@ export class EnemyManager {
   destroy() {
     this.colliders.forEach(collider => collider.destroy());
     this.colliders.length = 0;
-    for (const enemy of [...this.enemies]) {
-      enemy.sprite.destroy(); enemy.bodyZone.destroy(); enemy.attackZone.destroy();
-    }
+    for (const enemy of [...this.enemies]) this.cleanupEnemy(enemy);
     this.enemies.length = 0;
     this.colliderOwners.clear();
+    this.stateTimers.clear();
+    this.currentAttacker = null;
     this.slotGraphics?.destroy();
   }
 }

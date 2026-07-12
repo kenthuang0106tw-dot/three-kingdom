@@ -288,3 +288,14 @@ test("EnemyManager uses injectable gameplay time and randomness", async () => {
   assert.doesNotMatch(source, /Phaser\.Math\.Between/);
   assert.match(scene, /new SeededRandom\(0x3a6f2d1\)/);
 });
+
+test("EnemyManager cleanup cancels state timers and releases combat ownership", async () => {
+  const source = await readFile(new URL("../app/game/EnemyManager.ts", import.meta.url), "utf8");
+  assert.match(source, /stateTimers = new Map/);
+  assert.match(source, /clearStateTimer\(enemy\)/);
+  assert.match(source, /enemy\.body\.enable = false/);
+  assert.match(source, /this\.disableAttackHitbox\(enemy\)/);
+  assert.match(source, /enemy\.sprite\.off\(Phaser\.Animations\.Events\.ANIMATION_UPDATE/);
+  assert.match(source, /this\.currentAttacker = null/);
+  assert.match(source, /enemy\.state === "dead" \|\| enemy\.state === "hurt"/);
+});
