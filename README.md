@@ -36,7 +36,7 @@ React 不管理 gameplay state。所有角色、輸入、動畫、碰撞、AI、
 - pnpm
 - Windows 可使用 repository 根目錄的 `啟動遊戲.cmd`
 
-目前 repository 位於 Sprint 0：baseline、單一 Phaser runtime、pnpm 與 browser／worker typecheck 邊界已建立，但 tests 與 production asset routes 仍列為技術債。第一次接手請先閱讀 [SPRINT.md](SPRINT.md)，不要直接新增功能。
+目前 repository 已完成 Sprint 0：baseline、單一 Phaser runtime、pnpm、browser／worker typecheck、tests 與 production routes 均已建立。第一次接手請先閱讀 [SPRINT.md](SPRINT.md) 與 [NEXT_TASK.md](NEXT_TASK.md)，不要直接新增功能。
 
 ## Run
 
@@ -63,7 +63,7 @@ pnpm typecheck  # Browser app + Cloudflare worker TypeScript
 pnpm test       # Current test command
 ```
 
-`pnpm typecheck` 已同時驗證正式 `app/**` 與獨立 Cloudflare Worker boundary。Sprint 0 下一步會替換已過期的 starter tests；在此之前，不可把 build 通過視為完整品質驗收。
+`pnpm typecheck` 已同時驗證正式 `app/**` 與獨立 Cloudflare Worker boundary。`pnpm test` 現在驗證 app shell、Phaser lifecycle、production routes 與目前敵人／戰鬥 contracts。
 
 ## Controls
 
@@ -128,4 +128,4 @@ tools/build_enemy_art.py     Enemy sheet/atlas rebuild pipeline
 
 ## Current Priority
 
-先完成 Milestone 0：下一步是替換 starter tests 並修復 production asset routes。完成前不要新增 Stage、Boss、角色、招式或 Audio。
+Milestone 0 已完成；下一步進入 M1 / Task 1.1，先定義 action snapshot。完成前不要新增 Stage、Boss、角色、招式或 Audio。

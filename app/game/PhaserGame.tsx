@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { clearRegisteredPhaserGame, registerPhaserGame, releasePhaserGame } from "./phaserLifecycle";
 
 declare global {
   interface Window {
@@ -25,10 +26,7 @@ export default function PhaserGame() {
       const host = hostRef.current;
       // Fast Refresh and React development remounts must never leave a second
       // KeyboardManager listening to the same native keyboard events.
-      if (window.__dynastyPhaserGame) {
-        window.__dynastyPhaserGame.destroy(true);
-        window.__dynastyPhaserGame = undefined;
-      }
+      clearRegisteredPhaserGame(window);
 
       const game = new Phaser.Game({
         type: Phaser.AUTO,
@@ -67,7 +65,7 @@ export default function PhaserGame() {
         scene: [MainScene],
       });
       gameRef.current = game;
-      window.__dynastyPhaserGame = game;
+      registerPhaserGame(window, game);
       host.focus();
     };
 
@@ -75,8 +73,7 @@ export default function PhaserGame() {
     return () => {
       cancelled = true;
       const game = gameRef.current;
-      if (game) game.destroy(true);
-      if (window.__dynastyPhaserGame === game) window.__dynastyPhaserGame = undefined;
+      if (game) releasePhaserGame(window, game);
       gameRef.current = null;
     };
   }, []);

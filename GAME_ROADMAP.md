@@ -26,8 +26,8 @@
 | Mobile | Missing | 無正式 Phaser touch input |
 | UI | Debug only | 無 HUD、pause、continue、result |
 | Audio | Missing | 無 runtime assets |
-| Tests | Invalid | 仍驗證已移除 starter skeleton |
-| Repository | Stabilizing | baseline、UTF-8、單一 runtime、pnpm、lint/typecheck 已完成；tests、asset routes 待修 |
+| Tests | Contract baseline | app shell、lifecycle、route 與 multi-enemy source contracts 已建立 |
+| Repository | Baseline | baseline、UTF-8、單一 runtime、pnpm、lint/typecheck、tests、production routes 已完成 |
 
 ## 3. Technical Lead Review Findings
 
@@ -115,7 +115,7 @@
 
 ### Task 0.4 — Replace Invalid Tests and Verify Production Routes
 
-- **Status:** Next。
+- **Status:** Completed（2026-07-12；commit 於本 Task closeout 建立）。
 - **Description:** 移除 starter skeleton tests；加入 app shell、Phaser lifecycle、asset route、EnemyManager 最小測試。
 - **Priority:** P0
 - **Difficulty:** High

@@ -4,20 +4,6 @@
 
 ## Critical
 
-### TD-C02 — Test suite validates deleted starter content
-
-- **Evidence:** `tests/rendered-html.test.mjs` 要求 `_sites-preview`、starter title 與 `react-loading-skeleton`，repository 已無這些檔案。
-- **Impact:** `pnpm test` 無法反映遊戲品質；CI 信號失真。
-- **Recommended Resolution:** 替換為 app shell、Phaser lifecycle、asset route 與 gameplay contract tests。
-- **Target:** M0 / Task 0.4。
-
-### TD-C04 — Production asset routing is unreliable
-
-- **Evidence:** 本機 `vinext start` 曾回傳 HTML，但 `/assets/*.js` 為 404；需代理才能完成 runtime smoke。
-- **Impact:** Production build 成功但實際頁面可能白屏。
-- **Recommended Resolution:** 建立 production route smoke test，修復 Vinext/Sites asset serving config。
-- **Target:** M0 / Task 0.4；M9 再次驗證。
-
 ## High
 
 ### TD-H03 — MainScene owns too many responsibilities
@@ -26,13 +12,6 @@
 - **Impact:** 任一新功能容易破壞玩家輸入或戰鬥時序。
 - **Resolution:** 依 M1/M2逐步抽出 Input、Player、Combat Effect、Debug；禁止一次性 rewrite。
 - **Target:** M1–M2。
-
-### TD-H04 — No gameplay regression tests
-
-- **Evidence:** 沒有 Player state、Attack Slot、multi-hit、cleanup、Scene lifecycle tests。
-- **Impact:** 既有四類阻斷性 bug 容易復發。
-- **Resolution:** 先固定 contracts，再建立 deterministic tests。
-- **Target:** M0、M2、M3。
 
 ### TD-H05 — Mobile is a release target but has no Phaser touch input
 
@@ -95,6 +74,21 @@
 - **Target:** M0/M8。
 
 ## Resolved
+
+### TD-C02 — Test suite validated deleted starter content
+
+- **Resolved:** 2026-07-12，M0 / Task 0.4。
+- **Evidence:** 移除 `tests/rendered-html.test.mjs`，新增 app shell、lifecycle、production route 與 combat contract tests；`pnpm test` 4/4 通過。
+
+### TD-C04 — Production asset routing was unreliable
+
+- **Resolved:** 2026-07-12，M0 / Task 0.4。
+- **Evidence:** `tools/serve-production.mjs` 直接服務 `dist/client` 並將 SSR 交給既有 Worker；`pnpm start` 下 HTML、動態 JS/CSS、atlas、PNG route 均 200，無 proxy browser smoke Canvas count = 1、console error = 0。
+
+### TD-H04 — No gameplay regression tests
+
+- **Resolved:** 2026-07-12，M0 / Task 0.4（baseline contracts）。
+- **Evidence:** lifecycle 20 次 mount/destroy、EnemyManager/combat source contracts 與 production route integration tests 已建立；更深的 deterministic gameplay tests 仍排在 M1/M2。
 
 ### TD-C01 — Core prototype changes were uncommitted
 

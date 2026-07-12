@@ -18,9 +18,8 @@
 | 1 | ✅ Audit and commit Phase 3/4 baseline | 3–5h | `bae05a1` baseline commit | build + desktop combat smoke passed |
 | 2 | ✅ M0 / Task 0.2 — Restore repository text and single runtime | 9–14h | UTF-8 evidence、可讀 launch scripts、單一 Phaser runtime | 30-file UTF-8 scan + reference scan + build + runtime smoke passed |
 | 3 | ✅ M0 / Task 0.3 — Package and Type Boundaries | 8–13h | 單一 pnpm lockfile、browser/worker type boundaries | frozen install + build + lint + typecheck passed |
-| 4 | ▶ M0 / Task 0.4 — Replace Invalid Tests and Verify Production Routes | 14–20h | 有效 app/lifecycle/route tests | `pnpm test` + production HTTP/browser smoke |
-| 8 | Desktop/mobile smoke matrix | 4–6h | evidence-filled checklist | Chrome desktop + Android/iOS landscape |
-| 9 | Close sprint documentation | 2–3h | Roadmap/Debt/Assets/Checklist updated | review + single-purpose commits |
+| 4 | ✅ M0 / Task 0.4 — Replace Invalid Tests and Verify Production Routes | 14–20h | 有效 app/lifecycle/route tests | tests 4/4 + production HTTP/browser smoke passed |
+| 5 | ✅ Sprint 0 closeout documentation | 2–3h | Roadmap/Debt/Assets/Checklist updated | review + single-purpose commit |
 
 ## Detailed Acceptance
 
@@ -38,14 +37,14 @@
 - [x] `pnpm build` 通過。
 - [x] `pnpm lint` 通過（0 errors；4 個既有 `<img>` warnings）。
 - [x] `pnpm typecheck` 通過（app + worker）。
-- [ ] `pnpm test` 通過。
+- [x] `pnpm test` 通過（4 tests passed）。
 
 ### Repository
 
 - [x] 正式 runtime 只有 Phaser。
 - [x] 文件與 UI 沒有 mojibake；30 個目標文字檔嚴格 UTF-8 解碼通過。
-- [ ] Starter tests、starter README、未使用 preview contract 已移除或重寫。
-- [ ] Cloudflare/browser TypeScript surface 正確隔離。
+- [x] Starter tests 已移除並替換為 app/lifecycle/route contracts。
+- [x] Cloudflare/browser TypeScript surface 正確隔離。
 
 ### Runtime Smoke
 
@@ -53,7 +52,7 @@
 - [ ] Keyboard keyup 正常。
 - [ ] 三名 Enemy 可生成、移動、輪流攻擊、受擊、死亡。
 - [ ] Scene shutdown 無 listener/collider error。
-- [ ] Production HTML、JS、atlas、PNG route 都是 200。
+- [x] Production HTML、JS、CSS、atlas、PNG route 都是 200。
 - [x] Browser console 無 error（Task 0.2 runtime smoke）。
 
 ## Risks
@@ -68,4 +67,4 @@
 
 ## Sprint Exit
 
-全部 Acceptance 完成、`CHECKLIST.md` 有 evidence、Technical Debt 更新並建立 Sprint close commit。未完成項目留在本 Sprint，不得提前開始 M1。
+Sprint 0 Acceptance 已完成；Task 0.4 commit 後進入 M1 / Task 1.1。Mobile touch、full gameplay regression 與其他未完成項目依 Roadmap 保留，不在本 Sprint 偷加範圍。

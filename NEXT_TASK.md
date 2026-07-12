@@ -2,51 +2,50 @@
 
 ## Task
 
-**M0 / Task 0.4 — Replace Invalid Tests and Verify Production Routes**
+**M1 / Task 1.1 — Define Action Snapshot and Keyboard Input Boundary**
 
-這是 Task 0.3 完成後唯一允許開始的 Task；本次 closeout 不執行它。
+這是 M0 完成後唯一允許開始的 Task；本次 closeout 不執行它。
 
 ## 為什麼是它
 
-pnpm、lint 與 browser／worker typecheck 已成為可信 quality gate，但目前 `pnpm test` 仍驗證已刪除的 starter skeleton，且 `vinext start` 的 `/assets/*.js` 曾回傳 404。若不先修復 tests 與 production serving，build 成功仍無法證明使用者能載入遊戲。
+M0 已建立可信的 build、typecheck、tests、production routes 與 lifecycle baseline。下一個高風險基礎是把 keyboard input 正式收斂成可觀察的 action snapshot，讓後續 touch、pause、visibility 與 deterministic clock 不必再直接依賴 Scene 內散落的 Key 物件。
 
 ## 完成條件
 
-- 移除不再適用的 starter skeleton assertions。
-- 建立最小 app shell、Phaser lifecycle 與 EnemyManager／combat contract tests；不得複製 production logic 來測自己。
-- production server 直接提供 HTML、JS、CSS、atlas 與 PNG，無需臨時 proxy。
-- 重複 mount／destroy 不產生第二個 Phaser instance 或殘留 keyboard listener。
-- `pnpm test`、`pnpm build`、`pnpm lint`、`pnpm typecheck` 全部 exit code 0。
-- production browser smoke 顯示背景、玩家、三名敵人，console 無 error。
-- 更新 Sprint、Roadmap、README、Technical Debt 與 Checklist。
+- Phaser keyboard keys 只在 Scene `create()` 或 input controller 建立一次。
+- 每幀由目前 `isDown` 重算 movement，放開方向鍵下一幀 velocity 歸零。
+- WASD 與方向鍵均可重複移動、停止、斜向 normalize。
+- J 使用 edge-trigger，不因長按重播攻擊。
+- 不新增 DOM keyboard listener，不使用 React state 保存 gameplay input。
+- Player／Enemy gameplay 行為與美術不變。
+- 建立可讀的 action snapshot contract，供後續 touch input 共用。
+- 更新 Architecture、Roadmap、Sprint、Technical Debt、Checklist、README。
+- `pnpm test`、`pnpm build`、`pnpm lint`、`pnpm typecheck` 通過。
 - 建立單一目的 commit，commit 後 worktree clean。
 
 ## 驗收方式
 
-1. `pnpm test` exit code 0，測試名稱與目前 Phaser app 相符。
-2. `pnpm build`、`pnpm lint`、`pnpm typecheck` exit code 0。
-3. 啟動 `pnpm start` 後，首頁及其引用的 JS／CSS route 為 HTTP 200。
-4. Guanyu／Enemy atlas JSON 與 runtime PNG route 為 HTTP 200。
-5. 不使用 proxy 的瀏覽器 smoke：Canvas count = 1，背景、玩家、三敵人可見。
-6. Browser console error count = 0。
-7. Lifecycle test 重複 mount／destroy 20 次仍只有一個 Phaser instance。
-8. Commit 後 `git status --short` 無輸出。
+1. source scan 確認沒有新增 window/document keyboard listener。
+2. input contract test 驗證 keyup、WASD／方向鍵、斜向 normalize、JustDown attack。
+3. browser smoke：右移後放開立即停止，上下左右三輪可重複，J 長按不連續觸發。
+4. `pnpm test`、`pnpm build`、`pnpm lint`、`pnpm typecheck` exit code 0。
+5. Browser console 無新增 error。
+6. Commit 後 `git status --short` 無輸出。
 
 ## 預估修改檔案
 
+- `app/game/MainScene.ts` 或新增最小 `app/game/input/**` contract
 - `tests/**`
-- `package.json`
-- production serving／hosting config 的最小必要檔案
-- 可能新增不含 gameplay 重製邏輯的 test seam
-- `README.md`
-- `SPRINT.md`
+- `ARCHITECTURE.md`
 - `GAME_ROADMAP.md`
+- `SPRINT.md`
 - `TECH_DEBT.md`
 - `CHECKLIST.md`
+- `README.md`
 - `NEXT_TASK.md`
 
 ## 預估風險
 
-- Vinext production route 問題可能位於 framework／hosting adapter 邊界，修正必須保持最小且不可改 gameplay。
-- Phaser 依賴 Canvas/WebGL，Node unit test 不應假裝完整 renderer；可測 contract 的部分與真實 browser smoke 必須分工。
-- 不可為了讓 tests 通過而保留臨時 proxy、硬編 build hash，或重新實作 EnemyManager 邏輯。
+- 現有 input 已在 MainScene 運作，抽離時容易改變攻擊 timing；必須先固定行為測試再移動責任。
+- Phaser `JustDown` 與瀏覽器 focus／visibility 可能造成 stuck state；不能用強制清除 key 狀態繞過。
+- 不得在此 Task 順手加入 touch controls、pause 或 visibility clock；那些是後續獨立 Task。
