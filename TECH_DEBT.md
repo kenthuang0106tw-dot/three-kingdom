@@ -20,13 +20,6 @@
 
 ## High
 
-### TD-H02 — Typecheck is not part of build and currently fails
-
-- **Evidence:** `vinext build` 通過；`tsc --noEmit` 在 legacy game、MainScene graphics options、Cloudflare ambient types 失敗。
-- **Impact:** Production build 可接受不安全型別。
-- **Resolution:** 新增獨立 `typecheck` script；隔離 worker/browser tsconfig；修正真實 errors。
-- **Target:** M0 / Task 0.4。
-
 ### TD-H03 — MainScene owns too many responsibilities
 
 - **Evidence:** 約 571 行，同時處理 input、player state、combo、effects、debug 與 previews。
@@ -49,13 +42,6 @@
 - **Target:** M1。
 
 ## Medium
-
-### TD-M01 — Dual package manager lockfiles
-
-- **Evidence:** `package-lock.json` 與 `pnpm-lock.yaml` 並存；啟動腳本實際使用 bundled Node/Vinext。
-- **Impact:** dependency resolution 不一致。
-- **Resolution:** 選定 pnpm，更新 scripts/README/CI，移除 npm lockfile。
-- **Target:** M0。
 
 ### TD-M02 — Combat tuning constants are split across modules
 
@@ -124,3 +110,13 @@
 
 - **Resolved:** 2026-07-12，M0 / Task 0.2。
 - **Evidence:** 全 repository reference scan 證明 `app/game.tsx`、`game-extra.css`、`scene-overrides.css` 未被引用後移除；正式入口維持 `app/page.tsx → PhaserGame.tsx → MainScene.ts`。
+
+### TD-H02 — Typecheck was not part of the quality gate
+
+- **Resolved:** 2026-07-12，M0 / Task 0.3。
+- **Evidence:** `pnpm typecheck` 以 `skipLibCheck: false` 驗證完整 `app/**` 與獨立 Worker project；正式 source errors 已修復，command exit code 0。
+
+### TD-M01 — Dual package manager lockfiles
+
+- **Resolved:** 2026-07-12，M0 / Task 0.3。
+- **Evidence:** package manager 固定為 pnpm 11.7.0、刪除 `package-lock.json`，`pnpm install --frozen-lockfile` 通過且未修改 lockfile。

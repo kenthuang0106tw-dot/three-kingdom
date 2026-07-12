@@ -355,7 +355,7 @@ export default class MainScene extends Phaser.Scene {
   }
 
   private createHitSparkAnimation() {
-    const graphics = this.make.graphics({ x: 0, y: 0, add: false });
+    const graphics = new Phaser.GameObjects.Graphics(this);
     for (let frame = 0; frame < 5; frame += 1) {
       const key = `hit-spark-${frame}`;
       if (this.textures.exists(key)) continue;

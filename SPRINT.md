@@ -17,9 +17,8 @@
 |---:|---|---:|---|---|
 | 1 | ✅ Audit and commit Phase 3/4 baseline | 3–5h | `bae05a1` baseline commit | build + desktop combat smoke passed |
 | 2 | ✅ M0 / Task 0.2 — Restore repository text and single runtime | 9–14h | UTF-8 evidence、可讀 launch scripts、單一 Phaser runtime | 30-file UTF-8 scan + reference scan + build + runtime smoke passed |
-| 3 | ▶ M0 / Task 0.3 — Package and Type Boundaries | 8–13h | 單一 pnpm lockfile、browser/worker type boundaries | clean install + build + lint + typecheck |
-| 6 | Replace starter tests | 10–14h | shell/lifecycle/combat minimum tests | `pnpm test` exit 0 |
-| 7 | Validate dev/start asset routes | 4–6h | 無 module/asset 404 | HTTP smoke + browser console |
+| 3 | ✅ M0 / Task 0.3 — Package and Type Boundaries | 8–13h | 單一 pnpm lockfile、browser/worker type boundaries | frozen install + build + lint + typecheck passed |
+| 4 | ▶ M0 / Task 0.4 — Replace Invalid Tests and Verify Production Routes | 14–20h | 有效 app/lifecycle/route tests | `pnpm test` + production HTTP/browser smoke |
 | 8 | Desktop/mobile smoke matrix | 4–6h | evidence-filled checklist | Chrome desktop + Android/iOS landscape |
 | 9 | Close sprint documentation | 2–3h | Roadmap/Debt/Assets/Checklist updated | review + single-purpose commits |
 
@@ -33,12 +32,12 @@
 
 ### Toolchain
 
-- [ ] Node requirement 與 package manager 明確。
-- [ ] 只保留 pnpm lockfile。
+- [x] Node requirement 與 package manager 明確：Node `>=22.13.0`、pnpm `11.7.0`。
+- [x] 只保留 pnpm lockfile。
 - [ ] `pnpm dev` 可啟動。
-- [ ] `pnpm build` 通過。
-- [ ] `pnpm lint` 通過。
-- [ ] `pnpm typecheck` 通過。
+- [x] `pnpm build` 通過。
+- [x] `pnpm lint` 通過（0 errors；4 個既有 `<img>` warnings）。
+- [x] `pnpm typecheck` 通過（app + worker）。
 - [ ] `pnpm test` 通過。
 
 ### Repository

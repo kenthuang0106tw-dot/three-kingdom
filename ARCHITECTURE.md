@@ -128,3 +128,5 @@ Runtime 不猜測等寬切圖。任何 atlas 改動都必須重新產生 debug s
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。
+
+TypeScript 以兩個明確 project boundary 驗證：`tsconfig.json` 覆蓋正式 `app/**` gameplay/browser source，`tsconfig.worker.json` 只覆蓋 Cloudflare Worker。未啟用的 examples、DB 與 build tooling 不得污染正式 app typecheck。

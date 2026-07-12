@@ -27,7 +27,7 @@
 | UI | Debug only | 無 HUD、pause、continue、result |
 | Audio | Missing | 無 runtime assets |
 | Tests | Invalid | 仍驗證已移除 starter skeleton |
-| Repository | Unstable | 核心變更未 commit；lint/typecheck/test、編碼、asset routes 有問題 |
+| Repository | Stabilizing | baseline、UTF-8、單一 runtime、pnpm、lint/typecheck 已完成；tests、asset routes 待修 |
 
 ## 3. Technical Lead Review Findings
 
@@ -104,7 +104,7 @@
 
 ### Task 0.3 — Package and Type Boundaries
 
-- **Status:** Next。
+- **Status:** Completed（2026-07-12；commit 於本 Task closeout 建立）。
 - **Description:** 統一 pnpm；增加獨立 browser/worker typecheck config；修復 lint/type errors。
 - **Priority:** P0
 - **Difficulty:** High
@@ -115,6 +115,7 @@
 
 ### Task 0.4 — Replace Invalid Tests and Verify Production Routes
 
+- **Status:** Next。
 - **Description:** 移除 starter skeleton tests；加入 app shell、Phaser lifecycle、asset route、EnemyManager 最小測試。
 - **Priority:** P0
 - **Difficulty:** High

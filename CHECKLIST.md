@@ -2,12 +2,13 @@
 
 使用方式：每個 Task 複製 Applicable 項目到 PR／commit notes，標記 Pass/Fail/N/A 並附 command、截圖、log 或測試名稱。沒有 evidence 不算 Pass。
 
-## Latest Task Evidence — M0 / Task 0.2
+## Latest Task Evidence — M0 / Task 0.3
 
-- [x] 30 個目標文字檔以 strict UTF-8 解碼，0 failure、0 `U+FFFD`。
-- [x] 常見 mojibake pattern scan 無結果。
-- [x] 舊 Canvas runtime 與兩個孤立 CSS 經全 repository reference scan 後移除。
+- [x] `pnpm install --frozen-lockfile` 通過，lockfile 無變更。
+- [x] Repository 只保留 `pnpm-lock.yaml`，package manager 固定為 pnpm 11.7.0。
 - [x] `pnpm build` 通過。
+- [x] `pnpm lint` exit 0（0 errors；4 個既有 `<img>` warnings）。
+- [x] `pnpm typecheck` exit 0；`skipLibCheck` 關閉，正式 `app/**` 未被排除。
 - [x] Runtime smoke：Phaser Canvas count = 1；背景、玩家、三名敵人載入。
 - [x] Browser console error count = 0。
 
