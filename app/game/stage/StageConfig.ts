@@ -110,5 +110,9 @@ export const BAMBOO_COMBAT_ROOM: StageConfig = validateStageConfig({
     { id: "enemy-lower-front", x: 850, y: 625 },
   ],
   encounters: [{ id: "opening-combat", spawnPointIds: ["enemy-front", "enemy-upper-rear", "enemy-lower-front"] }],
-  exits: [],
+  exits: [{
+    id: "room-exit",
+    bounds: { x: 1140, y: 390, width: 70, height: 245 },
+    targetStageId: null,
+  }],
 });

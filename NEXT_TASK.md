@@ -1,32 +1,30 @@
 # Next Task
 
-## M3 / Task 3.6 — Stage exit and restart
+## M3 / Task 3.7 — Stage traversal acceptance
 
 ### Why this is next
 
-The current room now has explicit StageConfig, bounds, camera lock, spawn, and
-all-clear contracts. The next smallest playable Stage step is to define a
-single exit/restart transition without adding a second level or content.
+The current room now has explicit geometry, camera, encounter, clear, exit,
+and restart contracts. The final M3 task is to validate the complete single-room
+traversal path without adding a second stage or new gameplay content.
 
 ### Completion criteria
 
-- Define a minimal Phaser-free stage exit and restart contract.
-- Trigger the existing room's exit only after its encounter is clear.
-- Reset player, enemies, camera lock, timers, and listeners through the existing Scene lifecycle.
-- Preserve the current combat room and avoid adding a second stage.
-- Do not add title flow, save data, respawn waves, or new UI.
+- Add one deterministic acceptance path from room start through combat clear to exit eligibility and restart.
+- Verify camera lock/unlock, bounds, spawn count, all-clear, exit state, and Scene cleanup together.
+- Preserve the existing 1280×720 bamboo room and combat behavior.
+- Do not add a second stage, new enemies, parallax, or product UI.
 
 ### Validation
 
 - Run `pnpm test`, `pnpm build`, `pnpm lint`, and `pnpm typecheck`.
-- Add deterministic tests for exit eligibility, restart transition, and reset.
-- Browser smoke verifies one Canvas, no runtime errors, and a clean restart path.
+- Add deterministic traversal acceptance tests with no Phaser imports in pure contracts.
+- Browser smoke verifies one Canvas, no runtime errors, ten restart cycles, and no stale exit/encounter state.
 
 ### Expected files
 
 - `app/game/stage/**`
 - `app/game/MainScene.ts`
-- `app/game/EnemyManager.ts`
 - `tests/**`
 - `ARCHITECTURE.md`
 - `SPRINT.md`
@@ -36,5 +34,5 @@ single exit/restart transition without adding a second level or content.
 
 ### Risks
 
-- Exit eligibility could become coupled to presentation text or camera state.
-- Keep the contract data-driven and limited to one room; defer full game-flow UI.
+- An end-to-end contract could accidentally duplicate actor ownership or timers.
+- Keep it acceptance-focused and data-driven; defer M4 content and full game flow.

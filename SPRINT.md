@@ -245,6 +245,15 @@
 - [x] Browser smoke verified one 1280x720 Canvas, ten reset cycles, and zero page errors.
 - [ ] Physical mobile and long-session validation remain deferred.
 
+## M3 / Task 3.6 Closeout
+
+- [x] Added Phaser-free stage exit eligibility and restart state contract.
+- [x] Added the current room's `room-exit` metadata; it becomes available only after all-clear.
+- [x] Scene restart uses one lifecycle method and resets player, enemy, camera, timers, and listeners.
+- [x] `pnpm test` 33/33, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
+- [x] Browser smoke verified one 1280x720 Canvas, ten reset cycles, and zero page errors.
+- [ ] Physical mobile and long-session validation remain deferred.
+
 ## M3 / Task 3.2 Closeout
 
 - [x] Added deterministic Phaser-free X/Y and point clamping helpers.

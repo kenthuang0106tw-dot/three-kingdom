@@ -286,6 +286,14 @@ all-clear callback only when every spawned enemy is removed. MainScene owns the
 clear presentation and camera unlock; respawn and stage transitions remain
 outside this contract.
 
+## Stage Exit and Restart Contract (M3 / Task 3.6)
+
+`StageExit.ts` is a Phaser-free eligibility state: an exit starts locked,
+becomes available only after the existing all-clear callback, and can then be
+requested. MainScene resets this state with Scene creation and routes the
+existing development reset smoke through one `restartStage` lifecycle method.
+No second stage, save data, or automatic respawn is introduced.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

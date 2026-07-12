@@ -18,6 +18,7 @@ import { BAMBOO_COMBAT_ROOM, clampStagePoint, clampStageX, clampStageY, validate
 import { calculateCameraScroll } from "../app/game/camera/CameraFollow.ts";
 import { createCameraLockState, isCameraLocked, lockCamera, unlockCamera } from "../app/game/camera/CameraLock.ts";
 import { beginEncounter, createEncounterFlow, isEncounterCleared, recordEnemyRemoved } from "../app/game/stage/EncounterFlow.ts";
+import { canRequestStageExit, createStageExitState, makeExitAvailable, requestStageExit, resetStageExit } from "../app/game/stage/StageExit.ts";
 
 test("React shell mounts only the Phaser lifecycle component", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
@@ -406,4 +407,28 @@ test("EnemyManager owns spawn and all-clear contract while MainScene owns presen
   assert.match(manager, /recordEnemyRemoved\(this\.encounterFlow, enemy\.id\)/);
   assert.match(manager, /isEncounterCleared\(this\.encounterFlow\)/);
   assert.match(scene, /onAllDefeated: \(\) => this\.showAllEnemiesDefeated\(\)/);
+});
+
+test("Stage exit is locked until all-clear and resets deterministically", async () => {
+  const source = await readFile(new URL("../app/game/stage/StageExit.ts", import.meta.url), "utf8");
+  const exits = [{ id: "room-exit", bounds: { x: 0, y: 0, width: 10, height: 10 }, targetStageId: null }];
+  const locked = createStageExitState(exits);
+  assert.equal(canRequestStageExit(locked), false);
+  assert.deepEqual(requestStageExit(locked), locked);
+  const available = makeExitAvailable(locked, exits, "room-exit");
+  assert.equal(canRequestStageExit(available), true);
+  assert.deepEqual(requestStageExit(available), { status: "requested", exitId: "room-exit" });
+  assert.deepEqual(resetStageExit(), { status: "locked", exitId: null });
+  assert.match(source, /requested/);
+});
+
+test("MainScene only makes the configured exit available after all-clear", async () => {
+  const [scene, stage] = await Promise.all([
+    readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/stage/StageConfig.ts", import.meta.url), "utf8"),
+  ]);
+  assert.match(stage, /id: "room-exit"/);
+  assert.match(scene, /makeExitAvailable\(this\.stageExitState, BAMBOO_COMBAT_ROOM\.exits, "room-exit"\)/);
+  assert.match(scene, /private restartStage\(\)/);
+  assert.match(scene, /this\.restartStage\(\)/);
 });

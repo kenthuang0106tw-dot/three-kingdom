@@ -193,6 +193,12 @@ M3 / Task 3.5 now makes the current room's single spawn and all-clear lifecycle
 explicit and deterministic. Duplicate spawn requests and duplicate removal
 notifications are ignored; respawn and stage transitions remain deferred.
 
+### TD-M03 Update — Stage exit and restart
+
+M3 / Task 3.6 now models the current room's exit eligibility separately from
+presentation and routes restart through Scene lifecycle cleanup. There is still
+no second stage or automatic transition, by design.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

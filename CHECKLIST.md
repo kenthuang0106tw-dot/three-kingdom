@@ -409,3 +409,16 @@
 | Browser smoke | Pass | One 1280x720 Canvas, reset count 10, page errors 0 |
 | Spawn/clear contract | Pass | Spawn count, duplicate guards, all-clear, and reset tests |
 | Known issues | Non-blocking | Stage exits, respawn, and physical mobile QA remain deferred |
+
+## M3 / Task 3.6 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M3 / Task 3.6 Stage exit and restart |
+| Tests | Pass | `pnpm test` 33/33 |
+| Build | Pass | `pnpm build` |
+| Lint | Pass | 0 errors, existing 4 `<img>` warnings only |
+| Typecheck | Pass | `pnpm typecheck` |
+| Browser smoke | Pass | One 1280x720 Canvas, reset count 10, page errors 0 |
+| Exit/restart contract | Pass | Locked → available → requested and reset tests |
+| Known issues | Non-blocking | Traversal acceptance, second stage, and physical mobile QA remain deferred |

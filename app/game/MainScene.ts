@@ -15,6 +15,7 @@ import { EffectDirector, EFFECT_PARAMS } from "./combat/EffectDirector";
 import { BAMBOO_COMBAT_ROOM, clampStageX } from "./stage/StageConfig";
 import { calculateCameraScroll } from "./camera/CameraFollow";
 import { createCameraLockState, isCameraLocked, lockCamera, unlockCamera, type CameraLockState } from "./camera/CameraLock";
+import { createStageExitState, makeExitAvailable, resetStageExit, type StageExitState } from "./stage/StageExit";
 
 type AttackState = "attack1" | "attack2" | "attack3";
 type PreviewFrame = {
@@ -129,6 +130,7 @@ export default class MainScene extends Phaser.Scene {
   private enemyPreviewIndex = 0;
   private assetFailureListener?: (file: Phaser.Loader.File) => void;
   private cameraLockState: CameraLockState = createCameraLockState();
+  private stageExitState: StageExitState = createStageExitState(BAMBOO_COMBAT_ROOM.exits);
 
   constructor() { super("MainScene"); }
 
@@ -156,6 +158,7 @@ export default class MainScene extends Phaser.Scene {
     this.playerStateMachine.reset();
     this.playerLifecycle.reset();
     this.cameraLockState = createCameraLockState();
+    this.stageExitState = resetStageExit();
     if (this.enemyPreviewMode) { this.createEnemyAlignmentPreview(); return; }
     if (this.previewMode) { this.createPreviewMode(); return; }
 
@@ -221,7 +224,7 @@ export default class MainScene extends Phaser.Scene {
       this.resetSmokeIteration += 1;
       this.game.canvas.dataset.resetSmokeCount = String(this.resetSmokeIteration);
       this.time.delayedCall(20, () => {
-        if (this.resetSmokeIteration < 10 && this.scene.isActive()) this.scene.restart();
+        if (this.resetSmokeIteration < 10 && this.scene.isActive()) this.restartStage();
       });
     }
   }
@@ -433,11 +436,16 @@ export default class MainScene extends Phaser.Scene {
 
   private showAllEnemiesDefeated() {
     this.cameraLockState = unlockCamera(this.cameraLockState, "encounter");
+    this.stageExitState = makeExitAvailable(this.stageExitState, BAMBOO_COMBAT_ROOM.exits, "room-exit");
     if (this.defeatedText) return;
     this.defeatedText = this.add.text(WIDTH / 2, HEIGHT / 2, "All Enemies Defeated", {
       fontFamily: "Consolas, monospace", fontSize: "36px", color: "#ffffff",
       backgroundColor: "rgba(0,0,0,.72)", padding: { x: 20, y: 12 },
     }).setOrigin(0.5).setDepth(10000);
+  }
+
+  private restartStage() {
+    this.scene.restart();
   }
 
   private transitionTo(next: PlayerState) {
