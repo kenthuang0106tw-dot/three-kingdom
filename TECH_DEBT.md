@@ -143,6 +143,12 @@ Hit presentation and timing effects now have an `EffectDirector` boundary with
 explicit shutdown cleanup. Actor state and combat resolution remain separate;
 player hurt/dead/restart behavior is the next M2 extraction.
 
+### TD-M02 Update — 2026-07-12
+
+Player HP, terminal death, and Scene reset now use a Phaser-free lifecycle
+contract. Game Over presentation remains intentionally deferred; EnemyManager
+cleanup and director test coverage is next.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

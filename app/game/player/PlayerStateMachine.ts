@@ -1,14 +1,15 @@
-export type PlayerState = "idle" | "walk" | "attack1" | "attack2" | "attack3" | "hurt";
+export type PlayerState = "idle" | "walk" | "attack1" | "attack2" | "attack3" | "hurt" | "dead";
 
 export type PlayerTransition = Readonly<{ previous: PlayerState; next: PlayerState }>;
 
 const ALLOWED_TRANSITIONS: Readonly<Record<PlayerState, ReadonlySet<PlayerState>>> = {
-  idle: new Set(["walk", "attack1", "hurt"]),
-  walk: new Set(["idle", "attack1", "hurt"]),
-  attack1: new Set(["idle", "attack2", "hurt"]),
-  attack2: new Set(["idle", "attack3", "hurt"]),
-  attack3: new Set(["idle", "hurt"]),
-  hurt: new Set(["idle"]),
+  idle: new Set(["walk", "attack1", "hurt", "dead"]),
+  walk: new Set(["idle", "attack1", "hurt", "dead"]),
+  attack1: new Set(["idle", "attack2", "hurt", "dead"]),
+  attack2: new Set(["idle", "attack3", "hurt", "dead"]),
+  attack3: new Set(["idle", "hurt", "dead"]),
+  hurt: new Set(["idle", "dead"]),
+  dead: new Set(),
 };
 
 /** Pure player transition boundary; rendering, input, and combat stay outside. */

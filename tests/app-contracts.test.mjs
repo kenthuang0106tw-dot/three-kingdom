@@ -12,6 +12,7 @@ import { GameplayEventHub } from "../app/game/events/GameplayEvents.ts";
 import { SeededRandom, TestClock } from "../app/game/time/GameplayTime.ts";
 import { createAssetFailureReporter, RUNTIME_ASSET_MANIFEST } from "../app/game/assets/AssetManifest.ts";
 import { PlayerStateMachine } from "../app/game/player/PlayerStateMachine.ts";
+import { PlayerLifecycle } from "../app/game/player/PlayerLifecycle.ts";
 import { resolveAttack } from "../app/game/combat/CombatResolver.ts";
 
 test("React shell mounts only the Phaser lifecycle component", async () => {
@@ -169,6 +170,16 @@ test("Player state machine enforces explicit transitions and reset", () => {
   assert.deepEqual(machine.transition("idle"), { previous: "hurt", next: "idle" });
   machine.reset();
   assert.equal(machine.state, "idle");
+});
+
+test("PlayerLifecycle floors HP, enters dead once, and resets deterministically", () => {
+  const lifecycle = new PlayerLifecycle(3);
+  assert.deepEqual(lifecycle.applyDamage(1), { applied: true, damage: 1, hp: 2, becameDead: false });
+  assert.deepEqual(lifecycle.applyDamage(5), { applied: true, damage: 5, hp: 0, becameDead: true });
+  assert.deepEqual(lifecycle.applyDamage(1), { applied: false, damage: 0, hp: 0, becameDead: false });
+  lifecycle.reset();
+  assert.equal(lifecycle.hp, 3);
+  assert.equal(lifecycle.state, "alive");
 });
 
 test("PlayerActor owns sprite, feet anchor, and Arcade body responsibilities", async () => {

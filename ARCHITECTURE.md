@@ -216,6 +216,15 @@ request. It tracks its timers and tweens for Scene shutdown cleanup and keeps
 the established parameters in `EFFECT_PARAMS`. It does not resolve damage,
 select targets, transition actors, or own Combo state.
 
+## Player Lifecycle Contract (M2 / Task 2.6)
+
+`PlayerLifecycle` owns HP, the alive/dead life state, damage floor, and reset
+behavior without Phaser dependencies. `PlayerStateMachine` adds an explicit
+terminal `dead` state; MainScene keeps the existing 300ms hurt lockout and
+presentation effects, blocks input while dead, and resets the lifecycle during
+Scene creation/restart. Game Over UI and continue flow remain outside this
+contract.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

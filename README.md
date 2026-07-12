@@ -128,6 +128,6 @@ tools/build_enemy_art.py     Enemy sheet/atlas rebuild pipeline
 
 ## Current Priority
 
-M2 / Task 2.5 Effect Director is complete. The next single task is M2 / Task 2.6, Player Hurt, Dead, and Restart.
+M2 / Task 2.6 Player Hurt, Dead, and Restart is complete. The next single task is M2 / Task 2.7, EnemyManager Cleanup and Director Tests.
 
 Milestone 0 與 M1 / Task 1.1 已完成；下一步進入 M1 / Task 1.2，接入 Phaser touch controls。完成前不要新增 Stage、Boss、角色、招式或 Audio。

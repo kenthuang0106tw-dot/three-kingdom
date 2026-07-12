@@ -7,6 +7,7 @@ import { PhaserGameplayClock, SeededRandom } from "./time/GameplayTime";
 import { GameplayEventHub, type GameplaySnapshot } from "./events/GameplayEvents";
 import { createAssetFailureReporter, queueRuntimeAssets } from "./assets/AssetManifest";
 import { PlayerStateMachine, type PlayerState } from "./player/PlayerStateMachine";
+import { PlayerLifecycle } from "./player/PlayerLifecycle";
 import { PlayerActor } from "./player/PlayerActor";
 import { PLAYER_ATTACKS, PlayerAttackController, type AttackStep } from "./player/PlayerAttackController";
 import { resolveAttack } from "./combat/CombatResolver";
@@ -84,6 +85,7 @@ export default class MainScene extends Phaser.Scene {
   private lastLifecyclePaused = false;
   private enemyManager!: EnemyManager;
   private readonly playerStateMachine = new PlayerStateMachine();
+  private readonly playerLifecycle = new PlayerLifecycle(PLAYER_MAX_HP);
   private readonly attackController = new PlayerAttackController();
   private debugText?: Phaser.GameObjects.Text;
   private get state(): PlayerState { return this.playerStateMachine.state; }
@@ -96,7 +98,7 @@ export default class MainScene extends Phaser.Scene {
   private comboBuffered = false;
   private comboWindowOpen = false;
   private comboWindowEndsAt = 0;
-  private playerHp = PLAYER_MAX_HP;
+  private get playerHp() { return this.playerLifecycle.hp; }
   private hitCount = 0;
   private totalDamage = 0;
   private playerAttackId = 0;
@@ -149,6 +151,7 @@ export default class MainScene extends Phaser.Scene {
     this.previewMode = development && query.get("previewAttack") === "1";
     this.resetSmokeMode = development && query.get("resetSmoke") === "1";
     this.playerStateMachine.reset();
+    this.playerLifecycle.reset();
     if (this.enemyPreviewMode) { this.createEnemyAlignmentPreview(); return; }
     if (this.previewMode) { this.createPreviewMode(); return; }
 
@@ -217,6 +220,12 @@ export default class MainScene extends Phaser.Scene {
     this.enemyManager.update();
 
     if (this.state === "hurt") {
+      this.syncVisualsToBody();
+      this.updateDebugText();
+      return;
+    }
+    if (this.state === "dead") {
+      this.playerBody.setVelocity(0, 0);
       this.syncVisualsToBody();
       this.updateDebugText();
       return;
@@ -365,7 +374,8 @@ export default class MainScene extends Phaser.Scene {
 
   private applyHitToPlayer(enemy: EnemyCombatant) {
     if (this.state === "hurt") return;
-    this.playerHp = Math.max(0, this.playerHp - 1);
+    const damage = this.playerLifecycle.applyDamage(1);
+    if (!damage.applied) return;
     this.gameplayEvents.publish({ type: "player-hit", enemyId: enemy.id, at: this.time.now });
     this.disableAttackHitbox();
     this.comboStep = 0;
@@ -379,7 +389,11 @@ export default class MainScene extends Phaser.Scene {
     const targetX = Phaser.Math.Clamp(this.playerBodyZone.x + enemy.facing * EFFECT_PARAMS.knockbackDistance, WALK_BOUNDS.left, WALK_BOUNDS.right);
     this.effectDirector.knockback(this.playerBodyZone, targetX, () => this.syncVisualsToBody());
     this.effectDirector.beginHitStop();
-    this.time.delayedCall(HURT_MS, () => { if (this.state === "hurt") this.transitionTo("idle"); });
+    if (damage.becameDead) {
+      this.transitionTo("dead");
+    } else {
+      this.time.delayedCall(HURT_MS, () => { if (this.state === "hurt") this.transitionTo("idle"); });
+    }
   }
 
   private playHitSound() {
@@ -400,7 +414,7 @@ export default class MainScene extends Phaser.Scene {
     const { previous } = transition;
     this.gameplayEvents.publish({ type: "player-state-changed", previous, next, at: this.time.now });
     this.transitionLog.push(`${previous} -> ${next}`); if (this.transitionLog.length > 20) this.transitionLog.shift();
-    if (next === "idle" || next === "hurt") this.playerActor.showIdleFrame();
+    if (next === "idle" || next === "hurt" || next === "dead") this.playerActor.showIdleFrame();
     else if (next === "walk") this.playerActor.playWalk(FRAME_ORIGIN_Y["walk-0"]);
   }
 

@@ -139,6 +139,15 @@
 - [x] `pnpm test` 17/17, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
 - [x] Browser smoke loaded the updated route with one 1280×720 Canvas and no visible runtime error.
 
+## Task 2.6 Closeout
+
+- [x] Added Phaser-free `PlayerLifecycle` for HP floor, alive/dead state, damage rejection after death, and reset.
+- [x] Player state machine now has an explicit terminal `dead` state; MainScene blocks input while dead and resets lifecycle on Scene creation.
+- [x] Existing 300ms hurt lockout, white flash, horizontal knockback, and hit-stop behavior remain unchanged.
+- [x] `pnpm test` 22/22, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
+- [x] Browser reset smoke loaded one 1280x720 Canvas and completed 10 Scene restarts.
+- [ ] Game Over UI and physical mobile lifecycle remain intentionally deferred.
+
 ## Task 2.5 Closeout
 
 - [x] Added `EffectDirector` for existing hit flash, hit spark, knockback, camera shake, and hit-stop orchestration.

@@ -1,30 +1,29 @@
 # Next Task
 
-## M2 / Task 2.6 — Player Hurt, Dead, and Restart
+## M2 / Task 2.7 — EnemyManager Cleanup and Director Tests
 
 ### Why this is next
 
-Player attack timing, hit resolution, and hit presentation now have explicit
-boundaries. The next dependency-ready task is to isolate the player damage,
-hurt lockout, death, and reset flow without adding Game Over UI or new combat
-rules.
+Player lifecycle, combat resolution, and hit effects now have explicit seams.
+The remaining M2 risk is EnemyManager ownership of cleanup, attack-slot release,
+and deterministic director timing before the combat-room acceptance task.
 
 ### Completion criteria
 
-- Define a focused player hurt/dead/restart contract for the existing HP flow.
-- Preserve the current 300ms hurt lockout, flash, knockback, and hit-stop behavior.
-- Keep Game Over UI, continue screens, and new player abilities out of scope.
-- Add deterministic tests for HP floor, hurt lockout, death transition, and reset.
+- Add focused deterministic tests for EnemyManager cleanup, attack-slot release, hurt cancellation, death removal, and director delay.
+- Preserve the existing three-enemy formation, AI distances, attack behavior, and effect callbacks.
+- Ensure destroyed enemies remove bodies, hitboxes, listeners, colliders, timers, and manager references.
+- Do not add enemy types, new attacks, UI, or stage behavior.
 
 ### Validation
 
 - Run `pnpm test`, `pnpm build`, `pnpm lint`, and `pnpm typecheck`.
-- Browser smoke verifies player hurt recovery and Scene reset with one Canvas and zero visible runtime errors.
+- Browser smoke verifies enemy hurt/death cleanup and continued operation of surviving enemies with one Canvas and zero visible runtime errors.
 
 ### Expected files
 
-- `app/game/player/**`
-- `app/game/MainScene.ts`
+- `app/game/EnemyManager.ts`
+- `app/game/time/**`
 - `tests/**`
 - `ARCHITECTURE.md`
 - `SPRINT.md`
@@ -34,5 +33,5 @@ rules.
 
 ### Risks
 
-- Existing EnemyManager callbacks and lifecycle reset currently touch player HP and state directly.
-- Preserve current behavior and avoid introducing Game Over UI or broad game-flow refactors.
+- Phaser object destruction and delayed callbacks are tightly coupled to manager cleanup.
+- Keep the task test-focused and behavior-preserving; do not begin the full combat-room acceptance task.
