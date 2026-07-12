@@ -108,6 +108,12 @@ Scene reset cleanup is now exercised by a ten-cycle development smoke path. Phas
 animation definitions are idempotent and Scene shutdown removes runtime listeners,
 timers, colliders, touch input, and enemy resources.
 
+### TD-M03 Update — 2026-07-12
+
+Runtime asset ownership is now explicit through a typed manifest and deterministic
+development load-error reporting. Character expansion and full asset QA metadata
+remain future work.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

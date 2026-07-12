@@ -58,6 +58,15 @@ Vertical Slice 不接入兩名角色，維持 Backlog P2。
 - Camera Shake／Hit Stop：程式效果。
 - 尚缺正式 hit spark、slash trail、dust、death impact、environment break effects。
 
+### Runtime manifest (M1 / Task 1.5)
+
+`app/game/assets/AssetManifest.ts` owns the five currently loaded runtime entries:
+`forest`, `guanyu-idle`, `guanyu-walk`, `guanyu-attack`, and `enemy-soldier`.
+The manifest records whether an entry is an image or atlas and its exact public
+URLs. `MainScene.preload()` queues it without changing existing keys or frame
+metadata. Development loader failures report the required key deterministically;
+the listener is removed on Scene shutdown.
+
 ### Stage
 
 | Asset | Status |

@@ -335,7 +335,8 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 - Evidence: seeded RNG and test clock reproducibility tests, EnemyManager injection seams, `pnpm test`, `pnpm build`, `pnpm lint`, `pnpm typecheck`, and browser smoke with one Canvas and zero console errors.
 - M1 / Task 1.7 (Responsive Mobile Landscape Contract) completed in this closeout commit.
 - M1 / Task 1.8 (Scene Reset Smoke Test) completed in this closeout commit.
-- Next eligible task: M1 / Task 1.5 (Asset Manifest and Preload Failure Policy).
+- M1 / Task 1.5 (Asset Manifest and Preload Failure Policy) completed in this closeout commit.
+- Next eligible task: M2 / Task 2.1 (Player State Machine).
 
 ## 4. Global Acceptance Rules
 

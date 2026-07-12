@@ -10,6 +10,7 @@ import { createActionSnapshot } from "../app/game/input/ActionSnapshot.ts";
 import { ClockState } from "../app/game/time/ClockState.ts";
 import { GameplayEventHub } from "../app/game/events/GameplayEvents.ts";
 import { SeededRandom, TestClock } from "../app/game/time/GameplayTime.ts";
+import { createAssetFailureReporter, RUNTIME_ASSET_MANIFEST } from "../app/game/assets/AssetManifest.ts";
 
 test("React shell mounts only the Phaser lifecycle component", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
@@ -102,6 +103,19 @@ test("MainScene exposes a development-only reset smoke path with shutdown cleanu
   assert.match(source, /lifecycleClock\.destroy\(\)/);
   assert.match(source, /enemyManager\.destroy\(\)/);
   assert.match(source, /this\.anims\.exists\("guanyu-walk"\)/);
+});
+
+test("Runtime asset manifest preserves keys and reports missing required assets", async () => {
+  const source = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
+  assert.match(source, /queueRuntimeAssets\(this\.load\)/);
+  assert.match(source, /load\.on\("loaderror"/);
+  assert.match(source, /load\.off\("loaderror"/);
+  assert.deepEqual(RUNTIME_ASSET_MANIFEST.map(asset => asset.key), [
+    "forest", "guanyu-idle", "guanyu-walk", "guanyu-attack", "enemy-soldier",
+  ]);
+  const messages = [];
+  createAssetFailureReporter(RUNTIME_ASSET_MANIFEST, message => messages.push(message))("guanyu-walk");
+  assert.deepEqual(messages, ["Required runtime asset failed to load: guanyu-walk"]);
 });
 
 test("Clock pause reasons remain independent and resume only when all reasons clear", () => {

@@ -204,6 +204,19 @@
 | Browser reset smoke | Pass | `?resetSmoke=1`, 10 restarts, one 1280×720 Canvas, reset count 10 |
 | Known issues | Non-blocking | Physical mobile validation remains pending |
 
+## M1 / Task 1.5 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M1 / Task 1.5 — Asset Manifest and Preload Failure Policy |
+| Build | Pass | `pnpm build` |
+| Tests | Pass | `pnpm test` 16/16 |
+| Lint | Pass | `pnpm lint` 0 errors, existing `<img>` warnings only |
+| Typecheck | Pass | `pnpm typecheck` |
+| Browser smoke | Pass | Manifest-backed route, one 1280×720 Canvas, no visible runtime error |
+| Missing asset fixture | Pass | Reporter emits deterministic required-key message |
+| Known issues | Non-blocking | Full asset content/metadata expansion remains future work |
+
 ## M1 / Task 1.4 Evidence
 
 | Item | Result | Evidence |

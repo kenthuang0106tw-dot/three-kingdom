@@ -122,6 +122,15 @@
 
 ## Sprint Exit
 
+## Task 1.5 Closeout
+
+- [x] Added typed runtime manifest entries for the current background, player, and enemy assets.
+- [x] MainScene queues the manifest without changing asset keys, atlas metadata, or visuals.
+- [x] Development `loaderror` reporting identifies required missing keys deterministically and is removed on shutdown.
+- [x] `pnpm test` 16/16, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
+- [x] Browser smoke loaded the manifest-backed game with one 1280×720 Canvas and no visible runtime error.
+- [x] Missing-asset fixture contract test passed without modifying production assets.
+
 ## Task 1.8 Closeout
 
 - [x] Added development-only `?resetSmoke=1` Scene restart smoke path.

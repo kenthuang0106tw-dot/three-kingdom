@@ -1,31 +1,29 @@
 # Next Task
 
-## M1 / Task 1.5 — Asset Manifest and Preload Failure Policy
+## M2 / Task 2.1 — Player State Machine
 
 ### Why this is next
 
-The runtime, input, lifecycle, events, deterministic time, mobile viewport, and reset contracts are now validated. The remaining M1 foundation task is to make asset ownership and preload failures explicit before further gameplay content is added.
+Milestone 1 runtime contracts are complete: input, touch, lifecycle, events, deterministic time, mobile scaling, reset cleanup, and asset loading now have explicit boundaries. The highest-priority next step is to isolate player state transitions before extracting visual, physics, and attack ownership.
 
 ### Completion criteria
 
-- Define a typed runtime asset manifest for the current background, player, enemy, and atlas metadata assets.
-- Load runtime assets through the manifest without changing gameplay visuals or animation frame data.
-- Surface a deterministic development error when a required asset fails to load.
-- Preserve the single Phaser instance, Scene reset cleanup, touch input, and mobile scaling behavior.
+- Define a pure, explicit Player State Machine for the current idle, walk, attack1, attack2, attack3, and hurt states.
+- Encode allowed transitions and reject invalid transitions deterministically.
+- Preserve current controls, combo timing, hit effects, animations, and scene behavior.
+- Add focused transition tests without introducing new gameplay states or UI.
 
 ### Validation
 
 - Run `pnpm test`, `pnpm build`, `pnpm lint`, and `pnpm typecheck`.
-- Browser smoke loads the manifest-backed game with one Canvas and zero console errors.
-- Test a missing required asset through a development-only fixture or source contract without changing production assets.
+- Browser smoke verifies idle/walk/attack/hurt transitions with one Canvas and zero console errors.
 
 ### Expected files
 
-- `app/game/assets/**`
+- `app/game/player/**`
 - `app/game/MainScene.ts`
 - `tests/**`
 - `ARCHITECTURE.md`
-- `ASSET_PIPELINE.md`
 - `SPRINT.md`
 - `GAME_ROADMAP.md`
 - `CHECKLIST.md`
@@ -33,5 +31,5 @@ The runtime, input, lifecycle, events, deterministic time, mobile viewport, and 
 
 ### Risks
 
-- Moving preload ownership can accidentally change atlas keys or frame metadata.
-- Failure reporting must remain development-only and must not add a new production UI system.
+- Extracting transitions can desynchronize combo completion and animation listeners if ownership is moved too broadly.
+- The first extraction must remain pure and avoid rewriting actor, physics, or combat behavior in the same task.

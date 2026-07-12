@@ -162,6 +162,15 @@ colliders, and owned GameObjects before the next create. Global animation keys a
 created only once, so a restart cannot duplicate animation definitions. The smoke
 path is development-only and does not alter production gameplay.
 
+## Runtime Asset Manifest Contract (M1 / Task 1.5)
+
+`app/game/assets/AssetManifest.ts` is the single typed list of runtime image and
+atlas keys, URLs, and loader kinds. `MainScene.preload()` queues this manifest so
+asset keys remain identical to the existing animation and gameplay code. In
+development, Phaser's loader `loaderror` event is mapped to a deterministic
+required-asset message and removed during Scene shutdown. Production does not
+install the reporting listener or add an error UI.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

@@ -5,6 +5,7 @@ import { TouchInputController } from "./input/TouchInputController";
 import { LifecycleClock } from "./time/LifecycleClock";
 import { PhaserGameplayClock, SeededRandom } from "./time/GameplayTime";
 import { GameplayEventHub, type GameplaySnapshot } from "./events/GameplayEvents";
+import { createAssetFailureReporter, queueRuntimeAssets } from "./assets/AssetManifest";
 
 type PlayerState = "idle" | "walk" | "attack1" | "attack2" | "attack3" | "hurt";
 type AttackState = "attack1" | "attack2" | "attack3";
@@ -138,17 +139,23 @@ export default class MainScene extends Phaser.Scene {
   private enemyPreviewText?: Phaser.GameObjects.Text;
   private enemyPreviewKeys?: Record<"left" | "right", Phaser.Input.Keyboard.Key>;
   private enemyPreviewIndex = 0;
+  private assetFailureListener?: (file: Phaser.Loader.File) => void;
 
   constructor() { super("MainScene"); }
 
   getGameplayEvents() { return this.gameplayEvents; }
 
   preload() {
-    this.load.image("forest", "/scene/forest-camp.png");
-    this.load.atlas("guanyu-idle", "/art/guanyu/guanyu-master.png", "/art/guanyu/guanyu-idle.atlas.json");
-    this.load.atlas("guanyu-walk", "/art/guanyu/guanyu-walk.png", "/art/guanyu/guanyu-walk.atlas.json");
-    this.load.atlas("guanyu-attack", "/art/guanyu/guanyu-combo-frames.png", "/art/guanyu/guanyu-attack.atlas.json");
-    this.load.atlas("enemy-soldier", "/art/enemy/enemy-soldier.png", "/art/enemy/enemy-soldier.atlas.json");
+    queueRuntimeAssets(this.load);
+    if (process.env.NODE_ENV !== "production") {
+      const reportFailure = createAssetFailureReporter();
+      this.assetFailureListener = (file: Phaser.Loader.File) => reportFailure(file.key);
+      this.load.on("loaderror", this.assetFailureListener);
+      this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+        if (this.assetFailureListener) this.load.off("loaderror", this.assetFailureListener);
+        this.assetFailureListener = undefined;
+      });
+    }
   }
 
   create() {
