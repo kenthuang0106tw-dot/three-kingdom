@@ -4,7 +4,7 @@
     "x": 224,
     "y": 420
   },
-  "displayScale": 0.75,
+  "displayScale": 0.9,
   "sourceScale": 0.5769230769230769,
   "frames": [
     {
@@ -41,7 +41,7 @@
         "y": 420
       },
       "sourceScale": 0.5769230769230769,
-      "displayScale": 0.75
+      "displayScale": 0.9
     },
     {
       "name": "attack1-active",
@@ -77,7 +77,7 @@
         "y": 420
       },
       "sourceScale": 0.5769230769230769,
-      "displayScale": 0.75
+      "displayScale": 0.9
     },
     {
       "name": "attack1-recovery",
@@ -113,7 +113,7 @@
         "y": 420
       },
       "sourceScale": 0.5769230769230769,
-      "displayScale": 0.75
+      "displayScale": 0.9
     },
     {
       "name": "attack2-startup",
@@ -149,7 +149,7 @@
         "y": 420
       },
       "sourceScale": 0.5769230769230769,
-      "displayScale": 0.75
+      "displayScale": 0.9
     },
     {
       "name": "attack2-active",
@@ -185,7 +185,7 @@
         "y": 420
       },
       "sourceScale": 0.5769230769230769,
-      "displayScale": 0.75
+      "displayScale": 0.9
     },
     {
       "name": "attack2-recovery",
@@ -221,7 +221,7 @@
         "y": 420
       },
       "sourceScale": 0.5769230769230769,
-      "displayScale": 0.75
+      "displayScale": 0.9
     },
     {
       "name": "attack3-startup",
@@ -257,7 +257,7 @@
         "y": 420
       },
       "sourceScale": 0.5769230769230769,
-      "displayScale": 0.75
+      "displayScale": 0.9
     },
     {
       "name": "attack3-active",
@@ -293,7 +293,7 @@
         "y": 420
       },
       "sourceScale": 0.5769230769230769,
-      "displayScale": 0.75
+      "displayScale": 0.9
     },
     {
       "name": "attack3-recovery",
@@ -329,7 +329,7 @@
         "y": 420
       },
       "sourceScale": 0.5769230769230769,
-      "displayScale": 0.75
+      "displayScale": 0.9
     }
   ]
 }

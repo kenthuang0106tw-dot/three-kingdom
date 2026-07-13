@@ -5,6 +5,7 @@ export type BossDamageResult = Readonly<{
   damage: number;
   hp: number;
   becameDead: boolean;
+  phaseChanged: boolean;
 }>;
 
 const ALLOWED_TRANSITIONS: Readonly<Record<BossState, ReadonlySet<BossState>>> = {
@@ -21,6 +22,7 @@ export class BossLifecycle {
   readonly maxHp: number;
   hp: number;
   private current: BossState = "inactive";
+  private currentPhase: 1 | 2 = 1;
 
   constructor(maxHp: number) {
     if (!Number.isInteger(maxHp) || maxHp <= 0) throw new Error("Boss max HP must be a positive integer");
@@ -29,6 +31,7 @@ export class BossLifecycle {
   }
 
   get state(): BossState { return this.current; }
+  get phase(): 1 | 2 { return this.currentPhase; }
 
   activate(): void { this.transition("idle"); }
 
@@ -41,15 +44,17 @@ export class BossLifecycle {
   }
 
   applyDamage(amount: number): BossDamageResult {
-    if (this.current === "inactive" || this.current === "dead" || this.current === "cleaned") {
-      return { applied: false, damage: 0, hp: this.hp, becameDead: false };
+    if (this.current === "inactive" || this.current === "hurt" || this.current === "dead" || this.current === "cleaned") {
+      return { applied: false, damage: 0, hp: this.hp, becameDead: false, phaseChanged: false };
     }
     const damage = Math.max(0, Math.floor(amount));
-    if (damage === 0) return { applied: false, damage: 0, hp: this.hp, becameDead: false };
+    if (damage === 0) return { applied: false, damage: 0, hp: this.hp, becameDead: false, phaseChanged: false };
     this.hp = Math.max(0, this.hp - damage);
     const becameDead = this.hp === 0;
+    const phaseChanged = !becameDead && this.currentPhase === 1 && this.hp <= Math.ceil(this.maxHp / 2);
+    if (phaseChanged) this.currentPhase = 2;
     this.transition(becameDead ? "dead" : "hurt");
-    return { applied: true, damage, hp: this.hp, becameDead };
+    return { applied: true, damage, hp: this.hp, becameDead, phaseChanged };
   }
 
   cleanup(): boolean {
@@ -61,5 +66,6 @@ export class BossLifecycle {
   reset(): void {
     this.hp = this.maxHp;
     this.current = "inactive";
+    this.currentPhase = 1;
   }
 }

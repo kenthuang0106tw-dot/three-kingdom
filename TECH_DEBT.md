@@ -272,6 +272,15 @@ dependency and remains unconnected to `MainScene` until a real Boss actor
 exists. Distance, movement, phase, arena, and presentation decisions remain
 undefined rather than being guessed early.
 
+### TD-M05 Update — Boss actor lifecycle
+
+M5 / Task 5.4 connects one Scene-owned Boss actor with real idle, hurt,
+phase-transition, and death presentation. Lifecycle cleanup is idempotent,
+animation completion has one listener, and Scene restart destroys ownership.
+The actor intentionally has no arena ownership, player-damaging attack hitbox,
+walk behavior, HUD, audio, or stage-clear publication. Those are explicit
+remaining tasks rather than hidden temporary behavior.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

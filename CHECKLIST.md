@@ -563,3 +563,18 @@
 | State safety | Pass | Non-idle selection and non-attack completion are rejected; reset clears lockout |
 | Browser smoke | Pass | Existing room retained one 1280x720 Canvas and zero page errors |
 | Known issues | Non-blocking | Policy is intentionally not connected until the Boss actor exists |
+
+## M5 / Task 5.4 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M5 / Task 5.4 — Boss hurt/phase/death |
+| Tests | Pass | `pnpm test` 47/47 |
+| Build | Pass | `pnpm build` |
+| Lint | Pass | 0 errors, existing 4 `<img>` warnings only |
+| Typecheck | Pass | `pnpm typecheck` |
+| Lifecycle presentation | Pass | Feet-aligned idle, hurt, one phase transition, death, fade, and cleanup |
+| Ownership | Pass | Scene-owned actor remains separate from `EnemyManager`; cleanup is idempotent |
+| Browser lifecycle smoke | Pass | Phase 2 → dead → cleaned; one 1280×720 Canvas; zero page errors |
+| Browser restart smoke | Pass | 10 Scene restarts; `bossActorCount=1`; one Canvas; zero page errors |
+| Known issues | Non-blocking | Arena lock, Boss attack damage, walk, stage completion, HUD, and audio remain deferred |

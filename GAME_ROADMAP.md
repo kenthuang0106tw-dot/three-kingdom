@@ -21,7 +21,7 @@
 | Player | Playable prototype | 關羽移動、idle、walk、attack1–3、hurt |
 | Combat | Playable prototype | Combo、獨立 hitbox、multi-hit、Hit Stop、Flash、Spark、Knockback、Shake |
 | Enemy | Playable prototype | 三種近戰小兵、混合 Formation、Attack Slot、hurt/dead/cleanup |
-| Boss | Contract + decision policy | Phaser-free lifecycle、三招九幀 atlas/metadata、deterministic recovery；尚未生成 actor |
+| Boss | Playable actor prototype | Scene-owned actor、三招、deterministic recovery、hurt、一次 phase change、death/cleanup |
 | Stage | Static room | 單張竹林背景與固定 walk bounds |
 | Camera | Missing | 無 world scroll、follow、encounter lock |
 | Mobile | Missing | 無正式 Phaser touch input；下一步 Task 1.2 |
@@ -361,7 +361,8 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 - M5 / Task 5.1 (Boss state/ownership contract) completed in the current sprint.
 - M5 / Task 5.2 (Boss attack 1–3) completed in the current sprint.
 - M5 / Task 5.3 (Boss decision rhythm) completed in the current sprint.
-- Next eligible task: M5 / Task 5.4 (Boss hurt/phase/death).
+- M5 / Task 5.4 (Boss hurt/phase/death) completed in the current sprint.
+- Next eligible task: M5 / Task 5.5 (Arena bounds/camera lock).
 
 ## 4. Global Acceptance Rules
 

@@ -1,49 +1,48 @@
 # Next Task
 
-## M5 / Task 5.4 — Boss hurt/phase/death
+## M5 / Task 5.5 — Arena bounds/camera lock
 
 ### Why this is next
 
-The Boss lifecycle, three attack definitions, and deterministic decision rhythm
-are now testable. The smallest next playable step is a Scene-owned Boss actor
-that can enter hurt, change phase once, die, and clean up without being folded
-into `EnemyManager`.
+The first Boss now has deterministic combat and terminal cleanup, but it still
+shares the ordinary room without an explicit arena boundary. Locking and
+releasing the existing camera/bounds contract is the smallest next playable
+step and is required before stage-complete flow can be trusted.
 
 ### Completion criteria
 
-- Inspect the current Boss attack assets and create only the real idle, hurt,
-  phase-transition, and death frames required by this task, with one shared
-  scale and feet anchor; do not fake animation with transforms.
-- Add one Scene-owned Boss actor consuming `BossLifecycle`, `BOSS_ATTACKS`, and
-  `BossDecisionPolicy`; keep it separate from `EnemyManager`.
-- Implement one explicit phase change and deterministic hurt/death/cleanup
-  transitions without re-entry or duplicate listeners/timers.
-- Preserve the current player, normal-enemy combat, camera, stage, and UI
-  behavior outside the Boss actor integration.
-- Do not add arena bounds, camera lock, stage-complete flow, HUD, audio, a second
-  Boss phase, new player moves, or a reusable Boss framework.
+- Add one Boss-arena bounds configuration using the existing Stage and camera
+  contracts; do not create a general arena framework.
+- Activate the arena lock while the Boss is active and release it exactly once
+  after Boss cleanup.
+- Keep player and Boss feet bodies inside walkable bounds without teleporting,
+  oscillation, or edge trapping.
+- Reset arena and camera ownership correctly across ten Scene restarts.
+- Preserve current Boss lifecycle, attacks, normal enemies, player combat,
+  camera behavior outside the arena, and all presentation assets.
+- Do not add stage-complete events, HUD, audio, Boss attack damage, new art,
+  another phase, or another Boss.
 
 ### Validation
 
 - Run `pnpm test`, `pnpm build`, `pnpm lint`, and `pnpm typecheck`.
-- Add lifecycle integration tests for one phase transition, hurt recovery,
-  terminal death, cleanup idempotence, and restart ownership.
-- Browser smoke verifies Boss hurt/phase/death presentation, one 1280×720
-  Canvas, no duplicate Boss instance after restart, and zero page errors.
+- Add deterministic tests for arena lock entry, boundary clamping, Boss cleanup
+  release, and reset ownership.
+- Browser smoke verifies lock/release presentation, one 1280×720 Canvas, one
+  Boss after ten restarts, and zero page errors.
 
 ### Expected files
 
-- `app/game/boss/**`
+- `app/game/stage/**`
+- `app/game/camera/**`
+- `app/game/boss/**` only if a read-only boundary is required
 - `app/game/MainScene.ts`
-- `public/art/boss/**`
-- `tools/**`
 - `tests/**`
 - Project status and acceptance documents
 
 ### Risks
 
-- Attack-only art is not a complete actor sheet. Stop and report if real
-  feet-aligned hurt/death transitions cannot be produced reliably; do not reuse
-  unrelated attack poses or compensate with per-animation scale changes.
-- Keep this actor-specific implementation small so Task 5.5 can add arena and
-  camera ownership without undoing combat lifecycle work.
+- Reusing the encounter camera lock without a distinct Boss ownership reason
+  could unlock the camera too early.
+- Overlapping physics and arena clamps can trap actors at an edge; keep one
+  authoritative bounds calculation and verify reset cleanup.

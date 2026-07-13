@@ -159,7 +159,7 @@ test("Runtime asset manifest preserves keys and reports missing required assets"
   assert.match(source, /load\.on\("loaderror"/);
   assert.match(source, /load\.off\("loaderror"/);
   assert.deepEqual(RUNTIME_ASSET_MANIFEST.map(asset => asset.key), [
-    "forest", "guanyu-idle", "guanyu-walk", "guanyu-attack", "enemy-soldier", "enemy-mauler", "enemy-duelist", "boss-warlord-attacks",
+    "forest", "guanyu-idle", "guanyu-walk", "guanyu-attack", "enemy-soldier", "enemy-mauler", "enemy-duelist", "boss-warlord-attacks", "boss-warlord-lifecycle",
   ]);
   const messages = [];
   createAssetFailureReporter(RUNTIME_ASSET_MANIFEST, message => messages.push(message))("guanyu-walk");
@@ -568,17 +568,18 @@ test("Boss lifecycle owns deterministic state, damage, cleanup, and reset withou
   assert.equal(boss.state, "inactive");
   assert.equal(boss.hp, 12);
   assert.throws(() => boss.transition("attack"), /Invalid Boss transition/);
-  assert.deepEqual(boss.applyDamage(3), { applied: false, damage: 0, hp: 12, becameDead: false });
+  assert.deepEqual(boss.applyDamage(3), { applied: false, damage: 0, hp: 12, becameDead: false, phaseChanged: false });
 
   boss.activate();
   assert.equal(boss.state, "idle");
   boss.transition("attack");
-  assert.deepEqual(boss.applyDamage(3), { applied: true, damage: 3, hp: 9, becameDead: false });
+  assert.deepEqual(boss.applyDamage(3), { applied: true, damage: 3, hp: 9, becameDead: false, phaseChanged: false });
   assert.equal(boss.state, "hurt");
+  assert.deepEqual(boss.applyDamage(1), { applied: false, damage: 0, hp: 9, becameDead: false, phaseChanged: false });
   boss.transition("idle");
-  assert.deepEqual(boss.applyDamage(20), { applied: true, damage: 20, hp: 0, becameDead: true });
+  assert.deepEqual(boss.applyDamage(20), { applied: true, damage: 20, hp: 0, becameDead: true, phaseChanged: false });
   assert.equal(boss.state, "dead");
-  assert.deepEqual(boss.applyDamage(1), { applied: false, damage: 0, hp: 0, becameDead: false });
+  assert.deepEqual(boss.applyDamage(1), { applied: false, damage: 0, hp: 0, becameDead: false, phaseChanged: false });
   assert.equal(boss.cleanup(), true);
   assert.equal(boss.state, "cleaned");
   assert.equal(boss.cleanup(), false);
@@ -588,10 +589,38 @@ test("Boss lifecycle owns deterministic state, damage, cleanup, and reset withou
   assert.equal(boss.hp, 12);
   boss.activate();
   assert.equal(boss.state, "idle");
+  assert.equal(boss.phase, 1);
   assert.throws(() => new BossLifecycle(0), /positive integer/);
 
   assert.doesNotMatch(bossSource, /from ["']phaser["']|Phaser\./);
   assert.doesNotMatch(enemyManager, /BossLifecycle|game\/boss|boss\//i);
+});
+
+test("Boss lifecycle changes phase once and resets phase ownership", () => {
+  const boss = new BossLifecycle(8);
+  boss.activate();
+
+  assert.deepEqual(boss.applyDamage(1), {
+    applied: true, damage: 1, hp: 7, becameDead: false, phaseChanged: false,
+  });
+  boss.transition("idle");
+  assert.deepEqual(boss.applyDamage(3), {
+    applied: true, damage: 3, hp: 4, becameDead: false, phaseChanged: true,
+  });
+  assert.equal(boss.phase, 2);
+  boss.transition("idle");
+  assert.deepEqual(boss.applyDamage(1), {
+    applied: true, damage: 1, hp: 3, becameDead: false, phaseChanged: false,
+  });
+  boss.transition("idle");
+  assert.equal(boss.applyDamage(3).becameDead, true);
+  assert.equal(boss.cleanup(), true);
+  assert.equal(boss.cleanup(), false);
+
+  boss.reset();
+  assert.equal(boss.state, "inactive");
+  assert.equal(boss.hp, 8);
+  assert.equal(boss.phase, 1);
 });
 
 test("Boss attack art and metadata define three real telegraphed attacks", async () => {
@@ -623,13 +652,50 @@ test("Boss attack art and metadata define three real telegraphed attacks", async
   assert.ok(Object.values(atlas.frames).every(frame => frame.pivot.x === 0.5 && frame.pivot.y === 420 / 448));
   assert.equal(metadata.frames.length, 9);
   assert.ok(metadata.frames.every(frame => frame.feetAnchor.x === 224 && frame.feetAnchor.y === 420));
-  assert.ok(metadata.frames.every(frame => frame.sourceScale === metadata.sourceScale && frame.displayScale === 0.75));
+  assert.ok(metadata.frames.every(frame => frame.sourceScale === metadata.sourceScale && frame.displayScale === 0.9));
   assert.deepEqual(metadata.frames.map(frame => frame.phase), ["startup", "active", "recovery", "startup", "active", "recovery", "startup", "active", "recovery"]);
   assert.equal(metadata.frames[4].sourceRect.width, 851);
   assert.match(manifest, /boss-warlord-attacks/);
   assert.match(buildTool, /ATTACKS = \[/);
   assert.ok(sheet.length > 1000);
   assert.ok(debug.length > 1000);
+});
+
+test("Boss actor owns feet-aligned hurt, phase, death, and Scene cleanup", async () => {
+  const [atlasText, metadataText, actorSource, sceneSource, enemyManager] = await Promise.all([
+    readFile(new URL("../public/art/boss/warlord-lifecycle.atlas.json", import.meta.url), "utf8"),
+    readFile(new URL("../public/art/boss/warlord-lifecycle.metadata.json", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/boss/BossActor.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/EnemyManager.ts", import.meta.url), "utf8"),
+  ]);
+  const atlas = JSON.parse(atlasText);
+  const metadata = JSON.parse(metadataText);
+  const frameNames = [
+    "idle-0", "idle-1", "hurt-0", "hurt-1", "phase-0", "phase-1", "phase-2",
+    "dead-0", "dead-1", "dead-2", "dead-3",
+  ];
+
+  assert.deepEqual(Object.keys(atlas.frames), frameNames);
+  assert.deepEqual(metadata.frames.map(frame => frame.name), frameNames);
+  assert.ok(metadata.frames.every(frame => frame.feetAnchor.x === 224 && frame.feetAnchor.y === 420));
+  assert.ok(metadata.frames.every(frame => frame.sourceScale === metadata.sourceScale && frame.displayScale === 0.9));
+  assert.match(actorSource, /new BossLifecycle\(BOSS_ACTOR_CONFIG\.maxHp\)/);
+  assert.match(actorSource, /new BossDecisionPolicy\(clock, random, BOSS_ATTACKS\)/);
+  assert.match(actorSource, /ANIMATION_COMPLETE, this\.handleAnimationComplete/);
+  assert.match(actorSource, /\.off\(Phaser\.Animations\.Events\.ANIMATION_COMPLETE/);
+  assert.match(actorSource, /deathFadeMs: 500/);
+  assert.match(actorSource, /this\.body\.enable = false/);
+  assert.equal((sceneSource.match(/new BossActor\(/g) ?? []).length, 1);
+  assert.match(sceneSource, /this\.bossActor\.destroy\(\)/);
+  assert.match(sceneSource, /dataset\.bossActorCount = "1"/);
+  assert.match(sceneSource, /dataset\.bossActorCount = "0"/);
+  assert.match(sceneSource, /query\.get\("bossSmoke"\)/);
+  assert.match(sceneSource, /this\.time\.delayedCall\(700/);
+  assert.match(sceneSource, /bossSmokeTimer\?\.remove\(false\)/);
+  assert.match(sceneSource, /dataset\.bossSmokeLog/);
+  assert.doesNotMatch(sceneSource, /setTimeout|setInterval/);
+  assert.doesNotMatch(enemyManager, /BossActor|BossLifecycle|game\/boss|boss\//i);
 });
 
 test("Boss decision policy is deterministic and enforces attack recovery", () => {

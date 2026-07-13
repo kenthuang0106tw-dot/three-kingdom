@@ -6,7 +6,7 @@ ROOT = Path(__file__).resolve().parents[1]
 ART = ROOT / "public" / "art" / "boss"
 CELL = 448
 FEET_Y = 420
-DISPLAY_SCALE = 0.75
+DISPLAY_SCALE = 0.9
 
 ATTACKS = [
     ("attack1", ART / "warlord-attack1-transparent.png", [0, 703, 1436, 2172]),

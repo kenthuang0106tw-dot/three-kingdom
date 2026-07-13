@@ -360,4 +360,14 @@
 - [x] Browser smoke verified one 1280x720 Canvas, ten reset cycles, and zero page errors.
 - [ ] Physical mobile and long-session validation remain deferred.
 
-M5 / Task 5.3 已完成；下一步只執行 M5 / Task 5.4。其餘未完成項目依 Roadmap 保留。
+## M5 / Task 5.4 Closeout
+
+- [x] Added one Scene-owned `BossActor` separate from `EnemyManager`.
+- [x] Added real feet-aligned idle, hurt, phase-transition, and death frames at one `0.9` display scale.
+- [x] Boss attacks, hurt recovery, one phase change, death fade, cleanup, and restart ownership use one lifecycle.
+- [x] Player attacks resolve the Boss through the existing combat/effect path without adding arena, HUD, audio, or stage-clear flow.
+- [x] `pnpm test` 47/47, `pnpm build`, `pnpm typecheck`, and lint with 0 errors passed.
+- [x] Browser smoke completed phase/death/cleanup, then 10 Scene restarts with one 1280×720 Canvas, one Boss actor, and zero page errors.
+- [ ] Boss arena bounds/camera lock, walk behavior, attack damage, HUD, audio, and stage completion remain deferred.
+
+M5 / Task 5.4 已完成；下一步只執行 M5 / Task 5.5。其餘未完成項目依 Roadmap 保留。

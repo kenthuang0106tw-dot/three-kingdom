@@ -1,0 +1,385 @@
+{
+  "cellSize": 448,
+  "feetAnchor": {
+    "x": 224,
+    "y": 420
+  },
+  "displayScale": 0.9,
+  "sourceScale": 0.5769230769230769,
+  "frames": [
+    {
+      "name": "idle-0",
+      "sourceImage": "warlord-idle-hurt-transparent.png",
+      "sourceRect": {
+        "x": 0,
+        "y": 0,
+        "width": 546,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 57,
+        "y": 150,
+        "width": 471,
+        "height": 411
+      },
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 448,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 88,
+      "displayOffsetY": 183,
+      "visibleWidth": 272,
+      "visibleHeight": 237,
+      "feetAnchor": {
+        "x": 224,
+        "y": 420
+      },
+      "sourceScale": 0.5769230769230769,
+      "displayScale": 0.9
+    },
+    {
+      "name": "idle-1",
+      "sourceImage": "warlord-idle-hurt-transparent.png",
+      "sourceRect": {
+        "x": 546,
+        "y": 0,
+        "width": 506,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 20,
+        "y": 150,
+        "width": 458,
+        "height": 412
+      },
+      "frame": {
+        "x": 448,
+        "y": 0,
+        "width": 448,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 92,
+      "displayOffsetY": 182,
+      "visibleWidth": 264,
+      "visibleHeight": 238,
+      "feetAnchor": {
+        "x": 224,
+        "y": 420
+      },
+      "sourceScale": 0.5769230769230769,
+      "displayScale": 0.9
+    },
+    {
+      "name": "hurt-0",
+      "sourceImage": "warlord-idle-hurt-transparent.png",
+      "sourceRect": {
+        "x": 1052,
+        "y": 0,
+        "width": 520,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 29,
+        "y": 175,
+        "width": 469,
+        "height": 388
+      },
+      "frame": {
+        "x": 896,
+        "y": 0,
+        "width": 448,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 88,
+      "displayOffsetY": 196,
+      "visibleWidth": 271,
+      "visibleHeight": 224,
+      "feetAnchor": {
+        "x": 224,
+        "y": 420
+      },
+      "sourceScale": 0.5769230769230769,
+      "displayScale": 0.9
+    },
+    {
+      "name": "hurt-1",
+      "sourceImage": "warlord-idle-hurt-transparent.png",
+      "sourceRect": {
+        "x": 1572,
+        "y": 0,
+        "width": 600,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 22,
+        "y": 238,
+        "width": 485,
+        "height": 327
+      },
+      "frame": {
+        "x": 1344,
+        "y": 0,
+        "width": 448,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 84,
+      "displayOffsetY": 231,
+      "visibleWidth": 280,
+      "visibleHeight": 189,
+      "feetAnchor": {
+        "x": 224,
+        "y": 420
+      },
+      "sourceScale": 0.5769230769230769,
+      "displayScale": 0.9
+    },
+    {
+      "name": "phase-0",
+      "sourceImage": "warlord-phase-transparent.png",
+      "sourceRect": {
+        "x": 0,
+        "y": 0,
+        "width": 705,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 84,
+        "y": 190,
+        "width": 592,
+        "height": 411
+      },
+      "frame": {
+        "x": 0,
+        "y": 448,
+        "width": 448,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 53,
+      "displayOffsetY": 183,
+      "visibleWidth": 342,
+      "visibleHeight": 237,
+      "feetAnchor": {
+        "x": 224,
+        "y": 420
+      },
+      "sourceScale": 0.5769230769230769,
+      "displayScale": 0.9
+    },
+    {
+      "name": "phase-1",
+      "sourceImage": "warlord-phase-transparent.png",
+      "sourceRect": {
+        "x": 705,
+        "y": 0,
+        "width": 705,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 29,
+        "y": 164,
+        "width": 531,
+        "height": 438
+      },
+      "frame": {
+        "x": 448,
+        "y": 448,
+        "width": 448,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 71,
+      "displayOffsetY": 167,
+      "visibleWidth": 306,
+      "visibleHeight": 253,
+      "feetAnchor": {
+        "x": 224,
+        "y": 420
+      },
+      "sourceScale": 0.5769230769230769,
+      "displayScale": 0.9
+    },
+    {
+      "name": "phase-2",
+      "sourceImage": "warlord-phase-transparent.png",
+      "sourceRect": {
+        "x": 1410,
+        "y": 0,
+        "width": 762,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 146,
+        "y": 194,
+        "width": 569,
+        "height": 406
+      },
+      "frame": {
+        "x": 896,
+        "y": 448,
+        "width": 448,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 60,
+      "displayOffsetY": 186,
+      "visibleWidth": 328,
+      "visibleHeight": 234,
+      "feetAnchor": {
+        "x": 224,
+        "y": 420
+      },
+      "sourceScale": 0.5769230769230769,
+      "displayScale": 0.9
+    },
+    {
+      "name": "dead-0",
+      "sourceImage": "warlord-death-transparent.png",
+      "sourceRect": {
+        "x": 0,
+        "y": 0,
+        "width": 536,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 29,
+        "y": 153,
+        "width": 497,
+        "height": 366
+      },
+      "frame": {
+        "x": 1344,
+        "y": 448,
+        "width": 448,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 80,
+      "displayOffsetY": 209,
+      "visibleWidth": 287,
+      "visibleHeight": 211,
+      "feetAnchor": {
+        "x": 224,
+        "y": 420
+      },
+      "sourceScale": 0.5769230769230769,
+      "displayScale": 0.9
+    },
+    {
+      "name": "dead-1",
+      "sourceImage": "warlord-death-transparent.png",
+      "sourceRect": {
+        "x": 536,
+        "y": 0,
+        "width": 530,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 11,
+        "y": 295,
+        "width": 502,
+        "height": 265
+      },
+      "frame": {
+        "x": 0,
+        "y": 896,
+        "width": 448,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 79,
+      "displayOffsetY": 267,
+      "visibleWidth": 290,
+      "visibleHeight": 153,
+      "feetAnchor": {
+        "x": 224,
+        "y": 420
+      },
+      "sourceScale": 0.5769230769230769,
+      "displayScale": 0.9
+    },
+    {
+      "name": "dead-2",
+      "sourceImage": "warlord-death-transparent.png",
+      "sourceRect": {
+        "x": 1066,
+        "y": 0,
+        "width": 553,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 19,
+        "y": 343,
+        "width": 518,
+        "height": 220
+      },
+      "frame": {
+        "x": 448,
+        "y": 896,
+        "width": 448,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 74,
+      "displayOffsetY": 293,
+      "visibleWidth": 299,
+      "visibleHeight": 127,
+      "feetAnchor": {
+        "x": 224,
+        "y": 420
+      },
+      "sourceScale": 0.5769230769230769,
+      "displayScale": 0.9
+    },
+    {
+      "name": "dead-3",
+      "sourceImage": "warlord-death-transparent.png",
+      "sourceRect": {
+        "x": 1619,
+        "y": 0,
+        "width": 553,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 17,
+        "y": 422,
+        "width": 492,
+        "height": 152
+      },
+      "frame": {
+        "x": 896,
+        "y": 896,
+        "width": 448,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 82,
+      "displayOffsetY": 332,
+      "visibleWidth": 284,
+      "visibleHeight": 88,
+      "feetAnchor": {
+        "x": 224,
+        "y": 420
+      },
+      "sourceScale": 0.5769230769230769,
+      "displayScale": 0.9
+    }
+  ]
+}

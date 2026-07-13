@@ -17,6 +17,7 @@ import { calculateCameraScroll } from "./camera/CameraFollow";
 import { createCameraLockState, isCameraLocked, lockCamera, unlockCamera, type CameraLockState } from "./camera/CameraLock";
 import { createStageExitState, makeExitAvailable, resetStageExit, type StageExitState } from "./stage/StageExit";
 import { DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemyAnimationKey } from "./enemy/EnemyConfig";
+import { BossActor } from "./boss/BossActor";
 
 type AttackState = "attack1" | "attack2" | "attack3";
 type PreviewFrame = {
@@ -34,6 +35,8 @@ const ENEMY_FRAME_SIZE = 384;
 const ENEMY_FEET_Y = 354;
 const HURT_MS = 300;
 const COMBO_WINDOW_MS = 360;
+const BOSS_SPAWN_X = 1080;
+const BOSS_SPAWN_FOOT_Y = 560;
 const ATTACK_STATES: AttackState[] = ["attack1", "attack2", "attack3"];
 const FRAME_ORIGIN_Y: Record<string, number> = {
   "walk-0": 739 / 793, "walk-1": 736 / 793, "walk-2": 746 / 793, "walk-3": 741 / 793,
@@ -88,6 +91,7 @@ export default class MainScene extends Phaser.Scene {
   private readonly gameplayEvents = new GameplayEventHub();
   private lastLifecyclePaused = false;
   private enemyManager!: EnemyManager;
+  private bossActor!: BossActor;
   private readonly playerStateMachine = new PlayerStateMachine();
   private readonly playerLifecycle = new PlayerLifecycle(PLAYER_MAX_HP);
   private readonly attackController = new PlayerAttackController();
@@ -113,6 +117,9 @@ export default class MainScene extends Phaser.Scene {
   private previewMode = false;
   private enemyPreviewMode = false;
   private resetSmokeMode = false;
+  private bossSmokeMode = false;
+  private bossSmokeTimer?: Phaser.Time.TimerEvent;
+  private readonly bossSmokeLog: string[] = [];
   private resetSmokeIteration = 0;
   private previewSprite?: Phaser.GameObjects.Sprite;
   private onionSprite?: Phaser.GameObjects.Sprite;
@@ -156,6 +163,8 @@ export default class MainScene extends Phaser.Scene {
     this.enemyPreviewMode = development && query.get("previewEnemy") === "1";
     this.previewMode = development && query.get("previewAttack") === "1";
     this.resetSmokeMode = development && query.get("resetSmoke") === "1";
+    this.bossSmokeMode = development && query.get("bossSmoke") === "1";
+    if (this.bossSmokeMode) this.bossSmokeLog.length = 0;
     this.playerStateMachine.reset();
     this.playerLifecycle.reset();
     this.cameraLockState = createCameraLockState();
@@ -203,6 +212,21 @@ export default class MainScene extends Phaser.Scene {
       onAllDefeated: () => this.showAllEnemiesDefeated(),
     }, development, { clock: new PhaserGameplayClock(this), random: new SeededRandom(0x3a6f2d1) });
     this.enemyManager.spawnAll(BAMBOO_COMBAT_ROOM.spawnPoints);
+    this.bossActor = new BossActor(
+      this,
+      BOSS_SPAWN_X,
+      BOSS_SPAWN_FOOT_Y,
+      new PhaserGameplayClock(this),
+      new SeededRandom(0xb0555),
+      {
+        onCleaned: () => {
+          if (development) this.game.canvas.dataset.bossActorCount = "0";
+        },
+      },
+    );
+    if (development) this.game.canvas.dataset.bossActorCount = "1";
+    this.updateBossSmokeDataset();
+    if (this.bossSmokeMode) this.scheduleBossSmokeHit();
     this.cameraLockState = lockCamera(this.cameraLockState, "encounter");
 
     if (development) {
@@ -218,6 +242,10 @@ export default class MainScene extends Phaser.Scene {
       this.effectDirector.destroy();
       this.lifecycleClock.destroy();
       this.enemyManager.destroy();
+      this.bossSmokeTimer?.remove(false);
+      this.bossSmokeTimer = undefined;
+      this.bossActor.destroy();
+      if (development) this.game.canvas.dataset.bossActorCount = "0";
       this.playerActor.destroy();
     });
 
@@ -238,6 +266,8 @@ export default class MainScene extends Phaser.Scene {
     this.currentInput = this.touchInputController.readSnapshot(this.inputController.readSnapshot());
 
     this.enemyManager.update();
+    this.bossActor.update();
+    this.updateBossSmokeDataset();
 
     if (this.state === "hurt") {
       this.syncVisualsToBody();
@@ -321,6 +351,8 @@ export default class MainScene extends Phaser.Scene {
       this.comboWindowOpen = false;
     }
     if (this.attackBody.enable) {
+      let hitLanded = false;
+      let globalEffectsTriggered = false;
       const overlapping = this.enemyManager.getLivingEnemies().filter(enemy => this.physics.overlap(this.attackZone, enemy.bodyZone));
       const resolution = resolveAttack({
         attackId: this.playerAttackId,
@@ -333,10 +365,27 @@ export default class MainScene extends Phaser.Scene {
         .map(hit => overlapping.find(enemy => enemy.id === hit.targetId))
         .filter((enemy): enemy is EnemyCombatant => enemy !== undefined);
       if (hits.length) {
+        hitLanded = true;
+        globalEffectsTriggered = true;
+        hits.forEach((enemy, index) => this.applyHitToEnemy(enemy, index === 0));
+      }
+      if (this.bossActor.isDamageable && this.physics.overlap(this.attackZone, this.bossActor.bodyZone)) {
+        const bossResolution = resolveAttack({
+          attackId: this.playerAttackId,
+          damage: 1,
+          targets: [{ id: this.bossActor.targetId, hp: this.bossActor.hp, active: true }],
+          hitTargetIds: this.playerHitTargetIds,
+        });
+        this.playerHitTargetIds = bossResolution.hitTargetIds;
+        if (bossResolution.hits.length) {
+          hitLanded = true;
+          this.applyHitToBoss(!globalEffectsTriggered);
+        }
+      }
+      if (hitLanded) {
         this.hitConfirmed = true;
         this.comboWindowOpen = this.comboStep < 3;
         this.comboWindowEndsAt = this.time.now + COMBO_WINDOW_MS;
-        hits.forEach((enemy, index) => this.applyHitToEnemy(enemy, index === 0));
       }
     }
   }
@@ -409,6 +458,31 @@ export default class MainScene extends Phaser.Scene {
     if (triggerGlobalEffects) this.effectDirector.beginHitStop();
   }
 
+  private applyHitToBoss(triggerGlobalEffects: boolean) {
+    const damage = this.bossActor.damage(1);
+    if (!damage.applied) return;
+    this.hitCount += 1;
+    this.totalDamage += 1;
+
+    const left = Math.max(this.attackBody.x, this.bossActor.body.x);
+    const right = Math.min(this.attackBody.right, this.bossActor.body.right);
+    const top = Math.max(this.attackBody.y, this.bossActor.body.y);
+    const bottom = Math.min(this.attackBody.bottom, this.bossActor.body.bottom);
+    const hitX = Math.round((left + right) / 2);
+    const hitY = Math.round((top + bottom) / 2);
+
+    this.effectDirector.flash(this.bossActor.sprite);
+    this.effectDirector.createHitSpark(hitX, hitY);
+    if (triggerGlobalEffects) this.effectDirector.cameraShake();
+    const targetX = clampStageX(
+      this.bossActor.bodyZone.x + this.facing * EFFECT_PARAMS.knockbackDistance,
+      BAMBOO_COMBAT_ROOM.walkBounds,
+    );
+    this.effectDirector.knockback(this.bossActor.bodyZone, targetX, () => this.bossActor.syncVisuals());
+    this.playHitSound();
+    if (triggerGlobalEffects) this.effectDirector.beginHitStop();
+  }
+
   private applyHitToPlayer(enemy: EnemyCombatant) {
     if (this.state === "hurt") return;
     const damage = this.playerLifecycle.applyDamage(1);
@@ -449,6 +523,24 @@ export default class MainScene extends Phaser.Scene {
 
   private restartStage() {
     this.scene.restart();
+  }
+
+  private scheduleBossSmokeHit() {
+    this.bossSmokeTimer = this.time.delayedCall(700, () => {
+      this.bossSmokeTimer = undefined;
+      if (!this.scene.isActive() || this.bossActor.state === "dead" || this.bossActor.state === "cleaned") return;
+      if (this.bossActor.isDamageable) this.bossActor.damage(1);
+      this.updateBossSmokeDataset();
+      if (this.bossActor.hp > 0) this.scheduleBossSmokeHit();
+    });
+  }
+
+  private updateBossSmokeDataset() {
+    if (!this.bossSmokeMode || !this.bossActor) return;
+    const snapshot = `${this.bossActor.state}:${this.bossActor.hp}:p${this.bossActor.phase}`;
+    if (this.bossSmokeLog[this.bossSmokeLog.length - 1] !== snapshot) this.bossSmokeLog.push(snapshot);
+    this.game.canvas.dataset.bossSmokeState = snapshot;
+    this.game.canvas.dataset.bossSmokeLog = this.bossSmokeLog.join(",");
   }
 
   private transitionTo(next: PlayerState) {
@@ -576,6 +668,7 @@ export default class MainScene extends Phaser.Scene {
       `Alive Enemy Count: ${this.enemyManager.getLivingEnemies().length}`,
       `Current Attacker ID: ${this.enemyManager.currentAttackerId ?? "none"}`,
       `Player State: ${this.state}`,
+      `Boss State: ${this.bossActor.state} HP:${this.bossActor.hp} Phase:${this.bossActor.phase}`,
       ...enemies.map(enemy => {
         const dx = enemy.bodyZone.x - this.playerBodyZone.x;
         const dy = enemy.bodyZone.y - this.playerBodyZone.y;

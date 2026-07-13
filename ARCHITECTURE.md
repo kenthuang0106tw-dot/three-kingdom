@@ -373,6 +373,19 @@ when the attack completes. Pending selection and recovery prevent seamless
 reselection; `reset()` clears both for Scene restart. The policy owns no actor,
 movement, distance, phase, arena, rendering, or `EnemyManager` dependency.
 
+## Boss Actor Lifecycle (M5 / Task 5.4)
+
+`BossActor.ts` is owned directly by `MainScene` and composes `BossLifecycle`,
+`BossDecisionPolicy`, the two Boss atlases, one sprite, and one feet-oriented
+Arcade body. All lifecycle and attack animation listeners are registered once
+and removed by idempotent cleanup. The actor uses one `0.9` display scale and
+the shared `(224,420)` feet anchor for idle, hurt, phase, death, and attacks.
+
+Player attack overlap is resolved through the existing `CombatResolver` and
+`EffectDirector`; `EnemyManager` does not import or own the Boss. Arena bounds,
+Boss-to-player attack damage, stage-complete events, HUD, audio, and a reusable
+Boss framework remain outside this actor boundary.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

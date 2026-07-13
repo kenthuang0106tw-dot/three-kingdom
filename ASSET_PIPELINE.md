@@ -68,7 +68,7 @@ Vertical Slice 不接入兩名角色，維持 Backlog P2。
 | Frames | 9; three attacks × startup / active / recovery |
 | Runtime layout | 3×3, 448×448 cells |
 | Feet anchor | `(224, 420)` for every frame |
-| Display scale | `0.75` |
+| Display scale | `0.9` |
 | Metadata | `warlord-attacks.atlas.json`, `warlord-attacks.metadata.json` |
 | QA | `warlord-attacks-debug.png` |
 | Rebuild tool | `tools/build_boss_art.py` |
@@ -78,13 +78,33 @@ built-in image generator on flat magenta chroma-key strips, one strip per
 attack. The prompt set preserves one mature East Asian warlord identity and
 requests overhead smash, horizontal sweep, and forward lunge sequences. Local
 chroma removal and explicit non-equal source rectangles prevent neighboring
-weapon pixels from contaminating frames. Boss idle, walk, hurt, dead, and arena
-art remain missing; these attack frames are loaded but not spawned.
+weapon pixels from contaminating frames.
+
+### Boss — Indigo Warlord Lifecycle (M5 / Task 5.4)
+
+| Item | Value |
+|---|---|
+| Source strips | `warlord-idle-hurt-source.png`, `warlord-phase-source.png`, `warlord-death-source.png` |
+| Processed strips | Matching `*-transparent.png` files |
+| Runtime sheet | `warlord-lifecycle.png` |
+| Frames | 11; idle 2, hurt 2, phase 3, death 4 |
+| Runtime layout | 4×3, 448×448 cells |
+| Feet anchor | `(224, 420)` for every frame |
+| Display scale | `0.9`, shared with attack frames |
+| Metadata | `warlord-lifecycle.atlas.json`, `warlord-lifecycle.metadata.json` |
+| QA | `warlord-lifecycle-debug.png` |
+| Rebuild tool | `tools/build_boss_lifecycle_art.py` |
+
+The lifecycle strips were generated from the same indigo-and-antique-gold
+warlord reference. Explicit strip boundaries, chroma removal, and a common
+feet anchor prevent neighboring-frame contamination and animation jump. Walk
+and arena-specific art remain missing.
 
 ### Runtime manifest (M1 / Task 1.5)
 
-`app/game/assets/AssetManifest.ts` owns the five currently loaded runtime entries:
-`forest`, `guanyu-idle`, `guanyu-walk`, `guanyu-attack`, and `enemy-soldier`.
+`app/game/assets/AssetManifest.ts` owns the current stage, player, three enemy,
+and two Boss atlas runtime entries, including `boss-warlord-attacks` and
+`boss-warlord-lifecycle`.
 The manifest records whether an entry is an image or atlas and its exact public
 URLs. `MainScene.preload()` queues it without changing existing keys or frame
 metadata. Development loader failures report the required key deterministically;
@@ -165,7 +185,7 @@ Metadata 最少欄位：
 - **M2:** Guan Yu hurt、dead、完整 combo transitions。
 - **M3:** 第二／第三種近戰小兵全套動畫。
 - **M4:** Stage layers、foreground、props、collision/encounter metadata。
-- **M5:** Boss attack 1–3 已完成；仍缺 idle、walk、hurt、dead 與 arena assets。
+- **M5:** Boss attack 1–3、idle、hurt、phase、dead 已完成；仍缺 walk 與 arena assets。
 - **M6:** HUD、font、title/result UI。
 - **M7:** Combat SFX、BGM。
 - **M8:** Optimized atlases、loading/social/release assets。
