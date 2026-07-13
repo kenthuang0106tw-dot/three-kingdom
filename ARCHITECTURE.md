@@ -354,6 +354,15 @@ dead, and cleaned transitions plus deterministic damage, cleanup, and reset.
 Formation and Attack Slot rules do not apply to the Boss. A future Scene-owned
 Boss actor may consume the contract after real attack assets exist.
 
+## Boss Attack Metadata (M5 / Task 5.2)
+
+`BossAttackMetadata.ts` defines three Phaser-free attacks with independent
+animation keys, frame order, 6 FPS playback, and explicit startup, active,
+recovery, and telegraph indexes. `warlord-attacks.atlas.json` provides nine
+fixed 448×448 frames and a shared `(224,420)` feet pivot. The manifest preloads
+the atlas, but MainScene does not instantiate a Boss or create Boss animations;
+decision rhythm and actor integration remain separate future tasks.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

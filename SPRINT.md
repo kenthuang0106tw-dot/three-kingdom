@@ -330,6 +330,17 @@
 - [x] Browser smoke verified the unchanged room with one 1280x720 Canvas and zero page errors.
 - [ ] Boss art, attacks, AI, arena, HUD, and audio remain deferred.
 
+## M5 / Task 5.2 Closeout
+
+- [x] Added one original indigo/gold heavy warlord with three distinct attack strips.
+- [x] Each attack has real startup, active, and recovery poses with a readable startup telegraph.
+- [x] Explicit non-equal source rectangles prevent weapon overlap between generated poses.
+- [x] Runtime sheet contains nine 448x448 frames with shared `(224, 420)` feet anchor, source scale, and display scale.
+- [x] Added Phaser-free `BOSS_ATTACKS`, atlas, metadata, debug sheet, manifest route, and reproducible builder.
+- [x] `pnpm test` 43/43, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
+- [x] Browser smoke returned 200 for Boss PNG/atlas and retained one 1280x720 Canvas with zero page errors.
+- [ ] Boss actor, AI, phase, arena, idle/walk/hurt/dead art, HUD, and audio remain deferred.
+
 ## M3 / Task 3.2 Closeout
 
 - [x] Added deterministic Phaser-free X/Y and point clamping helpers.
@@ -339,4 +350,4 @@
 - [x] Browser smoke verified one 1280x720 Canvas, ten reset cycles, and zero page errors.
 - [ ] Physical mobile and long-session validation remain deferred.
 
-M5 / Task 5.1 已完成；下一步只執行 M5 / Task 5.2。其餘未完成項目依 Roadmap 保留。
+M5 / Task 5.2 已完成；下一步只執行 M5 / Task 5.3。其餘未完成項目依 Roadmap 保留。

@@ -533,3 +533,18 @@
 | Ownership | Pass | Phaser-free source; `EnemyManager` has no Boss reference |
 | Browser smoke | Pass | Existing room unchanged; one 1280x720 Canvas, zero page errors |
 | Known issues | Non-blocking | Boss art, attacks, AI, arena, HUD, and audio remain deferred |
+
+## M5 / Task 5.2 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M5 / Task 5.2 — Boss attack 1–3 |
+| Tests | Pass | `pnpm test` 43/43 |
+| Build | Pass | `pnpm build` |
+| Lint | Pass | 0 errors, existing 4 `<img>` warnings only |
+| Typecheck | Pass | `pnpm typecheck` |
+| Attack frames | Pass | Three attacks × startup / active / recovery; nine unique frames |
+| Atlas/alignment | Pass | 1344×1344 sheet, 448×448 cells, shared `(224,420)` feet anchor |
+| Asset routes | Pass | Boss PNG and atlas HTTP 200; zero request failures |
+| Browser smoke | Pass | Existing room unchanged; one 1280x720 Canvas, zero page errors |
+| Known issues | Non-blocking | Boss actor/AI and remaining animation states are deferred |

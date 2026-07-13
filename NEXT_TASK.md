@@ -1,44 +1,41 @@
 # Next Task
 
-## M5 / Task 5.2 — Boss attack 1–3
+## M5 / Task 5.3 — Boss decision rhythm
 
 ### Why this is next
 
-Boss HP, state, cleanup, and reset ownership are now explicit and independent
-from normal enemies. The next task must provide three readable attacks with real
-startup, active, recovery, and telegraph frames before any Boss AI is written.
+The Boss lifecycle and three readable attack definitions now exist. Before a
+Boss actor is rendered, the project needs a deterministic, Phaser-free decision
+policy that prevents seamless attack spam and chooses only legal attacks.
 
 ### Completion criteria
 
-- Inspect available Boss references/assets before implementation; do not assume
-  frames can be evenly sliced.
-- Add original runtime-ready Boss art and metadata for three distinct attacks,
-  each with startup, active, recovery, and readable telegraph frames.
-- Define Phaser-free attack metadata and deterministic frame-order/timing tests.
-- Keep Boss attacks unspawned and AI-free; do not add decision rhythm, phase,
-  arena, HUD, audio, stage completion, or normal-enemy changes.
-- If adequate real frames cannot be produced, stop and document the missing art
-  rather than faking attacks with transforms.
+- Define one minimal Boss decision policy using the existing seeded random and
+  gameplay clock contracts.
+- Select among attack1–3 only when the Boss lifecycle is eligible and recovery
+  has completed.
+- Prevent immediate seamless attacks and make identical seeds produce identical
+  decision sequences.
+- Keep the policy Phaser-free and separate from `EnemyManager`.
+- Do not spawn/render the Boss or add actor physics, phase, hurt/death visuals,
+  arena, HUD, audio, stage completion, or new art.
 
 ### Validation
 
 - Run `pnpm test`, `pnpm build`, `pnpm lint`, and `pnpm typecheck`.
-- Validate atlas rectangles, feet anchors, frame order, and asset routes.
+- Add deterministic sequence, recovery lockout, illegal-state, and reset tests.
 - Browser smoke verifies the existing room remains unchanged with one 1280×720
   Canvas and zero page errors.
 
 ### Expected files
 
-- `public/art/boss/**`
 - `app/game/boss/**`
-- `app/game/assets/AssetManifest.ts`
-- `tools/**` only for a reproducible Boss asset pipeline
 - `tests/**`
-- `ASSET_PIPELINE.md`, `ARCHITECTURE.md`, `SPRINT.md`, `GAME_ROADMAP.md`,
-  `CHECKLIST.md`, `TECH_DEBT.md`, `README.md`
+- `ARCHITECTURE.md`, `SPRINT.md`, `GAME_ROADMAP.md`, `CHECKLIST.md`,
+  `TECH_DEBT.md`, `README.md`
 
 ### Risks
 
-- Three attacks require enough real intermediate poses to avoid unreadable or
-  fake animation. Asset quality and feet-anchor consistency are the gate; do not
-  compensate with rotate, scale, translate, or interpolation.
+- A policy built before actor integration can become speculative. Limit it to
+  attack selection and recovery timing already required by the three existing
+  attack definitions; do not add movement, distance, phase, or arena rules.

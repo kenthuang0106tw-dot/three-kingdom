@@ -1,0 +1,231 @@
+{
+  "frames": {
+    "attack1-startup": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 448,
+        "h": 448
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 448,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 448,
+        "h": 448
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.9375
+      }
+    },
+    "attack1-active": {
+      "frame": {
+        "x": 448,
+        "y": 0,
+        "w": 448,
+        "h": 448
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 448,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 448,
+        "h": 448
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.9375
+      }
+    },
+    "attack1-recovery": {
+      "frame": {
+        "x": 896,
+        "y": 0,
+        "w": 448,
+        "h": 448
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 448,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 448,
+        "h": 448
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.9375
+      }
+    },
+    "attack2-startup": {
+      "frame": {
+        "x": 0,
+        "y": 448,
+        "w": 448,
+        "h": 448
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 448,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 448,
+        "h": 448
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.9375
+      }
+    },
+    "attack2-active": {
+      "frame": {
+        "x": 448,
+        "y": 448,
+        "w": 448,
+        "h": 448
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 448,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 448,
+        "h": 448
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.9375
+      }
+    },
+    "attack2-recovery": {
+      "frame": {
+        "x": 896,
+        "y": 448,
+        "w": 448,
+        "h": 448
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 448,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 448,
+        "h": 448
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.9375
+      }
+    },
+    "attack3-startup": {
+      "frame": {
+        "x": 0,
+        "y": 896,
+        "w": 448,
+        "h": 448
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 448,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 448,
+        "h": 448
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.9375
+      }
+    },
+    "attack3-active": {
+      "frame": {
+        "x": 448,
+        "y": 896,
+        "w": 448,
+        "h": 448
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 448,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 448,
+        "h": 448
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.9375
+      }
+    },
+    "attack3-recovery": {
+      "frame": {
+        "x": 896,
+        "y": 896,
+        "w": 448,
+        "h": 448
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 448,
+        "h": 448
+      },
+      "sourceSize": {
+        "w": 448,
+        "h": 448
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.9375
+      }
+    }
+  },
+  "meta": {
+    "app": "Codex Boss art builder",
+    "version": "1.0",
+    "image": "warlord-attacks.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 1344,
+      "h": 1344
+    },
+    "scale": "1"
+  }
+}

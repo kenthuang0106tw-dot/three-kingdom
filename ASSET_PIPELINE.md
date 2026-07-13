@@ -58,6 +58,29 @@ Vertical Slice 不接入兩名角色，維持 Backlog P2。
 - Camera Shake／Hit Stop：程式效果。
 - 尚缺正式 hit spark、slash trail、dust、death impact、environment break effects。
 
+### Boss — Indigo Warlord Attacks (M5 / Task 5.2)
+
+| Item | Value |
+|---|---|
+| Source strips | `warlord-attack1/2/3-source.png` |
+| Processed strips | `warlord-attack1/2/3-transparent.png` |
+| Runtime sheet | `warlord-attacks.png` |
+| Frames | 9; three attacks × startup / active / recovery |
+| Runtime layout | 3×3, 448×448 cells |
+| Feet anchor | `(224, 420)` for every frame |
+| Display scale | `0.75` |
+| Metadata | `warlord-attacks.atlas.json`, `warlord-attacks.metadata.json` |
+| QA | `warlord-attacks-debug.png` |
+| Rebuild tool | `tools/build_boss_art.py` |
+
+The original indigo-and-antique-gold heavy warlord was generated with the
+built-in image generator on flat magenta chroma-key strips, one strip per
+attack. The prompt set preserves one mature East Asian warlord identity and
+requests overhead smash, horizontal sweep, and forward lunge sequences. Local
+chroma removal and explicit non-equal source rectangles prevent neighboring
+weapon pixels from contaminating frames. Boss idle, walk, hurt, dead, and arena
+art remain missing; these attack frames are loaded but not spawned.
+
 ### Runtime manifest (M1 / Task 1.5)
 
 `app/game/assets/AssetManifest.ts` owns the five currently loaded runtime entries:
@@ -142,7 +165,7 @@ Metadata 最少欄位：
 - **M2:** Guan Yu hurt、dead、完整 combo transitions。
 - **M3:** 第二／第三種近戰小兵全套動畫。
 - **M4:** Stage layers、foreground、props、collision/encounter metadata。
-- **M5:** Boss 全套動畫與 arena assets。
+- **M5:** Boss attack 1–3 已完成；仍缺 idle、walk、hurt、dead 與 arena assets。
 - **M6:** HUD、font、title/result UI。
 - **M7:** Combat SFX、BGM。
 - **M8:** Optimized atlases、loading/social/release assets。

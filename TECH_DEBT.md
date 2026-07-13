@@ -255,6 +255,14 @@ not instantiated by `EnemyManager` or the current Scene. Rendering, physics,
 attacks, AI, arena rules, and presentation stay intentionally undefined until
 their concrete tasks provide requirements.
 
+### TD-M05 Update — Boss attack assets
+
+M5 / Task 5.2 adds nine original Boss attack frames, explicit source rectangles,
+one shared scale/feet anchor, atlas metadata, debug QA, and a reproducible build
+tool. The attacks remain unspawned and AI-free. Idle, walk, hurt, dead, arena,
+and actor integration are still missing; the next task may define decision
+rhythm but must not treat these attack-only assets as a complete Boss actor.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

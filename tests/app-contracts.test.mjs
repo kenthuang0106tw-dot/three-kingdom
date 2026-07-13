@@ -21,6 +21,7 @@ import { beginEncounter, createEncounterFlow, isEncounterCleared, recordEnemyRem
 import { canRequestStageExit, createStageExitState, makeExitAvailable, requestStageExit, resetStageExit } from "../app/game/stage/StageExit.ts";
 import { DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, validateEnemyConfig } from "../app/game/enemy/EnemyConfig.ts";
 import { BossLifecycle } from "../app/game/boss/BossLifecycle.ts";
+import { BOSS_ATTACKS } from "../app/game/boss/BossAttackMetadata.ts";
 
 test("React shell mounts only the Phaser lifecycle component", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
@@ -157,7 +158,7 @@ test("Runtime asset manifest preserves keys and reports missing required assets"
   assert.match(source, /load\.on\("loaderror"/);
   assert.match(source, /load\.off\("loaderror"/);
   assert.deepEqual(RUNTIME_ASSET_MANIFEST.map(asset => asset.key), [
-    "forest", "guanyu-idle", "guanyu-walk", "guanyu-attack", "enemy-soldier", "enemy-mauler", "enemy-duelist",
+    "forest", "guanyu-idle", "guanyu-walk", "guanyu-attack", "enemy-soldier", "enemy-mauler", "enemy-duelist", "boss-warlord-attacks",
   ]);
   const messages = [];
   createAssetFailureReporter(RUNTIME_ASSET_MANIFEST, message => messages.push(message))("guanyu-walk");
@@ -590,6 +591,44 @@ test("Boss lifecycle owns deterministic state, damage, cleanup, and reset withou
 
   assert.doesNotMatch(bossSource, /from ["']phaser["']|Phaser\./);
   assert.doesNotMatch(enemyManager, /BossLifecycle|game\/boss|boss\//i);
+});
+
+test("Boss attack art and metadata define three real telegraphed attacks", async () => {
+  const [atlasText, metadataText, manifest, sheet, debug, buildTool] = await Promise.all([
+    readFile(new URL("../public/art/boss/warlord-attacks.atlas.json", import.meta.url), "utf8"),
+    readFile(new URL("../public/art/boss/warlord-attacks.metadata.json", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/assets/AssetManifest.ts", import.meta.url), "utf8"),
+    readFile(new URL("../public/art/boss/warlord-attacks.png", import.meta.url)),
+    readFile(new URL("../public/art/boss/warlord-attacks-debug.png", import.meta.url)),
+    readFile(new URL("../tools/build_boss_art.py", import.meta.url), "utf8"),
+  ]);
+  const atlas = JSON.parse(atlasText);
+  const metadata = JSON.parse(metadataText);
+  const expectedFrames = BOSS_ATTACKS.flatMap(attack => attack.frames);
+
+  assert.deepEqual(BOSS_ATTACKS.map(attack => attack.key), ["attack1", "attack2", "attack3"]);
+  for (const attack of BOSS_ATTACKS) {
+    assert.equal(attack.frames.length, 3);
+    assert.deepEqual(attack.startupFrames, [0]);
+    assert.deepEqual(attack.activeFrames, [1]);
+    assert.deepEqual(attack.recoveryFrames, [2]);
+    assert.deepEqual(attack.telegraphFrames, [0]);
+    assert.equal(new Set(attack.frames).size, 3);
+  }
+  assert.deepEqual(Object.keys(atlas.frames), expectedFrames);
+  assert.equal(atlas.meta.size.w, 1344);
+  assert.equal(atlas.meta.size.h, 1344);
+  assert.ok(Object.values(atlas.frames).every(frame => frame.frame.w === 448 && frame.frame.h === 448));
+  assert.ok(Object.values(atlas.frames).every(frame => frame.pivot.x === 0.5 && frame.pivot.y === 420 / 448));
+  assert.equal(metadata.frames.length, 9);
+  assert.ok(metadata.frames.every(frame => frame.feetAnchor.x === 224 && frame.feetAnchor.y === 420));
+  assert.ok(metadata.frames.every(frame => frame.sourceScale === metadata.sourceScale && frame.displayScale === 0.75));
+  assert.deepEqual(metadata.frames.map(frame => frame.phase), ["startup", "active", "recovery", "startup", "active", "recovery", "startup", "active", "recovery"]);
+  assert.equal(metadata.frames[4].sourceRect.width, 851);
+  assert.match(manifest, /boss-warlord-attacks/);
+  assert.match(buildTool, /ATTACKS = \[/);
+  assert.ok(sheet.length > 1000);
+  assert.ok(debug.length > 1000);
 });
 
 test("Mauler asset routes and atlas metadata are present", async () => {

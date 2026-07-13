@@ -1,0 +1,335 @@
+{
+  "cellSize": 448,
+  "feetAnchor": {
+    "x": 224,
+    "y": 420
+  },
+  "displayScale": 0.75,
+  "sourceScale": 0.5769230769230769,
+  "frames": [
+    {
+      "name": "attack1-startup",
+      "attack": "attack1",
+      "phase": "startup",
+      "sourceImage": "warlord-attack1-transparent.png",
+      "sourceRect": {
+        "x": 0,
+        "y": 0,
+        "width": 703,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 157,
+        "y": 107,
+        "width": 467,
+        "height": 482
+      },
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 448,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 89,
+      "displayOffsetY": 142,
+      "visibleWidth": 269,
+      "visibleHeight": 278,
+      "feetAnchor": {
+        "x": 224,
+        "y": 420
+      },
+      "sourceScale": 0.5769230769230769,
+      "displayScale": 0.75
+    },
+    {
+      "name": "attack1-active",
+      "attack": "attack1",
+      "phase": "active",
+      "sourceImage": "warlord-attack1-transparent.png",
+      "sourceRect": {
+        "x": 703,
+        "y": 0,
+        "width": 733,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 79,
+        "y": 245,
+        "width": 554,
+        "height": 376
+      },
+      "frame": {
+        "x": 448,
+        "y": 0,
+        "width": 448,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 64,
+      "displayOffsetY": 203,
+      "visibleWidth": 320,
+      "visibleHeight": 217,
+      "feetAnchor": {
+        "x": 224,
+        "y": 420
+      },
+      "sourceScale": 0.5769230769230769,
+      "displayScale": 0.75
+    },
+    {
+      "name": "attack1-recovery",
+      "attack": "attack1",
+      "phase": "recovery",
+      "sourceImage": "warlord-attack1-transparent.png",
+      "sourceRect": {
+        "x": 1436,
+        "y": 0,
+        "width": 736,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 101,
+        "y": 236,
+        "width": 516,
+        "height": 375
+      },
+      "frame": {
+        "x": 896,
+        "y": 0,
+        "width": 448,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 75,
+      "displayOffsetY": 204,
+      "visibleWidth": 298,
+      "visibleHeight": 216,
+      "feetAnchor": {
+        "x": 224,
+        "y": 420
+      },
+      "sourceScale": 0.5769230769230769,
+      "displayScale": 0.75
+    },
+    {
+      "name": "attack2-startup",
+      "attack": "attack2",
+      "phase": "startup",
+      "sourceImage": "warlord-attack2-transparent.png",
+      "sourceRect": {
+        "x": 0,
+        "y": 0,
+        "width": 662,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 93,
+        "y": 147,
+        "width": 522,
+        "height": 451
+      },
+      "frame": {
+        "x": 0,
+        "y": 448,
+        "width": 448,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 73,
+      "displayOffsetY": 160,
+      "visibleWidth": 301,
+      "visibleHeight": 260,
+      "feetAnchor": {
+        "x": 224,
+        "y": 420
+      },
+      "sourceScale": 0.5769230769230769,
+      "displayScale": 0.75
+    },
+    {
+      "name": "attack2-active",
+      "attack": "attack2",
+      "phase": "active",
+      "sourceImage": "warlord-attack2-transparent.png",
+      "sourceRect": {
+        "x": 662,
+        "y": 0,
+        "width": 851,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 48,
+        "y": 188,
+        "width": 728,
+        "height": 426
+      },
+      "frame": {
+        "x": 448,
+        "y": 448,
+        "width": 448,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 14,
+      "displayOffsetY": 174,
+      "visibleWidth": 420,
+      "visibleHeight": 246,
+      "feetAnchor": {
+        "x": 224,
+        "y": 420
+      },
+      "sourceScale": 0.5769230769230769,
+      "displayScale": 0.75
+    },
+    {
+      "name": "attack2-recovery",
+      "attack": "attack2",
+      "phase": "recovery",
+      "sourceImage": "warlord-attack2-transparent.png",
+      "sourceRect": {
+        "x": 1513,
+        "y": 0,
+        "width": 659,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 77,
+        "y": 178,
+        "width": 530,
+        "height": 440
+      },
+      "frame": {
+        "x": 896,
+        "y": 448,
+        "width": 448,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 71,
+      "displayOffsetY": 166,
+      "visibleWidth": 306,
+      "visibleHeight": 254,
+      "feetAnchor": {
+        "x": 224,
+        "y": 420
+      },
+      "sourceScale": 0.5769230769230769,
+      "displayScale": 0.75
+    },
+    {
+      "name": "attack3-startup",
+      "attack": "attack3",
+      "phase": "startup",
+      "sourceImage": "warlord-attack3-transparent.png",
+      "sourceRect": {
+        "x": 0,
+        "y": 0,
+        "width": 640,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 48,
+        "y": 219,
+        "width": 509,
+        "height": 333
+      },
+      "frame": {
+        "x": 0,
+        "y": 896,
+        "width": 448,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 77,
+      "displayOffsetY": 228,
+      "visibleWidth": 294,
+      "visibleHeight": 192,
+      "feetAnchor": {
+        "x": 224,
+        "y": 420
+      },
+      "sourceScale": 0.5769230769230769,
+      "displayScale": 0.75
+    },
+    {
+      "name": "attack3-active",
+      "attack": "attack3",
+      "phase": "active",
+      "sourceImage": "warlord-attack3-transparent.png",
+      "sourceRect": {
+        "x": 640,
+        "y": 0,
+        "width": 851,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 86,
+        "y": 219,
+        "width": 704,
+        "height": 333
+      },
+      "frame": {
+        "x": 448,
+        "y": 896,
+        "width": 448,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 21,
+      "displayOffsetY": 228,
+      "visibleWidth": 406,
+      "visibleHeight": 192,
+      "feetAnchor": {
+        "x": 224,
+        "y": 420
+      },
+      "sourceScale": 0.5769230769230769,
+      "displayScale": 0.75
+    },
+    {
+      "name": "attack3-recovery",
+      "attack": "attack3",
+      "phase": "recovery",
+      "sourceImage": "warlord-attack3-transparent.png",
+      "sourceRect": {
+        "x": 1491,
+        "y": 0,
+        "width": 681,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 61,
+        "y": 224,
+        "width": 495,
+        "height": 339
+      },
+      "frame": {
+        "x": 896,
+        "y": 896,
+        "width": 448,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 81,
+      "displayOffsetY": 224,
+      "visibleWidth": 286,
+      "visibleHeight": 196,
+      "feetAnchor": {
+        "x": 224,
+        "y": 420
+      },
+      "sourceScale": 0.5769230769230769,
+      "displayScale": 0.75
+    }
+  ]
+}

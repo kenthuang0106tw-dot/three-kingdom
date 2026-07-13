@@ -128,6 +128,6 @@ tools/build_enemy_art.py     Enemy sheet/atlas rebuild pipeline
 
 ## Current Priority
 
-M5 / Task 5.1 Boss state/ownership contract is complete. The next single task is M5 / Task 5.2, Boss attack 1–3.
+M5 / Task 5.2 Boss attack 1–3 is complete. The next single task is M5 / Task 5.3, Boss decision rhythm.
 
-Milestone 0–4 已完成；Boss lifecycle contract 已建立，但目前遊戲畫面尚未生成 Boss。下一步只處理 Boss attack 1–3 素材與 metadata。
+Milestone 0–4 已完成；Boss lifecycle 與三招九幀素材已建立，但目前遊戲畫面尚未生成 Boss。下一步只定義 Boss 決策節奏。
