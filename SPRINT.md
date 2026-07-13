@@ -341,6 +341,16 @@
 - [x] Browser smoke returned 200 for Boss PNG/atlas and retained one 1280x720 Canvas with zero page errors.
 - [ ] Boss actor, AI, phase, arena, idle/walk/hurt/dead art, HUD, and audio remain deferred.
 
+## M5 / Task 5.3 Closeout
+
+- [x] Added one Phaser-free Boss decision policy using the existing gameplay clock, seeded random source, and attack definitions.
+- [x] Attack selection is limited to idle lifecycle state and one pending attack at a time.
+- [x] Attack completion requires attack lifecycle state and starts a deterministic 900–1300ms recovery.
+- [x] Deterministic sequence, recovery lockout, illegal-state, and reset contracts passed.
+- [x] `pnpm test` 45/45, `pnpm build`, `pnpm typecheck`, and lint with 0 errors passed.
+- [x] Browser smoke retained one 1280×720 Canvas and zero page errors.
+- [ ] Boss actor, phase presentation, hurt/dead art, arena, HUD, and audio remain deferred.
+
 ## M3 / Task 3.2 Closeout
 
 - [x] Added deterministic Phaser-free X/Y and point clamping helpers.
@@ -350,4 +360,4 @@
 - [x] Browser smoke verified one 1280x720 Canvas, ten reset cycles, and zero page errors.
 - [ ] Physical mobile and long-session validation remain deferred.
 
-M5 / Task 5.2 已完成；下一步只執行 M5 / Task 5.3。其餘未完成項目依 Roadmap 保留。
+M5 / Task 5.3 已完成；下一步只執行 M5 / Task 5.4。其餘未完成項目依 Roadmap 保留。

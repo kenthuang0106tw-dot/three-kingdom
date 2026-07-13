@@ -548,3 +548,18 @@
 | Asset routes | Pass | Boss PNG and atlas HTTP 200; zero request failures |
 | Browser smoke | Pass | Existing room unchanged; one 1280x720 Canvas, zero page errors |
 | Known issues | Non-blocking | Boss actor/AI and remaining animation states are deferred |
+
+## M5 / Task 5.3 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M5 / Task 5.3 — Boss decision rhythm |
+| Tests | Pass | `pnpm test` 45/45 |
+| Build | Pass | `pnpm build` |
+| Lint | Pass | 0 errors, existing 4 `<img>` warnings only |
+| Typecheck | Pass | `pnpm typecheck` |
+| Determinism | Pass | Identical seeds produce identical legal attack sequences |
+| Recovery | Pass | One pending attack; completion starts 900–1300ms lockout |
+| State safety | Pass | Non-idle selection and non-attack completion are rejected; reset clears lockout |
+| Browser smoke | Pass | Existing room retained one 1280x720 Canvas and zero page errors |
+| Known issues | Non-blocking | Policy is intentionally not connected until the Boss actor exists |

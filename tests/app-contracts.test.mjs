@@ -22,6 +22,7 @@ import { canRequestStageExit, createStageExitState, makeExitAvailable, requestSt
 import { DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, validateEnemyConfig } from "../app/game/enemy/EnemyConfig.ts";
 import { BossLifecycle } from "../app/game/boss/BossLifecycle.ts";
 import { BOSS_ATTACKS } from "../app/game/boss/BossAttackMetadata.ts";
+import { BossDecisionPolicy } from "../app/game/boss/BossDecisionPolicy.ts";
 
 test("React shell mounts only the Phaser lifecycle component", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
@@ -629,6 +630,50 @@ test("Boss attack art and metadata define three real telegraphed attacks", async
   assert.match(buildTool, /ATTACKS = \[/);
   assert.ok(sheet.length > 1000);
   assert.ok(debug.length > 1000);
+});
+
+test("Boss decision policy is deterministic and enforces attack recovery", () => {
+  const firstClock = new TestClock();
+  const secondClock = new TestClock();
+  const first = new BossDecisionPolicy(firstClock, new SeededRandom(0x5b055), BOSS_ATTACKS);
+  const second = new BossDecisionPolicy(secondClock, new SeededRandom(0x5b055), BOSS_ATTACKS);
+  const firstSequence = [];
+  const secondSequence = [];
+
+  for (let index = 0; index < 8; index += 1) {
+    const firstAttack = first.selectAttack("idle");
+    const secondAttack = second.selectAttack("idle");
+    assert.notEqual(firstAttack, null);
+    assert.equal(secondAttack, firstAttack);
+    firstSequence.push(firstAttack);
+    secondSequence.push(secondAttack);
+    assert.equal(first.selectAttack("idle"), null);
+    assert.equal(first.completeAttack("idle"), false);
+    assert.equal(first.completeAttack("attack"), true);
+    assert.equal(second.completeAttack("attack"), true);
+    assert.equal(first.selectAttack("idle"), null);
+    firstClock.advance(1300);
+    secondClock.advance(1300);
+  }
+
+  assert.deepEqual(firstSequence, secondSequence);
+  assert.ok(firstSequence.every(key => BOSS_ATTACKS.some(attack => attack.key === key)));
+});
+
+test("Boss decision policy rejects illegal states and reset clears lockout", () => {
+  const clock = new TestClock(100);
+  const policy = new BossDecisionPolicy(clock, new SeededRandom(9), BOSS_ATTACKS);
+
+  for (const state of ["inactive", "attack", "hurt", "dead", "cleaned"]) {
+    assert.equal(policy.selectAttack(state), null);
+  }
+  assert.equal(policy.completeAttack("attack"), false);
+  assert.notEqual(policy.selectAttack("idle"), null);
+  assert.equal(policy.completeAttack("attack"), true);
+  clock.advance(899);
+  assert.equal(policy.selectAttack("idle"), null);
+  policy.reset();
+  assert.notEqual(policy.selectAttack("idle"), null);
 });
 
 test("Mauler asset routes and atlas metadata are present", async () => {

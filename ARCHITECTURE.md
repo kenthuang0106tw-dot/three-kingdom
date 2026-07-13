@@ -363,6 +363,16 @@ fixed 448×448 frames and a shared `(224,420)` feet pivot. The manifest preloads
 the atlas, but MainScene does not instantiate a Boss or create Boss animations;
 decision rhythm and actor integration remain separate future tasks.
 
+## Boss Decision Policy (M5 / Task 5.3)
+
+`BossDecisionPolicy.ts` is a Phaser-free policy that receives the existing
+gameplay clock, seeded random source, and `BOSS_ATTACKS` definitions. It selects
+one attack only while `BossLifecycle` is idle, keeps that attack pending until
+the lifecycle is in `attack`, and starts a deterministic 900–1300ms recovery
+when the attack completes. Pending selection and recovery prevent seamless
+reselection; `reset()` clears both for Scene restart. The policy owns no actor,
+movement, distance, phase, arena, rendering, or `EnemyManager` dependency.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

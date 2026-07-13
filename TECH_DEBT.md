@@ -263,6 +263,15 @@ tool. The attacks remain unspawned and AI-free. Idle, walk, hurt, dead, arena,
 and actor integration are still missing; the next task may define decision
 rhythm but must not treat these attack-only assets as a complete Boss actor.
 
+### TD-M05 Update — Boss decision rhythm
+
+M5 / Task 5.3 adds a Phaser-free attack-selection policy with deterministic
+seeded choices, explicit pending-attack ownership, and 900–1300ms post-attack
+recovery. It intentionally accepts the existing attack definitions as a
+dependency and remains unconnected to `MainScene` until a real Boss actor
+exists. Distance, movement, phase, arena, and presentation decisions remain
+undefined rather than being guessed early.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

@@ -128,6 +128,6 @@ tools/build_enemy_art.py     Enemy sheet/atlas rebuild pipeline
 
 ## Current Priority
 
-M5 / Task 5.2 Boss attack 1–3 is complete. The next single task is M5 / Task 5.3, Boss decision rhythm.
+M5 / Task 5.3 Boss decision rhythm is complete. The next single task is M5 / Task 5.4, Boss hurt/phase/death.
 
-Milestone 0–4 已完成；Boss lifecycle 與三招九幀素材已建立，但目前遊戲畫面尚未生成 Boss。下一步只定義 Boss 決策節奏。
+Milestone 0–4 已完成；Boss lifecycle、三招九幀素材與 deterministic recovery policy 已建立，但目前遊戲畫面尚未生成 Boss。下一步只建立 Boss hurt／phase／death 與必要 actor lifecycle。
