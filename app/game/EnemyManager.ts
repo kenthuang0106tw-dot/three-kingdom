@@ -3,6 +3,7 @@ import { PhaserGameplayClock, SeededRandom, type GameplayClock, type RandomSourc
 import { BAMBOO_COMBAT_ROOM, clampStageX, clampStageY, type StageSpawnPoint } from "./stage/StageConfig";
 import { beginEncounter, createEncounterFlow, isEncounterCleared, recordEnemyRemoved, type EncounterFlowState } from "./stage/EncounterFlow";
 import { DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemyAnimationKey, enemySpriteShouldFlip, type EnemyConfig } from "./enemy/EnemyConfig";
+import { selectFairAttackCandidate } from "./enemy/AttackSlotPolicy";
 
 export type EnemyState = "idle" | "walk" | "attack" | "hurt" | "dead";
 
@@ -41,6 +42,7 @@ export class EnemyCombatant {
   attackHitPlayer = false;
   hasAttackSlot = false;
   attackApproachEndsAt = 0;
+  attackSlotGrantCount = 0;
 
   constructor(readonly id: number, readonly assignedSlot: number, readonly config: EnemyConfig, scene: Phaser.Scene, x: number, y: number) {
     this.hp = config.maxHp;
@@ -207,13 +209,11 @@ export class EnemyManager {
     const candidates = alive.filter(enemy => enemy.state !== "hurt" && enemy.state !== "dead" && this.clock.now() >= enemy.cooldownUntil &&
       Math.abs(enemy.bodyZone.x - this.playerBodyZone.x) < 220 && Math.abs(enemy.bodyZone.y - this.playerBodyZone.y) < 140);
     if (!candidates.length) return;
-    candidates.sort((a, b) => a.id - b.id);
-    const nextIndex = this.lastAttackerId === null
-      ? 0
-      : Math.max(0, candidates.findIndex(enemy => enemy.id > this.lastAttackerId!));
-    const enemy = candidates[nextIndex];
+    const enemy = selectFairAttackCandidate(candidates, this.lastAttackerId);
+    if (!enemy) return;
     this.currentAttacker = enemy;
     enemy.hasAttackSlot = true;
+    enemy.attackSlotGrantCount += 1;
     enemy.attackApproachEndsAt = this.clock.now() + ATTACK_APPROACH_TIMEOUT_MS;
   }
 

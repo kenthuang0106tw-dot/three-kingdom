@@ -254,8 +254,11 @@ previously applied one global flip rule. The two later archetypes also selected
 Phaser animation index 1 as active even though their real `attack-1` pose is
 index 2. Per-config source facing, corrected 1-based active indices, and a
 1500 ms Attack Slot approach deadline now prevent reversed presentation and a
-permanently blocked attacker. Boss walk behavior remains a separate deferred M5
-limitation and was not changed by this repair.
+permanently blocked attacker. Follow-up browser revalidation exposed candidate
+starvation when two aligned enemies alternated until Player HP reached zero.
+A Phaser-free least-grants-first policy with deterministic ID tie-breaking now
+ensures every eligible archetype receives a turn. Boss walk behavior remains a
+separate deferred M5 limitation and was not changed by this repair.
 
 ### TD-M05 Update — Boss ownership contract
 

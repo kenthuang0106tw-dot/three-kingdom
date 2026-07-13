@@ -631,13 +631,14 @@
 | Item | Result | Evidence |
 |---|---|---|
 | Task ID | Pass | M4 / Task 4.7 — Enemy facing and hit reachability regression |
-| Tests | Pass | `pnpm test` 52/52, including source-facing, flip, active-pose, and slot-release contracts |
+| Tests | Pass | `pnpm test` 53/53, including source-facing, flip, active-pose, slot-release, and non-starvation contracts |
 | Build | Pass | `pnpm build` |
 | Lint | Pass | 0 errors, existing 4 `<img>` warnings only |
 | Typecheck | Pass | `pnpm typecheck` |
 | Facing | Pass | Soldier left-facing source and mauler/duelist right-facing sources resolve through one config-aware rule |
 | Attack timing | Pass | All three archetypes use Phaser active-frame index 2, the actual `attack-1` pose |
 | Slot recovery | Pass | A holder unable to reach attack range releases the slot after 1500 ms |
-| Browser combat | Pass | Actual player-damage evidence recorded unique attackers `mauler,duelist,soldier`; duelist walk and attack visuals faced travel/attack direction |
+| Browser combat | Pass | Separate real touch-movement lane smokes recorded player damage from `mauler`, `duelist`, and `soldier`; duelist walk and attack visuals faced travel/attack direction |
+| Attack Slot fairness | Pass | Lowest grant count wins among eligible enemies; ID rotation deterministically resolves ties |
 | Restart smoke | Pass | 10 Scene restarts; one 1280×720 Canvas; one Boss; no stale completion; zero browser errors |
 | Deferred | Non-blocking | Boss movement remains planned work and was intentionally not changed |

@@ -24,6 +24,7 @@ import { DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemyS
 import { BossLifecycle } from "../app/game/boss/BossLifecycle.ts";
 import { BOSS_ATTACKS } from "../app/game/boss/BossAttackMetadata.ts";
 import { BossDecisionPolicy } from "../app/game/boss/BossDecisionPolicy.ts";
+import { selectFairAttackCandidate } from "../app/game/enemy/AttackSlotPolicy.ts";
 
 test("React shell mounts only the Phaser lifecycle component", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
@@ -642,6 +643,18 @@ test("Enemy source facing, active frames, and attack-slot reachability match the
   assert.match(manager, /const ATTACK_APPROACH_TIMEOUT_MS = 1500/);
   assert.match(manager, /enemy\.attackApproachEndsAt = this\.clock\.now\(\) \+ ATTACK_APPROACH_TIMEOUT_MS/);
   assert.match(manager, /this\.clock\.now\(\) >= enemy\.attackApproachEndsAt[\s\S]*this\.releaseAttackSlot\(enemy\)/);
+});
+
+test("Attack-slot selection cannot starve an eligible archetype", () => {
+  const candidates = [
+    { id: 1, attackSlotGrantCount: 2 },
+    { id: 2, attackSlotGrantCount: 0 },
+    { id: 3, attackSlotGrantCount: 1 },
+  ];
+
+  assert.equal(selectFairAttackCandidate(candidates, 3)?.id, 2);
+  assert.equal(selectFairAttackCandidate(candidates.map(candidate => ({ ...candidate, attackSlotGrantCount: 0 })), 1)?.id, 2);
+  assert.equal(selectFairAttackCandidate([], 1), null);
 });
 
 test("Every mixed archetype shares attack-slot release, death cleanup, and survivor flow", async () => {

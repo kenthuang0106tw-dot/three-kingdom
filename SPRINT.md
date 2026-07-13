@@ -413,8 +413,9 @@ M5 / Task 5.6 已完成；下一步只執行 M5 / Task 5.7。其餘未完成項�
 - [x] Added per-archetype source-facing metadata; soldier remains left-facing while mauler and duelist use their right-facing source art correctly.
 - [x] Corrected ordinary-enemy active attacks to Phaser's 1-based frame index 2 (`attack-1`).
 - [x] Added a gameplay-clock 1500 ms approach deadline so a blocked attacker releases the single Attack Slot.
-- [x] Browser combat recorded real player damage from `mauler`, `duelist`, and `soldier`; duelist movement and attack presentation faced forward.
-- [x] `pnpm test` passed 52/52; build and typecheck passed; lint passed with 0 errors and the existing 4 `<img>` warnings.
+- [x] Follow-up revalidation found and fixed Attack Slot starvation with a Phaser-free least-grants-first policy and deterministic ID tie-breaking.
+- [x] Separate real touch-movement lane smokes recorded player damage from `mauler`, `duelist`, and `soldier`; duelist movement and attack presentation faced forward.
+- [x] `pnpm test` passed 53/53; build and typecheck passed; lint passed with 0 errors and the existing 4 `<img>` warnings.
 - [x] Ten Scene restarts retained one Canvas, one Boss, no stale completion, and zero browser errors.
 - [ ] Boss movement remains deferred and was not part of this M4 regression repair.
 

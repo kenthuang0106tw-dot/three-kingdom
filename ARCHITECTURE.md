@@ -357,6 +357,12 @@ existing gameplay clock. If bodies or formation prevent it reaching valid X/Y
 attack range, it releases the slot and returns to idle so another living enemy
 can be selected. This adds no second timer owner and does not alter combat range.
 
+`AttackSlotPolicy.ts` prevents a temporarily misaligned archetype from being
+starved by two repeatedly eligible neighbors. Among current eligible candidates,
+the manager selects the lowest slot-grant count first, then uses the existing
+ID rotation as a deterministic tie-breaker. Each combatant owns its own count;
+the policy owns no Phaser object, timer, damage, or movement behavior.
+
 ## Boss Lifecycle Boundary (M5 / Task 5.1)
 
 `app/game/boss/BossLifecycle.ts` is the sole owner of the first Boss's HP and
