@@ -490,3 +490,18 @@
 | Composition | Pass | Deterministic soldier / mauler / duelist spawn assignment |
 | Combat contracts | Pass | Single attack slot, Y alignment, pairwise spacing, per-archetype animation and cleanup tests |
 | Known issues | Non-blocking | Encounter tuning and physical mobile QA remain deferred |
+
+## M4 / Task 4.5 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M4 / Task 4.5 — Encounter tuning pass |
+| Tests | Pass | `pnpm test` 40/40 |
+| Build | Pass | `pnpm build` |
+| Lint | Pass | 0 errors, existing 4 `<img>` warnings only |
+| Typecheck | Pass | `pnpm typecheck` |
+| Browser smoke | Pass | Keyboard movement/attack sequence, one 1280x720 Canvas, zero page errors |
+| Duration budget | Pass | 12 total HP × 3000ms reference hit interval = 36 seconds |
+| Movement/spacing | Pass | Attack Y range ≤48px; minimum spacing ≥68px; distinct walk speeds retained |
+| Attack slot | Pass | Existing single `currentAttacker` guard remains covered |
+| Known issues | Non-blocking | Physical-player duration sampling and mobile QA remain deferred |

@@ -128,6 +128,6 @@ tools/build_enemy_art.py     Enemy sheet/atlas rebuild pipeline
 
 ## Current Priority
 
-M4 / Task 4.4 Mixed encounter composition is complete. The next single task is M4 / Task 4.5, Encounter tuning pass.
+M4 / Task 4.5 Encounter tuning pass is complete. The next single task is M4 / Task 4.6, Multi-archetype regression.
 
 Milestone 0、M1、M2 與 M3 已完成；目前進行 M4 敵人種類與遭遇節奏。完成下一個 Task 前不要新增 Boss、角色、招式或 Audio。

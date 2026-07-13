@@ -300,6 +300,16 @@
 - [x] Browser smoke verified one 1280x720 Canvas and zero page errors.
 - [ ] Encounter tuning and physical mobile validation remain deferred to later tasks.
 
+## M4 / Task 4.5 Closeout
+
+- [x] Tuned mixed-enemy durability to 4 / 5 / 3 HP for soldier, mauler, and duelist.
+- [x] Tuned director delays, recovery windows, and minimum spacing without changing the single Attack Director slot.
+- [x] Deterministic reference model estimates 36 seconds at one successful hit every 3 seconds, inside the 30–90 second budget.
+- [x] Attack Y ranges remain at or below 48px, preserving vertical dodge space in the 245px walk area.
+- [x] `pnpm test` 40/40, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
+- [x] Browser movement/attack smoke verified one 1280x720 Canvas, all three archetypes visible, and zero page errors.
+- [ ] Physical-player duration sampling remains deferred to later balancing QA.
+
 ## M3 / Task 3.2 Closeout
 
 - [x] Added deterministic Phaser-free X/Y and point clamping helpers.
@@ -309,4 +319,4 @@
 - [x] Browser smoke verified one 1280x720 Canvas, ten reset cycles, and zero page errors.
 - [ ] Physical mobile and long-session validation remain deferred.
 
-M4 / Task 4.4 已完成；下一步只執行 M4 / Task 4.5。其餘未完成項目依 Roadmap 保留。
+M4 / Task 4.5 已完成；下一步只執行 M4 / Task 4.6。其餘未完成項目依 Roadmap 保留。

@@ -231,6 +231,14 @@ the existing single Attack Director and cleanup contracts remain shared. A
 short encounter-tuning pass is still needed before balancing is considered
 complete; no generic enemy framework was introduced.
 
+### TD-M04 Update — Encounter tuning pass
+
+M4 / Task 4.5 raises mixed-room durability to 12 total HP and narrows the
+director/recovery ranges into a deterministic 36-second reference budget. This
+is a contract estimate based on one successful hit every three seconds, not a
+substitute for later physical-player balancing. Y dodge space, single-attacker
+ownership, and per-archetype movement differences remain intact.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

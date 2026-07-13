@@ -70,13 +70,13 @@ export const SOLDIER_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
   },
   animationRates: { idle: 4, walk: 8, attack: 8, hurt: 8, dead: 8 },
   attackActiveFrame: 2,
-  maxHp: 3,
+  maxHp: 4,
   displayScale: 1.4,
   frameSize: 384,
   feetY: 354,
   movement: { walkSpeed: 70, detectionDistance: 500, verticalScale: 0.7 },
   combat: { attackXRange: 110, attackYRange: 45, minSpacing: 72 },
-  timing: { hurtMs: 300, directorDelayMin: 400, directorDelayMax: 800, recoveryMin: 800, recoveryMax: 1200 },
+  timing: { hurtMs: 300, directorDelayMin: 500, directorDelayMax: 750, recoveryMin: 850, recoveryMax: 1100 },
 });
 
 export const MAULER_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
@@ -88,13 +88,13 @@ export const MAULER_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
   },
   animationRates: { idle: 4, walk: 8, attack: 8, hurt: 8, dead: 8 },
   attackActiveFrame: 1,
-  maxHp: 4,
+  maxHp: 5,
   displayScale: 1.4,
   frameSize: 313,
   feetY: 282,
   movement: { walkSpeed: 62, detectionDistance: 500, verticalScale: 0.7 },
-  combat: { attackXRange: 150, attackYRange: 48, minSpacing: 78 },
-  timing: { hurtMs: 300, directorDelayMin: 500, directorDelayMax: 900, recoveryMin: 1000, recoveryMax: 1400 },
+  combat: { attackXRange: 150, attackYRange: 48, minSpacing: 82 },
+  timing: { hurtMs: 300, directorDelayMin: 650, directorDelayMax: 900, recoveryMin: 1150, recoveryMax: 1450 },
 });
 
 export const DUELIST_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
@@ -106,11 +106,11 @@ export const DUELIST_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
   },
   animationRates: { idle: 6, walk: 10, attack: 10, hurt: 8, dead: 8 },
   attackActiveFrame: 1,
-  maxHp: 2,
+  maxHp: 3,
   displayScale: 1.4,
   frameSize: 313,
   feetY: 282,
   movement: { walkSpeed: 96, detectionDistance: 560, verticalScale: 0.8 },
-  combat: { attackXRange: 92, attackYRange: 40, minSpacing: 64 },
-  timing: { hurtMs: 300, directorDelayMin: 300, directorDelayMax: 600, recoveryMin: 600, recoveryMax: 900 },
+  combat: { attackXRange: 92, attackYRange: 40, minSpacing: 68 },
+  timing: { hurtMs: 300, directorDelayMin: 400, directorDelayMax: 600, recoveryMin: 700, recoveryMax: 900 },
 });

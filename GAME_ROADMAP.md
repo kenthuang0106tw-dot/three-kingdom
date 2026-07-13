@@ -355,7 +355,8 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 - M4 / Task 4.2 (Second melee soldier) completed in the current sprint.
 - M4 / Task 4.3 (Third melee soldier) completed in the current sprint.
 - M4 / Task 4.4 (Mixed encounter composition) completed in the current sprint.
-- Next eligible task: M4 / Task 4.5 (Encounter tuning pass).
+- M4 / Task 4.5 (Encounter tuning pass) completed in the current sprint.
+- Next eligible task: M4 / Task 4.6 (Multi-archetype regression).
 
 ## 4. Global Acceptance Rules
 

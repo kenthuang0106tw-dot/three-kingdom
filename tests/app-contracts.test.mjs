@@ -463,12 +463,12 @@ test("Soldier EnemyConfig validates stable tuning and preserves current values",
   const source = await readFile(new URL("../app/game/enemy/EnemyConfig.ts", import.meta.url), "utf8");
   assert.equal(SOLDIER_ENEMY_CONFIG.id, "soldier");
   assert.equal(SOLDIER_ENEMY_CONFIG.assetKey, "enemy-soldier");
-  assert.equal(SOLDIER_ENEMY_CONFIG.maxHp, 3);
+  assert.equal(SOLDIER_ENEMY_CONFIG.maxHp, 4);
   assert.equal(SOLDIER_ENEMY_CONFIG.movement.walkSpeed, 70);
   assert.equal(SOLDIER_ENEMY_CONFIG.movement.detectionDistance, 500);
   assert.deepEqual(SOLDIER_ENEMY_CONFIG.combat, { attackXRange: 110, attackYRange: 45, minSpacing: 72 });
   assert.deepEqual(SOLDIER_ENEMY_CONFIG.timing, {
-    hurtMs: 300, directorDelayMin: 400, directorDelayMax: 800, recoveryMin: 800, recoveryMax: 1200,
+    hurtMs: 300, directorDelayMin: 500, directorDelayMax: 750, recoveryMin: 850, recoveryMax: 1100,
   });
   assert.equal(validateEnemyConfig(SOLDIER_ENEMY_CONFIG), SOLDIER_ENEMY_CONFIG);
   assert.throws(() => validateEnemyConfig({ ...SOLDIER_ENEMY_CONFIG, maxHp: 0 }), /Invalid enemy config/);
@@ -501,6 +501,21 @@ test("Mixed encounter composition assigns three archetypes with one attack direc
   assert.match(scene, /for \(const config of \[SOLDIER_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, DUELIST_ENEMY_CONFIG\]\)/);
   assert.match(stage, /enemyType: "mauler"/);
   assert.match(stage, /enemyType: "duelist"/);
+});
+
+test("Mixed encounter tuning stays readable, dodgeable, and within the duration budget", async () => {
+  const manager = await readFile(new URL("../app/game/EnemyManager.ts", import.meta.url), "utf8");
+  const configs = [SOLDIER_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, DUELIST_ENEMY_CONFIG];
+  const referenceSuccessfulHitIntervalMs = 3000;
+  const estimatedDurationMs = configs.reduce((total, config) => total + config.maxHp, 0) * referenceSuccessfulHitIntervalMs;
+
+  assert.equal(estimatedDurationMs, 36000);
+  assert.ok(estimatedDurationMs >= 30000 && estimatedDurationMs <= 90000);
+  assert.ok(configs.every(config => config.combat.attackYRange <= 48));
+  assert.ok(configs.every(config => config.combat.minSpacing >= 68));
+  assert.ok(configs.every(config => config.timing.directorDelayMin >= 400));
+  assert.ok(configs.every(config => config.timing.recoveryMin >= 700));
+  assert.match(manager, /if \(this\.currentAttacker \|\| this\.clock\.now\(\) < this\.directorReadyAt\) return/);
 });
 
 test("Mauler asset routes and atlas metadata are present", async () => {
