@@ -22,8 +22,8 @@
 | Combat | Playable prototype | Combo、獨立 hitbox、multi-hit、Hit Stop、Flash、Spark、Knockback、Shake |
 | Enemy | Playable prototype | 三種近戰小兵、混合 Formation、Attack Slot、hurt/dead/cleanup |
 | Boss | Playable actor prototype | Scene-owned actor、三招、deterministic recovery、hurt、一次 phase change、death/cleanup |
-| Stage | Static room | 單張竹林背景與固定 walk bounds |
-| Camera | Missing | 無 world scroll、follow、encounter lock |
+| Stage | Boss room prototype | 單張竹林背景、固定 walk bounds、Boss arena boundary |
+| Camera | Prototype contract | follow、獨立 encounter/Boss lock ownership、Boss cleanup release |
 | Mobile | Missing | 無正式 Phaser touch input；下一步 Task 1.2 |
 | UI | Debug only | 無 HUD、pause、continue、result |
 | Audio | Missing | 無 runtime assets |
@@ -362,7 +362,8 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 - M5 / Task 5.2 (Boss attack 1–3) completed in the current sprint.
 - M5 / Task 5.3 (Boss decision rhythm) completed in the current sprint.
 - M5 / Task 5.4 (Boss hurt/phase/death) completed in the current sprint.
-- Next eligible task: M5 / Task 5.5 (Arena bounds/camera lock).
+- M5 / Task 5.5 (Arena bounds/camera lock) completed in the current sprint.
+- Next eligible task: M5 / Task 5.6 (Stage-complete event).
 
 ## 4. Global Acceptance Rules
 

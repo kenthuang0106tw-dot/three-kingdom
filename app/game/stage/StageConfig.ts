@@ -118,3 +118,12 @@ export const BAMBOO_COMBAT_ROOM: StageConfig = validateStageConfig({
     targetStageId: null,
   }],
 });
+
+// The current prototype is a single room, so its first Boss arena deliberately
+// reuses the room's authoritative walk boundary instead of introducing a
+// second physics clamp or speculative arena framework.
+export const BAMBOO_BOSS_ARENA = Object.freeze({
+  id: "bamboo-boss-arena",
+  bounds: BAMBOO_COMBAT_ROOM.walkBounds,
+  cameraScroll: Object.freeze({ x: 0, y: 0 }),
+});

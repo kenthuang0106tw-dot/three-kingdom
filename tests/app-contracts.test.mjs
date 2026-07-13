@@ -14,9 +14,9 @@ import { createAssetFailureReporter, RUNTIME_ASSET_MANIFEST } from "../app/game/
 import { PlayerStateMachine } from "../app/game/player/PlayerStateMachine.ts";
 import { PlayerLifecycle } from "../app/game/player/PlayerLifecycle.ts";
 import { resolveAttack } from "../app/game/combat/CombatResolver.ts";
-import { BAMBOO_COMBAT_ROOM, clampStagePoint, clampStageX, clampStageY, validateStageConfig } from "../app/game/stage/StageConfig.ts";
+import { BAMBOO_BOSS_ARENA, BAMBOO_COMBAT_ROOM, clampStagePoint, clampStageX, clampStageY, isStagePointWithin, validateStageConfig } from "../app/game/stage/StageConfig.ts";
 import { calculateCameraScroll } from "../app/game/camera/CameraFollow.ts";
-import { createCameraLockState, isCameraLocked, lockCamera, unlockCamera } from "../app/game/camera/CameraLock.ts";
+import { createCameraLockState, hasCameraLock, isCameraLocked, lockCamera, unlockCamera } from "../app/game/camera/CameraLock.ts";
 import { beginEncounter, createEncounterFlow, isEncounterCleared, recordEnemyRemoved } from "../app/game/stage/EncounterFlow.ts";
 import { canRequestStageExit, createStageExitState, makeExitAvailable, requestStageExit, resetStageExit } from "../app/game/stage/StageExit.ts";
 import { DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, validateEnemyConfig } from "../app/game/enemy/EnemyConfig.ts";
@@ -368,16 +368,36 @@ test("Camera follow clamps scroll to world bounds without Phaser coupling", asyn
   assert.doesNotMatch(source, /from ["']phaser["']/);
 });
 
-test("Camera lock contract transitions by explicit encounter reason", async () => {
+test("Camera lock contract preserves independent encounter and Boss ownership", async () => {
   const source = await readFile(new URL("../app/game/camera/CameraLock.ts", import.meta.url), "utf8");
   const initial = createCameraLockState();
-  const locked = lockCamera(initial, "encounter");
+  const encounterLocked = lockCamera(initial, "encounter");
+  const bothLocked = lockCamera(encounterLocked, "boss");
   assert.equal(isCameraLocked(initial), false);
-  assert.equal(isCameraLocked(locked), true);
-  assert.deepEqual(unlockCamera(locked, "encounter"), initial);
-  assert.equal(unlockCamera(locked, "encounter").reason, null);
+  assert.equal(isCameraLocked(bothLocked), true);
+  assert.equal(hasCameraLock(bothLocked, "encounter"), true);
+  assert.equal(hasCameraLock(bothLocked, "boss"), true);
+  const bossOnly = unlockCamera(bothLocked, "encounter");
+  assert.equal(isCameraLocked(bossOnly), true);
+  assert.equal(hasCameraLock(bossOnly, "boss"), true);
+  assert.deepEqual(unlockCamera(bossOnly, "boss"), initial);
   assert.match(source, /CameraLockReason/);
   assert.doesNotMatch(source, /from ["']phaser["']/);
+});
+
+test("Boss arena reuses one authoritative walk boundary and releases its lock", async () => {
+  const scene = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
+  assert.deepEqual(BAMBOO_BOSS_ARENA.bounds, BAMBOO_COMBAT_ROOM.walkBounds);
+  assert.deepEqual(BAMBOO_BOSS_ARENA.cameraScroll, { x: 0, y: 0 });
+  assert.equal(isStagePointWithin(BAMBOO_COMBAT_ROOM.playerSpawn, BAMBOO_BOSS_ARENA.bounds), true);
+  assert.equal(isStagePointWithin({ x: 1080, y: 560 }, BAMBOO_BOSS_ARENA.bounds), true);
+  assert.deepEqual(clampStagePoint({ x: -100, y: 900 }, BAMBOO_BOSS_ARENA.bounds), { x: 70, y: 635 });
+  assert.match(scene, /lockCamera\(this\.cameraLockState, "boss"\)/);
+  assert.match(scene, /unlockCamera\(this\.cameraLockState, "boss"\)/);
+  assert.match(scene, /hasCameraLock\(this\.cameraLockState, "boss"\)/);
+  assert.match(scene, /BAMBOO_BOSS_ARENA\.bounds/);
+  assert.match(scene, /dataset\.bossArenaLocked/);
+  assert.match(scene, /dataset\.bossArenaReleaseCount/);
 });
 
 test("MainScene owns encounter camera lock lifecycle without enemy internals", async () => {
@@ -458,7 +478,7 @@ test("Single-room traversal acceptance composes spawn, clear, camera, exit, and 
   assert.deepEqual(requestStageExit(exit), { status: "requested", exitId: "room-exit" });
 
   assert.deepEqual(createEncounterFlow(), { status: "ready", spawnedCount: 0, removedEnemyIds: [] });
-  assert.deepEqual(createCameraLockState(), { reason: null });
+  assert.deepEqual(createCameraLockState(), { reasons: [] });
   assert.deepEqual(resetStageExit(), { status: "locked", exitId: null });
 });
 

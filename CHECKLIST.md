@@ -578,3 +578,18 @@
 | Browser lifecycle smoke | Pass | Phase 2 → dead → cleaned; one 1280×720 Canvas; zero page errors |
 | Browser restart smoke | Pass | 10 Scene restarts; `bossActorCount=1`; one Canvas; zero page errors |
 | Known issues | Non-blocking | Arena lock, Boss attack damage, walk, stage completion, HUD, and audio remain deferred |
+
+## M5 / Task 5.5 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M5 / Task 5.5 — Arena bounds/camera lock |
+| Tests | Pass | `pnpm test` 48/48 |
+| Build | Pass | `pnpm build` |
+| Lint | Pass | 0 errors, existing 4 `<img>` warnings only |
+| Typecheck | Pass | `pnpm typecheck` |
+| Lock ownership | Pass | `encounter,boss` coexist; Boss cleanup removes only `boss` |
+| Bounds | Pass | Player spawn, Boss spawn, world physics, and knockback share the walk boundary |
+| Browser lifecycle smoke | Pass | Locked → released; release count 1; one Canvas; zero page errors |
+| Browser restart smoke | Pass | 10 Scene restarts; one Boss; arena locked; release count reset to 0 |
+| Known issues | Non-blocking | Single-room arena only; stage-complete event, HUD, audio, and Boss damage remain deferred |

@@ -386,6 +386,19 @@ Player attack overlap is resolved through the existing `CombatResolver` and
 Boss-to-player attack damage, stage-complete events, HUD, audio, and a reusable
 Boss framework remain outside this actor boundary.
 
+## Boss Arena and Camera Ownership (M5 / Task 5.5)
+
+`BAMBOO_BOSS_ARENA` is the one concrete arena configuration for the current
+single-room prototype. It deliberately reuses `BAMBOO_COMBAT_ROOM.walkBounds`,
+so Arcade world bounds and Boss knockback cannot disagree or create a second
+clamping path.
+
+`CameraLockState` stores independent `encounter` and `boss` reasons. MainScene
+acquires the Boss reason after creating the Boss actor and releases only that
+reason from the actor's idempotent cleanup callback. Releasing one reason never
+removes another owner. Development mode draws the arena boundary and exposes
+lock ownership on the Canvas; production contains no debug presentation.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

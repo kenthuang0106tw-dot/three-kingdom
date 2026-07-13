@@ -128,6 +128,6 @@ tools/build_enemy_art.py     Enemy sheet/atlas rebuild pipeline
 
 ## Current Priority
 
-M5 / Task 5.4 Boss hurt/phase/death is complete. The next single task is M5 / Task 5.5, arena bounds/camera lock.
+M5 / Task 5.5 arena bounds/camera lock is complete. The next single task is M5 / Task 5.6, stage-complete event.
 
-Milestone 0–4 已完成；Scene 現在會生成具三招、受傷、一次變相與死亡清理的 Boss。下一步只建立 Boss arena bounds 與 camera lock，不加入 HUD、音效或關卡完成流程。
+Milestone 0–4 已完成；Boss 現在具有獨立 Arena/camera lock ownership，死亡清理後只釋放自己的 lock。下一步只發布一次 stage-complete gameplay event，不加入 Result UI、音效或新內容。

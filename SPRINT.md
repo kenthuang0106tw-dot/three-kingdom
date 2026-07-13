@@ -371,3 +371,16 @@
 - [ ] Boss arena bounds/camera lock, walk behavior, attack damage, HUD, audio, and stage completion remain deferred.
 
 M5 / Task 5.4 已完成；下一步只執行 M5 / Task 5.5。其餘未完成項目依 Roadmap 保留。
+
+## M5 / Task 5.5 Closeout
+
+- [x] Added one concrete bamboo Boss arena that reuses the room's authoritative walk bounds.
+- [x] Camera lock now preserves independent `encounter` and `boss` ownership without premature unlock.
+- [x] Boss cleanup releases only the Boss lock exactly once; encounter ownership remains intact.
+- [x] Player, normal enemies, Boss bodies, and Boss knockback use the same effective walk boundary.
+- [x] Development presentation shows the arena outline and live locked/released state.
+- [x] `pnpm test` 48/48, `pnpm build`, `pnpm typecheck`, and lint with 0 errors passed.
+- [x] Browser smoke verified lock → release, one release, 10 Scene restarts, one Boss/Canvas, and zero page errors.
+- [ ] Stage-complete publication, Boss attack damage, HUD, audio, and multi-room arena traversal remain deferred.
+
+M5 / Task 5.5 已完成；下一步只執行 M5 / Task 5.6。其餘未完成項目依 Roadmap 保留。

@@ -12,9 +12,9 @@ import { PlayerActor } from "./player/PlayerActor";
 import { PLAYER_ATTACKS, PlayerAttackController, type AttackStep } from "./player/PlayerAttackController";
 import { resolveAttack } from "./combat/CombatResolver";
 import { EffectDirector, EFFECT_PARAMS } from "./combat/EffectDirector";
-import { BAMBOO_COMBAT_ROOM, clampStageX } from "./stage/StageConfig";
+import { BAMBOO_BOSS_ARENA, BAMBOO_COMBAT_ROOM, clampStageX } from "./stage/StageConfig";
 import { calculateCameraScroll } from "./camera/CameraFollow";
-import { createCameraLockState, isCameraLocked, lockCamera, unlockCamera, type CameraLockState } from "./camera/CameraLock";
+import { createCameraLockState, hasCameraLock, isCameraLocked, lockCamera, unlockCamera, type CameraLockState } from "./camera/CameraLock";
 import { createStageExitState, makeExitAvailable, resetStageExit, type StageExitState } from "./stage/StageExit";
 import { DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemyAnimationKey } from "./enemy/EnemyConfig";
 import { BossActor } from "./boss/BossActor";
@@ -120,6 +120,8 @@ export default class MainScene extends Phaser.Scene {
   private bossSmokeMode = false;
   private bossSmokeTimer?: Phaser.Time.TimerEvent;
   private readonly bossSmokeLog: string[] = [];
+  private bossArenaReleaseCount = 0;
+  private bossArenaDebug?: Phaser.GameObjects.Graphics;
   private resetSmokeIteration = 0;
   private previewSprite?: Phaser.GameObjects.Sprite;
   private onionSprite?: Phaser.GameObjects.Sprite;
@@ -165,6 +167,7 @@ export default class MainScene extends Phaser.Scene {
     this.resetSmokeMode = development && query.get("resetSmoke") === "1";
     this.bossSmokeMode = development && query.get("bossSmoke") === "1";
     if (this.bossSmokeMode) this.bossSmokeLog.length = 0;
+    this.bossArenaReleaseCount = 0;
     this.playerStateMachine.reset();
     this.playerLifecycle.reset();
     this.cameraLockState = createCameraLockState();
@@ -183,10 +186,10 @@ export default class MainScene extends Phaser.Scene {
       BAMBOO_COMBAT_ROOM.worldBounds.height,
     );
     this.physics.world.setBounds(
-      BAMBOO_COMBAT_ROOM.walkBounds.x,
-      BAMBOO_COMBAT_ROOM.walkBounds.y,
-      BAMBOO_COMBAT_ROOM.walkBounds.width,
-      BAMBOO_COMBAT_ROOM.walkBounds.height,
+      BAMBOO_BOSS_ARENA.bounds.x,
+      BAMBOO_BOSS_ARENA.bounds.y,
+      BAMBOO_BOSS_ARENA.bounds.width,
+      BAMBOO_BOSS_ARENA.bounds.height,
     );
     const background = this.add.image(WIDTH / 2, HEIGHT / 2, "forest");
     background.setScale(Math.max(WIDTH / background.width, HEIGHT / background.height)).setDepth(0);
@@ -221,6 +224,7 @@ export default class MainScene extends Phaser.Scene {
       {
         onCleaned: () => {
           if (development) this.game.canvas.dataset.bossActorCount = "0";
+          this.releaseBossArena(development);
         },
       },
     );
@@ -228,6 +232,7 @@ export default class MainScene extends Phaser.Scene {
     this.updateBossSmokeDataset();
     if (this.bossSmokeMode) this.scheduleBossSmokeHit();
     this.cameraLockState = lockCamera(this.cameraLockState, "encounter");
+    this.activateBossArena(development);
 
     if (development) {
       this.diagnosticMode = new URLSearchParams(window.location.search).get("debugInput") === "1";
@@ -246,6 +251,8 @@ export default class MainScene extends Phaser.Scene {
       this.bossSmokeTimer = undefined;
       this.bossActor.destroy();
       if (development) this.game.canvas.dataset.bossActorCount = "0";
+      this.bossArenaDebug?.destroy();
+      this.bossArenaDebug = undefined;
       this.playerActor.destroy();
     });
 
@@ -476,7 +483,7 @@ export default class MainScene extends Phaser.Scene {
     if (triggerGlobalEffects) this.effectDirector.cameraShake();
     const targetX = clampStageX(
       this.bossActor.bodyZone.x + this.facing * EFFECT_PARAMS.knockbackDistance,
-      BAMBOO_COMBAT_ROOM.walkBounds,
+      BAMBOO_BOSS_ARENA.bounds,
     );
     this.effectDirector.knockback(this.bossActor.bodyZone, targetX, () => this.bossActor.syncVisuals());
     this.playHitSound();
@@ -513,6 +520,7 @@ export default class MainScene extends Phaser.Scene {
 
   private showAllEnemiesDefeated() {
     this.cameraLockState = unlockCamera(this.cameraLockState, "encounter");
+    this.updateBossArenaDataset(process.env.NODE_ENV !== "production");
     this.stageExitState = makeExitAvailable(this.stageExitState, BAMBOO_COMBAT_ROOM.exits, "room-exit");
     if (this.defeatedText) return;
     this.defeatedText = this.add.text(WIDTH / 2, HEIGHT / 2, "All Enemies Defeated", {
@@ -523,6 +531,33 @@ export default class MainScene extends Phaser.Scene {
 
   private restartStage() {
     this.scene.restart();
+  }
+
+  private activateBossArena(development: boolean) {
+    this.cameraLockState = lockCamera(this.cameraLockState, "boss");
+    this.cameras.main.setScroll(BAMBOO_BOSS_ARENA.cameraScroll.x, BAMBOO_BOSS_ARENA.cameraScroll.y);
+    if (development) {
+      const { x, y, width, height } = BAMBOO_BOSS_ARENA.bounds;
+      this.bossArenaDebug = this.add.graphics().lineStyle(2, 0x38d9ff, 0.9)
+        .strokeRect(x, y, width, height).setDepth(9999);
+    }
+    this.updateBossArenaDataset(development);
+  }
+
+  private releaseBossArena(development: boolean) {
+    if (!hasCameraLock(this.cameraLockState, "boss")) return;
+    this.cameraLockState = unlockCamera(this.cameraLockState, "boss");
+    this.bossArenaReleaseCount += 1;
+    this.bossArenaDebug?.destroy();
+    this.bossArenaDebug = undefined;
+    this.updateBossArenaDataset(development);
+  }
+
+  private updateBossArenaDataset(development: boolean) {
+    if (!development) return;
+    this.game.canvas.dataset.bossArenaLocked = String(hasCameraLock(this.cameraLockState, "boss"));
+    this.game.canvas.dataset.bossArenaReleaseCount = String(this.bossArenaReleaseCount);
+    this.game.canvas.dataset.cameraLockReasons = this.cameraLockState.reasons.join(",");
   }
 
   private scheduleBossSmokeHit() {
@@ -669,6 +704,7 @@ export default class MainScene extends Phaser.Scene {
       `Current Attacker ID: ${this.enemyManager.currentAttackerId ?? "none"}`,
       `Player State: ${this.state}`,
       `Boss State: ${this.bossActor.state} HP:${this.bossActor.hp} Phase:${this.bossActor.phase}`,
+      `Boss Arena: ${hasCameraLock(this.cameraLockState, "boss") ? "locked" : "released"}`,
       ...enemies.map(enemy => {
         const dx = enemy.bodyZone.x - this.playerBodyZone.x;
         const dy = enemy.bodyZone.y - this.playerBodyZone.y;

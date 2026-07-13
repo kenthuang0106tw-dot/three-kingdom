@@ -281,6 +281,14 @@ The actor intentionally has no arena ownership, player-damaging attack hitbox,
 walk behavior, HUD, audio, or stage-clear publication. Those are explicit
 remaining tasks rather than hidden temporary behavior.
 
+### TD-M05 Update — Boss arena ownership
+
+M5 / Task 5.5 gives camera locks independent `encounter` and `boss` ownership
+and reuses the room walk bounds as the current Boss arena. This removes early
+unlock and competing-clamp risks without adding a general arena framework.
+The world is still one 1280×720 room, so multi-screen arena entry and camera
+travel remain future Stage content rather than simulated behavior.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content
