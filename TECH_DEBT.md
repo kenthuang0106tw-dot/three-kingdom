@@ -289,6 +289,13 @@ unlock and competing-clamp risks without adding a general arena framework.
 The world is still one 1280×720 room, so multi-screen arena entry and camera
 travel remain future Stage content rather than simulated behavior.
 
+### TD-M05 Update — Stage completion publication
+
+M5 / Task 5.6 adds one frozen primitive `stage-completed` event with a resettable
+one-shot gate. Boss cleanup distinguishes defeat from Scene destruction, so
+restart cannot publish a false clear. No current UI consumes the event; Result,
+game-flow, persistence, scoring, and audio remain intentionally deferred.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

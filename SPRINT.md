@@ -384,3 +384,15 @@ M5 / Task 5.4 已完成；下一步只執行 M5 / Task 5.5。其餘未完成項�
 - [ ] Stage-complete publication, Boss attack damage, HUD, audio, and multi-room arena traversal remain deferred.
 
 M5 / Task 5.5 已完成；下一步只執行 M5 / Task 5.6。其餘未完成項目依 Roadmap 保留。
+
+## M5 / Task 5.6 Closeout
+
+- [x] Added one typed readonly `stage-completed` event to the existing `GameplayEventHub`.
+- [x] Added a one-shot `StageCompletionGate` with explicit Scene-restart re-arming.
+- [x] Boss cleanup reports `defeated` versus ordinary destruction, preventing restart/shutdown false positives.
+- [x] MainScene releases the Boss arena before publishing one primitive `{ stageId, at }` payload.
+- [x] `pnpm test` 50/50, `pnpm build`, `pnpm typecheck`, and lint with 0 errors passed.
+- [x] Browser smoke verified count 0 before defeat, count 1 after cleanup/release, and count 0 after 10 restarts.
+- [ ] Result UI, game-flow modes, audio, scoring, Boss attack damage, and a second stage remain deferred.
+
+M5 / Task 5.6 已完成；下一步只執行 M5 / Task 5.7。其餘未完成項目依 Roadmap 保留。

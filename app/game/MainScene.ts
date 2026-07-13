@@ -5,6 +5,7 @@ import { TouchInputController } from "./input/TouchInputController";
 import { LifecycleClock } from "./time/LifecycleClock";
 import { PhaserGameplayClock, SeededRandom } from "./time/GameplayTime";
 import { GameplayEventHub, type GameplaySnapshot } from "./events/GameplayEvents";
+import { StageCompletionGate } from "./events/StageCompletion";
 import { createAssetFailureReporter, queueRuntimeAssets } from "./assets/AssetManifest";
 import { PlayerStateMachine, type PlayerState } from "./player/PlayerStateMachine";
 import { PlayerLifecycle } from "./player/PlayerLifecycle";
@@ -122,6 +123,8 @@ export default class MainScene extends Phaser.Scene {
   private readonly bossSmokeLog: string[] = [];
   private bossArenaReleaseCount = 0;
   private bossArenaDebug?: Phaser.GameObjects.Graphics;
+  private readonly stageCompletion = new StageCompletionGate();
+  private stageCompleteEventCount = 0;
   private resetSmokeIteration = 0;
   private previewSprite?: Phaser.GameObjects.Sprite;
   private onionSprite?: Phaser.GameObjects.Sprite;
@@ -168,6 +171,13 @@ export default class MainScene extends Phaser.Scene {
     this.bossSmokeMode = development && query.get("bossSmoke") === "1";
     if (this.bossSmokeMode) this.bossSmokeLog.length = 0;
     this.bossArenaReleaseCount = 0;
+    this.stageCompletion.reset();
+    this.stageCompleteEventCount = 0;
+    if (development) {
+      this.game.canvas.dataset.stageCompleteCount = "0";
+      delete this.game.canvas.dataset.stageCompleteStageId;
+      delete this.game.canvas.dataset.stageCompleteAfterArenaRelease;
+    }
     this.playerStateMachine.reset();
     this.playerLifecycle.reset();
     this.cameraLockState = createCameraLockState();
@@ -222,9 +232,10 @@ export default class MainScene extends Phaser.Scene {
       new PhaserGameplayClock(this),
       new SeededRandom(0xb0555),
       {
-        onCleaned: () => {
+        onCleaned: reason => {
           if (development) this.game.canvas.dataset.bossActorCount = "0";
           this.releaseBossArena(development);
+          if (reason === "defeated") this.publishStageComplete(development);
         },
       },
     );
@@ -558,6 +569,17 @@ export default class MainScene extends Phaser.Scene {
     this.game.canvas.dataset.bossArenaLocked = String(hasCameraLock(this.cameraLockState, "boss"));
     this.game.canvas.dataset.bossArenaReleaseCount = String(this.bossArenaReleaseCount);
     this.game.canvas.dataset.cameraLockReasons = this.cameraLockState.reasons.join(",");
+  }
+
+  private publishStageComplete(development: boolean) {
+    const event = this.stageCompletion.complete(BAMBOO_COMBAT_ROOM.id, this.time.now);
+    if (!event) return;
+    this.gameplayEvents.publish(event);
+    this.stageCompleteEventCount += 1;
+    if (!development) return;
+    this.game.canvas.dataset.stageCompleteCount = String(this.stageCompleteEventCount);
+    this.game.canvas.dataset.stageCompleteStageId = event.stageId;
+    this.game.canvas.dataset.stageCompleteAfterArenaRelease = String(!hasCameraLock(this.cameraLockState, "boss"));
   }
 
   private scheduleBossSmokeHit() {

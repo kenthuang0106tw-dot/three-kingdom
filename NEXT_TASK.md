@@ -1,45 +1,48 @@
 # Next Task
 
-## M5 / Task 5.6 — Stage-complete event
+## M5 / Task 5.7 — Full-stage acceptance
 
 ### Why this is next
 
-Boss lifecycle, cleanup, and arena release now have deterministic ownership.
-The smallest remaining dependency before full-stage acceptance is one readonly
-stage-complete signal that future game flow can consume without reading Boss
-internals.
+All planned Milestone 5 contracts now exist: Boss ownership, attacks, decision
+rhythm, hurt/phase/death, arena lock, cleanup, and stage completion. Before
+starting Product Flow, the current playable path needs one integrated acceptance
+task that finds and fixes only M5 regressions.
 
 ### Completion criteria
 
-- Add one typed readonly stage-complete gameplay event using the existing
-  `GameplayEventHub`; do not introduce a second event system.
-- Publish it exactly once after terminal Boss cleanup and arena release.
-- Include only the minimum stable stage identifier and event timestamp; do not
-  expose Boss, Scene, sprite, physics, or mutable state references.
-- Reset publication ownership on Scene restart so each run can complete once.
-- Preserve Boss lifecycle, arena/camera locks, normal enemies, player combat,
-  existing snapshots, and presentation.
-- Do not add Result UI, HUD, audio, scoring, save data, another stage, new art,
-  Boss attack damage, or game-flow modes.
+- Add deterministic acceptance coverage for the existing run: Scene create,
+  mixed encounter ownership, Boss lifecycle, arena release, one stage-complete
+  event, and restart re-arming.
+- Verify the current desktop and responsive touch viewports can reach the
+  existing completion path without duplicate Boss, Canvas, event, timer,
+  listener, or camera-lock ownership.
+- Record known gameplay/content limitations honestly; fix only defects that
+  violate an existing M0–M5 contract.
+- Preserve current art, combat timing, AI tuning, Stage data, event payloads,
+  and React/Phaser boundaries.
+- Do not add Result UI, game-flow modes, HUD, audio, scoring, save data, another
+  stage, new attacks, new enemies, new art, or unrelated refactors.
 
 ### Validation
 
 - Run `pnpm test`, `pnpm build`, `pnpm lint`, and `pnpm typecheck`.
-- Add deterministic tests proving one event after Boss cleanup, no event before
-  cleanup, no duplicate event, immutable payload, and restart re-arming.
-- Browser smoke verifies one stage-complete publication, one 1280×720 Canvas,
-  ten Scene restarts without duplicate ownership, and zero page errors.
+- Add one integrated deterministic M5 acceptance test covering ordering,
+  exactly-once completion, cleanup, and restart ownership.
+- Browser smoke completes the development Boss path three times at desktop,
+  landscape-touch, and portrait-fitted viewports; each run must have one
+  1280×720 Canvas, one completion event, and zero page errors.
+- Run the 10-restart smoke after completion and confirm one Boss, zero stale
+  completion count, and no duplicate lock ownership.
 
 ### Expected files
 
-- `app/game/events/**`
-- `app/game/MainScene.ts`
 - `tests/**`
+- Existing M5 implementation files only when an acceptance failure proves a defect
 - Project status and acceptance documents
 
 ### Risks
 
-- Publishing from animation completion instead of terminal cleanup can fire
-  before fade/arena release or fire twice.
-- A UI-specific payload would couple the next product-flow milestone to Boss
-  internals; keep the event primitive and readonly.
+- Automated smoke can verify ownership and ordering but not final game balance
+  or physical-device feel; record those as release QA instead of claiming them.
+- Do not turn acceptance work into new gameplay or broad refactoring.

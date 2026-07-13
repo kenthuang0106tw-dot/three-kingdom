@@ -9,6 +9,7 @@ import {
 import { createActionSnapshot } from "../app/game/input/ActionSnapshot.ts";
 import { ClockState } from "../app/game/time/ClockState.ts";
 import { GameplayEventHub } from "../app/game/events/GameplayEvents.ts";
+import { StageCompletionGate } from "../app/game/events/StageCompletion.ts";
 import { SeededRandom, TestClock } from "../app/game/time/GameplayTime.ts";
 import { createAssetFailureReporter, RUNTIME_ASSET_MANIFEST } from "../app/game/assets/AssetManifest.ts";
 import { PlayerStateMachine } from "../app/game/player/PlayerStateMachine.ts";
@@ -262,6 +263,43 @@ test("Gameplay event hub publishes frozen snapshots without actor references", (
   unsubscribe();
   hub.publish({ type: "lifecycle-changed", paused: true, at: 13 });
   assert.equal(events.length, 1);
+});
+
+test("Stage completion publishes once after explicit completion and re-arms on reset", () => {
+  const gate = new StageCompletionGate();
+  const hub = new GameplayEventHub();
+  const events = [];
+  hub.subscribe(event => events.push(event));
+
+  assert.equal(events.length, 0);
+  const first = gate.complete("bamboo-combat-room", 120);
+  assert.notEqual(first, null);
+  hub.publish(first);
+  assert.equal(gate.complete("bamboo-combat-room", 121), null);
+  assert.deepEqual(events, [{ type: "stage-completed", stageId: "bamboo-combat-room", at: 120 }]);
+  assert.equal(Object.isFrozen(events[0]), true);
+
+  gate.reset();
+  const second = gate.complete("bamboo-combat-room", 240);
+  assert.notEqual(second, null);
+  hub.publish(second);
+  assert.equal(events.length, 2);
+  assert.equal(events[1].at, 240);
+});
+
+test("MainScene publishes stage completion only for defeated Boss cleanup", async () => {
+  const [scene, actor, completion] = await Promise.all([
+    readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/boss/BossActor.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/events/StageCompletion.ts", import.meta.url), "utf8"),
+  ]);
+  assert.match(scene, /this\.stageCompletion\.reset\(\)/);
+  assert.match(scene, /this\.releaseBossArena\(development\);\s+if \(reason === "defeated"\) this\.publishStageComplete\(development\)/);
+  assert.match(completion, /type: "stage-completed"/);
+  assert.match(scene, /dataset\.stageCompleteCount/);
+  assert.match(scene, /dataset\.stageCompleteAfterArenaRelease/);
+  assert.match(actor, /onCleaned\?: \(reason: BossCleanupReason\) => void/);
+  assert.match(actor, /const reason: BossCleanupReason = this\.state === "dead" \? "defeated" : "destroyed"/);
 });
 
 test("MainScene publishes readonly gameplay observations", async () => {

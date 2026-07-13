@@ -21,7 +21,8 @@ const HURT_ANIMATION = "boss-hurt";
 const PHASE_ANIMATION = "boss-phase";
 const DEAD_ANIMATION = "boss-dead";
 
-type BossActorCallbacks = Readonly<{ onCleaned?: () => void }>;
+type BossCleanupReason = "defeated" | "destroyed";
+type BossActorCallbacks = Readonly<{ onCleaned?: (reason: BossCleanupReason) => void }>;
 
 /** Scene-owned Phaser presentation for the first Boss. EnemyManager never owns this actor. */
 export class BossActor {
@@ -161,6 +162,7 @@ export class BossActor {
   }
 
   private cleanup(): boolean {
+    const reason: BossCleanupReason = this.state === "dead" ? "defeated" : "destroyed";
     if (!this.lifecycle.cleanup()) return false;
     this.decision.reset();
     if (this.deathTween) {
@@ -171,7 +173,7 @@ export class BossActor {
     this.body.enable = false;
     this.sprite.destroy();
     this.bodyZone.destroy();
-    this.callbacks.onCleaned?.();
+    this.callbacks.onCleaned?.(reason);
     return true;
   }
 }

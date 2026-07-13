@@ -399,6 +399,18 @@ reason from the actor's idempotent cleanup callback. Releasing one reason never
 removes another owner. Development mode draws the arena boundary and exposes
 lock ownership on the Canvas; production contains no debug presentation.
 
+## Stage Completion Event (M5 / Task 5.6)
+
+`StageCompletionGate` owns one-shot completion publication for a Scene run and
+is reset in `MainScene.create()`. `BossActor` reports whether cleanup followed
+defeat or ordinary destruction; MainScene first releases the Boss arena, then
+publishes one frozen `stage-completed` event through the existing
+`GameplayEventHub` only for defeated cleanup.
+
+The payload contains only `type`, `stageId`, and `at`. It exposes no Boss,
+Scene, sprite, physics, UI, or mutable state reference. Result presentation and
+game-flow transitions remain future consumers rather than event responsibilities.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

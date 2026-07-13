@@ -593,3 +593,19 @@
 | Browser lifecycle smoke | Pass | Locked → released; release count 1; one Canvas; zero page errors |
 | Browser restart smoke | Pass | 10 Scene restarts; one Boss; arena locked; release count reset to 0 |
 | Known issues | Non-blocking | Single-room arena only; stage-complete event, HUD, audio, and Boss damage remain deferred |
+
+## M5 / Task 5.6 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M5 / Task 5.6 — Stage-complete event |
+| Tests | Pass | `pnpm test` 50/50 |
+| Build | Pass | `pnpm build` |
+| Lint | Pass | 0 errors, existing 4 `<img>` warnings only |
+| Typecheck | Pass | `pnpm typecheck` |
+| Event contract | Pass | Frozen primitive `stage-completed` payload through existing event hub |
+| Ordering | Pass | Arena release precedes one completion publication after defeated cleanup |
+| Restart ownership | Pass | Ordinary destruction publishes nothing; reset re-arms the one-shot gate |
+| Browser lifecycle smoke | Pass | Count 0 → 1; correct stage id; released arena; one Canvas; zero errors |
+| Browser restart smoke | Pass | 10 Scene restarts; completion count 0; one Boss/Canvas; zero errors |
+| Known issues | Non-blocking | No Result consumer, game-flow mode, audio, scoring, or Boss attack damage yet |

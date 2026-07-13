@@ -29,6 +29,7 @@ export type GameplayEvent = Readonly<
   | { type: "player-attack-started"; step: number; at: number }
   | { type: "player-hit"; enemyId: number; at: number }
   | { type: "enemy-hit"; enemyId: number; damage: number; at: number }
+  | { type: "stage-completed"; stageId: string; at: number }
   | { type: "lifecycle-changed"; paused: boolean; at: number }
 >;
 
