@@ -296,6 +296,15 @@ one-shot gate. Boss cleanup distinguishes defeat from Scene destruction, so
 restart cannot publish a false clear. No current UI consumes the event; Result,
 game-flow, persistence, scoring, and audio remain intentionally deferred.
 
+### TD-M05 Update — Full-stage acceptance
+
+M5 / Task 5.7 verifies the existing stage contracts as one deterministic run
+and across desktop, landscape-touch, portrait-fitted, and ten-restart browser
+smokes. No acceptance failure required a runtime patch. Remaining limitations
+are explicit: the world is still one 1280×720 room, Boss attacks do not yet
+damage the player, Boss walk behavior is absent, and Result UI, HUD, audio,
+scoring, persistence, and physical-device feel remain deferred.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

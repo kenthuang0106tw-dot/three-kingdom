@@ -302,6 +302,47 @@ test("MainScene publishes stage completion only for defeated Boss cleanup", asyn
   assert.match(actor, /const reason: BossCleanupReason = this\.state === "dead" \? "defeated" : "destroyed"/);
 });
 
+test("M5 full-stage acceptance preserves ordering, exactly-once completion, and restart ownership", () => {
+  const hub = new GameplayEventHub();
+  const completion = new StageCompletionGate();
+  const published = [];
+  hub.subscribe(event => published.push(event));
+
+  let encounter = beginEncounter(createEncounterFlow(), BAMBOO_COMBAT_ROOM.spawnPoints.length);
+  let camera = lockCamera(lockCamera(createCameraLockState(), "encounter"), "boss");
+  const boss = new BossLifecycle(8);
+  boss.activate();
+
+  for (const enemyId of [1, 2, 3]) encounter = recordEnemyRemoved(encounter, enemyId);
+  assert.equal(isEncounterCleared(encounter), true);
+  camera = unlockCamera(camera, "encounter");
+  assert.equal(hasCameraLock(camera, "boss"), true);
+  assert.equal(published.length, 0);
+
+  assert.equal(boss.applyDamage(4).phaseChanged, true);
+  boss.transition("idle");
+  assert.equal(boss.applyDamage(4).becameDead, true);
+  assert.equal(boss.cleanup(), true);
+  camera = unlockCamera(camera, "boss");
+  assert.equal(isCameraLocked(camera), false);
+
+  const event = completion.complete(BAMBOO_COMBAT_ROOM.id, 900);
+  assert.notEqual(event, null);
+  hub.publish(event);
+  assert.equal(completion.complete(BAMBOO_COMBAT_ROOM.id, 901), null);
+  assert.deepEqual(published, [{ type: "stage-completed", stageId: BAMBOO_COMBAT_ROOM.id, at: 900 }]);
+  assert.equal(Object.isFrozen(published[0]), true);
+
+  completion.reset();
+  boss.reset();
+  encounter = createEncounterFlow();
+  camera = createCameraLockState();
+  assert.equal(encounter.status, "ready");
+  assert.equal(boss.state, "inactive");
+  assert.equal(isCameraLocked(camera), false);
+  assert.notEqual(completion.complete(BAMBOO_COMBAT_ROOM.id, 1000), null);
+});
+
 test("MainScene publishes readonly gameplay observations", async () => {
   const source = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
   assert.match(source, /GameplayEventHub/);

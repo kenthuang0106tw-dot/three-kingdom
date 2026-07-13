@@ -364,7 +364,8 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 - M5 / Task 5.4 (Boss hurt/phase/death) completed in the current sprint.
 - M5 / Task 5.5 (Arena bounds/camera lock) completed in the current sprint.
 - M5 / Task 5.6 (Stage-complete event) completed in the current sprint.
-- Next eligible task: M5 / Task 5.7 (Full-stage acceptance).
+- M5 / Task 5.7 (Full-stage acceptance) completed in the current sprint.
+- Milestone 5 is complete. Next eligible task: M6 / Task 6.1 (game-flow modes/reset ownership).
 
 ## 4. Global Acceptance Rules
 

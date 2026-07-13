@@ -411,6 +411,17 @@ The payload contains only `type`, `stageId`, and `at`. It exposes no Boss,
 Scene, sprite, physics, UI, or mutable state reference. Result presentation and
 game-flow transitions remain future consumers rather than event responsibilities.
 
+## Milestone 5 Integrated Acceptance (M5 / Task 5.7)
+
+The accepted stage path composes existing Phaser-free contracts in this order:
+encounter ownership, independent encounter/Boss camera locks, Boss lifecycle,
+Boss cleanup, arena release, and one `stage-completed` publication. Restart
+resets the completion gate, lifecycle, encounter flow, and camera-lock state.
+
+This task added regression coverage only. It introduced no new runtime module or
+ownership path; `MainScene` remains the composition root, `EnemyManager` owns
+normal enemies, and the Scene-owned `BossActor` remains outside that manager.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

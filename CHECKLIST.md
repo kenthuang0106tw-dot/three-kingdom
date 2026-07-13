@@ -609,3 +609,19 @@
 | Browser lifecycle smoke | Pass | Count 0 → 1; correct stage id; released arena; one Canvas; zero errors |
 | Browser restart smoke | Pass | 10 Scene restarts; completion count 0; one Boss/Canvas; zero errors |
 | Known issues | Non-blocking | No Result consumer, game-flow mode, audio, scoring, or Boss attack damage yet |
+
+## M5 / Task 5.7 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M5 / Task 5.7 — Full-stage acceptance |
+| Tests | Pass | `pnpm test` 51/51, including integrated ordering, exactly-once completion, cleanup, and restart ownership |
+| Build | Pass | `pnpm build` |
+| Lint | Pass | 0 errors, existing 4 `<img>` warnings only |
+| Typecheck | Pass | `pnpm typecheck` |
+| Desktop Boss smoke | Pass | 1280×720 viewport; one logical 1280×720 Canvas; one completion; released arena; Boss cleaned |
+| Landscape touch smoke | Pass | 844×390 viewport; fitted Canvas; one completion; released arena; Boss cleaned |
+| Portrait fitted smoke | Pass | 390×844 viewport; fitted Canvas; one completion; released arena; Boss cleaned |
+| Restart smoke | Pass | 10 Scene restarts; one Canvas; one Boss; completion count 0; lock reasons `encounter,boss` |
+| Browser errors | Pass | Zero page errors |
+| Known issues | Non-blocking | Physical-device feel, Boss attack damage/walk, Result UI, audio, scoring, and additional stages remain deferred |

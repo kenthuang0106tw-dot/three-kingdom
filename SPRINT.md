@@ -395,4 +395,15 @@ M5 / Task 5.5 已完成；下一步只執行 M5 / Task 5.6。其餘未完成項�
 - [x] Browser smoke verified count 0 before defeat, count 1 after cleanup/release, and count 0 after 10 restarts.
 - [ ] Result UI, game-flow modes, audio, scoring, Boss attack damage, and a second stage remain deferred.
 
+## M5 / Task 5.7 Closeout
+
+- [x] Added one deterministic integrated acceptance test covering encounter clear, independent camera-lock ownership, Boss phase/death/cleanup, exactly-once stage completion, and restart re-arming.
+- [x] `pnpm test` passed 51/51; `pnpm build`, `pnpm typecheck`, and lint with 0 errors passed.
+- [x] Browser Boss smoke passed at 1280×720, 844×390, and 390×844 with one logical 1280×720 Canvas, one completion event, released Boss arena, and zero page errors.
+- [x] Ten Scene restarts retained one Canvas, one Boss, zero stale completion events, and exactly one `encounter,boss` lock ownership set.
+- [x] Milestone 5 is complete; no gameplay, art, balance, or runtime behavior changed in this acceptance task.
+- [ ] Physical-device feel, Boss attack damage, Result UI, audio, scoring, and additional stages remain deferred to their planned milestones.
+
+The next eligible task is M6 / Task 6.1. Do not begin it until the next task-runner cycle.
+
 M5 / Task 5.6 已完成；下一步只執行 M5 / Task 5.7。其餘未完成項目依 Roadmap 保留。

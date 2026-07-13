@@ -1,48 +1,44 @@
 # Next Task
 
-## M5 / Task 5.7 — Full-stage acceptance
+## M6 / Task 6.1 — Game-flow modes and reset ownership
 
 ### Why this is next
 
-All planned Milestone 5 contracts now exist: Boss ownership, attacks, decision
-rhythm, hurt/phase/death, arena lock, cleanup, and stage completion. Before
-starting Product Flow, the current playable path needs one integrated acceptance
-task that finds and fixes only M5 regressions.
+Milestone 5 now has an accepted, exactly-once stage-completion path. Product UI
+must not be added until one Phaser-free flow contract defines who owns
+`title`, `playing`, `paused`, `failed`, and `cleared` transitions and how a new
+run resets them. This prevents Title, Pause, Failure, and Result screens from
+inventing competing Scene state later.
 
 ### Completion criteria
 
-- Add deterministic acceptance coverage for the existing run: Scene create,
-  mixed encounter ownership, Boss lifecycle, arena release, one stage-complete
-  event, and restart re-arming.
-- Verify the current desktop and responsive touch viewports can reach the
-  existing completion path without duplicate Boss, Canvas, event, timer,
-  listener, or camera-lock ownership.
-- Record known gameplay/content limitations honestly; fix only defects that
-  violate an existing M0–M5 contract.
-- Preserve current art, combat timing, AI tuning, Stage data, event payloads,
-  and React/Phaser boundaries.
-- Do not add Result UI, game-flow modes, HUD, audio, scoring, save data, another
-  stage, new attacks, new enemies, new art, or unrelated refactors.
+- Add one Phaser-free game-flow state machine for `title`, `playing`, `paused`,
+  `failed`, and `cleared`.
+- Define and test legal transitions, invalid-transition behavior, and one
+  explicit new-run reset path.
+- Keep actors, Phaser objects, React state, UI presentation, and persistence out
+  of the flow contract.
+- Connect existing lifecycle signals only if required to prove ownership; do not
+  add Title, Pause, Failure, Result, HUD, audio, or new gameplay.
+- Preserve all M0–M5 runtime, combat, Boss, completion, and restart contracts.
 
 ### Validation
 
-- Run `pnpm test`, `pnpm build`, `pnpm lint`, and `pnpm typecheck`.
-- Add one integrated deterministic M5 acceptance test covering ordering,
-  exactly-once completion, cleanup, and restart ownership.
-- Browser smoke completes the development Boss path three times at desktop,
-  landscape-touch, and portrait-fitted viewports; each run must have one
-  1280×720 Canvas, one completion event, and zero page errors.
-- Run the 10-restart smoke after completion and confirm one Boss, zero stale
-  completion count, and no duplicate lock ownership.
+- Deterministic unit tests cover every legal transition, representative illegal
+  transitions, cleared/failed terminal handling, and reset re-arming.
+- `pnpm test`, `pnpm build`, `pnpm lint`, and `pnpm typecheck` pass.
+- Browser smoke retains one 1280×720 Canvas, the current playable room, and zero
+  page errors; the 10-restart smoke retains one Boss and no stale completion.
 
 ### Expected files
 
+- `app/game/flow/**`
 - `tests/**`
-- Existing M5 implementation files only when an acceptance failure proves a defect
+- `app/game/MainScene.ts` only if a tested ownership connection requires it
 - Project status and acceptance documents
 
 ### Risks
 
-- Automated smoke can verify ownership and ordering but not final game balance
-  or physical-device feel; record those as release QA instead of claiming them.
-- Do not turn acceptance work into new gameplay or broad refactoring.
+- Duplicating Phaser Scene lifecycle or React state would create two flow owners.
+- Adding UI in this task would mix contract work with M6.2–M6.6 and increase
+  rework; keep this task presentation-free.
