@@ -247,6 +247,14 @@ slot release, survivor continuity, cleanup ownership, encounter progress, and
 ten Scene restarts are accepted. Milestone 4 can now close without introducing
 a broader enemy framework.
 
+### TD-M05 Update — Boss ownership contract
+
+M5 / Task 5.1 establishes a Phaser-free `BossLifecycle` with one state field,
+HP, legal transitions, damage/death entry, explicit cleanup, and reset. It is
+not instantiated by `EnemyManager` or the current Scene. Rendering, physics,
+attacks, AI, arena rules, and presentation stay intentionally undefined until
+their concrete tasks provide requirements.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

@@ -20,6 +20,7 @@ import { createCameraLockState, isCameraLocked, lockCamera, unlockCamera } from 
 import { beginEncounter, createEncounterFlow, isEncounterCleared, recordEnemyRemoved } from "../app/game/stage/EncounterFlow.ts";
 import { canRequestStageExit, createStageExitState, makeExitAvailable, requestStageExit, resetStageExit } from "../app/game/stage/StageExit.ts";
 import { DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, validateEnemyConfig } from "../app/game/enemy/EnemyConfig.ts";
+import { BossLifecycle } from "../app/game/boss/BossLifecycle.ts";
 
 test("React shell mounts only the Phaser lifecycle component", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
@@ -553,6 +554,42 @@ test("Every mixed archetype shares attack-slot release, death cleanup, and survi
   assert.match(removalPath, /this\.enemies\.splice\(index, 1\)/);
   assert.match(removalPath, /recordEnemyRemoved\(this\.encounterFlow, enemy\.id\)/);
   assert.doesNotMatch(removalPath, /enemy\.config\.id/);
+});
+
+test("Boss lifecycle owns deterministic state, damage, cleanup, and reset without EnemyManager", async () => {
+  const [bossSource, enemyManager] = await Promise.all([
+    readFile(new URL("../app/game/boss/BossLifecycle.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/EnemyManager.ts", import.meta.url), "utf8"),
+  ]);
+  const boss = new BossLifecycle(12);
+
+  assert.equal(boss.state, "inactive");
+  assert.equal(boss.hp, 12);
+  assert.throws(() => boss.transition("attack"), /Invalid Boss transition/);
+  assert.deepEqual(boss.applyDamage(3), { applied: false, damage: 0, hp: 12, becameDead: false });
+
+  boss.activate();
+  assert.equal(boss.state, "idle");
+  boss.transition("attack");
+  assert.deepEqual(boss.applyDamage(3), { applied: true, damage: 3, hp: 9, becameDead: false });
+  assert.equal(boss.state, "hurt");
+  boss.transition("idle");
+  assert.deepEqual(boss.applyDamage(20), { applied: true, damage: 20, hp: 0, becameDead: true });
+  assert.equal(boss.state, "dead");
+  assert.deepEqual(boss.applyDamage(1), { applied: false, damage: 0, hp: 0, becameDead: false });
+  assert.equal(boss.cleanup(), true);
+  assert.equal(boss.state, "cleaned");
+  assert.equal(boss.cleanup(), false);
+
+  boss.reset();
+  assert.equal(boss.state, "inactive");
+  assert.equal(boss.hp, 12);
+  boss.activate();
+  assert.equal(boss.state, "idle");
+  assert.throws(() => new BossLifecycle(0), /positive integer/);
+
+  assert.doesNotMatch(bossSource, /from ["']phaser["']|Phaser\./);
+  assert.doesNotMatch(enemyManager, /BossLifecycle|game\/boss|boss\//i);
 });
 
 test("Mauler asset routes and atlas metadata are present", async () => {

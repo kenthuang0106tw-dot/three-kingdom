@@ -345,6 +345,15 @@ path. Deterministic tests cover all six removal orders and prove that surviving
 archetypes remain tracked until the third unique removal. Browser combat/reset
 smoke verifies this ownership model survives ten Scene restarts.
 
+## Boss Lifecycle Boundary (M5 / Task 5.1)
+
+`app/game/boss/BossLifecycle.ts` is the sole owner of the first Boss's HP and
+lifecycle state. It is Phaser-free and models inactive, idle, attack, hurt,
+dead, and cleaned transitions plus deterministic damage, cleanup, and reset.
+`EnemyManager` must never own or instantiate this contract: normal-enemy
+Formation and Attack Slot rules do not apply to the Boss. A future Scene-owned
+Boss actor may consume the contract after real attack assets exist.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

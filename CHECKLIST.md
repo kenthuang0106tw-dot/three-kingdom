@@ -519,3 +519,17 @@
 | Slot/cleanup contract | Pass | Shared damage/removal paths release slot, clean ownership, splice collection, and record removal |
 | Browser combat/reset | Pass | Keyboard combat followed by 10 Scene restarts; one 1280x720 Canvas, zero page errors |
 | Known issues | Non-blocking | Physical mobile and long-session QA remain deferred |
+
+## M5 / Task 5.1 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M5 / Task 5.1 — Boss state/ownership contract |
+| Tests | Pass | `pnpm test` 42/42 |
+| Build | Pass | `pnpm build` |
+| Lint | Pass | 0 errors, existing 4 `<img>` warnings only |
+| Typecheck | Pass | `pnpm typecheck` |
+| State/lifecycle | Pass | Legal transitions, damage, death, cleanup, reset, and reactivation covered |
+| Ownership | Pass | Phaser-free source; `EnemyManager` has no Boss reference |
+| Browser smoke | Pass | Existing room unchanged; one 1280x720 Canvas, zero page errors |
+| Known issues | Non-blocking | Boss art, attacks, AI, arena, HUD, and audio remain deferred |

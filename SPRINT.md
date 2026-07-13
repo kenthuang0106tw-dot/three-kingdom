@@ -320,6 +320,16 @@
 - [x] Browser combat/reset smoke completed 10 Scene restarts with one 1280x720 Canvas and zero page errors.
 - [ ] Physical mobile and long-session validation remain deferred to release QA.
 
+## M5 / Task 5.1 Closeout
+
+- [x] Added one Phaser-free `BossLifecycle` owning HP and a single explicit state.
+- [x] Legal transitions cover inactive, idle, attack, hurt, dead, and cleaned without animation or AI assumptions.
+- [x] Damage, terminal death, idempotent cleanup, and reset/reactivation are deterministic.
+- [x] `EnemyManager` does not import, instantiate, or own the Boss contract.
+- [x] `pnpm test` 42/42, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
+- [x] Browser smoke verified the unchanged room with one 1280x720 Canvas and zero page errors.
+- [ ] Boss art, attacks, AI, arena, HUD, and audio remain deferred.
+
 ## M3 / Task 3.2 Closeout
 
 - [x] Added deterministic Phaser-free X/Y and point clamping helpers.
@@ -329,4 +339,4 @@
 - [x] Browser smoke verified one 1280x720 Canvas, ten reset cycles, and zero page errors.
 - [ ] Physical mobile and long-session validation remain deferred.
 
-Milestone 4 已完成；下一步只執行 M5 / Task 5.1。其餘未完成項目依 Roadmap 保留。
+M5 / Task 5.1 已完成；下一步只執行 M5 / Task 5.2。其餘未完成項目依 Roadmap 保留。

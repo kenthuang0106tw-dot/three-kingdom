@@ -21,6 +21,7 @@
 | Player | Playable prototype | 關羽移動、idle、walk、attack1–3、hurt |
 | Combat | Playable prototype | Combo、獨立 hitbox、multi-hit、Hit Stop、Flash、Spark、Knockback、Shake |
 | Enemy | Playable prototype | 三種近戰小兵、混合 Formation、Attack Slot、hurt/dead/cleanup |
+| Boss | Contract only | Phaser-free HP、state、cleanup 與 reset ownership；尚未生成或渲染 |
 | Stage | Static room | 單張竹林背景與固定 walk bounds |
 | Camera | Missing | 無 world scroll、follow、encounter lock |
 | Mobile | Missing | 無正式 Phaser touch input；下一步 Task 1.2 |
@@ -357,7 +358,8 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 - M4 / Task 4.4 (Mixed encounter composition) completed in the current sprint.
 - M4 / Task 4.5 (Encounter tuning pass) completed in the current sprint.
 - M4 / Task 4.6 (Multi-archetype regression) completed in the current sprint.
-- Milestone 4 completed; next eligible task: M5 / Task 5.1 (Boss state/ownership contract).
+- M5 / Task 5.1 (Boss state/ownership contract) completed in the current sprint.
+- Next eligible task: M5 / Task 5.2 (Boss attack 1–3).
 
 ## 4. Global Acceptance Rules
 
