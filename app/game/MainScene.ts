@@ -177,6 +177,7 @@ export default class MainScene extends Phaser.Scene {
       this.game.canvas.dataset.stageCompleteCount = "0";
       delete this.game.canvas.dataset.stageCompleteStageId;
       delete this.game.canvas.dataset.stageCompleteAfterArenaRelease;
+      delete this.game.canvas.dataset.playerHitEnemyIds;
     }
     this.playerStateMachine.reset();
     this.playerLifecycle.reset();
@@ -506,6 +507,11 @@ export default class MainScene extends Phaser.Scene {
     const damage = this.playerLifecycle.applyDamage(1);
     if (!damage.applied) return;
     this.gameplayEvents.publish({ type: "player-hit", enemyId: enemy.id, at: this.time.now });
+    if (process.env.NODE_ENV !== "production") {
+      const hitEnemyIds = new Set((this.game.canvas.dataset.playerHitEnemyIds ?? "").split(",").filter(Boolean));
+      hitEnemyIds.add(enemy.config.id);
+      this.game.canvas.dataset.playerHitEnemyIds = [...hitEnemyIds].join(",");
+    }
     this.disableAttackHitbox();
     this.comboStep = 0;
     this.hitConfirmed = false;

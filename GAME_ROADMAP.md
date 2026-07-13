@@ -217,6 +217,7 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 | 4.4 | Mixed encounter composition | P0 | Medium | 4.2, 4.3 | Attack Slot 公平、Y 對線、站位穩定 | stage data/director | 組合造成死鎖 |
 | 4.5 | Encounter tuning pass | P0 | Medium | 4.4 | 每場 30–90 秒、玩家可走位避免攻擊 | configs/checklist | 過早追求最終平衡 |
 | 4.6 | Multi-archetype regression | P0 | High | 4.1–4.5 | 死亡/cleanup 不影響其他 archetype | tests | config 分支漏測 |
+| 4.7 | Enemy facing and hit reachability regression | P0 | Medium | 4.2–4.6 | three archetypes face, walk, attack, and hit in the same direction | enemy config/manager/tests | global flip breaks soldier |
 
 ---
 
@@ -358,6 +359,7 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 - M4 / Task 4.4 (Mixed encounter composition) completed in the current sprint.
 - M4 / Task 4.5 (Encounter tuning pass) completed in the current sprint.
 - M4 / Task 4.6 (Multi-archetype regression) completed in the current sprint.
+- M4 / Task 4.7 (Enemy facing and hit reachability regression) completed in the current sprint.
 - M5 / Task 5.1 (Boss state/ownership contract) completed in the current sprint.
 - M5 / Task 5.2 (Boss attack 1–3) completed in the current sprint.
 - M5 / Task 5.3 (Boss decision rhythm) completed in the current sprint.

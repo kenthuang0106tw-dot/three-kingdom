@@ -625,3 +625,19 @@
 | Restart smoke | Pass | 10 Scene restarts; one Canvas; one Boss; completion count 0; lock reasons `encounter,boss` |
 | Browser errors | Pass | Zero page errors |
 | Known issues | Non-blocking | Physical-device feel, Boss attack damage/walk, Result UI, audio, scoring, and additional stages remain deferred |
+
+## M4 / Task 4.7 Regression Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M4 / Task 4.7 — Enemy facing and hit reachability regression |
+| Tests | Pass | `pnpm test` 52/52, including source-facing, flip, active-pose, and slot-release contracts |
+| Build | Pass | `pnpm build` |
+| Lint | Pass | 0 errors, existing 4 `<img>` warnings only |
+| Typecheck | Pass | `pnpm typecheck` |
+| Facing | Pass | Soldier left-facing source and mauler/duelist right-facing sources resolve through one config-aware rule |
+| Attack timing | Pass | All three archetypes use Phaser active-frame index 2, the actual `attack-1` pose |
+| Slot recovery | Pass | A holder unable to reach attack range releases the slot after 1500 ms |
+| Browser combat | Pass | Actual player-damage evidence recorded unique attackers `mauler,duelist,soldier`; duelist walk and attack visuals faced travel/attack direction |
+| Restart smoke | Pass | 10 Scene restarts; one 1280×720 Canvas; one Boss; no stale completion; zero browser errors |
+| Deferred | Non-blocking | Boss movement remains planned work and was intentionally not changed |

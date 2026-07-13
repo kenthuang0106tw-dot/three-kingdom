@@ -2,7 +2,7 @@ import * as Phaser from "phaser";
 import { PhaserGameplayClock, SeededRandom, type GameplayClock, type RandomSource } from "./time/GameplayTime";
 import { BAMBOO_COMBAT_ROOM, clampStageX, clampStageY, type StageSpawnPoint } from "./stage/StageConfig";
 import { beginEncounter, createEncounterFlow, isEncounterCleared, recordEnemyRemoved, type EncounterFlowState } from "./stage/EncounterFlow";
-import { DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemyAnimationKey, type EnemyConfig } from "./enemy/EnemyConfig";
+import { DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemyAnimationKey, enemySpriteShouldFlip, type EnemyConfig } from "./enemy/EnemyConfig";
 
 export type EnemyState = "idle" | "walk" | "attack" | "hurt" | "dead";
 
@@ -11,6 +11,8 @@ const ENEMY_CONFIGS: Record<"soldier" | "mauler" | "duelist", EnemyConfig> = {
   mauler: MAULER_ENEMY_CONFIG,
   duelist: DUELIST_ENEMY_CONFIG,
 };
+
+const ATTACK_APPROACH_TIMEOUT_MS = 1500;
 
 const FORMATION_SLOTS = [
   { name: "front", x: 135, y: 0 },
@@ -38,6 +40,7 @@ export class EnemyCombatant {
   cooldownUntil = 0;
   attackHitPlayer = false;
   hasAttackSlot = false;
+  attackApproachEndsAt = 0;
 
   constructor(readonly id: number, readonly assignedSlot: number, readonly config: EnemyConfig, scene: Phaser.Scene, x: number, y: number) {
     this.hp = config.maxHp;
@@ -55,6 +58,7 @@ export class EnemyCombatant {
     this.sprite = scene.add.sprite(x, y, config.assetKey, config.animations.idle[0])
       .setOrigin(0.5, config.feetY / config.frameSize)
       .setScale(config.displayScale)
+      .setFlipX(enemySpriteShouldFlip(config, this.facing))
       .setDepth(y)
       .play(enemyAnimationKey(config, "idle"));
   }
@@ -151,10 +155,14 @@ export class EnemyManager {
   private updateAttackApproach(enemy: EnemyCombatant) {
     const dx = this.playerBodyZone.x - enemy.bodyZone.x;
     const dy = this.playerBodyZone.y - enemy.bodyZone.y;
-    enemy.facing = dx >= 0 ? 1 : -1;
-    enemy.sprite.setFlipX(enemy.facing > 0);
+    this.setFacing(enemy, dx >= 0 ? 1 : -1);
     if (Math.abs(dx) <= enemy.config.combat.attackXRange && Math.abs(dy) < enemy.config.combat.attackYRange && this.clock.now() >= enemy.cooldownUntil) {
       this.setState(enemy, "attack");
+      return;
+    }
+    if (this.clock.now() >= enemy.attackApproachEndsAt) {
+      this.releaseAttackSlot(enemy);
+      this.setState(enemy, "idle");
       return;
     }
     const attackX = this.playerBodyZone.x - enemy.facing * enemy.config.combat.attackXRange * 0.82;
@@ -176,10 +184,7 @@ export class EnemyManager {
     const dy = targetY - enemy.bodyZone.y;
     if (Math.hypot(dx, dy) < 10) { this.setState(enemy, "idle"); return; }
     this.setState(enemy, "walk");
-    if (dx !== 0) {
-      enemy.facing = dx > 0 ? 1 : -1;
-      enemy.sprite.setFlipX(enemy.facing > 0);
-    }
+    if (dx !== 0) this.setFacing(enemy, dx > 0 ? 1 : -1);
     const velocity = new Phaser.Math.Vector2(dx, dy * enemy.config.movement.verticalScale).normalize().scale(enemy.config.movement.walkSpeed);
     for (const other of this.getLivingEnemies()) {
       if (other === enemy) continue;
@@ -190,6 +195,11 @@ export class EnemyManager {
     }
     velocity.limit(enemy.config.movement.walkSpeed);
     enemy.body.setVelocity(velocity.x, velocity.y);
+  }
+
+  private setFacing(enemy: EnemyCombatant, facing: 1 | -1) {
+    enemy.facing = facing;
+    enemy.sprite.setFlipX(enemySpriteShouldFlip(enemy.config, facing));
   }
 
   private assignAttackSlot(alive: EnemyCombatant[]) {
@@ -204,10 +214,12 @@ export class EnemyManager {
     const enemy = candidates[nextIndex];
     this.currentAttacker = enemy;
     enemy.hasAttackSlot = true;
+    enemy.attackApproachEndsAt = this.clock.now() + ATTACK_APPROACH_TIMEOUT_MS;
   }
 
   releaseAttackSlot(enemy: EnemyCombatant) {
     enemy.hasAttackSlot = false;
+    enemy.attackApproachEndsAt = 0;
     if (this.currentAttacker !== enemy) return;
     this.currentAttacker = null;
     this.lastAttackerId = enemy.id;

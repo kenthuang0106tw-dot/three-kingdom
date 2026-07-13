@@ -9,6 +9,8 @@ export type EnemyConfig = {
     readonly dead: readonly string[];
   };
   readonly animationRates: { readonly idle: number; readonly walk: number; readonly attack: number; readonly hurt: number; readonly dead: number };
+  readonly sourceFacing: 1 | -1;
+  /** Phaser AnimationFrame.index is one-based. */
   readonly attackActiveFrame: number;
   readonly maxHp: number;
   readonly displayScale: number;
@@ -49,7 +51,8 @@ export function validateEnemyConfig(config: EnemyConfig): EnemyConfig {
     throw new Error(`Enemy timing ranges must be ordered: ${config.id}`);
   }
   if (config.feetY > config.frameSize) throw new Error(`Enemy feet anchor is outside frame: ${config.id}`);
-  if (!Number.isInteger(config.attackActiveFrame) || config.attackActiveFrame < 0 || config.attackActiveFrame >= config.animations.attack.length) {
+  if (config.sourceFacing !== -1 && config.sourceFacing !== 1) throw new Error(`Invalid enemy source facing: ${config.id}`);
+  if (!Number.isInteger(config.attackActiveFrame) || config.attackActiveFrame < 1 || config.attackActiveFrame > config.animations.attack.length) {
     throw new Error(`Invalid enemy attack active frame: ${config.id}`);
   }
   return config;
@@ -61,6 +64,10 @@ export function enemyAnimationKey(config: EnemyConfig, state: EnemyAnimationStat
   return config.id === "soldier" ? `enemy-${state}` : `enemy-${config.id}-${state}`;
 }
 
+export function enemySpriteShouldFlip(config: EnemyConfig, facing: 1 | -1): boolean {
+  return facing !== config.sourceFacing;
+}
+
 export const SOLDIER_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
   id: "soldier",
   assetKey: "enemy-soldier",
@@ -69,6 +76,7 @@ export const SOLDIER_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
     attack: ["attack-0", "attack-1", "attack-2"], hurt: ["hurt-0", "hurt-1"], dead: ["dead-0", "dead-1", "dead-2", "dead-3"],
   },
   animationRates: { idle: 4, walk: 8, attack: 8, hurt: 8, dead: 8 },
+  sourceFacing: -1,
   attackActiveFrame: 2,
   maxHp: 4,
   displayScale: 1.4,
@@ -87,7 +95,8 @@ export const MAULER_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
     attack: ["attack-0", "attack-1", "attack-2"], hurt: ["hurt-0", "hurt-1"], dead: ["dead-0", "dead-1", "dead-2", "dead-3"],
   },
   animationRates: { idle: 4, walk: 8, attack: 8, hurt: 8, dead: 8 },
-  attackActiveFrame: 1,
+  sourceFacing: 1,
+  attackActiveFrame: 2,
   maxHp: 5,
   displayScale: 1.4,
   frameSize: 313,
@@ -105,7 +114,8 @@ export const DUELIST_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
     attack: ["attack-0", "attack-1", "attack-2"], hurt: ["hurt-0", "hurt-1"], dead: ["dead-0", "dead-1", "dead-2", "dead-3"],
   },
   animationRates: { idle: 6, walk: 10, attack: 10, hurt: 8, dead: 8 },
-  attackActiveFrame: 1,
+  sourceFacing: 1,
+  attackActiveFrame: 2,
   maxHp: 3,
   displayScale: 1.4,
   frameSize: 313,

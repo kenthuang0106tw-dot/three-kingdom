@@ -247,6 +247,16 @@ slot release, survivor continuity, cleanup ownership, encounter progress, and
 ten Scene restarts are accepted. Milestone 4 can now close without introducing
 a broader enemy framework.
 
+### Resolved M4 Regression — Mixed enemy facing and reachability
+
+Soldier art faces left while mauler and duelist art face right, but the runtime
+previously applied one global flip rule. The two later archetypes also selected
+Phaser animation index 1 as active even though their real `attack-1` pose is
+index 2. Per-config source facing, corrected 1-based active indices, and a
+1500 ms Attack Slot approach deadline now prevent reversed presentation and a
+permanently blocked attacker. Boss walk behavior remains a separate deferred M5
+limitation and was not changed by this repair.
+
 ### TD-M05 Update — Boss ownership contract
 
 M5 / Task 5.1 establishes a Phaser-free `BossLifecycle` with one state field,
