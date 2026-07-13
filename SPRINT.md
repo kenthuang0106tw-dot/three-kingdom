@@ -310,6 +310,16 @@
 - [x] Browser movement/attack smoke verified one 1280x720 Canvas, all three archetypes visible, and zero page errors.
 - [ ] Physical-player duration sampling remains deferred to later balancing QA.
 
+## M4 / Task 4.6 Closeout
+
+- [x] Added all six soldier / mauler / duelist removal-order permutations.
+- [x] Every first removal preserves both surviving archetypes; all-clear occurs only after the third unique removal.
+- [x] Verified the shared damage path releases the Attack Director slot before hurt/dead, without archetype branches.
+- [x] Verified the shared removal path releases slot ownership, cleans objects, removes the collection entry, and records encounter progress.
+- [x] `pnpm test` 41/41, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
+- [x] Browser combat/reset smoke completed 10 Scene restarts with one 1280x720 Canvas and zero page errors.
+- [ ] Physical mobile and long-session validation remain deferred to release QA.
+
 ## M3 / Task 3.2 Closeout
 
 - [x] Added deterministic Phaser-free X/Y and point clamping helpers.
@@ -319,4 +329,4 @@
 - [x] Browser smoke verified one 1280x720 Canvas, ten reset cycles, and zero page errors.
 - [ ] Physical mobile and long-session validation remain deferred.
 
-M4 / Task 4.5 已完成；下一步只執行 M4 / Task 4.6。其餘未完成項目依 Roadmap 保留。
+Milestone 4 已完成；下一步只執行 M5 / Task 5.1。其餘未完成項目依 Roadmap 保留。

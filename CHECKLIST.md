@@ -505,3 +505,17 @@
 | Movement/spacing | Pass | Attack Y range ≤48px; minimum spacing ≥68px; distinct walk speeds retained |
 | Attack slot | Pass | Existing single `currentAttacker` guard remains covered |
 | Known issues | Non-blocking | Physical-player duration sampling and mobile QA remain deferred |
+
+## M4 / Task 4.6 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M4 / Task 4.6 — Multi-archetype regression |
+| Tests | Pass | `pnpm test` 41/41 |
+| Build | Pass | `pnpm build` |
+| Lint | Pass | 0 errors, existing 4 `<img>` warnings only |
+| Typecheck | Pass | `pnpm typecheck` |
+| Removal permutations | Pass | All six archetype death orders preserve survivors and clear only after three removals |
+| Slot/cleanup contract | Pass | Shared damage/removal paths release slot, clean ownership, splice collection, and record removal |
+| Browser combat/reset | Pass | Keyboard combat followed by 10 Scene restarts; one 1280x720 Canvas, zero page errors |
+| Known issues | Non-blocking | Physical mobile and long-session QA remain deferred |

@@ -128,6 +128,6 @@ tools/build_enemy_art.py     Enemy sheet/atlas rebuild pipeline
 
 ## Current Priority
 
-M4 / Task 4.5 Encounter tuning pass is complete. The next single task is M4 / Task 4.6, Multi-archetype regression.
+Milestone 4 is complete. The next single task is M5 / Task 5.1, Boss state/ownership contract.
 
-Milestone 0、M1、M2 與 M3 已完成；目前進行 M4 敵人種類與遭遇節奏。完成下一個 Task 前不要新增 Boss、角色、招式或 Audio。
+Milestone 0–4 已完成；下一步只建立 Boss ownership contract，不新增 Boss 招式、第二關、角色或 Audio。

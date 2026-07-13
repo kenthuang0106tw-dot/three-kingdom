@@ -337,6 +337,14 @@ movement, attack, spacing, and animation values from each combatant's immutable
 existing Y-alignment, hurt, death, hit-record, and camera-lock cleanup contracts
 remain shared. M4 / Task 4.5 is reserved for tuning this deterministic mix.
 
+## Multi-Archetype Regression (M4 / Task 4.6)
+
+All three archetypes intentionally share the same damage, hurt/dead transition,
+Attack Director release, object cleanup, collection removal, and encounter-flow
+path. Deterministic tests cover all six removal orders and prove that surviving
+archetypes remain tracked until the third unique removal. Browser combat/reset
+smoke verifies this ownership model survives ten Scene restarts.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

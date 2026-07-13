@@ -1,35 +1,39 @@
 # Next Task
 
-## M4 / Task 4.6 — Multi-archetype regression
+## M5 / Task 5.1 — Boss state/ownership contract
 
 ### Why this is next
 
-The three melee archetypes are now mixed and tuned. The final M4 task must prove
-that hurt, death, cleanup, attack-slot release, and surviving enemies continue
-correctly for every archetype before Boss work can begin.
+Milestone 4 now has accepted mixed-archetype lifecycle and cleanup behavior.
+Before adding Boss attacks or art, the project needs one explicit ownership and
+state contract so the Boss does not become a special case inside EnemyManager.
 
 ### Completion criteria
 
-- Add deterministic regression coverage for soldier, mauler, and duelist death
-  and cleanup paths.
-- Verify one archetype's removal does not stop or corrupt the surviving enemies.
-- Verify hurt/death releases the Attack Director slot for every archetype.
-- Preserve existing gameplay and assets; do not add Boss, enemy types, attacks,
-  stage content, UI, or audio.
+- Define one Phaser-free Boss state and lifecycle ownership contract.
+- Keep Boss ownership separate from `EnemyManager` while reusing established
+  combat events and stage boundaries where appropriate.
+- Cover legal state transitions, damage/death entry, cleanup, and reset behavior
+  with deterministic tests.
+- Do not add Boss art, attacks, AI decisions, arena content, HUD, audio, or a
+  generic Boss framework.
 
 ### Validation
 
 - Run `pnpm test`, `pnpm build`, `pnpm lint`, and `pnpm typecheck`.
-- Browser smoke verifies one 1280×720 Canvas with zero page errors.
-- Exercise a mixed-room combat/reset path and record cleanup evidence.
+- Browser smoke verifies the existing room remains unchanged: one 1280×720
+  Canvas with zero page errors.
+- Confirm `EnemyManager` does not own or instantiate the Boss contract.
 
 ### Expected files
 
+- `app/game/boss/**`
 - `tests/**`
-- `app/game/EnemyManager.ts` only if a regression exposes a real defect
-- `SPRINT.md`, `GAME_ROADMAP.md`, `CHECKLIST.md`, `TECH_DEBT.md`, `README.md`
+- `ARCHITECTURE.md`, `SPRINT.md`, `GAME_ROADMAP.md`, `CHECKLIST.md`,
+  `TECH_DEBT.md`, `README.md`
 
 ### Risks
 
-- Source-only assertions can miss lifecycle bugs. Prefer pure contract coverage
-  plus a real browser combat/reset smoke, without creating a parallel simulator.
+- Reusing too much EnemyManager behavior would couple Boss lifecycle to normal
+  enemy formation and Attack Slot rules. Keep the contract minimal and
+  Phaser-free until real Boss attacks provide concrete requirements.

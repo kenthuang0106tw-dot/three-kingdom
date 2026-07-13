@@ -518,6 +518,43 @@ test("Mixed encounter tuning stays readable, dodgeable, and within the duration 
   assert.match(manager, /if \(this\.currentAttacker \|\| this\.clock\.now\(\) < this\.directorReadyAt\) return/);
 });
 
+test("Every mixed archetype shares attack-slot release, death cleanup, and survivor flow", async () => {
+  const manager = await readFile(new URL("../app/game/EnemyManager.ts", import.meta.url), "utf8");
+  const spawns = BAMBOO_COMBAT_ROOM.spawnPoints;
+  const permutations = [
+    [0, 1, 2], [0, 2, 1], [1, 0, 2],
+    [1, 2, 0], [2, 0, 1], [2, 1, 0],
+  ];
+
+  assert.deepEqual(new Set(spawns.map(spawn => spawn.enemyType)), new Set(["soldier", "mauler", "duelist"]));
+  for (const order of permutations) {
+    let flow = beginEncounter(createEncounterFlow(), spawns.length);
+    const firstId = order[0] + 1;
+    flow = recordEnemyRemoved(flow, firstId);
+    assert.equal(isEncounterCleared(flow), false);
+    assert.deepEqual(
+      spawns.filter((_, index) => !flow.removedEnemyIds.includes(index + 1)).map(spawn => spawn.enemyType).sort(),
+      order.slice(1).map(index => spawns[index].enemyType).sort(),
+    );
+    flow = recordEnemyRemoved(flow, order[1] + 1);
+    assert.equal(isEncounterCleared(flow), false);
+    flow = recordEnemyRemoved(flow, order[2] + 1);
+    assert.equal(isEncounterCleared(flow), true);
+  }
+
+  const damagePath = manager.slice(manager.indexOf("  damage(enemy:"), manager.indexOf("  private setState"));
+  assert.match(damagePath, /this\.releaseAttackSlot\(enemy\)/);
+  assert.match(damagePath, /enemy\.hp === 0/);
+  assert.doesNotMatch(damagePath, /enemy\.config\.id/);
+
+  const removalPath = manager.slice(manager.indexOf("  private remove(enemy:"), manager.indexOf("  private cleanupEnemy"));
+  assert.match(removalPath, /this\.releaseAttackSlot\(enemy\)/);
+  assert.match(removalPath, /this\.cleanupEnemy\(enemy\)/);
+  assert.match(removalPath, /this\.enemies\.splice\(index, 1\)/);
+  assert.match(removalPath, /recordEnemyRemoved\(this\.encounterFlow, enemy\.id\)/);
+  assert.doesNotMatch(removalPath, /enemy\.config\.id/);
+});
+
 test("Mauler asset routes and atlas metadata are present", async () => {
   const [manifest, atlas, metadata] = await Promise.all([
     readFile(new URL("../app/game/assets/AssetManifest.ts", import.meta.url), "utf8"),

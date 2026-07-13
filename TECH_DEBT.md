@@ -239,6 +239,14 @@ is a contract estimate based on one successful hit every three seconds, not a
 substitute for later physical-player balancing. Y dodge space, single-attacker
 ownership, and per-archetype movement differences remain intact.
 
+### TD-M04 Resolved — Multi-archetype regression
+
+M4 / Task 4.6 covers every removal order for soldier, mauler, and duelist and
+confirms that the shared damage/removal paths do not branch by archetype. Attack
+slot release, survivor continuity, cleanup ownership, encounter progress, and
+ten Scene restarts are accepted. Milestone 4 can now close without introducing
+a broader enemy framework.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content
