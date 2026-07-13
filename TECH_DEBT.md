@@ -223,6 +223,14 @@ M4 / Task 4.3 adds the real duelist sprite sheet, atlas metadata, debug sheet,
 and distinct config values. Both additional archetypes remain routed but not
 spawned until the mixed-composition task validates director fairness and cleanup.
 
+### TD-M04 Update — Mixed encounter composition
+
+M4 / Task 4.4 now routes one soldier, one mauler, and one duelist through the
+same deterministic room. Per-archetype tuning stays in validated config data;
+the existing single Attack Director and cleanup contracts remain shared. A
+short encounter-tuning pass is still needed before balancing is considered
+complete; no generic enemy framework was introduced.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

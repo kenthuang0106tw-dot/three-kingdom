@@ -14,6 +14,7 @@ export type StageSpawnPoint = {
   readonly id: string;
   readonly x: number;
   readonly y: number;
+  readonly enemyType?: "soldier" | "mauler" | "duelist";
 };
 
 export type StageEncounter = {
@@ -84,6 +85,7 @@ export function validateStageConfig(config: StageConfig): StageConfig {
   const ids = new Set<string>();
   for (const point of config.spawnPoints) {
     assertPoint("spawn", point, config.walkBounds);
+    if (point.enemyType && !["soldier", "mauler", "duelist"].includes(point.enemyType)) throw new Error(`Unknown enemy type: ${point.enemyType}`);
     if (ids.has(point.id)) throw new Error(`Duplicate spawn point id: ${point.id}`);
     ids.add(point.id);
   }
@@ -105,9 +107,9 @@ export const BAMBOO_COMBAT_ROOM: StageConfig = validateStageConfig({
   walkBounds: { x: 70, y: 390, width: 1140, height: 245 },
   playerSpawn: { id: "player-start", x: 180, y: 602 },
   spawnPoints: [
-    { id: "enemy-front", x: 900, y: 560 },
-    { id: "enemy-upper-rear", x: 830, y: 455 },
-    { id: "enemy-lower-front", x: 850, y: 625 },
+    { id: "enemy-front", x: 900, y: 560, enemyType: "soldier" },
+    { id: "enemy-upper-rear", x: 830, y: 455, enemyType: "mauler" },
+    { id: "enemy-lower-front", x: 850, y: 625, enemyType: "duelist" },
   ],
   encounters: [{ id: "opening-combat", spawnPointIds: ["enemy-front", "enemy-upper-rear", "enemy-lower-front"] }],
   exits: [{

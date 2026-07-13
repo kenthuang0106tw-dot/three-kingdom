@@ -291,6 +291,15 @@
 - [x] Browser smoke verified one 1280x720 Canvas and zero page errors.
 - [ ] Mixed encounter wiring remains deferred to Task 4.4.
 
+## M4 / Task 4.4 Closeout
+
+- [x] Bamboo combat room now deterministically spawns soldier, mauler, and duelist.
+- [x] EnemyManager preserves per-archetype config, animation keys, hit records, hurt/death cleanup, and the single Attack Director slot.
+- [x] Mixed encounter tests cover composition, Y alignment, pairwise spacing, attack-slot exclusivity, and animation setup.
+- [x] `pnpm test` 39/39, `pnpm build`, `pnpm lint`, and `pnpm typecheck` passed.
+- [x] Browser smoke verified one 1280x720 Canvas and zero page errors.
+- [ ] Encounter tuning and physical mobile validation remain deferred to later tasks.
+
 ## M3 / Task 3.2 Closeout
 
 - [x] Added deterministic Phaser-free X/Y and point clamping helpers.
@@ -300,4 +309,4 @@
 - [x] Browser smoke verified one 1280x720 Canvas, ten reset cycles, and zero page errors.
 - [ ] Physical mobile and long-session validation remain deferred.
 
-Task 1.1 已完成；下一步只執行 Task 1.2。Pause、visibility、deterministic clock 與其他未完成項目依 Roadmap 保留。
+M4 / Task 4.4 已完成；下一步只執行 M4 / Task 4.5。其餘未完成項目依 Roadmap 保留。

@@ -476,3 +476,17 @@
 | Art/metadata | Pass | 15-frame duelist sheet, atlas, debug sheet, asset route |
 | Behavior config | Pass | Faster movement/recovery and shorter attack range |
 | Known issues | Non-blocking | Mixed encounter wiring and physical mobile QA remain deferred |
+
+## M4 / Task 4.4 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M4 / Task 4.4 — Mixed encounter composition |
+| Tests | Pass | `pnpm test` 39/39 |
+| Build | Pass | `pnpm build` |
+| Lint | Pass | 0 errors, existing 4 `<img>` warnings only |
+| Typecheck | Pass | `pnpm typecheck` |
+| Browser smoke | Pass | One 1280x720 Canvas and zero page errors |
+| Composition | Pass | Deterministic soldier / mauler / duelist spawn assignment |
+| Combat contracts | Pass | Single attack slot, Y alignment, pairwise spacing, per-archetype animation and cleanup tests |
+| Known issues | Non-blocking | Encounter tuning and physical mobile QA remain deferred |

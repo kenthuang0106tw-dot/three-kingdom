@@ -313,13 +313,13 @@ test("Combat room acceptance covers formation, attack director, alignment, and s
   const spawnCoordinates = BAMBOO_COMBAT_ROOM.spawnPoints.map(({ x, y }) => [x, y]);
   assert.equal(spawnCoordinates.length, 3);
   assert.equal(new Set(spawnCoordinates.map(([, y]) => y)).size, 3);
-  assert.match(scene, /SOLDIER_ENEMY_CONFIG/);
+  assert.match(manager, /ENEMY_CONFIGS/);
   assert.equal(SOLDIER_ENEMY_CONFIG.combat.attackXRange, 110);
   assert.equal(SOLDIER_ENEMY_CONFIG.combat.attackYRange, 45);
   assert.equal(SOLDIER_ENEMY_CONFIG.combat.minSpacing, 72);
   assert.match(manager, /if \(this\.currentAttacker \|\| this\.clock\.now\(\) < this\.directorReadyAt\) return/);
   assert.match(manager, /this\.currentAttacker = enemy/);
-  assert.match(manager, /Math\.abs\(dy\) < SOLDIER_ENEMY_CONFIG\.combat\.attackYRange/);
+  assert.match(manager, /Math\.abs\(dy\) < enemy\.config\.combat\.attackYRange/);
   assert.match(manager, /getLivingEnemies\(\)/);
   assert.match(manager, /onAllDefeated\(\)/);
   assert.match(scene, /this\.enemyManager\.spawnAll\(BAMBOO_COMBAT_ROOM\.spawnPoints\)/);
@@ -481,11 +481,26 @@ test("Soldier EnemyConfig validates stable tuning and preserves current values",
 
 test("EnemyManager consumes the soldier config instead of owning tuning literals", async () => {
   const source = await readFile(new URL("../app/game/EnemyManager.ts", import.meta.url), "utf8");
-  assert.match(source, /SOLDIER_ENEMY_CONFIG\.maxHp/);
-  assert.match(source, /SOLDIER_ENEMY_CONFIG\.movement\.walkSpeed/);
-  assert.match(source, /SOLDIER_ENEMY_CONFIG\.combat\.attackXRange/);
-  assert.match(source, /SOLDIER_ENEMY_CONFIG\.timing\.recoveryMin/);
+  assert.match(source, /config\.maxHp/);
+  assert.match(source, /enemy\.config\.movement\.walkSpeed/);
+  assert.match(source, /enemy\.config\.combat\.attackXRange/);
+  assert.match(source, /enemy\.config\.timing\.recoveryMin/);
   assert.doesNotMatch(source, /const WALK_SPEED = 70/);
+});
+
+test("Mixed encounter composition assigns three archetypes with one attack director", async () => {
+  const [stage, manager, scene] = await Promise.all([
+    readFile(new URL("../app/game/stage/StageConfig.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/EnemyManager.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8"),
+  ]);
+  assert.deepEqual(BAMBOO_COMBAT_ROOM.spawnPoints.map(point => point.enemyType), ["soldier", "mauler", "duelist"]);
+  assert.match(manager, /ENEMY_CONFIGS\[spawn\.enemyType \?\? "soldier"\]/);
+  assert.match(manager, /if \(this\.currentAttacker \|\| this\.clock\.now\(\) < this\.directorReadyAt\) return/);
+  assert.match(manager, /Math\.max\(enemy\.config\.combat\.minSpacing, other\.config\.combat\.minSpacing\)/);
+  assert.match(scene, /for \(const config of \[SOLDIER_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, DUELIST_ENEMY_CONFIG\]\)/);
+  assert.match(stage, /enemyType: "mauler"/);
+  assert.match(stage, /enemyType: "duelist"/);
 });
 
 test("Mauler asset routes and atlas metadata are present", async () => {

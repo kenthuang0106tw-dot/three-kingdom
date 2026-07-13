@@ -16,7 +16,7 @@ import { BAMBOO_COMBAT_ROOM, clampStageX } from "./stage/StageConfig";
 import { calculateCameraScroll } from "./camera/CameraFollow";
 import { createCameraLockState, isCameraLocked, lockCamera, unlockCamera, type CameraLockState } from "./camera/CameraLock";
 import { createStageExitState, makeExitAvailable, resetStageExit, type StageExitState } from "./stage/StageExit";
-import { SOLDIER_ENEMY_CONFIG } from "./enemy/EnemyConfig";
+import { DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemyAnimationKey } from "./enemy/EnemyConfig";
 
 type AttackState = "attack1" | "attack2" | "attack3";
 type PreviewFrame = {
@@ -303,11 +303,13 @@ export default class MainScene extends Phaser.Scene {
         repeat: 0,
       });
     }
-    this.anims.create({ key: "enemy-idle", frames: ["idle-0", "idle-1"].map(frame => ({ key: "enemy-soldier", frame })), frameRate: 4, repeat: -1 });
-    this.anims.create({ key: "enemy-walk", frames: [0, 1, 2, 3].map(i => ({ key: "enemy-soldier", frame: `walk-${i}` })), frameRate: 8, repeat: -1 });
-    this.anims.create({ key: "enemy-attack", frames: [0, 1, 2].map(i => ({ key: "enemy-soldier", frame: `attack-${i}` })), frameRate: 8, repeat: 0 });
-    this.anims.create({ key: "enemy-hurt", frames: ["hurt-0", "hurt-1"].map(frame => ({ key: "enemy-soldier", frame })), frameRate: 8, repeat: 0 });
-    this.anims.create({ key: "enemy-dead", frames: [0, 1, 2, 3].map(i => ({ key: "enemy-soldier", frame: `dead-${i}` })), frameRate: 8, repeat: 0 });
+    for (const config of [SOLDIER_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, DUELIST_ENEMY_CONFIG]) {
+      this.anims.create({ key: enemyAnimationKey(config, "idle"), frames: config.animations.idle.map(frame => ({ key: config.assetKey, frame })), frameRate: config.animationRates.idle, repeat: -1 });
+      this.anims.create({ key: enemyAnimationKey(config, "walk"), frames: config.animations.walk.map(frame => ({ key: config.assetKey, frame })), frameRate: config.animationRates.walk, repeat: -1 });
+      this.anims.create({ key: enemyAnimationKey(config, "attack"), frames: config.animations.attack.map(frame => ({ key: config.assetKey, frame })), frameRate: config.animationRates.attack, repeat: 0 });
+      this.anims.create({ key: enemyAnimationKey(config, "hurt"), frames: config.animations.hurt.map(frame => ({ key: config.assetKey, frame })), frameRate: config.animationRates.hurt, repeat: 0 });
+      this.anims.create({ key: enemyAnimationKey(config, "dead"), frames: config.animations.dead.map(frame => ({ key: config.assetKey, frame })), frameRate: config.animationRates.dead, repeat: 0 });
+    }
     this.effectDirector.createHitSparkAnimation();
   }
 

@@ -327,6 +327,16 @@ frames, 313x313 atlas rectangles, shared 0.9 feet pivot, and a debug sheet.
 and mauler, with a shorter attack range. Its asset is routed through the
 manifest but remains out of the current room until mixed-composition work.
 
+## Mixed Encounter Composition (M4 / Task 4.4)
+
+The bamboo combat room now resolves each spawn point to an explicit archetype:
+soldier at the front, mauler at the upper rear, and duelist at the lower front.
+`EnemyManager` keeps the existing single Attack Director slot while reading
+movement, attack, spacing, and animation values from each combatant's immutable
+`EnemyConfig`. Pairwise spacing uses the stricter configured minimum, and all
+existing Y-alignment, hurt, death, hit-record, and camera-lock cleanup contracts
+remain shared. M4 / Task 4.5 is reserved for tuning this deterministic mix.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

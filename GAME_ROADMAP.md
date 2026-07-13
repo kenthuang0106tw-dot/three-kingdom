@@ -20,7 +20,7 @@
 | React boundary | Correct | `PhaserGame.tsx` 建立／銷毀唯一 instance |
 | Player | Playable prototype | 關羽移動、idle、walk、attack1–3、hurt |
 | Combat | Playable prototype | Combo、獨立 hitbox、multi-hit、Hit Stop、Flash、Spark、Knockback、Shake |
-| Enemy | Playable prototype | 三名相同小兵、Formation、Attack Slot、hurt/dead/cleanup |
+| Enemy | Playable prototype | 三種近戰小兵、混合 Formation、Attack Slot、hurt/dead/cleanup |
 | Stage | Static room | 單張竹林背景與固定 walk bounds |
 | Camera | Missing | 無 world scroll、follow、encounter lock |
 | Mobile | Missing | 無正式 Phaser touch input；下一步 Task 1.2 |
@@ -354,7 +354,8 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 - M4 / Task 4.1 (EnemyConfig boundary) completed in the current sprint.
 - M4 / Task 4.2 (Second melee soldier) completed in the current sprint.
 - M4 / Task 4.3 (Third melee soldier) completed in the current sprint.
-- Next eligible task: M4 / Task 4.4 (Mixed encounter composition).
+- M4 / Task 4.4 (Mixed encounter composition) completed in the current sprint.
+- Next eligible task: M4 / Task 4.5 (Encounter tuning pass).
 
 ## 4. Global Acceptance Rules
 

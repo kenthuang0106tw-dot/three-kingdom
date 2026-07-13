@@ -2,9 +2,15 @@ import * as Phaser from "phaser";
 import { PhaserGameplayClock, SeededRandom, type GameplayClock, type RandomSource } from "./time/GameplayTime";
 import { BAMBOO_COMBAT_ROOM, clampStageX, clampStageY, type StageSpawnPoint } from "./stage/StageConfig";
 import { beginEncounter, createEncounterFlow, isEncounterCleared, recordEnemyRemoved, type EncounterFlowState } from "./stage/EncounterFlow";
-import { SOLDIER_ENEMY_CONFIG } from "./enemy/EnemyConfig";
+import { DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemyAnimationKey, type EnemyConfig } from "./enemy/EnemyConfig";
 
 export type EnemyState = "idle" | "walk" | "attack" | "hurt" | "dead";
+
+const ENEMY_CONFIGS: Record<"soldier" | "mauler" | "duelist", EnemyConfig> = {
+  soldier: SOLDIER_ENEMY_CONFIG,
+  mauler: MAULER_ENEMY_CONFIG,
+  duelist: DUELIST_ENEMY_CONFIG,
+};
 
 const FORMATION_SLOTS = [
   { name: "front", x: 135, y: 0 },
@@ -27,29 +33,30 @@ export class EnemyCombatant {
   readonly attackBody: Phaser.Physics.Arcade.Body;
   readonly sprite: Phaser.GameObjects.Sprite;
   state: EnemyState = "idle";
-  hp = SOLDIER_ENEMY_CONFIG.maxHp;
+  hp: number;
   facing: 1 | -1 = -1;
   cooldownUntil = 0;
   attackHitPlayer = false;
   hasAttackSlot = false;
 
-  constructor(readonly id: number, readonly assignedSlot: number, scene: Phaser.Scene, x: number, y: number) {
+  constructor(readonly id: number, readonly assignedSlot: number, readonly config: EnemyConfig, scene: Phaser.Scene, x: number, y: number) {
+    this.hp = config.maxHp;
     this.bodyZone = scene.add.zone(x, y, 58, 52).setOrigin(0.5, 1);
     scene.physics.add.existing(this.bodyZone);
     this.body = this.bodyZone.body as Phaser.Physics.Arcade.Body;
     this.body.setAllowGravity(false).setCollideWorldBounds(true);
 
-    this.attackZone = scene.add.zone(x - 78, y - 58, 112, 68).setOrigin(0.5);
+    this.attackZone = scene.add.zone(x - config.combat.attackXRange * 0.7, y - 58, Math.max(112, config.combat.attackXRange * 0.8), 68).setOrigin(0.5);
     scene.physics.add.existing(this.attackZone);
     this.attackBody = this.attackZone.body as Phaser.Physics.Arcade.Body;
     this.attackBody.setAllowGravity(false).setEnable(false);
     this.attackZone.setActive(false);
 
-    this.sprite = scene.add.sprite(x, y, "enemy-soldier", "idle-0")
-      .setOrigin(0.5, SOLDIER_ENEMY_CONFIG.feetY / SOLDIER_ENEMY_CONFIG.frameSize)
-      .setScale(SOLDIER_ENEMY_CONFIG.displayScale)
+    this.sprite = scene.add.sprite(x, y, config.assetKey, config.animations.idle[0])
+      .setOrigin(0.5, config.feetY / config.frameSize)
+      .setScale(config.displayScale)
       .setDepth(y)
-      .play("enemy-idle");
+      .play(enemyAnimationKey(config, "idle"));
   }
 
   get slotName() { return FORMATION_SLOTS[this.assignedSlot].name; }
@@ -88,15 +95,18 @@ export class EnemyManager {
   spawnAll(spawns: readonly StageSpawnPoint[] = BAMBOO_COMBAT_ROOM.spawnPoints) {
     if (this.enemies.length > 0 || this.encounterFlow.status === "active") return;
     this.encounterFlow = beginEncounter(this.encounterFlow, spawns.length);
-    spawns.forEach((spawn, index) => this.addEnemy(new EnemyCombatant(index + 1, index, this.scene, spawn.x, spawn.y)));
+    spawns.forEach((spawn, index) => {
+      const config = ENEMY_CONFIGS[spawn.enemyType ?? "soldier"];
+      this.addEnemy(new EnemyCombatant(index + 1, index, config, this.scene, spawn.x, spawn.y));
+    });
   }
 
   private addEnemy(enemy: EnemyCombatant) {
     this.enemies.push(enemy);
     this.colliderOwners.set(enemy, []);
     const update = (animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) => {
-      if (animation.key !== "enemy-attack") return;
-      if (frame.index === 2 && enemy.state === "attack") this.enableAttackHitbox(enemy);
+      if (animation.key !== enemyAnimationKey(enemy.config, "attack")) return;
+      if (frame.index === enemy.config.attackActiveFrame && enemy.state === "attack") this.enableAttackHitbox(enemy);
       else this.disableAttackHitbox(enemy);
     };
     const complete = (animation: Phaser.Animations.Animation) => this.handleAnimationComplete(enemy, animation);
@@ -143,11 +153,11 @@ export class EnemyManager {
     const dy = this.playerBodyZone.y - enemy.bodyZone.y;
     enemy.facing = dx >= 0 ? 1 : -1;
     enemy.sprite.setFlipX(enemy.facing > 0);
-    if (Math.abs(dx) <= SOLDIER_ENEMY_CONFIG.combat.attackXRange && Math.abs(dy) < SOLDIER_ENEMY_CONFIG.combat.attackYRange && this.clock.now() >= enemy.cooldownUntil) {
+    if (Math.abs(dx) <= enemy.config.combat.attackXRange && Math.abs(dy) < enemy.config.combat.attackYRange && this.clock.now() >= enemy.cooldownUntil) {
       this.setState(enemy, "attack");
       return;
     }
-    const attackX = this.playerBodyZone.x - enemy.facing * SOLDIER_ENEMY_CONFIG.combat.attackXRange * 0.82;
+    const attackX = this.playerBodyZone.x - enemy.facing * enemy.config.combat.attackXRange * 0.82;
     this.moveToward(enemy, attackX, this.playerBodyZone.y);
   }
 
@@ -157,7 +167,7 @@ export class EnemyManager {
     const targetX = clampStageX(this.playerBodyZone.x + slot.x, BAMBOO_COMBAT_ROOM.walkBounds);
     const targetY = clampStageY(this.playerBodyZone.y + slot.y, BAMBOO_COMBAT_ROOM.walkBounds);
     const distance = Phaser.Math.Distance.Between(enemy.bodyZone.x, enemy.bodyZone.y, this.playerBodyZone.x, this.playerBodyZone.y);
-    if (distance > SOLDIER_ENEMY_CONFIG.movement.detectionDistance) { this.setState(enemy, "idle"); return; }
+    if (distance > enemy.config.movement.detectionDistance) { this.setState(enemy, "idle"); return; }
     this.moveToward(enemy, targetX, targetY);
   }
 
@@ -170,15 +180,15 @@ export class EnemyManager {
       enemy.facing = dx > 0 ? 1 : -1;
       enemy.sprite.setFlipX(enemy.facing > 0);
     }
-    const velocity = new Phaser.Math.Vector2(dx, dy * SOLDIER_ENEMY_CONFIG.movement.verticalScale).normalize().scale(SOLDIER_ENEMY_CONFIG.movement.walkSpeed);
+    const velocity = new Phaser.Math.Vector2(dx, dy * enemy.config.movement.verticalScale).normalize().scale(enemy.config.movement.walkSpeed);
     for (const other of this.getLivingEnemies()) {
       if (other === enemy) continue;
       const ox = enemy.bodyZone.x - other.bodyZone.x;
       const oy = enemy.bodyZone.y - other.bodyZone.y;
       const separation = Math.hypot(ox, oy);
-      if (separation > 0 && separation < SOLDIER_ENEMY_CONFIG.combat.minSpacing) velocity.add(new Phaser.Math.Vector2(ox, oy).normalize().scale(18));
+      if (separation > 0 && separation < Math.max(enemy.config.combat.minSpacing, other.config.combat.minSpacing)) velocity.add(new Phaser.Math.Vector2(ox, oy).normalize().scale(18));
     }
-    velocity.limit(SOLDIER_ENEMY_CONFIG.movement.walkSpeed);
+    velocity.limit(enemy.config.movement.walkSpeed);
     enemy.body.setVelocity(velocity.x, velocity.y);
   }
 
@@ -201,7 +211,7 @@ export class EnemyManager {
     if (this.currentAttacker !== enemy) return;
     this.currentAttacker = null;
     this.lastAttackerId = enemy.id;
-    this.directorReadyAt = this.clock.now() + this.random.between(SOLDIER_ENEMY_CONFIG.timing.directorDelayMin, SOLDIER_ENEMY_CONFIG.timing.directorDelayMax);
+    this.directorReadyAt = this.clock.now() + this.random.between(enemy.config.timing.directorDelayMin, enemy.config.timing.directorDelayMax);
   }
 
   damage(enemy: EnemyCombatant) {
@@ -219,35 +229,35 @@ export class EnemyManager {
     enemy.state = next;
     enemy.body.setVelocity(0, 0);
     this.disableAttackHitbox(enemy);
-    if (next === "idle") enemy.sprite.play("enemy-idle", true);
-    else if (next === "walk") enemy.sprite.play("enemy-walk", true);
+    if (next === "idle") enemy.sprite.play(enemyAnimationKey(enemy.config, "idle"), true);
+    else if (next === "walk") enemy.sprite.play(enemyAnimationKey(enemy.config, "walk"), true);
     else if (next === "attack") {
       enemy.attackHitPlayer = false;
-      enemy.sprite.play("enemy-attack", true);
+      enemy.sprite.play(enemyAnimationKey(enemy.config, "attack"), true);
     } else if (next === "hurt") {
-      enemy.sprite.play("enemy-hurt", true);
-      const timer = this.scene.time.delayedCall(SOLDIER_ENEMY_CONFIG.timing.hurtMs, () => {
+      enemy.sprite.play(enemyAnimationKey(enemy.config, "hurt"), true);
+      const timer = this.scene.time.delayedCall(enemy.config.timing.hurtMs, () => {
         this.stateTimers.delete(enemy);
         if (enemy.sprite.active && enemy.state === "hurt") {
-          enemy.cooldownUntil = this.clock.now() + this.random.between(SOLDIER_ENEMY_CONFIG.timing.recoveryMin, SOLDIER_ENEMY_CONFIG.timing.recoveryMax);
+          enemy.cooldownUntil = this.clock.now() + this.random.between(enemy.config.timing.recoveryMin, enemy.config.timing.recoveryMax);
           this.setState(enemy, "idle");
         }
       });
       this.stateTimers.set(enemy, timer);
     } else {
       enemy.body.enable = false;
-      enemy.sprite.play("enemy-dead", true);
+      enemy.sprite.play(enemyAnimationKey(enemy.config, "dead"), true);
     }
   }
 
   private handleAnimationComplete(enemy: EnemyCombatant, animation: Phaser.Animations.Animation) {
     if (!enemy.sprite.active) return;
-    if (animation.key === "enemy-attack" && enemy.state === "attack") {
+    if (animation.key === enemyAnimationKey(enemy.config, "attack") && enemy.state === "attack") {
       this.releaseAttackSlot(enemy);
-      enemy.cooldownUntil = this.clock.now() + this.random.between(SOLDIER_ENEMY_CONFIG.timing.recoveryMin, SOLDIER_ENEMY_CONFIG.timing.recoveryMax);
+      enemy.cooldownUntil = this.clock.now() + this.random.between(enemy.config.timing.recoveryMin, enemy.config.timing.recoveryMax);
       this.setState(enemy, "idle");
-    } else if (animation.key === "enemy-dead" && enemy.state === "dead") {
-      enemy.sprite.setFrame("dead-3");
+    } else if (animation.key === enemyAnimationKey(enemy.config, "dead") && enemy.state === "dead") {
+      enemy.sprite.setFrame(enemy.config.animations.dead.at(-1)!);
       this.scene.tweens.add({ targets: enemy.sprite, alpha: 0, duration: 500, onComplete: () => this.remove(enemy) });
     }
   }
@@ -304,7 +314,7 @@ export class EnemyManager {
   }
 
   private positionAttackHitbox(enemy: EnemyCombatant) {
-    const x = Math.round(enemy.bodyZone.x + enemy.facing * 78), y = Math.round(enemy.bodyZone.y - 58);
+    const x = Math.round(enemy.bodyZone.x + enemy.facing * enemy.config.combat.attackXRange * 0.7), y = Math.round(enemy.bodyZone.y - 58);
     enemy.attackZone.setPosition(x, y);
     enemy.attackBody.reset(x, y);
   }

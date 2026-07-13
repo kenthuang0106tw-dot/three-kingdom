@@ -9,6 +9,7 @@ export type EnemyConfig = {
     readonly dead: readonly string[];
   };
   readonly animationRates: { readonly idle: number; readonly walk: number; readonly attack: number; readonly hurt: number; readonly dead: number };
+  readonly attackActiveFrame: number;
   readonly maxHp: number;
   readonly displayScale: number;
   readonly frameSize: number;
@@ -48,7 +49,16 @@ export function validateEnemyConfig(config: EnemyConfig): EnemyConfig {
     throw new Error(`Enemy timing ranges must be ordered: ${config.id}`);
   }
   if (config.feetY > config.frameSize) throw new Error(`Enemy feet anchor is outside frame: ${config.id}`);
+  if (!Number.isInteger(config.attackActiveFrame) || config.attackActiveFrame < 0 || config.attackActiveFrame >= config.animations.attack.length) {
+    throw new Error(`Invalid enemy attack active frame: ${config.id}`);
+  }
   return config;
+}
+
+export type EnemyAnimationState = "idle" | "walk" | "attack" | "hurt" | "dead";
+
+export function enemyAnimationKey(config: EnemyConfig, state: EnemyAnimationState): string {
+  return config.id === "soldier" ? `enemy-${state}` : `enemy-${config.id}-${state}`;
 }
 
 export const SOLDIER_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
@@ -59,6 +69,7 @@ export const SOLDIER_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
     attack: ["attack-0", "attack-1", "attack-2"], hurt: ["hurt-0", "hurt-1"], dead: ["dead-0", "dead-1", "dead-2", "dead-3"],
   },
   animationRates: { idle: 4, walk: 8, attack: 8, hurt: 8, dead: 8 },
+  attackActiveFrame: 2,
   maxHp: 3,
   displayScale: 1.4,
   frameSize: 384,
@@ -76,6 +87,7 @@ export const MAULER_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
     attack: ["attack-0", "attack-1", "attack-2"], hurt: ["hurt-0", "hurt-1"], dead: ["dead-0", "dead-1", "dead-2", "dead-3"],
   },
   animationRates: { idle: 4, walk: 8, attack: 8, hurt: 8, dead: 8 },
+  attackActiveFrame: 1,
   maxHp: 4,
   displayScale: 1.4,
   frameSize: 313,
@@ -93,6 +105,7 @@ export const DUELIST_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
     attack: ["attack-0", "attack-1", "attack-2"], hurt: ["hurt-0", "hurt-1"], dead: ["dead-0", "dead-1", "dead-2", "dead-3"],
   },
   animationRates: { idle: 6, walk: 10, attack: 10, hurt: 8, dead: 8 },
+  attackActiveFrame: 1,
   maxHp: 2,
   displayScale: 1.4,
   frameSize: 313,
