@@ -128,8 +128,8 @@ tools/build_enemy_art.py     Enemy sheet/atlas rebuild pipeline
 
 ## Current Priority
 
-M3 Stage contracts and M5 Boss contracts are retained, but their playable-result acceptance has been reopened: runtime is still one 1280×720 room and the Boss cannot yet move or damage the player. M6.1–6.2 remain complete; M6.3 is paused.
+M5R.1 已完成真正的 3840×720 三畫面竹林世界、共享 walk bounds 與可見的 0–2560 camera scrolling。M5 Boss contracts 保留，但 Boss 仍不能移動或傷害玩家；M6.1–6.2 完成，M6.3 暫停。
 
-The next single task is M5R / Task 5R.1: build a real three-screen bamboo world with visible horizontal camera scrolling.
+The next single task is M5R / Task 5R.2: add two ordered encounter triggers and camera gates using only the existing enemies.
 
 Recovery 期間不加入 HUD、Result、音效或新內容；先完成真正關卡、Boss 戰與 clear/failed 流程。

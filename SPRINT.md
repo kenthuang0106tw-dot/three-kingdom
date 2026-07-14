@@ -2,21 +2,21 @@
 
 ## Sprint Goal
 
-先把單一 1280×720 combat room 擴充成真正可見的三畫面橫向捲軸世界。完成 5R.1 前，不加入 HUD、Pause、Result、Audio、新角色或新戰鬥內容。
+在已完成的三畫面橫向捲軸世界中建立兩場依序觸發、戰鬥時鎖定、清敵後解除的 encounter。完成 5R.2 前，不加入 Boss entry、HUD、Pause、Result、Audio、新角色或新戰鬥內容。
 
 ## Cadence
 
 - Duration：2 weeks
 - Capacity：1 developer + AI，約 40–55 hours
 - Milestone：M5R — Vertical Slice Recovery
-- Scope rule：一次只做一個 Recovery Task；目前唯一 Task 是 5R.1
+- Scope rule：一次只做一個 Recovery Task；目前唯一 Task 是 5R.2
 
 ## Task List
 
 | Order | Task | Estimate | Deliverable | Verification |
 |---:|---|---:|---|---|
-| 1 | ▶ M5R / Task 5R.1 — Three-screen world and visible camera scrolling | 12–18h | ≥3840px world、三段竹林背景、可見 camera scroll | deterministic bounds/camera tests + desktop/mobile browser smoke |
-| 2 | M5R / Task 5R.2 — Two encounter triggers and gates | 14–20h | 兩場依序 encounter | trigger/lock/clear browser acceptance |
+| 1 | ✅ M5R / Task 5R.1 — Three-screen world and visible camera scrolling | 12–18h | 3840px world、三段竹林背景、可見 camera scroll | tests + desktop/mobile browser smoke passed |
+| 2 | ▶ M5R / Task 5R.2 — Two encounter triggers and gates | 14–20h | 兩場依序 encounter | trigger/lock/clear browser acceptance |
 | 3 | M5R / Task 5R.3 — Boss arena entry sequencing | 8–12h | Boss 延後啟用與 arena entry | no premature Boss/lock smoke |
 
 ## Recovery Planning Correction — 2026-07-14
@@ -28,6 +28,19 @@
 - [x] 保留已完成的 M6.1 game-flow contract 與 M6.2 Title/start。
 - [x] 暫停 M6.3 HUD；Recovery 全部通過後才恢復 M6。
 - [x] 唯一 NEXT_TASK 改為 5R.1。
+
+## M5R / Task 5R.1 Closeout
+
+- [x] `StageConfig` 現在定義 3840×720 world、三段連續 1280×720 竹林 section 與完整覆蓋驗證。
+- [x] Player／Enemy／Boss／knockback 共用擴充後的 walk/world contract，正常流程起始不再被未來 encounter／Boss lock 永久鎖住。
+- [x] 現有敵人與 Boss 暫放第三畫面；正式 spawn trigger、兩場 encounter 與 Boss entry 仍分別保留給 5R.2／5R.3。
+- [x] Desktop browser：`scrollX 0 → 355 → 2560`，Player 到達 `x=3727`，三段背景無 uncovered area，console 0 error。
+- [x] 844×390 landscape touch：Canvas 仍為邏輯 1280×720，觸控 traversal 到 `scrollX=758`。
+- [x] 390×844 portrait FIT：Canvas 比例維持 16:9，觸控 traversal 到 `scrollX=586`。
+- [x] 10 次 Scene restart：一個 Canvas、一個 Player／Boss ownership、camera 回 0、無 stale completion 或 browser error。
+- [x] Boss smoke regression：arena release 1 次、stage-complete 1 次且在 release 後發布，browser error 0。
+- [x] `pnpm test` 56/56、`pnpm build`、`pnpm typecheck`、lint 0 errors（既有 4 warnings）通過。
+- [ ] 三段目前重複使用同一張 forest art；獨特 section art 留在內容 polish，不阻擋 5R.2。
 
 ## Historical Closeout Evidence
 

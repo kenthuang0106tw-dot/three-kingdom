@@ -22,8 +22,8 @@
 | Combat | Playable prototype | Combo、獨立 hitbox、multi-hit、Hit Stop、Flash、Spark、Knockback、Shake |
 | Enemy | Playable prototype | 三種近戰小兵、混合 Formation、Attack Slot、hurt/dead/cleanup |
 | Boss | Recovery required | Actor lifecycle／動畫／death cleanup 已有；缺 movement、對線、attack hitbox 與 player damage |
-| Stage | Recovery required | 目前只有單一 1280×720 room；缺三畫面世界、可見捲動、兩場 encounter 與 Boss 進場流程 |
-| Camera | Contract only | follow 計算與 lock ownership 已有；world 等於 viewport，正式流程尚無可見捲動 |
+| Stage | Recovery in progress | 3840×720 三畫面世界與 traversal 已完成；缺兩場 encounter 與 Boss 進場流程 |
+| Camera | Visible traversal | follow、整數 scroll 與 0–2560 clamp 已接入；encounter/Boss lock sequencing 尚未接入 |
 | Mobile | Missing | 無正式 Phaser touch input；下一步 Task 1.2 |
 | UI | Title only | Phaser Title/start 已完成；無 HUD、pause、continue、result |
 | Audio | Missing | 無 runtime assets |
@@ -261,7 +261,7 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 
 | ID | Description | Priority | Difficulty | Dependencies | Acceptance Criteria | Expected Files | Risk |
 |---|---|---:|---:|---|---|---|---|
-| 5R.1 | Three-screen world and visible camera scrolling | P0 | High | M3 contracts | world width ≥3840；三段背景無空白；玩家可離開首屏；camera `scrollX` 實際變化且不越界 | StageConfig/MainScene/camera tests | camera lock 阻止捲動、重複背景接縫 |
+| 5R.1 | Three-screen world and visible camera scrolling（Completed 2026-07-14） | P0 | High | M3 contracts | world width ≥3840；三段背景無空白；玩家可離開首屏；camera `scrollX` 實際變化且不越界 | StageConfig/MainScene/camera tests | camera lock 阻止捲動、重複背景接縫 |
 | 5R.2 | Two encounter triggers and gates | P0 | High | 5R.1, M4 | 進區才生成；戰鬥時鎖定；清敵後解除；兩場依序完成 | stage director/config/tests | spawn ownership、soft lock |
 | 5R.3 | Boss arena entry sequencing | P0 | Medium | 5R.2, M5 arena | 普通 encounter 完成後才啟用 Boss 與 Boss lock；Boss 不在起點同時出現 | stage/Boss orchestration | premature activation |
 | 5R.4 | Boss locomotion, facing, and Y alignment | P0 | High | 5R.3, Boss walk assets | Boss 會接近、停止、面向與對線；不倒走、不瞬移、不出界 | BossActor/metadata/assets/tests | 缺 walk frames、腳底漂移 |
@@ -408,7 +408,8 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 - M6 / Task 6.2 (Title/start) completed on 2026-07-14.
 - M3 and M5 playable-result acceptance corrected on 2026-07-14; their contract foundations remain accepted.
 - M6 / Task 6.3 is paused until Vertical Slice Recovery completes.
-- Next eligible task: M5R / Task 5R.1 (three-screen world and visible camera scrolling).
+- M5R / Task 5R.1 (three-screen world and visible camera scrolling) completed on 2026-07-14.
+- Next eligible task: M5R / Task 5R.2 (two encounter triggers and gates).
 
 ## 4. Global Acceptance Rules
 

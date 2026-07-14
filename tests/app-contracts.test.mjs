@@ -465,15 +465,22 @@ test("Combat room acceptance covers formation, attack director, alignment, and s
 test("StageConfig remains Phaser-free and validates the bamboo combat room", async () => {
   const source = await readFile(new URL("../app/game/stage/StageConfig.ts", import.meta.url), "utf8");
   assert.doesNotMatch(source, /from ["']phaser["']/);
-  assert.equal(BAMBOO_COMBAT_ROOM.worldBounds.width, 1280);
+  assert.equal(BAMBOO_COMBAT_ROOM.worldBounds.width, 3840);
   assert.equal(BAMBOO_COMBAT_ROOM.worldBounds.height, 720);
-  assert.deepEqual(BAMBOO_COMBAT_ROOM.walkBounds, { x: 70, y: 390, width: 1140, height: 245 });
+  assert.deepEqual(BAMBOO_COMBAT_ROOM.walkBounds, { x: 70, y: 390, width: 3700, height: 245 });
+  assert.deepEqual(BAMBOO_COMBAT_ROOM.backgroundSections.map(section => section.bounds.x), [0, 1280, 2560]);
+  assert.ok(BAMBOO_COMBAT_ROOM.backgroundSections.every(section => section.bounds.width === 1280 && section.bounds.height === 720));
   assert.equal(BAMBOO_COMBAT_ROOM.spawnPoints.length, 3);
+  assert.ok(BAMBOO_COMBAT_ROOM.spawnPoints.every(point => point.x > 1280));
   assert.equal(validateStageConfig(BAMBOO_COMBAT_ROOM), BAMBOO_COMBAT_ROOM);
   assert.throws(() => validateStageConfig({
     ...BAMBOO_COMBAT_ROOM,
     spawnPoints: [...BAMBOO_COMBAT_ROOM.spawnPoints, { id: "enemy-front", x: 900, y: 560 }],
   }), /Duplicate spawn point id/);
+  assert.throws(() => validateStageConfig({
+    ...BAMBOO_COMBAT_ROOM,
+    backgroundSections: BAMBOO_COMBAT_ROOM.backgroundSections.slice(1),
+  }), /Background sections must cover world bounds without gaps/);
 });
 
 test("Stage bounds clamp movement and knockback deterministically", async () => {
@@ -497,6 +504,9 @@ test("Camera follow clamps scroll to world bounds without Phaser coupling", asyn
   assert.deepEqual(calculateCameraScroll({ x: 100, y: 100 }, world, viewport), { x: 0, y: 0 });
   assert.deepEqual(calculateCameraScroll({ x: 1000, y: 700 }, world, viewport), { x: 360, y: 340 });
   assert.deepEqual(calculateCameraScroll({ x: 1999, y: 1199 }, world, viewport), { x: 720, y: 480 });
+  assert.deepEqual(calculateCameraScroll(BAMBOO_COMBAT_ROOM.playerSpawn, BAMBOO_COMBAT_ROOM.worldBounds, viewport), { x: 0, y: 0 });
+  assert.deepEqual(calculateCameraScroll({ x: 1920, y: 560 }, BAMBOO_COMBAT_ROOM.worldBounds, viewport), { x: 1280, y: 0 });
+  assert.deepEqual(calculateCameraScroll({ x: 3770, y: 560 }, BAMBOO_COMBAT_ROOM.worldBounds, viewport), { x: 2560, y: 0 });
   assert.doesNotMatch(source, /from ["']phaser["']/);
 });
 
@@ -517,13 +527,13 @@ test("Camera lock contract preserves independent encounter and Boss ownership", 
   assert.doesNotMatch(source, /from ["']phaser["']/);
 });
 
-test("Boss arena reuses one authoritative walk boundary and releases its lock", async () => {
+test("Boss arena occupies the final viewport and releases its lock", async () => {
   const scene = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
-  assert.deepEqual(BAMBOO_BOSS_ARENA.bounds, BAMBOO_COMBAT_ROOM.walkBounds);
-  assert.deepEqual(BAMBOO_BOSS_ARENA.cameraScroll, { x: 0, y: 0 });
-  assert.equal(isStagePointWithin(BAMBOO_COMBAT_ROOM.playerSpawn, BAMBOO_BOSS_ARENA.bounds), true);
-  assert.equal(isStagePointWithin({ x: 1080, y: 560 }, BAMBOO_BOSS_ARENA.bounds), true);
-  assert.deepEqual(clampStagePoint({ x: -100, y: 900 }, BAMBOO_BOSS_ARENA.bounds), { x: 70, y: 635 });
+  assert.deepEqual(BAMBOO_BOSS_ARENA.bounds, { x: 2630, y: 390, width: 1140, height: 245 });
+  assert.deepEqual(BAMBOO_BOSS_ARENA.cameraScroll, { x: 2560, y: 0 });
+  assert.equal(isStagePointWithin(BAMBOO_BOSS_ARENA.spawn, BAMBOO_BOSS_ARENA.bounds), true);
+  assert.equal(isStagePointWithin(BAMBOO_COMBAT_ROOM.playerSpawn, BAMBOO_BOSS_ARENA.bounds), false);
+  assert.deepEqual(clampStagePoint({ x: -100, y: 900 }, BAMBOO_BOSS_ARENA.bounds), { x: 2630, y: 635 });
   assert.match(scene, /lockCamera\(this\.cameraLockState, "boss"\)/);
   assert.match(scene, /unlockCamera\(this\.cameraLockState, "boss"\)/);
   assert.match(scene, /hasCameraLock\(this\.cameraLockState, "boss"\)/);
@@ -532,11 +542,13 @@ test("Boss arena reuses one authoritative walk boundary and releases its lock", 
   assert.match(scene, /dataset\.bossArenaReleaseCount/);
 });
 
-test("MainScene owns encounter camera lock lifecycle without enemy internals", async () => {
+test("Recovery traversal starts unlocked while preserving explicit diagnostic lock ownership", async () => {
   const source = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
-  assert.match(source, /lockCamera\(this\.cameraLockState, "encounter"\)/);
+  assert.match(source, /if \(this\.bossSmokeMode\) \{\s+this\.cameraLockState = lockCamera\(this\.cameraLockState, "encounter"\)/);
   assert.match(source, /unlockCamera\(this\.cameraLockState, "encounter"\)/);
-  assert.match(source, /if \(isCameraLocked\(this\.cameraLockState\)\) return/);
+  assert.match(source, /if \(!isCameraLocked\(this\.cameraLockState\)\)/);
+  assert.match(source, /dataset\.cameraScrollX/);
+  assert.match(source, /dataset\.playerWorldX/);
 });
 
 test("Encounter flow tracks spawn count, all-clear, duplicate removal, and reset", async () => {

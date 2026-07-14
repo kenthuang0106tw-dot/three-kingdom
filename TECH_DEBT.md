@@ -10,6 +10,7 @@
 - **Impact:** Later UI work can proceed on top of an incomplete vertical slice, hiding the absence of the core scrolling-stage and Boss-combat loop.
 - **Resolution:** Preserve accepted contracts, reopen playable-result acceptance, and complete M5R Tasks 5R.1–5R.8 before resuming M6.3.
 - **Target:** M5R Vertical Slice Recovery.
+- **Progress 2026-07-14:** M5R.1 completed the 3840×720 world, three contiguous sections, shared walk bounds, visible 0–2560 camera scroll, mobile FIT traversal, and restart evidence. Two encounters, Boss entry/combat, and clear/fail remain open in 5R.2–5R.8.
 
 ## High
 
@@ -303,11 +304,11 @@ remaining tasks rather than hidden temporary behavior.
 
 ### TD-M05 Update — Boss arena ownership
 
-M5 / Task 5.5 gives camera locks independent `encounter` and `boss` ownership
+M5 / Task 5.5 gave camera locks independent `encounter` and `boss` ownership
 and reuses the room walk bounds as the current Boss arena. This removes early
 unlock and competing-clamp risks without adding a general arena framework.
-The world is still one 1280×720 room, so multi-screen arena entry and camera
-travel remain future Stage content rather than simulated behavior.
+At that acceptance point the world was still one 1280×720 room. M5R.1 has since
+expanded traversal; multi-screen arena entry remains Task 5R.3.
 
 ### TD-M05 Update — Stage completion publication
 
@@ -318,12 +319,12 @@ game-flow, persistence, scoring, and audio remain intentionally deferred.
 
 ### TD-M05 Update — Full-stage acceptance
 
-M5 / Task 5.7 verifies the existing stage contracts as one deterministic run
+M5 / Task 5.7 verified the existing stage contracts as one deterministic run
 and across desktop, landscape-touch, portrait-fitted, and ten-restart browser
 smokes. No acceptance failure required a runtime patch. Remaining limitations
-are explicit: the world is still one 1280×720 room, Boss attacks do not yet
-damage the player, Boss walk behavior is absent, and Result UI, HUD, audio,
-scoring, persistence, and physical-device feel remain deferred.
+at that acceptance point included a 1280×720 room. M5R.1 has since resolved the
+three-screen traversal gap; Boss damage, Boss walk behavior, Result UI, HUD,
+audio, scoring, persistence, and physical-device feel remain deferred.
 
 ### TD-M06 Update — Game-flow ownership contract
 

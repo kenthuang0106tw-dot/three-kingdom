@@ -681,4 +681,20 @@
 | M5 playable result | Reopened | Boss has no movement/Y alignment, player-damaging attack hitbox, or real stage-entry sequence |
 | M6 status | Paused after 6.2 | Game-flow contract and Title/start remain accepted; HUD and later UI wait for M5R.8 |
 | Recovery gate | Required | 5R.1–5R.8 must pass before the project again claims a complete playable Vertical Slice |
-| Next task | Selected | M5R / Task 5R.1 — Three-screen world and visible camera scrolling |
+| Planning next task | Superseded | M5R / Task 5R.1 was selected here and is now completed below |
+
+## M5R / Task 5R.1 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M5R / Task 5R.1 — Three-screen world and visible camera scrolling |
+| Stage data | Pass | 3840×720 world; three contiguous 1280×720 sections; gap/coverage validation |
+| Shared bounds | Pass | 3700px walk bounds used by Arcade Physics, actors, formation, and knockback |
+| Desktop traversal | Pass | `scrollX 0 → 355 → 2560`; Player reached `x=3727`; one Canvas; zero browser errors |
+| Landscape touch | Pass | 844×390 viewport; logical Canvas 1280×720; touch traversal reached `scrollX=758` |
+| Portrait FIT | Pass | 390×844 viewport; 325×182.8125 fitted Canvas; touch traversal reached `scrollX=586` |
+| Restart ownership | Pass | 10 Scene restarts; one Canvas; one Boss; Player `x=180`; scroll 0; completion count 0 |
+| Boss regression | Pass | Boss cleanup released arena once, then published one stage-complete event; zero browser errors |
+| Quality gates | Pass | `pnpm test` 56/56; build/typecheck; lint 0 errors with 4 existing warnings |
+| Temporary content | Accepted | Existing forest art repeats for all three sections; encounter/Boss sequencing remains 5R.2/5R.3 |
+| Next task | Selected | M5R / Task 5R.2 — Two encounter triggers and gates |

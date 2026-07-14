@@ -28,10 +28,17 @@ export type StageExit = {
   readonly targetStageId: string | null;
 };
 
+export type StageBackgroundSection = {
+  readonly id: string;
+  readonly textureKey: string;
+  readonly bounds: StageRect;
+};
+
 export type StageConfig = {
   readonly id: string;
   readonly worldBounds: StageRect;
   readonly walkBounds: StageRect;
+  readonly backgroundSections: readonly StageBackgroundSection[];
   readonly playerSpawn: StageSpawnPoint;
   readonly spawnPoints: readonly StageSpawnPoint[];
   readonly encounters: readonly StageEncounter[];
@@ -81,6 +88,24 @@ export function validateStageConfig(config: StageConfig): StageConfig {
     config.walkBounds.y + config.walkBounds.height > config.worldBounds.y + config.worldBounds.height
   ) throw new Error("Walk bounds must be inside world bounds");
 
+  const backgroundIds = new Set<string>();
+  const backgroundSections = [...config.backgroundSections].sort((left, right) => left.bounds.x - right.bounds.x);
+  let expectedSectionX = config.worldBounds.x;
+  for (const section of backgroundSections) {
+    if (!section.id || !section.textureKey || backgroundIds.has(section.id)) throw new Error(`Invalid background section: ${section.id}`);
+    backgroundIds.add(section.id);
+    assertRect(`background ${section.id}`, section.bounds);
+    if (
+      section.bounds.x !== expectedSectionX ||
+      section.bounds.y !== config.worldBounds.y ||
+      section.bounds.height !== config.worldBounds.height
+    ) throw new Error("Background sections must cover world bounds without gaps");
+    expectedSectionX += section.bounds.width;
+  }
+  if (expectedSectionX !== config.worldBounds.x + config.worldBounds.width) {
+    throw new Error("Background sections must cover world bounds without gaps");
+  }
+
   assertPoint("player spawn", config.playerSpawn, config.walkBounds);
   const ids = new Set<string>();
   for (const point of config.spawnPoints) {
@@ -103,27 +128,32 @@ export function validateStageConfig(config: StageConfig): StageConfig {
 
 export const BAMBOO_COMBAT_ROOM: StageConfig = validateStageConfig({
   id: "bamboo-combat-room",
-  worldBounds: { x: 0, y: 0, width: 1280, height: 720 },
-  walkBounds: { x: 70, y: 390, width: 1140, height: 245 },
+  worldBounds: { x: 0, y: 0, width: 3840, height: 720 },
+  walkBounds: { x: 70, y: 390, width: 3700, height: 245 },
+  backgroundSections: [
+    { id: "bamboo-section-1", textureKey: "forest", bounds: { x: 0, y: 0, width: 1280, height: 720 } },
+    { id: "bamboo-section-2", textureKey: "forest", bounds: { x: 1280, y: 0, width: 1280, height: 720 } },
+    { id: "bamboo-section-3", textureKey: "forest", bounds: { x: 2560, y: 0, width: 1280, height: 720 } },
+  ],
   playerSpawn: { id: "player-start", x: 180, y: 602 },
   spawnPoints: [
-    { id: "enemy-front", x: 900, y: 560, enemyType: "soldier" },
-    { id: "enemy-upper-rear", x: 830, y: 455, enemyType: "mauler" },
-    { id: "enemy-lower-front", x: 850, y: 625, enemyType: "duelist" },
+    { id: "enemy-front", x: 3650, y: 560, enemyType: "soldier" },
+    { id: "enemy-upper-rear", x: 3550, y: 455, enemyType: "mauler" },
+    { id: "enemy-lower-front", x: 3600, y: 625, enemyType: "duelist" },
   ],
   encounters: [{ id: "opening-combat", spawnPointIds: ["enemy-front", "enemy-upper-rear", "enemy-lower-front"] }],
   exits: [{
     id: "room-exit",
-    bounds: { x: 1140, y: 390, width: 70, height: 245 },
+    bounds: { x: 3690, y: 390, width: 80, height: 245 },
     targetStageId: null,
   }],
 });
 
-// The current prototype is a single room, so its first Boss arena deliberately
-// reuses the room's authoritative walk boundary instead of introducing a
-// second physics clamp or speculative arena framework.
+// The concrete Boss arena occupies the final viewport. Runtime physics still
+// uses the Stage walk boundary; arena activation remains Task 5R.3.
 export const BAMBOO_BOSS_ARENA = Object.freeze({
   id: "bamboo-boss-arena",
-  bounds: BAMBOO_COMBAT_ROOM.walkBounds,
-  cameraScroll: Object.freeze({ x: 0, y: 0 }),
+  bounds: Object.freeze({ x: 2630, y: 390, width: 1140, height: 245 }),
+  cameraScroll: Object.freeze({ x: 2560, y: 0 }),
+  spawn: Object.freeze({ x: 3420, y: 560 }),
 });

@@ -13,7 +13,6 @@
 | Mobile landscape runtime | M1 | safe area、orientation、DPR |
 | Player combat contract tests | M2 | 防止輸入／attack regression |
 | EnemyManager cleanup/director tests | M3 | 多敵人長時間穩定 |
-| Three-screen Stage / visible scrolling | M5R.1 | Stage contracts 已有，真正可見捲動未完成 |
 | Two encounter gates | M5R.2 | 關卡戰鬥循環 |
 | Playable Boss combat | M5R.3–5R.7 | locomotion、alignment、hitbox、damage、clear/fail |
 | HUD/pause/result | M6.3–6.7 | M5R.8 通過後恢復；Title 已完成 |

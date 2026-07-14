@@ -480,6 +480,20 @@ contracts rather than introduce parallel Stage, Camera, Boss, or flow state.
 M6.1–6.2 remain valid consumers; M6.3 and later product UI are blocked until the
 Recovery end-to-end gate passes.
 
+## Three-screen Traversal Contract (M5R / Task 5R.1)
+
+`BAMBOO_COMBAT_ROOM` now describes one 3840×720 world with three explicit,
+contiguous 1280×720 background sections. Validation rejects gaps, vertical
+misalignment, duplicate section IDs, or incomplete world coverage. The Phaser
+Canvas remains a fixed logical 1280×720 surface.
+
+MainScene renders sections from Stage data, sets Arcade Physics to the shared
+3700px walk rectangle, and applies the accepted bounded integer camera helper.
+Normal play begins with no encounter or Boss camera lock; diagnostic Boss smoke
+retains explicit lock ownership. Existing enemies and Boss are temporarily
+placed near the final viewport so traversal is observable. Their formal trigger
+and entry sequencing remain exclusively owned by Tasks 5R.2 and 5R.3.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

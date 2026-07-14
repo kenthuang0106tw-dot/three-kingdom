@@ -187,6 +187,7 @@ Metadata 最少欄位：
 - **M4:** Stage layers、foreground、props、collision/encounter metadata。
 - **M5:** Boss attack 1–3、idle、hurt、phase、dead 已完成；仍缺 walk 與 arena assets。
 - **M5R:** 三段連續竹林 Stage layout、Boss walk frames 與可驗證 arena entry presentation。
+- **M5R.1 runtime:** 已用現有 `forest-camp.png` 建立三段明確、無 uncovered area 的暫時 section；三段獨特場景美術仍屬後續 content polish，不阻擋 encounter work。
 - **M6:** 最小 Title 使用 Phaser system text，無新增 asset；仍缺 HUD、custom font、title/result art。
 - **M7:** Combat SFX、BGM。
 - **M8:** Optimized atlases、loading/social/release assets。

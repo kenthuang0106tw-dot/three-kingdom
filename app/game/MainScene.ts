@@ -29,8 +29,8 @@ type PreviewFrame = {
   originY: number; offsetX: number; offsetY: number; classification: string;
 };
 
-const WIDTH = BAMBOO_COMBAT_ROOM.worldBounds.width;
-const HEIGHT = BAMBOO_COMBAT_ROOM.worldBounds.height;
+const VIEWPORT_WIDTH = 1280;
+const VIEWPORT_HEIGHT = 720;
 const START_X = BAMBOO_COMBAT_ROOM.playerSpawn.x;
 const START_FOOT_Y = BAMBOO_COMBAT_ROOM.playerSpawn.y;
 const WALK_SPEED = 235;
@@ -39,8 +39,6 @@ const ENEMY_FRAME_SIZE = 384;
 const ENEMY_FEET_Y = 354;
 const HURT_MS = 300;
 const COMBO_WINDOW_MS = 360;
-const BOSS_SPAWN_X = 1080;
-const BOSS_SPAWN_FOOT_Y = 560;
 const ATTACK_STATES: AttackState[] = ["attack1", "attack2", "attack3"];
 const FRAME_ORIGIN_Y: Record<string, number> = {
   "walk-0": 739 / 793, "walk-1": 736 / 793, "walk-2": 746 / 793, "walk-3": 741 / 793,
@@ -209,13 +207,22 @@ export default class MainScene extends Phaser.Scene {
       BAMBOO_COMBAT_ROOM.worldBounds.height,
     );
     this.physics.world.setBounds(
-      BAMBOO_BOSS_ARENA.bounds.x,
-      BAMBOO_BOSS_ARENA.bounds.y,
-      BAMBOO_BOSS_ARENA.bounds.width,
-      BAMBOO_BOSS_ARENA.bounds.height,
+      BAMBOO_COMBAT_ROOM.walkBounds.x,
+      BAMBOO_COMBAT_ROOM.walkBounds.y,
+      BAMBOO_COMBAT_ROOM.walkBounds.width,
+      BAMBOO_COMBAT_ROOM.walkBounds.height,
     );
-    const background = this.add.image(WIDTH / 2, HEIGHT / 2, "forest");
-    background.setScale(Math.max(WIDTH / background.width, HEIGHT / background.height)).setDepth(0);
+    for (const section of BAMBOO_COMBAT_ROOM.backgroundSections) {
+      const background = this.add.image(
+        section.bounds.x + section.bounds.width / 2,
+        section.bounds.y + section.bounds.height / 2,
+        section.textureKey,
+      );
+      background.setScale(Math.max(
+        section.bounds.width / background.width,
+        section.bounds.height / background.height,
+      )).setDepth(0);
+    }
 
     this.playerActor = new PlayerActor(this, START_X, START_FOOT_Y);
     this.showIdleFrame();
@@ -240,8 +247,8 @@ export default class MainScene extends Phaser.Scene {
     this.enemyManager.spawnAll(BAMBOO_COMBAT_ROOM.spawnPoints);
     this.bossActor = new BossActor(
       this,
-      BOSS_SPAWN_X,
-      BOSS_SPAWN_FOOT_Y,
+      BAMBOO_BOSS_ARENA.spawn.x,
+      BAMBOO_BOSS_ARENA.spawn.y,
       new PhaserGameplayClock(this),
       new SeededRandom(0xb0555),
       {
@@ -255,13 +262,18 @@ export default class MainScene extends Phaser.Scene {
     if (development) this.game.canvas.dataset.bossActorCount = "1";
     this.updateBossSmokeDataset();
     if (this.bossSmokeMode) this.scheduleBossSmokeHit();
-    this.cameraLockState = lockCamera(this.cameraLockState, "encounter");
-    this.activateBossArena(development);
+    if (this.bossSmokeMode) {
+      this.cameraLockState = lockCamera(this.cameraLockState, "encounter");
+      this.activateBossArena(development);
+    } else this.updateBossArenaDataset(development);
 
     if (development) {
       this.diagnosticMode = new URLSearchParams(window.location.search).get("debugInput") === "1";
-      this.debugText = this.add.text(12, 12, "", { fontFamily: "Consolas, monospace", fontSize: "15px", color: "#fff", backgroundColor: "rgba(0,0,0,.78)", padding: { x: 8, y: 7 } }).setDepth(10000);
+      this.debugText = this.add.text(12, 12, "", { fontFamily: "Consolas, monospace", fontSize: "15px", color: "#fff", backgroundColor: "rgba(0,0,0,.78)", padding: { x: 8, y: 7 } }).setScrollFactor(0).setDepth(10000);
+      this.game.canvas.dataset.stageWorldWidth = String(BAMBOO_COMBAT_ROOM.worldBounds.width);
+      this.game.canvas.dataset.stageSectionCount = String(BAMBOO_COMBAT_ROOM.backgroundSections.length);
     }
+    this.updateCamera();
     this.createTitleOverlay(keyboard);
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
@@ -349,13 +361,18 @@ export default class MainScene extends Phaser.Scene {
   }
 
   private updateCamera() {
-    if (isCameraLocked(this.cameraLockState)) return;
-    const scroll = calculateCameraScroll(
-      { x: this.playerBodyZone.x, y: this.playerBodyZone.y },
-      BAMBOO_COMBAT_ROOM.worldBounds,
-      { width: this.cameras.main.width, height: this.cameras.main.height },
-    );
-    this.cameras.main.setScroll(Math.round(scroll.x), Math.round(scroll.y));
+    if (!isCameraLocked(this.cameraLockState)) {
+      const scroll = calculateCameraScroll(
+        { x: this.playerBodyZone.x, y: this.playerBodyZone.y },
+        BAMBOO_COMBAT_ROOM.worldBounds,
+        { width: this.cameras.main.width, height: this.cameras.main.height },
+      );
+      this.cameras.main.setScroll(Math.round(scroll.x), Math.round(scroll.y));
+    }
+    if (process.env.NODE_ENV !== "production") {
+      this.game.canvas.dataset.cameraScrollX = String(Math.round(this.cameras.main.scrollX));
+      this.game.canvas.dataset.playerWorldX = String(Math.round(this.playerBodyZone.x));
+    }
   }
 
   private createCombatAnimations() {
@@ -557,10 +574,10 @@ export default class MainScene extends Phaser.Scene {
     this.updateBossArenaDataset(process.env.NODE_ENV !== "production");
     this.stageExitState = makeExitAvailable(this.stageExitState, BAMBOO_COMBAT_ROOM.exits, "room-exit");
     if (this.defeatedText) return;
-    this.defeatedText = this.add.text(WIDTH / 2, HEIGHT / 2, "All Enemies Defeated", {
+    this.defeatedText = this.add.text(VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2, "All Enemies Defeated", {
       fontFamily: "Consolas, monospace", fontSize: "36px", color: "#ffffff",
       backgroundColor: "rgba(0,0,0,.72)", padding: { x: 20, y: 12 },
-    }).setOrigin(0.5).setDepth(10000);
+    }).setOrigin(0.5).setScrollFactor(0).setDepth(10000);
   }
 
   private restartStage() {
@@ -568,14 +585,14 @@ export default class MainScene extends Phaser.Scene {
   }
 
   private createTitleOverlay(keyboard: Phaser.Input.Keyboard.KeyboardPlugin) {
-    const shade = this.add.rectangle(WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT, 0x07120d, 0.94)
+    const shade = this.add.rectangle(VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2, VIEWPORT_WIDTH, VIEWPORT_HEIGHT, 0x07120d, 0.94)
       .setScrollFactor(0)
       .setInteractive();
-    const title = this.add.text(WIDTH / 2, HEIGHT / 2 - 48, "THREE KINGDOMS", {
+    const title = this.add.text(VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2 - 48, "THREE KINGDOMS", {
       fontFamily: "Georgia, serif", fontSize: "62px", color: "#f6d56b",
       stroke: "#5b170d", strokeThickness: 7,
     }).setOrigin(0.5).setScrollFactor(0);
-    const prompt = this.add.text(WIDTH / 2, HEIGHT / 2 + 50, "PRESS ANY KEY / TAP TO START", {
+    const prompt = this.add.text(VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2 + 50, "PRESS ANY KEY / TAP TO START", {
       fontFamily: "Consolas, monospace", fontSize: "24px", color: "#ffffff",
     }).setOrigin(0.5).setScrollFactor(0);
     this.titleOverlay = this.add.container(0, 0, [shade, title, prompt]).setDepth(20000);
@@ -676,9 +693,9 @@ export default class MainScene extends Phaser.Scene {
     this.enemyPreviewKeys = keyboard.addKeys({ left: "LEFT", right: "RIGHT" }) as typeof this.enemyPreviewKeys;
     const groundY = 580;
     const guide = this.add.graphics().setDepth(20);
-    guide.lineStyle(2, 0xff3b30, 1).lineBetween(100, groundY, WIDTH - 100, groundY);
-    guide.fillStyle(0x00ffff, 1).fillCircle(WIDTH / 2, groundY, 5);
-    this.enemyPreviewSprite = this.add.sprite(WIDTH / 2, groundY, "enemy-soldier", ENEMY_PREVIEW_FRAMES[0])
+    guide.lineStyle(2, 0xff3b30, 1).lineBetween(100, groundY, VIEWPORT_WIDTH - 100, groundY);
+    guide.fillStyle(0x00ffff, 1).fillCircle(VIEWPORT_WIDTH / 2, groundY, 5);
+    this.enemyPreviewSprite = this.add.sprite(VIEWPORT_WIDTH / 2, groundY, "enemy-soldier", ENEMY_PREVIEW_FRAMES[0])
       .setOrigin(0.5, ENEMY_FEET_Y / ENEMY_FRAME_SIZE)
       .setScale(SOLDIER_ENEMY_CONFIG.displayScale);
     this.enemyPreviewText = this.add.text(24, 22, "", {
@@ -701,7 +718,7 @@ export default class MainScene extends Phaser.Scene {
     this.enemyPreviewSprite!.setTexture("enemy-soldier", name)
       .setOrigin(0.5, ENEMY_FEET_Y / ENEMY_FRAME_SIZE)
       .setScale(SOLDIER_ENEMY_CONFIG.displayScale)
-      .setPosition(WIDTH / 2, 580);
+      .setPosition(VIEWPORT_WIDTH / 2, 580);
     this.enemyPreviewText!.setText([
       "ENEMY FEET ALIGNMENT PREVIEW",
       `frame: ${this.enemyPreviewIndex} / ${ENEMY_PREVIEW_FRAMES.length - 1}`,
@@ -721,8 +738,8 @@ export default class MainScene extends Phaser.Scene {
     const keyboard = this.input.keyboard;
     if (!keyboard) throw new Error("Keyboard input is unavailable");
     this.previewKeys = keyboard.addKeys({ left: "LEFT", right: "RIGHT", play: "SPACE", slower: "DOWN", faster: "UP", loop: "L", onion: "O" }) as typeof this.previewKeys;
-    this.onionSprite = this.add.sprite(WIDTH / 2, 600, "guanyu-attack", "attack-0").setAlpha(0.32).setTint(0x69cfff).setScale(0.64).setVisible(false);
-    this.previewSprite = this.add.sprite(WIDTH / 2, 600, "guanyu-attack", "attack-0").setScale(0.64);
+    this.onionSprite = this.add.sprite(VIEWPORT_WIDTH / 2, 600, "guanyu-attack", "attack-0").setAlpha(0.32).setTint(0x69cfff).setScale(0.64).setVisible(false);
+    this.previewSprite = this.add.sprite(VIEWPORT_WIDTH / 2, 600, "guanyu-attack", "attack-0").setScale(0.64);
     this.previewText = this.add.text(24, 22, "", { fontFamily: "Consolas, monospace", fontSize: "18px", color: "#fff", backgroundColor: "rgba(0,0,0,.8)", padding: { x: 12, y: 10 }, lineSpacing: 3 }).setDepth(100);
     this.showPreviewFrame(0);
   }
@@ -748,9 +765,9 @@ export default class MainScene extends Phaser.Scene {
   private showPreviewFrame(index: number) {
     this.previewIndex = Phaser.Math.Wrap(index, 0, PREVIEW_FRAMES.length);
     const current = PREVIEW_FRAMES[this.previewIndex];
-    this.previewSprite!.setTexture("guanyu-attack", current.name).setOrigin(0.5, current.originY).setPosition(WIDTH / 2, 600);
+    this.previewSprite!.setTexture("guanyu-attack", current.name).setOrigin(0.5, current.originY).setPosition(VIEWPORT_WIDTH / 2, 600);
     const previous = PREVIEW_FRAMES[Phaser.Math.Wrap(this.previewIndex - 1, 0, PREVIEW_FRAMES.length)];
-    this.onionSprite!.setTexture("guanyu-attack", previous.name).setOrigin(0.5, previous.originY).setPosition(WIDTH / 2, 600).setVisible(this.onionEnabled);
+    this.onionSprite!.setTexture("guanyu-attack", previous.name).setOrigin(0.5, previous.originY).setPosition(VIEWPORT_WIDTH / 2, 600).setVisible(this.onionEnabled);
     this.refreshPreviewText();
   }
 
