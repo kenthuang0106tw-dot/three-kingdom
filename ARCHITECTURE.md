@@ -465,6 +465,21 @@ one keyboard listener and any remaining overlay. The input edge used for Title
 start is consumed before gameplay resumes, preventing a J-key start from also
 triggering an attack.
 
+## Vertical Slice Recovery Boundary (Planning Correction 2026-07-14)
+
+The accepted M3 modules are foundation contracts for bounds, camera math,
+encounter state, exits, and reset; they do not constitute the originally
+promised three-screen playable stage. Runtime remains one 1280×720 world, so
+camera follow has no visible scroll range. The accepted M5 modules likewise
+prove Boss lifecycle, presentation, cleanup, arena-lock ownership, and
+completion-event ordering, but the Boss has no locomotion, alignment policy,
+player-damaging hitbox, or real stage-entry sequence.
+
+Milestone 5R now owns the missing composition work. It must reuse the existing
+contracts rather than introduce parallel Stage, Camera, Boss, or flow state.
+M6.1–6.2 remain valid consumers; M6.3 and later product UI are blocked until the
+Recovery end-to-end gate passes.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

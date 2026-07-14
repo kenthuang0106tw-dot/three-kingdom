@@ -1,25 +1,35 @@
-# Current Sprint — Sprint 1: Runtime Input Contract
+# Current Sprint — Vertical Slice Recovery
 
 ## Sprint Goal
 
-在不增加新 gameplay 的前提下，固定 keyboard action snapshot 與輸入邊界，讓後續 touch、pause 與 visibility contract 有單一輸入來源。
+先把單一 1280×720 combat room 擴充成真正可見的三畫面橫向捲軸世界。完成 5R.1 前，不加入 HUD、Pause、Result、Audio、新角色或新戰鬥內容。
 
 ## Cadence
 
 - Duration：2 weeks
 - Capacity：1 developer + AI，約 40–55 hours
-- Milestone：M1 — Runtime Contracts and Mobile Input
-- Scope rule：本 Sprint 只做 keyboard action snapshot；禁止加入 touch、pause、Stage、Boss、新角色、新招式或 Audio
+- Milestone：M5R — Vertical Slice Recovery
+- Scope rule：一次只做一個 Recovery Task；目前唯一 Task 是 5R.1
 
 ## Task List
 
 | Order | Task | Estimate | Deliverable | Verification |
 |---:|---|---:|---|---|
-| 1 | ✅ M1 / Task 1.1 — Define Action Snapshot and Keyboard Input Boundary | 6–10h | `ActionSnapshot`、keyboard contract tests | tests + browser keyboard smoke passed |
-| 2 | ▶ M1 / Task 1.2 — Phaser Touch Controls | 10–16h | touch action adapter | pointer/multi-touch smoke |
-| 3 | Pause/hit-stop/visibility clock contract | 8–12h | lifecycle clock contract | deterministic time tests |
-| 4 | Readonly gameplay events/snapshot | 6–10h | event/snapshot types | consumer contract tests |
-| 5 | Deterministic seed/test clock | 6–10h | RNG/time adapter | repeatable director tests |
+| 1 | ▶ M5R / Task 5R.1 — Three-screen world and visible camera scrolling | 12–18h | ≥3840px world、三段竹林背景、可見 camera scroll | deterministic bounds/camera tests + desktop/mobile browser smoke |
+| 2 | M5R / Task 5R.2 — Two encounter triggers and gates | 14–20h | 兩場依序 encounter | trigger/lock/clear browser acceptance |
+| 3 | M5R / Task 5R.3 — Boss arena entry sequencing | 8–12h | Boss 延後啟用與 arena entry | no premature Boss/lock smoke |
+
+## Recovery Planning Correction — 2026-07-14
+
+- [x] 保留 M3 Stage 與 M5 Boss 已完成的純 contracts、assets、cleanup 與 restart evidence。
+- [x] 撤銷「M3 已完成三畫面可玩關卡」的結論；目前 runtime 仍是單一 1280×720 room。
+- [x] 撤銷「M5 已完成可玩 Boss 戰／完整關卡」的結論；Boss 尚無 locomotion、alignment、attack hitbox 或 player damage。
+- [x] 建立 M5R Vertical Slice Recovery，將真正可玩成果拆成 5R.1–5R.8。
+- [x] 保留已完成的 M6.1 game-flow contract 與 M6.2 Title/start。
+- [x] 暫停 M6.3 HUD；Recovery 全部通過後才恢復 M6。
+- [x] 唯一 NEXT_TASK 改為 5R.1。
+
+## Historical Closeout Evidence
 
 ## Detailed Acceptance
 

@@ -670,3 +670,15 @@
 | Restart ownership | Pass | 10 Scene restarts; one 1280×720 Canvas; one Boss; completion count 0; Title re-armed |
 | Browser errors | Pass | Zero errors across Title, keyboard, pointer, and restart smoke tabs |
 | Deferred | Non-blocking | Player/Boss HUD remains M6 / Task 6.3 |
+
+## Vertical Slice Planning Correction — 2026-07-14
+
+| Item | Result | Evidence |
+|---|---|---|
+| M3 contract foundation | Retained | Bounds, camera calculation, encounter state, exit, reset, and cleanup evidence remains valid |
+| M3 playable result | Reopened | Runtime world is still 1280×720; no visible horizontal scroll or two sequential encounters |
+| M5 contract foundation | Retained | Boss lifecycle, art, decision rhythm, hurt/phase/death, arena lock, cleanup, and completion ordering remain valid |
+| M5 playable result | Reopened | Boss has no movement/Y alignment, player-damaging attack hitbox, or real stage-entry sequence |
+| M6 status | Paused after 6.2 | Game-flow contract and Title/start remain accepted; HUD and later UI wait for M5R.8 |
+| Recovery gate | Required | 5R.1–5R.8 must pass before the project again claims a complete playable Vertical Slice |
+| Next task | Selected | M5R / Task 5R.1 — Three-screen world and visible camera scrolling |

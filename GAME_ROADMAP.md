@@ -21,11 +21,11 @@
 | Player | Playable prototype | 關羽移動、idle、walk、attack1–3、hurt |
 | Combat | Playable prototype | Combo、獨立 hitbox、multi-hit、Hit Stop、Flash、Spark、Knockback、Shake |
 | Enemy | Playable prototype | 三種近戰小兵、混合 Formation、Attack Slot、hurt/dead/cleanup |
-| Boss | Playable actor prototype | Scene-owned actor、三招、deterministic recovery、hurt、一次 phase change、death/cleanup |
-| Stage | Boss room prototype | 固定 bounds、Boss arena、一次 readonly stage-complete event |
-| Camera | Prototype contract | follow、獨立 encounter/Boss lock ownership、Boss cleanup release |
+| Boss | Recovery required | Actor lifecycle／動畫／death cleanup 已有；缺 movement、對線、attack hitbox 與 player damage |
+| Stage | Recovery required | 目前只有單一 1280×720 room；缺三畫面世界、可見捲動、兩場 encounter 與 Boss 進場流程 |
+| Camera | Contract only | follow 計算與 lock ownership 已有；world 等於 viewport，正式流程尚無可見捲動 |
 | Mobile | Missing | 無正式 Phaser touch input；下一步 Task 1.2 |
-| UI | Debug only | 無 HUD、pause、continue、result |
+| UI | Title only | Phaser Title/start 已完成；無 HUD、pause、continue、result |
 | Audio | Missing | 無 runtime assets |
 | Tests | Contract baseline | app shell、lifecycle、route 與 multi-enemy source contracts 已建立 |
 | Repository | Baseline | baseline、UTF-8、單一 runtime、pnpm、lint/typecheck、tests、production routes 已完成 |
@@ -177,6 +177,8 @@ Task 1.1 completed in the current sprint; Task 1.2 is next.
 
 ## Milestone 3 — Playable Scrolling Stage Skeleton
 
+**Status correction (2026-07-14):** 3.1–3.7 的資料、bounds、camera、encounter、exit 與 reset contracts 保留為完成；原本宣稱的 Playable Result 未實現，因此 Milestone 3 的「可玩關卡完成」驗收撤銷並移入 Vertical Slice Recovery。
+
 **Playable Result:** 玩家可在至少三個畫面寬的竹林中前進，完成兩場使用現有小兵的 encounter，抵達終點並 restart。
 
 **Goal:** 在增加敵人內容前固定 Stage、Camera、Encounter 與 actor-world interface。
@@ -193,7 +195,7 @@ Task 1.1 completed in the current sprint; Task 1.2 is next.
 | 3.4 | Encounter camera lock/unlock | P0 | High | 3.3 | 進區鎖定、清敵解除、無 soft lock | camera/stage director | Camera 與 AI 循環依賴 |
 | 3.5 | Spawn and all-clear flow | P0 | Medium | 3.1, M2 enemy events | spawn 不重疊；死亡後正確 clear | StageDirector | manager ownership 不清 |
 | 3.6 | Stage exit and restart | P0 | Medium | 3.4, 3.5 | 抵達 exit 可完成並重新開始 | stage flow | reset 漏資源 |
-| 3.7 | Stage traversal acceptance | P0 | High | 3.1–3.6 | 連續完成 10 次，無 soft lock／leak | e2e/checklist | 長流程難重現 |
+| 3.7 | Current-room contract acceptance（contract only） | P0 | High | 3.1–3.6 | 單一 room contract 連續 reset 無 soft lock／leak；不代表三畫面關卡完成 | e2e/checklist | contract 被誤當 playable result |
 
 Parallax、foreground props、breakables 暫不在本 Milestone。
 
@@ -223,6 +225,8 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 
 ## Milestone 5 — First Boss and Stage Completion
 
+**Status correction (2026-07-14):** Boss lifecycle、attack art、decision rhythm、hurt/phase/death、arena lock 與 completion event contracts 保留；Boss 尚不會移動、對線或以 hitbox 傷害玩家，且不存在從關卡起點抵達 Boss 的流程，因此 Milestone 5 的「完整 Boss 戰／完整關卡」驗收撤銷並移入 Vertical Slice Recovery。
+
 **Playable Result:** 玩家可從關卡起點一路打到 Boss，擊敗 Boss 後完成關卡。
 
 **Goal:** 建立一名專屬 Boss，不做通用 Boss framework。
@@ -239,17 +243,49 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 | 5.4 | Boss hurt/phase/death | P0 | High | 5.2 | 一次 phase change、完整 death/cleanup | boss actor | phase transition 重入 |
 | 5.5 | Arena bounds/camera lock | P0 | Medium | M3 camera, 5.1 | 玩家/Boss 不出界，死亡後解除 | stage/camera config | 邊界夾死 |
 | 5.6 | Stage-complete event | P0 | Low | 5.4 | Boss 死亡只發布一次 clear event | gameplay events | UI 直接依賴 Boss internals |
-| 5.7 | Full-stage acceptance | P0 | High | 5.1–5.6 | 三平台各完成三次；無 soft lock/error | e2e/checklist | 平衡遮蔽系統 bug |
+| 5.7 | Integrated contract acceptance（playable acceptance revoked） | P0 | High | 5.1–5.6 | lifecycle／cleanup／completion ordering contracts 通過；不代表可玩 Boss 戰或完整關卡 | e2e/checklist | contract 被誤當 playable result |
+
+---
+
+## Milestone 5R — Vertical Slice Recovery
+
+**Status:** Active P0 recovery milestone。M6.1–6.2 保留；M6.3 之後暫停至 5R.8 通過。
+
+**Playable Result:** 玩家從 Title 開始，在至少三個畫面寬的竹林中前進，完成兩場分段 encounter，進入 Boss arena，與會移動且能傷害玩家的 Boss 互相攻防，最後進入 `cleared` 或 `failed`。
+
+**Goal:** 將已驗證的 Stage／Boss contracts 接成真正可玩的 Vertical Slice，不重寫 Player、Combat、Enemy 或 React 架構。
+
+**Dependencies:** M2 combat contracts、M3 stage contracts、M4 mixed enemies、M5 Boss contracts、M6.1–6.2 Title/flow foundation。
+
+### Tasks
+
+| ID | Description | Priority | Difficulty | Dependencies | Acceptance Criteria | Expected Files | Risk |
+|---|---|---:|---:|---|---|---|---|
+| 5R.1 | Three-screen world and visible camera scrolling | P0 | High | M3 contracts | world width ≥3840；三段背景無空白；玩家可離開首屏；camera `scrollX` 實際變化且不越界 | StageConfig/MainScene/camera tests | camera lock 阻止捲動、重複背景接縫 |
+| 5R.2 | Two encounter triggers and gates | P0 | High | 5R.1, M4 | 進區才生成；戰鬥時鎖定；清敵後解除；兩場依序完成 | stage director/config/tests | spawn ownership、soft lock |
+| 5R.3 | Boss arena entry sequencing | P0 | Medium | 5R.2, M5 arena | 普通 encounter 完成後才啟用 Boss 與 Boss lock；Boss 不在起點同時出現 | stage/Boss orchestration | premature activation |
+| 5R.4 | Boss locomotion, facing, and Y alignment | P0 | High | 5R.3, Boss walk assets | Boss 會接近、停止、面向與對線；不倒走、不瞬移、不出界 | BossActor/metadata/assets/tests | 缺 walk frames、腳底漂移 |
+| 5R.5 | Boss attack hitbox and player damage | P0 | High | 5R.4, M2 combat | startup/active/recovery；active frame 每招只命中一次；Player flash/hit-stop/knockback/HP 正常 | boss/combat/tests | 動畫 frame 與 hitbox 時序錯位 |
+| 5R.6 | Player failure and deterministic restart | P0 | High | 5R.5, M6 flow | HP 0 → `failed`；輸入停止；restart 完整重置關卡且 10 次無 leak | flow/MainScene/tests | stale timer/listener/lock |
+| 5R.7 | Boss defeat and cleared flow | P0 | Medium | 5R.5, M5 completion, M6 flow | Boss defeat cleanup 後一次進入 `cleared`；arena release 與 event ordering 正確 | flow/events/MainScene/tests | duplicate completion |
+| 5R.8 | End-to-end Vertical Slice acceptance | P0 | High | 5R.1–5R.7 | Desktop、landscape touch、portrait fitted 各從 Title 完成整關；可失敗重試；零 soft lock/error | browser/checklist/docs | 只測捷徑而非真實流程 |
+
+### Recovery exclusions
+
+- 5R 不加入 HUD、Pause、Result 美化、Audio、新角色、新招式、新敵人、掉寶、成長或第二關。
+- Stage foreground/parallax/props 只在 5R.8 之後進行內容 polish；5R.1 先建立可驗證的三段連續竹林畫面。
 
 ---
 
 ## Milestone 6 — Product Flow and UI
 
+**Status:** 6.1–6.2 completed；6.3–6.7 blocked by Milestone 5R recovery。
+
 **Playable Result:** 玩家可從 Title 開始、查看 HUD、暫停、失敗、重試、擊敗 Boss 並看到 Result。
 
 **Goal:** 以已穩定的 gameplay events 建立完整流程，不讓 UI 控制 actor。
 
-**Dependencies:** M5。
+**Dependencies:** 6.1–6.2 使用既有 M5 contracts；6.3–6.7 必須等待 M5R。
 
 ### Tasks
 
@@ -370,7 +406,9 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 - Milestone 5 is complete.
 - M6 / Task 6.1 (game-flow modes/reset ownership) completed on 2026-07-14.
 - M6 / Task 6.2 (Title/start) completed on 2026-07-14.
-- Next eligible task: M6 / Task 6.3 (Player/Boss HUD).
+- M3 and M5 playable-result acceptance corrected on 2026-07-14; their contract foundations remain accepted.
+- M6 / Task 6.3 is paused until Vertical Slice Recovery completes.
+- Next eligible task: M5R / Task 5R.1 (three-screen world and visible camera scrolling).
 
 ## 4. Global Acceptance Rules
 
@@ -387,6 +425,6 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 
 ## 5. Required Development Order
 
-`M0 Baseline → M1 Runtime Contracts → M2 Combat Room → M3 Stage Skeleton → M4 Enemy Variety → M5 Boss → M6 Product Flow → M7 Audio → M8 Polish → M9 Release`
+`M0 Baseline → M1 Runtime Contracts → M2 Combat Room → M3 Stage Contracts → M4 Enemy Variety → M5 Boss Contracts → M5R Vertical Slice Recovery → M6 Product Flow (resume at 6.3) → M7 Audio → M8 Polish → M9 Release`
 
 不得跳過 M3 先擴敵人內容；不得跳過 M1/M2 直接加入 Stage 或 Boss。

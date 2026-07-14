@@ -128,8 +128,8 @@ tools/build_enemy_art.py     Enemy sheet/atlas rebuild pipeline
 
 ## Current Priority
 
-Milestone 5 is complete and its full-stage acceptance passed. M6 now has a Phaser-owned Title that starts the existing run by keyboard or touch without recreating the Scene. The next single task is M6 / Task 6.3, Player/Boss HUD.
+M3 Stage contracts and M5 Boss contracts are retained, but their playable-result acceptance has been reopened: runtime is still one 1280×720 room and the Boss cannot yet move or damage the player. M6.1–6.2 remain complete; M6.3 is paused.
 
-The M4 mixed-enemy facing and hit-reachability regression has also been repaired and accepted; Boss movement remains deferred.
+The next single task is M5R / Task 5R.1: build a real three-screen bamboo world with visible horizontal camera scrolling.
 
-Milestone 0–4 已完成；Boss cleanup 現在會在 Arena release 後發布一次唯讀 stage-complete event，Scene restart 不會誤發布。下一步只驗收完整現有流程，不加入 Result UI、音效或新內容。
+Recovery 期間不加入 HUD、Result、音效或新內容；先完成真正關卡、Boss 戰與 clear/failed 流程。

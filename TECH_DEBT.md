@@ -4,6 +4,13 @@
 
 ## Critical
 
+### TD-C05 — Contract acceptance was reported as playable Stage/Boss completion
+
+- **Evidence:** Runtime `worldBounds.width` is 1280, equal to the viewport; the Boss has no locomotion, attack hitbox, or player-damage path, while M3 and M5 were described as playable/full-stage complete.
+- **Impact:** Later UI work can proceed on top of an incomplete vertical slice, hiding the absence of the core scrolling-stage and Boss-combat loop.
+- **Resolution:** Preserve accepted contracts, reopen playable-result acceptance, and complete M5R Tasks 5R.1–5R.8 before resuming M6.3.
+- **Target:** M5R Vertical Slice Recovery.
+
 ## High
 
 ### TD-H03 — MainScene owns too many responsibilities

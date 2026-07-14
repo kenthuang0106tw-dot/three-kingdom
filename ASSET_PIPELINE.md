@@ -186,6 +186,7 @@ Metadata 最少欄位：
 - **M3:** 第二／第三種近戰小兵全套動畫。
 - **M4:** Stage layers、foreground、props、collision/encounter metadata。
 - **M5:** Boss attack 1–3、idle、hurt、phase、dead 已完成；仍缺 walk 與 arena assets。
+- **M5R:** 三段連續竹林 Stage layout、Boss walk frames 與可驗證 arena entry presentation。
 - **M6:** 最小 Title 使用 Phaser system text，無新增 asset；仍缺 HUD、custom font、title/result art。
 - **M7:** Combat SFX、BGM。
 - **M8:** Optimized atlases、loading/social/release assets。
