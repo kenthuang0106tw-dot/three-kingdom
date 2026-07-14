@@ -11,7 +11,7 @@ import { ClockState } from "../app/game/time/ClockState.ts";
 import { GameplayEventHub } from "../app/game/events/GameplayEvents.ts";
 import { StageCompletionGate } from "../app/game/events/StageCompletion.ts";
 import { SeededRandom, TestClock } from "../app/game/time/GameplayTime.ts";
-import { createAssetFailureReporter, RUNTIME_ASSET_MANIFEST } from "../app/game/assets/AssetManifest.ts";
+import { createAssetFailureReporter, resolveRuntimeAssetUrl, RUNTIME_ASSET_MANIFEST } from "../app/game/assets/AssetManifest.ts";
 import { PlayerStateMachine } from "../app/game/player/PlayerStateMachine.ts";
 import { PlayerLifecycle } from "../app/game/player/PlayerLifecycle.ts";
 import { resolveAttack } from "../app/game/combat/CombatResolver.ts";
@@ -168,6 +168,14 @@ test("Runtime asset manifest preserves keys and reports missing required assets"
   const messages = [];
   createAssetFailureReporter(RUNTIME_ASSET_MANIFEST, message => messages.push(message))("guanyu-walk");
   assert.deepEqual(messages, ["Required runtime asset failed to load: guanyu-walk"]);
+});
+
+test("Runtime asset URLs support the GitHub Pages repository base path", () => {
+  assert.equal(resolveRuntimeAssetUrl("/scene/forest-camp.png"), "/scene/forest-camp.png");
+  assert.equal(
+    resolveRuntimeAssetUrl("/scene/forest-camp.png", "https://example.github.io/three-kingdom/"),
+    "/three-kingdom/scene/forest-camp.png",
+  );
 });
 
 test("Player state machine enforces explicit transitions and reset", () => {
