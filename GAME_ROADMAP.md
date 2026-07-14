@@ -255,7 +255,7 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 
 | ID | Description | Priority | Difficulty | Dependencies | Acceptance Criteria | Expected Files | Risk |
 |---|---|---:|---:|---|---|---|---|
-| 6.1 | 定義 game-flow modes/reset ownership | P0 | Medium | M5 | title/playing/paused/failed/cleared transition 可測 | flow controller | 與 Scene state 重複 |
+| 6.1 | 定義 game-flow modes/reset ownership（Completed 2026-07-14） | P0 | Medium | M5 | title/playing/paused/failed/cleared transition 可測 | flow controller | 與 Scene state 重複 |
 | 6.2 | Title/start | P0 | Low | 6.1 | keyboard/touch 可開始；無重複 Scene | UI/flow | React/Phaser 混用 |
 | 6.3 | Player/Boss HUD | P0 | Medium | M1 snapshot, M5 | UI 只讀 snapshot；不同 viewport 可讀 | UI layer | 每幀重建物件 |
 | 6.4 | Pause/resume | P0 | Medium | M1 clock, 6.1 | input/time/audio interface 同步 | UI/flow | 與 Hit Stop 衝突 |
@@ -367,7 +367,9 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 - M5 / Task 5.5 (Arena bounds/camera lock) completed in the current sprint.
 - M5 / Task 5.6 (Stage-complete event) completed in the current sprint.
 - M5 / Task 5.7 (Full-stage acceptance) completed in the current sprint.
-- Milestone 5 is complete. Next eligible task: M6 / Task 6.1 (game-flow modes/reset ownership).
+- Milestone 5 is complete.
+- M6 / Task 6.1 (game-flow modes/reset ownership) completed on 2026-07-14.
+- Next eligible task: M6 / Task 6.2 (Title/start).
 
 ## 4. Global Acceptance Rules
 

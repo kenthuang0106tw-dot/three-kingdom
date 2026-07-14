@@ -25,6 +25,7 @@ import { BossLifecycle } from "../app/game/boss/BossLifecycle.ts";
 import { BOSS_ATTACKS } from "../app/game/boss/BossAttackMetadata.ts";
 import { BossDecisionPolicy } from "../app/game/boss/BossDecisionPolicy.ts";
 import { selectFairAttackCandidate } from "../app/game/enemy/AttackSlotPolicy.ts";
+import { GameFlowStateMachine } from "../app/game/flow/GameFlowStateMachine.ts";
 
 test("React shell mounts only the Phaser lifecycle component", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
@@ -180,6 +181,28 @@ test("Player state machine enforces explicit transitions and reset", () => {
   assert.deepEqual(machine.transition("idle"), { previous: "hurt", next: "idle" });
   machine.reset();
   assert.equal(machine.state, "idle");
+});
+
+test("Game flow state machine enforces modes, terminal states, and new-run reset", () => {
+  const flow = new GameFlowStateMachine();
+  assert.equal(flow.state, "title");
+  assert.deepEqual(flow.transition("playing"), { previous: "title", next: "playing" });
+  assert.deepEqual(flow.transition("paused"), { previous: "playing", next: "paused" });
+  assert.deepEqual(flow.transition("playing"), { previous: "paused", next: "playing" });
+  assert.deepEqual(flow.transition("failed"), { previous: "playing", next: "failed" });
+  assert.throws(() => flow.transition("title"), /Invalid game-flow transition: failed -> title/);
+
+  flow.resetForNewRun();
+  assert.equal(flow.state, "title");
+  assert.deepEqual(flow.transition("playing"), { previous: "title", next: "playing" });
+  assert.deepEqual(flow.transition("cleared"), { previous: "playing", next: "cleared" });
+  assert.throws(() => flow.transition("playing"), /Invalid game-flow transition: cleared -> playing/);
+  assert.equal(flow.transition("cleared"), undefined);
+
+  flow.resetForNewRun();
+  assert.deepEqual(flow.transition("playing"), { previous: "title", next: "playing" });
+  assert.deepEqual(flow.transition("paused"), { previous: "playing", next: "paused" });
+  assert.deepEqual(flow.transition("failed"), { previous: "paused", next: "failed" });
 });
 
 test("PlayerLifecycle floors HP, enters dead once, and resets deterministically", () => {

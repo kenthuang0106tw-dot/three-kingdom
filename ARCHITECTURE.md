@@ -440,6 +440,18 @@ This task added regression coverage only. It introduced no new runtime module or
 ownership path; `MainScene` remains the composition root, `EnemyManager` owns
 normal enemies, and the Scene-owned `BossActor` remains outside that manager.
 
+## Game-flow State Contract (M6 / Task 6.1)
+
+`app/game/flow/GameFlowStateMachine.ts` is the sole Phaser-free contract for
+product modes: `title`, `playing`, `paused`, `failed`, and `cleared`. Legal
+transitions are explicit; `failed` and `cleared` are terminal until
+`resetForNewRun()` returns the contract to `title`.
+
+The contract owns no Scene, actor, input, React state, UI, timer, or persistence.
+It is intentionally not connected to `MainScene` until Title/start presentation
+has a real consumer in Task 6.2, preventing a second lifecycle owner or a hidden
+change to the accepted M0–M5 runtime.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

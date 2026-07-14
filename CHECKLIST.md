@@ -642,3 +642,16 @@
 | Attack Slot fairness | Pass | Lowest grant count wins among eligible enemies; ID rotation deterministically resolves ties |
 | Restart smoke | Pass | 10 Scene restarts; one 1280×720 Canvas; one Boss; no stale completion; zero browser errors |
 | Deferred | Non-blocking | Boss movement remains planned work and was intentionally not changed |
+
+## M6 / Task 6.1 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M6 / Task 6.1 — Game-flow modes and reset ownership |
+| Tests | Pass | `pnpm test` 54/54; every legal transition, terminal handling, invalid transition, and reset re-arming covered |
+| Build | Pass | `pnpm build` |
+| Lint | Pass | 0 errors, existing 4 `<img>` warnings only |
+| Typecheck | Pass | `pnpm typecheck` |
+| Runtime ownership | Pass | No MainScene, React, actor, asset, UI, or gameplay file changed |
+| Browser revalidation | Tool-limited | In-app browser blocked the local URL by policy; prior task automated reset contracts and all quality gates passed |
+| Deferred | Non-blocking | Title/start UI and runtime connection remain M6 / Task 6.2 |

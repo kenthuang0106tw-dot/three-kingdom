@@ -318,6 +318,15 @@ are explicit: the world is still one 1280×720 room, Boss attacks do not yet
 damage the player, Boss walk behavior is absent, and Result UI, HUD, audio,
 scoring, persistence, and physical-device feel remain deferred.
 
+### TD-M06 Update — Game-flow ownership contract
+
+M6 / Task 6.1 adds a pure state contract before any product UI is introduced.
+The contract prevents Title, Pause, Failure, and Result consumers from inventing
+competing modes. It is deliberately not wired to `MainScene` yet; Task 6.2 must
+connect one Title/start consumer without duplicating Phaser Scene or React
+lifecycle ownership. Pause timing, continue rules, Result presentation, and
+persistence remain deferred to their dedicated tasks.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

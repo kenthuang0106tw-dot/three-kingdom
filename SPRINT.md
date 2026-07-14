@@ -420,3 +420,15 @@ M5 / Task 5.6 已完成；下一步只執行 M5 / Task 5.7。其餘未完成項�
 - [ ] Boss movement remains deferred and was not part of this M4 regression repair.
 
 The next eligible task remains M6 / Task 6.1. Do not begin it until the next task-runner cycle.
+
+## M6 / Task 6.1 Closeout
+
+- [x] Added one Phaser-free `GameFlowStateMachine` for `title`, `playing`, `paused`, `failed`, and `cleared`.
+- [x] Defined every legal transition; invalid transitions fail deterministically.
+- [x] Kept `failed` and `cleared` terminal until the explicit `resetForNewRun()` path re-arms the flow at `title`.
+- [x] Kept Phaser objects, Scene lifecycle, React state, actors, UI, persistence, and gameplay out of the contract.
+- [x] `pnpm test` passed 54/54; build, lint, and typecheck passed.
+- [x] Existing M0–M5 runtime path was not modified.
+- [ ] Title presentation and start input remain M6 / Task 6.2.
+
+The next eligible task is M6 / Task 6.2. Do not begin it until the next task-runner cycle.
