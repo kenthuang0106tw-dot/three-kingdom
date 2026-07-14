@@ -452,6 +452,19 @@ It is intentionally not connected to `MainScene` until Title/start presentation
 has a real consumer in Task 6.2, preventing a second lifecycle owner or a hidden
 change to the accepted M0–M5 runtime.
 
+## Title/start Ownership (M6 / Task 6.2)
+
+`TitleStartController` maps Phaser keyboard or pointer input to the one
+`GameFlowStateMachine`. `MainScene` owns a single presentation-only overlay and
+blocks gameplay updates while the flow is `title`; starting destroys only the
+overlay and transitions the existing run to `playing` without restarting the
+Scene or recreating actors.
+
+React remains limited to the Phaser host lifecycle. Scene shutdown removes the
+one keyboard listener and any remaining overlay. The input edge used for Title
+start is consumed before gameplay resumes, preventing a J-key start from also
+triggering an attack.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

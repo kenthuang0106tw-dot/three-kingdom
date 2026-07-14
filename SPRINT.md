@@ -432,3 +432,16 @@ The next eligible task remains M6 / Task 6.1. Do not begin it until the next tas
 - [ ] Title presentation and start input remain M6 / Task 6.2.
 
 The next eligible task is M6 / Task 6.2. Do not begin it until the next task-runner cycle.
+
+## M6 / Task 6.2 Closeout
+
+- [x] Added one Phaser-owned Title overlay without React state or a second Scene.
+- [x] Keyboard and pointer/touch each start the existing run through the single game-flow contract.
+- [x] Repeated start input is ignored; starting does not restart the Scene or recreate actors.
+- [x] The keyboard edge used to start is consumed so J does not leak into the first gameplay attack.
+- [x] Browser smoke verified Title visibility, pointer start, keyboard start, one Canvas, unchanged gameplay, and zero errors.
+- [x] Ten restart cycles retained one Canvas, one Boss, zero stale completion, and a freshly re-armed Title.
+- [x] `pnpm test` passed 56/56; build, lint, and typecheck passed.
+- [ ] HUD, Pause, Failure, Result, audio, persistence, and custom Title art remain deferred.
+
+The next eligible task is M6 / Task 6.3. Do not begin it until the next task-runner cycle.

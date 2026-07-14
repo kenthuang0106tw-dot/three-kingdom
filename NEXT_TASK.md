@@ -1,48 +1,50 @@
 # Next Task
 
-## M6 / Task 6.2 — Title/start
+## M6 / Task 6.3 — Player/Boss HUD
 
 ### Why this is next
 
-Task 6.1 now provides one tested owner for `title` and `playing`. The smallest
-playable product-flow increment is a Title presentation that starts exactly one
-existing run through that contract. Pause, Failure, Result, HUD, audio, and
-gameplay changes remain separate later tasks.
+Title/start now provides the first product-flow entry point. The next smallest
+playable increment is a readable Player/Boss HUD driven only by the existing
+readonly gameplay observation boundary. Pause, Failure, Result, audio, and
+gameplay changes remain later tasks.
 
 ### Completion criteria
 
-- Present a minimal Title mode without replacing the arcade shell or creating a
-  second Phaser instance.
-- Keyboard and Phaser touch/pointer input can each transition `title` to
-  `playing` exactly once.
-- Starting reveals/enables the existing accepted game runtime; it does not
-  recreate actors, register duplicate listeners, or restart an already-playing
-  run.
-- The game-flow state remains the sole product-mode owner; React may host Phaser
-  but must not duplicate the mode in React state.
-- Do not add Pause, Failure, Result, HUD, audio, persistence, new gameplay, or
-  visual polish.
+- Display Player HP and Boss HP/state in a Phaser-owned HUD while playing.
+- Extend the readonly gameplay snapshot with only the primitive Boss fields the
+  HUD needs; do not expose BossActor, sprites, physics, timers, or managers.
+- The HUD consumes readonly snapshot data and never mutates Player, Boss,
+  combat, Scene flow, or React state.
+- Create HUD objects once and update their text/graphics without rebuilding
+  GameObjects every frame.
+- Keep the HUD readable at 1280×720, 844×390 landscape, and 390×844 fitted
+  portrait without covering the touch controls.
+- Hide the HUD during Title mode; do not add Pause, Failure, Result, scoring,
+  audio, persistence, gameplay, or visual polish.
 
 ### Validation
 
-- Deterministic tests cover one keyboard start, one pointer/touch start, repeated
-  start input, and reset-to-title re-arming without duplicate ownership.
+- Deterministic tests cover immutable Boss snapshot data, HUD ownership, and
+  absence of actor references or React gameplay state.
 - `pnpm test`, `pnpm build`, `pnpm lint`, and `pnpm typecheck` pass.
-- Browser smoke verifies one 1280×720 Canvas, visible Title mode, one start
-  transition, unchanged playable room after start, zero console errors, and ten
-  restart cycles without a second Phaser instance.
+- Browser smoke verifies correct Player/Boss values, one Canvas, HUD visibility
+  only after start, three target viewports, zero console errors, and ten Scene
+  restarts without duplicate HUD objects.
 
-### Estimated files
+### Expected files
 
-- `app/game/flow/**`
-- `app/game/MainScene.ts` or one narrowly scoped Phaser presentation module
+- `app/game/events/GameplayEvents.ts`
+- `app/game/ui/**`
+- `app/game/MainScene.ts`
 - `tests/app-contracts.test.mjs`
 - Project status/evidence documents
 
 ### Risks
 
-- React and Phaser must not both own Title state.
-- Starting by restarting the Scene could duplicate lifecycle resources; prefer
-  one explicit transition over a second runtime path.
-- Touch start input must not leak into the first gameplay attack or movement
-  frame.
+- Reading BossActor directly from UI would bypass the readonly observation
+  boundary and force later refactoring.
+- Recreating text or bars every update would leak GameObjects and hurt mobile
+  performance.
+- HUD placement can obscure touch controls or become unreadable after FIT
+  scaling; validate all three target viewports.

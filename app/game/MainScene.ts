@@ -19,8 +19,11 @@ import { createCameraLockState, hasCameraLock, isCameraLocked, lockCamera, unloc
 import { createStageExitState, makeExitAvailable, resetStageExit, type StageExitState } from "./stage/StageExit";
 import { DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemyAnimationKey } from "./enemy/EnemyConfig";
 import { BossActor } from "./boss/BossActor";
+import { GameFlowStateMachine } from "./flow/GameFlowStateMachine";
+import { TitleStartController } from "./flow/TitleStartController";
 
 type AttackState = "attack1" | "attack2" | "attack3";
+type TitleStartSource = "keyboard" | "pointer";
 type PreviewFrame = {
   name: string; x: number; y: number; width: number; height: number;
   originY: number; offsetX: number; offsetY: number; classification: string;
@@ -96,6 +99,12 @@ export default class MainScene extends Phaser.Scene {
   private readonly playerStateMachine = new PlayerStateMachine();
   private readonly playerLifecycle = new PlayerLifecycle(PLAYER_MAX_HP);
   private readonly attackController = new PlayerAttackController();
+  private readonly gameFlow = new GameFlowStateMachine();
+  private readonly titleStartController = new TitleStartController(this.gameFlow);
+  private titleOverlay?: Phaser.GameObjects.Container;
+  private titleStartCount = 0;
+  private readonly handleTitleKeyboardStart = () => this.startGame("keyboard");
+  private readonly handleTitlePointerStart = () => this.startGame("pointer");
   private debugText?: Phaser.GameObjects.Text;
   private get state(): PlayerState { return this.playerStateMachine.state; }
   private facing: 1 | -1 = 1;
@@ -173,11 +182,14 @@ export default class MainScene extends Phaser.Scene {
     this.bossArenaReleaseCount = 0;
     this.stageCompletion.reset();
     this.stageCompleteEventCount = 0;
+    this.gameFlow.resetForNewRun();
+    this.titleStartCount = 0;
     if (development) {
       this.game.canvas.dataset.stageCompleteCount = "0";
       delete this.game.canvas.dataset.stageCompleteStageId;
       delete this.game.canvas.dataset.stageCompleteAfterArenaRelease;
       delete this.game.canvas.dataset.playerHitEnemyIds;
+      delete this.game.canvas.dataset.titleStartSource;
     }
     this.playerStateMachine.reset();
     this.playerLifecycle.reset();
@@ -250,6 +262,7 @@ export default class MainScene extends Phaser.Scene {
       this.diagnosticMode = new URLSearchParams(window.location.search).get("debugInput") === "1";
       this.debugText = this.add.text(12, 12, "", { fontFamily: "Consolas, monospace", fontSize: "15px", color: "#fff", backgroundColor: "rgba(0,0,0,.78)", padding: { x: 8, y: 7 } }).setDepth(10000);
     }
+    this.createTitleOverlay(keyboard);
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.playerSprite.off(Phaser.Animations.Events.ANIMATION_UPDATE, this.handleAnimationUpdate, this);
@@ -266,6 +279,9 @@ export default class MainScene extends Phaser.Scene {
       this.bossArenaDebug?.destroy();
       this.bossArenaDebug = undefined;
       this.playerActor.destroy();
+      keyboard.off("keydown", this.handleTitleKeyboardStart, this);
+      this.titleOverlay?.destroy(true);
+      this.titleOverlay = undefined;
     });
 
     if (this.resetSmokeMode) {
@@ -280,6 +296,7 @@ export default class MainScene extends Phaser.Scene {
   update() {
     if (this.enemyPreviewMode) { this.updateEnemyAlignmentPreview(); return; }
     if (this.previewMode) { this.updatePreviewMode(); return; }
+    if (this.gameFlow.state === "title") return;
     if (this.lifecycleClock.isPaused()) { this.updateDebugText(); return; }
     this.playerBody.setVelocity(0, 0);
     this.currentInput = this.touchInputController.readSnapshot(this.inputController.readSnapshot());
@@ -548,6 +565,42 @@ export default class MainScene extends Phaser.Scene {
 
   private restartStage() {
     this.scene.restart();
+  }
+
+  private createTitleOverlay(keyboard: Phaser.Input.Keyboard.KeyboardPlugin) {
+    const shade = this.add.rectangle(WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT, 0x07120d, 0.94)
+      .setScrollFactor(0)
+      .setInteractive();
+    const title = this.add.text(WIDTH / 2, HEIGHT / 2 - 48, "THREE KINGDOMS", {
+      fontFamily: "Georgia, serif", fontSize: "62px", color: "#f6d56b",
+      stroke: "#5b170d", strokeThickness: 7,
+    }).setOrigin(0.5).setScrollFactor(0);
+    const prompt = this.add.text(WIDTH / 2, HEIGHT / 2 + 50, "PRESS ANY KEY / TAP TO START", {
+      fontFamily: "Consolas, monospace", fontSize: "24px", color: "#ffffff",
+    }).setOrigin(0.5).setScrollFactor(0);
+    this.titleOverlay = this.add.container(0, 0, [shade, title, prompt]).setDepth(20000);
+    shade.once("pointerdown", this.handleTitlePointerStart, this);
+    keyboard.once("keydown", this.handleTitleKeyboardStart, this);
+    this.updateTitleDataset();
+  }
+
+  private startGame(source: TitleStartSource) {
+    if (!this.titleStartController.requestStart()) return;
+    this.titleStartCount += 1;
+    this.input.keyboard?.off("keydown", this.handleTitleKeyboardStart, this);
+    this.titleOverlay?.destroy(true);
+    this.titleOverlay = undefined;
+    this.inputController.readSnapshot();
+    this.currentInput = createActionSnapshot({ up: false, down: false, left: false, right: false });
+    this.updateTitleDataset(source);
+  }
+
+  private updateTitleDataset(source?: TitleStartSource) {
+    if (process.env.NODE_ENV === "production") return;
+    this.game.canvas.dataset.gameFlowState = this.gameFlow.state;
+    this.game.canvas.dataset.titleVisible = String(this.gameFlow.state === "title");
+    this.game.canvas.dataset.titleStartCount = String(this.titleStartCount);
+    if (source) this.game.canvas.dataset.titleStartSource = source;
   }
 
   private activateBossArena(development: boolean) {

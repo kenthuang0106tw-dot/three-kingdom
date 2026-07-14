@@ -26,6 +26,7 @@ import { BOSS_ATTACKS } from "../app/game/boss/BossAttackMetadata.ts";
 import { BossDecisionPolicy } from "../app/game/boss/BossDecisionPolicy.ts";
 import { selectFairAttackCandidate } from "../app/game/enemy/AttackSlotPolicy.ts";
 import { GameFlowStateMachine } from "../app/game/flow/GameFlowStateMachine.ts";
+import { TitleStartController } from "../app/game/flow/TitleStartController.ts";
 
 test("React shell mounts only the Phaser lifecycle component", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
@@ -203,6 +204,34 @@ test("Game flow state machine enforces modes, terminal states, and new-run reset
   assert.deepEqual(flow.transition("playing"), { previous: "title", next: "playing" });
   assert.deepEqual(flow.transition("paused"), { previous: "playing", next: "paused" });
   assert.deepEqual(flow.transition("failed"), { previous: "paused", next: "failed" });
+});
+
+test("Title start accepts keyboard or pointer once and re-arms only after reset", () => {
+  const flow = new GameFlowStateMachine();
+  const start = new TitleStartController(flow);
+
+  assert.equal(start.requestStart(), true);
+  assert.equal(flow.state, "playing");
+  assert.equal(start.requestStart(), false);
+
+  flow.resetForNewRun();
+  assert.equal(start.requestStart(), true);
+  assert.equal(flow.state, "playing");
+  assert.equal(start.requestStart(), false);
+});
+
+test("MainScene owns one Phaser Title overlay without React or Scene restart", async () => {
+  const [scene, reactHost] = await Promise.all([
+    readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/PhaserGame.tsx", import.meta.url), "utf8"),
+  ]);
+  assert.match(scene, /new GameFlowStateMachine\(\)/);
+  assert.match(scene, /new TitleStartController\(this\.gameFlow\)/);
+  assert.match(scene, /keyboard\.once\("keydown", this\.handleTitleKeyboardStart, this\)/);
+  assert.match(scene, /once\("pointerdown", this\.handleTitlePointerStart, this\)/);
+  assert.match(scene, /if \(this\.gameFlow\.state === "title"\) return/);
+  assert.match(scene, /this\.inputController\.readSnapshot\(\)/);
+  assert.doesNotMatch(reactHost, /GameFlowStateMachine|TitleStartController|useState/);
 });
 
 test("PlayerLifecycle floors HP, enters dead once, and resets deterministically", () => {

@@ -327,6 +327,14 @@ connect one Title/start consumer without duplicating Phaser Scene or React
 lifecycle ownership. Pause timing, continue rules, Result presentation, and
 persistence remain deferred to their dedicated tasks.
 
+### TD-M06 Update — Title/start presentation
+
+M6 / Task 6.2 connects the flow contract to one Phaser-owned overlay and keeps
+React free of product state. The current Title deliberately uses system text and
+the accepted room behind an opaque shade; custom Title art and font assets remain
+asset work, not a hidden dependency of the flow contract. HUD, Pause, Failure,
+Result, and persistence remain separate tasks.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

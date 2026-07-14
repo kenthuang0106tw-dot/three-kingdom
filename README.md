@@ -128,7 +128,7 @@ tools/build_enemy_art.py     Enemy sheet/atlas rebuild pipeline
 
 ## Current Priority
 
-Milestone 5 is complete and its full-stage acceptance passed. M6 / Task 6.1 now defines the Phaser-free product-flow ownership contract. The next single task is M6 / Task 6.2, Title/start.
+Milestone 5 is complete and its full-stage acceptance passed. M6 now has a Phaser-owned Title that starts the existing run by keyboard or touch without recreating the Scene. The next single task is M6 / Task 6.3, Player/Boss HUD.
 
 The M4 mixed-enemy facing and hit-reachability regression has also been repaired and accepted; Boss movement remains deferred.
 

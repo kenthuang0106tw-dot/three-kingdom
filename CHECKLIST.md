@@ -655,3 +655,18 @@
 | Runtime ownership | Pass | No MainScene, React, actor, asset, UI, or gameplay file changed |
 | Browser revalidation | Tool-limited | In-app browser blocked the local URL by policy; prior task automated reset contracts and all quality gates passed |
 | Deferred | Non-blocking | Title/start UI and runtime connection remain M6 / Task 6.2 |
+
+## M6 / Task 6.2 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M6 / Task 6.2 — Title/start |
+| Tests | Pass | `pnpm test` 56/56; keyboard/pointer single-start, reset re-arm, ownership, and no-React-state contracts covered |
+| Build | Pass | `pnpm build` |
+| Lint | Pass | 0 errors, existing 4 `<img>` warnings only |
+| Typecheck | Pass | `pnpm typecheck` |
+| Pointer start | Pass | Visible Title → `playing`; start count 1; one Canvas |
+| Keyboard start | Pass | J starts once; player remains idle; no attack-input leak |
+| Restart ownership | Pass | 10 Scene restarts; one 1280×720 Canvas; one Boss; completion count 0; Title re-armed |
+| Browser errors | Pass | Zero errors across Title, keyboard, pointer, and restart smoke tabs |
+| Deferred | Non-blocking | Player/Boss HUD remains M6 / Task 6.3 |
