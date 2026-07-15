@@ -81,6 +81,7 @@ export class EnemyManager {
   private readonly slotGraphics?: Phaser.GameObjects.Graphics;
   private currentAttacker: EnemyCombatant | null = null;
   private encounterFlow: EncounterFlowState = createEncounterFlow();
+  private nextEnemyId = 1;
   private lastAttackerId: number | null = null;
   private directorReadyAt = 0;
   private readonly clock: GameplayClock;
@@ -98,12 +99,12 @@ export class EnemyManager {
     if (development) this.slotGraphics = scene.add.graphics().setDepth(9000);
   }
 
-  spawnAll(spawns: readonly StageSpawnPoint[] = BAMBOO_COMBAT_ROOM.spawnPoints) {
+  spawnAll(spawns: readonly StageSpawnPoint[]) {
     if (this.enemies.length > 0 || this.encounterFlow.status === "active") return;
     this.encounterFlow = beginEncounter(this.encounterFlow, spawns.length);
     spawns.forEach((spawn, index) => {
       const config = ENEMY_CONFIGS[spawn.enemyType ?? "soldier"];
-      this.addEnemy(new EnemyCombatant(index + 1, index, config, this.scene, spawn.x, spawn.y));
+      this.addEnemy(new EnemyCombatant(this.nextEnemyId++, index, config, this.scene, spawn.x, spawn.y));
     });
   }
 
@@ -367,6 +368,7 @@ export class EnemyManager {
     this.stateTimers.clear();
     this.currentAttacker = null;
     this.encounterFlow = createEncounterFlow();
+    this.nextEnemyId = 1;
     this.slotGraphics?.destroy();
   }
 }

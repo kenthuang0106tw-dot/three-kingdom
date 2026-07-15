@@ -19,6 +19,7 @@ export type StageSpawnPoint = {
 
 export type StageEncounter = {
   readonly id: string;
+  readonly trigger: StageRect;
   readonly spawnPointIds: readonly string[];
 };
 
@@ -115,9 +116,20 @@ export function validateStageConfig(config: StageConfig): StageConfig {
     ids.add(point.id);
   }
   const encounterIds = new Set<string>();
+  let previousTriggerEnd = config.walkBounds.x;
   for (const encounter of config.encounters) {
     if (!encounter.id || encounterIds.has(encounter.id)) throw new Error(`Duplicate encounter id: ${encounter.id}`);
+    if (encounter.spawnPointIds.length === 0) throw new Error(`Encounter has no spawn points: ${encounter.id}`);
     encounterIds.add(encounter.id);
+    assertRect(`encounter ${encounter.id} trigger`, encounter.trigger);
+    if (
+      encounter.trigger.x < previousTriggerEnd ||
+      encounter.trigger.x < config.walkBounds.x ||
+      encounter.trigger.y < config.walkBounds.y ||
+      encounter.trigger.x + encounter.trigger.width > config.walkBounds.x + config.walkBounds.width ||
+      encounter.trigger.y + encounter.trigger.height > config.walkBounds.y + config.walkBounds.height
+    ) throw new Error("Encounter triggers must be ordered inside walk bounds");
+    previousTriggerEnd = encounter.trigger.x + encounter.trigger.width;
     for (const spawnPointId of encounter.spawnPointIds) {
       if (!ids.has(spawnPointId)) throw new Error(`Unknown spawn point: ${spawnPointId}`);
     }
@@ -137,11 +149,22 @@ export const BAMBOO_COMBAT_ROOM: StageConfig = validateStageConfig({
   ],
   playerSpawn: { id: "player-start", x: 180, y: 602 },
   spawnPoints: [
-    { id: "enemy-front", x: 3650, y: 560, enemyType: "soldier" },
-    { id: "enemy-upper-rear", x: 3550, y: 455, enemyType: "mauler" },
-    { id: "enemy-lower-front", x: 3600, y: 625, enemyType: "duelist" },
+    { id: "enemy-front", x: 1300, y: 560, enemyType: "soldier" },
+    { id: "enemy-upper-rear", x: 2320, y: 455, enemyType: "mauler" },
+    { id: "enemy-lower-front", x: 2420, y: 625, enemyType: "duelist" },
   ],
-  encounters: [{ id: "opening-combat", spawnPointIds: ["enemy-front", "enemy-upper-rear", "enemy-lower-front"] }],
+  encounters: [
+    {
+      id: "forest-entry",
+      trigger: { x: 900, y: 390, width: 120, height: 245 },
+      spawnPointIds: ["enemy-front"],
+    },
+    {
+      id: "forest-ambush",
+      trigger: { x: 2000, y: 390, width: 120, height: 245 },
+      spawnPointIds: ["enemy-upper-rear", "enemy-lower-front"],
+    },
+  ],
   exits: [{
     id: "room-exit",
     bounds: { x: 3690, y: 390, width: 80, height: 245 },

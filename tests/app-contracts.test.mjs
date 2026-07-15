@@ -18,7 +18,7 @@ import { resolveAttack } from "../app/game/combat/CombatResolver.ts";
 import { BAMBOO_BOSS_ARENA, BAMBOO_COMBAT_ROOM, clampStagePoint, clampStageX, clampStageY, isStagePointWithin, validateStageConfig } from "../app/game/stage/StageConfig.ts";
 import { calculateCameraScroll } from "../app/game/camera/CameraFollow.ts";
 import { createCameraLockState, hasCameraLock, isCameraLocked, lockCamera, unlockCamera } from "../app/game/camera/CameraLock.ts";
-import { beginEncounter, createEncounterFlow, isEncounterCleared, recordEnemyRemoved } from "../app/game/stage/EncounterFlow.ts";
+import { beginEncounter, clearActiveEncounter, createEncounterFlow, createEncounterSequence, isEncounterCleared, isEncounterSequenceCleared, recordEnemyRemoved, triggerNextEncounter } from "../app/game/stage/EncounterFlow.ts";
 import { canRequestStageExit, createStageExitState, makeExitAvailable, requestStageExit, resetStageExit } from "../app/game/stage/StageExit.ts";
 import { DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemySpriteShouldFlip, validateEnemyConfig } from "../app/game/enemy/EnemyConfig.ts";
 import { BossLifecycle } from "../app/game/boss/BossLifecycle.ts";
@@ -487,7 +487,8 @@ test("Combat room acceptance covers formation, attack director, alignment, and s
   assert.match(manager, /Math\.abs\(dy\) < enemy\.config\.combat\.attackYRange/);
   assert.match(manager, /getLivingEnemies\(\)/);
   assert.match(manager, /onAllDefeated\(\)/);
-  assert.match(scene, /this\.enemyManager\.spawnAll\(BAMBOO_COMBAT_ROOM\.spawnPoints\)/);
+  assert.doesNotMatch(scene, /spawnAll\(BAMBOO_COMBAT_ROOM\.spawnPoints\)/);
+  assert.match(scene, /this\.enemyManager\.spawnAll\(spawns\)/);
   assert.match(scene, /resolveAttack\(\{/);
   assert.match(scene, /this\.playerHitTargetIds/);
 });
@@ -501,7 +502,9 @@ test("StageConfig remains Phaser-free and validates the bamboo combat room", asy
   assert.deepEqual(BAMBOO_COMBAT_ROOM.backgroundSections.map(section => section.bounds.x), [0, 1280, 2560]);
   assert.ok(BAMBOO_COMBAT_ROOM.backgroundSections.every(section => section.bounds.width === 1280 && section.bounds.height === 720));
   assert.equal(BAMBOO_COMBAT_ROOM.spawnPoints.length, 3);
-  assert.ok(BAMBOO_COMBAT_ROOM.spawnPoints.every(point => point.x > 1280));
+  assert.equal(BAMBOO_COMBAT_ROOM.encounters.length, 2);
+  assert.deepEqual(BAMBOO_COMBAT_ROOM.encounters.map(encounter => encounter.trigger.x), [900, 2000]);
+  assert.deepEqual(BAMBOO_COMBAT_ROOM.encounters.map(encounter => encounter.spawnPointIds.length), [1, 2]);
   assert.equal(validateStageConfig(BAMBOO_COMBAT_ROOM), BAMBOO_COMBAT_ROOM);
   assert.throws(() => validateStageConfig({
     ...BAMBOO_COMBAT_ROOM,
@@ -511,6 +514,10 @@ test("StageConfig remains Phaser-free and validates the bamboo combat room", asy
     ...BAMBOO_COMBAT_ROOM,
     backgroundSections: BAMBOO_COMBAT_ROOM.backgroundSections.slice(1),
   }), /Background sections must cover world bounds without gaps/);
+  assert.throws(() => validateStageConfig({
+    ...BAMBOO_COMBAT_ROOM,
+    encounters: [...BAMBOO_COMBAT_ROOM.encounters].reverse(),
+  }), /Encounter triggers must be ordered inside walk bounds/);
 });
 
 test("Stage bounds clamp movement and knockback deterministically", async () => {
@@ -597,6 +604,41 @@ test("Encounter flow tracks spawn count, all-clear, duplicate removal, and reset
   assert.match(source, /removedEnemyIds/);
 });
 
+test("Encounter sequence triggers two ordered groups once and resets deterministically", () => {
+  const encounters = BAMBOO_COMBAT_ROOM.encounters;
+  const ready = createEncounterSequence();
+  assert.equal(triggerNextEncounter(ready, encounters, { x: 850, y: 560 }, { x: 840, y: 560 }), null);
+
+  const first = triggerNextEncounter(ready, encounters, { x: 850, y: 560 }, { x: 910, y: 560 });
+  assert.equal(first?.encounter.id, "forest-entry");
+  assert.equal(first?.state.activeEncounterId, "forest-entry");
+  assert.equal(triggerNextEncounter(first.state, encounters, { x: 910, y: 560 }, { x: 2010, y: 560 }), null);
+
+  const afterFirst = clearActiveEncounter(first.state, "forest-entry");
+  assert.deepEqual(afterFirst.clearedEncounterIds, ["forest-entry"]);
+  assert.equal(triggerNextEncounter(afterFirst, encounters, { x: 1990, y: 560 }, { x: 1980, y: 560 }), null);
+
+  const second = triggerNextEncounter(afterFirst, encounters, { x: 1990, y: 560 }, { x: 2010, y: 560 });
+  assert.equal(second?.encounter.id, "forest-ambush");
+  const complete = clearActiveEncounter(second.state, "forest-ambush");
+  assert.equal(isEncounterSequenceCleared(complete, encounters.length), true);
+  assert.equal(triggerNextEncounter(complete, encounters, { x: 1990, y: 560 }, { x: 2010, y: 560 }), null);
+  assert.deepEqual(createEncounterSequence(), ready);
+});
+
+test("MainScene owns encounter gates without eager spawning or Boss coupling", async () => {
+  const source = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
+  assert.match(source, /this\.encounterSequence = createEncounterSequence\(\)/);
+  assert.match(source, /triggerNextEncounter\(/);
+  assert.match(source, /this\.cameraLockState = lockCamera\(this\.cameraLockState, "encounter"\)/);
+  assert.match(source, /this\.cameraLockState = unlockCamera\(this\.cameraLockState, "encounter"\)/);
+  assert.match(source, /this\.constrainPlayerToEncounterCamera\(\)/);
+  assert.match(source, /this\.encounterSmokeMode = development && query\.get\("encounterSmoke"\) === "1"/);
+  assert.doesNotMatch(source, /spawnAll\(BAMBOO_COMBAT_ROOM\.spawnPoints\)/);
+  const handler = source.slice(source.indexOf("private handleEncounterCleared"), source.indexOf("private showAllEnemiesDefeated"));
+  assert.doesNotMatch(handler, /Boss|activateBossArena/);
+});
+
 test("EnemyManager owns spawn and all-clear contract while MainScene owns presentation", async () => {
   const [manager, scene] = await Promise.all([
     readFile(new URL("../app/game/EnemyManager.ts", import.meta.url), "utf8"),
@@ -605,7 +647,7 @@ test("EnemyManager owns spawn and all-clear contract while MainScene owns presen
   assert.match(manager, /beginEncounter\(this\.encounterFlow, spawns\.length\)/);
   assert.match(manager, /recordEnemyRemoved\(this\.encounterFlow, enemy\.id\)/);
   assert.match(manager, /isEncounterCleared\(this\.encounterFlow\)/);
-  assert.match(scene, /onAllDefeated: \(\) => this\.showAllEnemiesDefeated\(\)/);
+  assert.match(scene, /onAllDefeated: \(\) => this\.handleEncounterCleared\(\)/);
 });
 
 test("Stage exit is locked until all-clear and resets deterministically", async () => {

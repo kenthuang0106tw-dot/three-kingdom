@@ -2,22 +2,22 @@
 
 ## Sprint Goal
 
-在已完成的三畫面橫向捲軸世界中建立兩場依序觸發、戰鬥時鎖定、清敵後解除的 encounter。完成 5R.2 前，不加入 Boss entry、HUD、Pause、Result、Audio、新角色或新戰鬥內容。
+在已完成的三畫面橫向捲軸與兩場依序 encounter 上，下一步只建立 Boss arena entry sequencing。完成 5R.3 前，不加入 Boss locomotion／damage、HUD、Pause、Result、Audio、新角色或新戰鬥內容。
 
 ## Cadence
 
 - Duration：2 weeks
 - Capacity：1 developer + AI，約 40–55 hours
 - Milestone：M5R — Vertical Slice Recovery
-- Scope rule：一次只做一個 Recovery Task；目前唯一 Task 是 5R.2
+- Scope rule：一次只做一個 Recovery Task；5R.2 已完成，下一個唯一 Task 是 5R.3
 
 ## Task List
 
 | Order | Task | Estimate | Deliverable | Verification |
 |---:|---|---:|---|---|
 | 1 | ✅ M5R / Task 5R.1 — Three-screen world and visible camera scrolling | 12–18h | 3840px world、三段竹林背景、可見 camera scroll | tests + desktop/mobile browser smoke passed |
-| 2 | ▶ M5R / Task 5R.2 — Two encounter triggers and gates | 14–20h | 兩場依序 encounter | trigger/lock/clear browser acceptance |
-| 3 | M5R / Task 5R.3 — Boss arena entry sequencing | 8–12h | Boss 延後啟用與 arena entry | no premature Boss/lock smoke |
+| 2 | ✅ M5R / Task 5R.2 — Two encounter triggers and gates | 14–20h | 兩場依序 encounter | trigger/lock/clear browser acceptance passed |
+| 3 | ▶ M5R / Task 5R.3 — Boss arena entry sequencing | 8–12h | Boss 延後啟用與 arena entry | no premature Boss/lock smoke |
 
 ## Recovery Planning Correction — 2026-07-14
 
@@ -41,6 +41,17 @@
 - [x] Boss smoke regression：arena release 1 次、stage-complete 1 次且在 release 後發布，browser error 0。
 - [x] `pnpm test` 56/56、`pnpm build`、`pnpm typecheck`、lint 0 errors（既有 4 warnings）通過。
 - [ ] 三段目前重複使用同一張 forest art；獨特 section art 留在內容 polish，不阻擋 5R.2。
+
+## M5R / Task 5R.2 Closeout
+
+- [x] `StageConfig` 定義兩個有序 trigger 與 spawn groups：第一場 1 隻 soldier，第二場 1 隻 mauler + 1 隻 duelist；Scene 建立時普通敵人數為 0。
+- [x] 純 `EncounterSequenceState` 只允許向前進入下一個 trigger；active encounter、倒退跨界、已完成 trigger 都不會重複生成。
+- [x] 每場開始只取得 `encounter` camera lock，並將玩家限制在當下 viewport；全清後只釋放該 lock，第二場完成後可繼續前往終點。
+- [x] `EnemyManager` 只生成明確傳入的當前群組，跨 encounter 使用唯一 enemy ID；既有 archetype、combat、death 與 cleanup 不變。
+- [x] Desktop browser timeline：初始 0 敵人；`forest-entry` 生成 1 隻並鎖在 `scrollX=261`；全清後 `forest-ambush` 生成 2 隻並鎖在 `scrollX=1361`；第二場全清後 0 敵人且 progression index 為 2；全程一個 Canvas。
+- [x] `pnpm test` 60/60、`pnpm build`、`pnpm build:github-pages`、`pnpm typecheck`、lint 0 errors（既有 8 個 `<img>` warnings）通過。
+- [x] Scene create 明確重設 encounter sequence、camera gate 與前一幀玩家位置；契約測試覆蓋 reset、順序、spawn-once 與 camera ownership。
+- [ ] 實體手機與瀏覽器補充 debug 欄位重測因本輪 Browser 連線中斷未執行；主流程 desktop browser smoke 已通過，不阻擋 5R.2 closeout，保留於後續 physical-device QA。
 
 ## Historical Closeout Evidence
 

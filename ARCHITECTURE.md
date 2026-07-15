@@ -490,9 +490,29 @@ Canvas remains a fixed logical 1280×720 surface.
 MainScene renders sections from Stage data, sets Arcade Physics to the shared
 3700px walk rectangle, and applies the accepted bounded integer camera helper.
 Normal play begins with no encounter or Boss camera lock; diagnostic Boss smoke
-retains explicit lock ownership. Existing enemies and Boss are temporarily
-placed near the final viewport so traversal is observable. Their formal trigger
-and entry sequencing remain exclusively owned by Tasks 5R.2 and 5R.3.
+retains explicit lock ownership. Ordinary enemy entry is now owned by the
+ordered encounter contract below. Boss entry sequencing remains exclusively
+owned by Task 5R.3.
+
+## Two Encounter Gate Contract (M5R / Task 5R.2)
+
+`StageConfig` is authoritative for two ordered trigger rectangles and their
+existing spawn-point IDs. The Phaser-free `EncounterSequenceState` owns only
+progression: next trigger, active encounter, cleared IDs, forward-entry checks,
+and reset. It does not create actors or control the camera.
+
+`MainScene` observes the player's previous/current feet position, asks the pure
+sequence to advance, resolves the selected Stage spawn group, and acquires the
+existing `encounter` camera lock at the current bounded scroll position. While
+that lock is active the player is clamped to the locked viewport. On the
+EnemyManager all-clear callback, MainScene clears the active encounter and
+releases only the `encounter` reason.
+
+`EnemyManager` owns only the currently requested spawn group and uses monotonic
+enemy IDs across both encounters. It does not choose triggers, progression, or
+Boss activation. Scene creation resets the sequence and manager ownership, so
+restart cannot retain completed triggers, actors, or camera locks. Boss entry is
+deliberately not coupled to encounter completion in this task.
 
 ## 10. External and Optional Infrastructure
 

@@ -698,3 +698,19 @@
 | Quality gates | Pass | `pnpm test` 56/56; build/typecheck; lint 0 errors with 4 existing warnings |
 | Temporary content | Accepted | Existing forest art repeats for all three sections; encounter/Boss sequencing remains 5R.2/5R.3 |
 | Next task | Selected | M5R / Task 5R.2 — Two encounter triggers and gates |
+
+## M5R / Task 5R.2 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M5R / Task 5R.2 — Two encounter triggers and gates |
+| Ordered Stage data | Pass | Exactly two trigger rectangles at X 900 and 2000 with group sizes 1 and 2; validation rejects unordered triggers |
+| Initial ownership | Pass | Scene starts with zero ordinary enemies; no eager all-spawn path remains |
+| Trigger safety | Pass | Pure tests cover forward-only entry, active-encounter blocking, duplicate crossing, ordered clear, completion, and reset |
+| Camera gate | Pass | Encounter 1 locked at `scrollX=261`; encounter 2 at `scrollX=1361`; all-clear releases only `encounter` ownership |
+| Browser sequence | Pass | Initial 0 enemies → `forest-entry` 1 → clear → `forest-ambush` 2 → clear → 0; one logical 1280×720 Canvas throughout |
+| Existing combat | Pass | Existing soldier, mauler, duelist configs and EnemyManager combat/death/cleanup paths reused without rebalance |
+| Restart contract | Pass | Scene create resets sequence, previous player position, gate scroll, locks, and manager ownership |
+| Quality gates | Pass | `pnpm test` 60/60; app and GitHub Pages builds; typecheck; lint 0 errors with 8 existing warnings |
+| Scope | Pass | No Boss entry/behavior, player move, art, UI, audio, or enemy rebalance added |
+| Next task | Selected | M5R / Task 5R.3 — Boss arena entry sequencing |

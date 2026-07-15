@@ -10,7 +10,7 @@
 - **Impact:** Later UI work can proceed on top of an incomplete vertical slice, hiding the absence of the core scrolling-stage and Boss-combat loop.
 - **Resolution:** Preserve accepted contracts, reopen playable-result acceptance, and complete M5R Tasks 5R.1–5R.8 before resuming M6.3.
 - **Target:** M5R Vertical Slice Recovery.
-- **Progress 2026-07-14:** M5R.1 completed the 3840×720 world, three contiguous sections, shared walk bounds, visible 0–2560 camera scroll, mobile FIT traversal, and restart evidence. Two encounters, Boss entry/combat, and clear/fail remain open in 5R.2–5R.8.
+- **Progress 2026-07-15:** M5R.1 completed the 3840×720 world and visible camera traversal. M5R.2 completed two ordered, spawn-on-entry encounters with per-fight camera gates, all-clear release, duplicate protection, and reset coverage. Boss entry/combat and clear/fail remain open in 5R.3–5R.8.
 
 ## High
 

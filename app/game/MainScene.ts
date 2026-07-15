@@ -17,6 +17,7 @@ import { BAMBOO_BOSS_ARENA, BAMBOO_COMBAT_ROOM, clampStageX } from "./stage/Stag
 import { calculateCameraScroll } from "./camera/CameraFollow";
 import { createCameraLockState, hasCameraLock, isCameraLocked, lockCamera, unlockCamera, type CameraLockState } from "./camera/CameraLock";
 import { createStageExitState, makeExitAvailable, resetStageExit, type StageExitState } from "./stage/StageExit";
+import { clearActiveEncounter, createEncounterSequence, isEncounterSequenceCleared, triggerNextEncounter, type EncounterSequenceState } from "./stage/EncounterFlow";
 import { DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemyAnimationKey } from "./enemy/EnemyConfig";
 import { BossActor } from "./boss/BossActor";
 import { GameFlowStateMachine } from "./flow/GameFlowStateMachine";
@@ -126,6 +127,7 @@ export default class MainScene extends Phaser.Scene {
   private previewMode = false;
   private enemyPreviewMode = false;
   private resetSmokeMode = false;
+  private encounterSmokeMode = false;
   private bossSmokeMode = false;
   private bossSmokeTimer?: Phaser.Time.TimerEvent;
   private playerDeathRestartTimer?: Phaser.Time.TimerEvent;
@@ -153,6 +155,9 @@ export default class MainScene extends Phaser.Scene {
   private assetFailureListener?: (file: Phaser.Loader.File) => void;
   private cameraLockState: CameraLockState = createCameraLockState();
   private stageExitState: StageExitState = createStageExitState(BAMBOO_COMBAT_ROOM.exits);
+  private encounterSequence: EncounterSequenceState = createEncounterSequence();
+  private previousPlayerPosition = { x: START_X, y: START_FOOT_Y };
+  private encounterCameraScrollX: number | null = null;
 
   constructor() { super("MainScene"); }
 
@@ -177,6 +182,7 @@ export default class MainScene extends Phaser.Scene {
     this.enemyPreviewMode = development && query.get("previewEnemy") === "1";
     this.previewMode = development && query.get("previewAttack") === "1";
     this.resetSmokeMode = development && query.get("resetSmoke") === "1";
+    this.encounterSmokeMode = development && query.get("encounterSmoke") === "1";
     this.bossSmokeMode = development && query.get("bossSmoke") === "1";
     if (this.bossSmokeMode) this.bossSmokeLog.length = 0;
     this.bossArenaReleaseCount = 0;
@@ -195,6 +201,10 @@ export default class MainScene extends Phaser.Scene {
     this.playerLifecycle.reset();
     this.cameraLockState = createCameraLockState();
     this.stageExitState = resetStageExit();
+    this.encounterSequence = createEncounterSequence();
+    this.previousPlayerPosition = { x: START_X, y: START_FOOT_Y };
+    this.encounterCameraScrollX = null;
+    this.defeatedText = undefined;
     if (this.enemyPreviewMode) { this.createEnemyAlignmentPreview(); return; }
     if (this.previewMode) { this.createPreviewMode(); return; }
 
@@ -244,9 +254,9 @@ export default class MainScene extends Phaser.Scene {
 
     this.enemyManager = new EnemyManager(this, this.playerBodyZone, {
       onPlayerHit: enemy => this.applyHitToPlayer(enemy),
-      onAllDefeated: () => this.showAllEnemiesDefeated(),
+      onAllDefeated: () => this.handleEncounterCleared(),
     }, development, { clock: new PhaserGameplayClock(this), random: new SeededRandom(0x3a6f2d1) });
-    this.enemyManager.spawnAll(BAMBOO_COMBAT_ROOM.spawnPoints);
+    this.updateEncounterDataset();
     this.bossActor = new BossActor(
       this,
       BAMBOO_BOSS_ARENA.spawn.x,
@@ -316,6 +326,9 @@ export default class MainScene extends Phaser.Scene {
     if (this.lifecycleClock.isPaused()) { this.updateDebugText(); return; }
     this.playerBody.setVelocity(0, 0);
     this.currentInput = this.touchInputController.readSnapshot(this.inputController.readSnapshot());
+    this.updateEncounterSmoke();
+    this.updateEncounterProgress();
+    this.constrainPlayerToEncounterCamera();
 
     this.enemyManager.update();
     this.bossActor.update();
@@ -582,6 +595,67 @@ export default class MainScene extends Phaser.Scene {
     // Interface reserved for a future hit sound asset.
   }
 
+  private updateEncounterProgress() {
+    const current = { x: this.playerBodyZone.x, y: this.playerBodyZone.y };
+    const triggered = triggerNextEncounter(
+      this.encounterSequence,
+      BAMBOO_COMBAT_ROOM.encounters,
+      this.previousPlayerPosition,
+      current,
+    );
+    this.previousPlayerPosition = current;
+    if (!triggered) return;
+
+    const spawnIds = new Set(triggered.encounter.spawnPointIds);
+    const spawns = BAMBOO_COMBAT_ROOM.spawnPoints.filter(spawn => spawnIds.has(spawn.id));
+    const scroll = calculateCameraScroll(
+      current,
+      BAMBOO_COMBAT_ROOM.worldBounds,
+      { width: this.cameras.main.width, height: this.cameras.main.height },
+    );
+    this.cameras.main.setScroll(Math.round(scroll.x), Math.round(scroll.y));
+    this.encounterCameraScrollX = Math.round(scroll.x);
+    this.encounterSequence = triggered.state;
+    this.cameraLockState = lockCamera(this.cameraLockState, "encounter");
+    this.enemyManager.spawnAll(spawns);
+    this.updateEncounterDataset();
+  }
+
+  private updateEncounterSmoke() {
+    if (!this.encounterSmokeMode) return;
+    if (this.encounterSequence.activeEncounterId) {
+      for (const enemy of this.enemyManager.getLivingEnemies()) {
+        if (enemy.state !== "hurt" && enemy.state !== "dead") this.enemyManager.damage(enemy);
+      }
+      return;
+    }
+    const encounter = BAMBOO_COMBAT_ROOM.encounters[this.encounterSequence.nextEncounterIndex];
+    if (!encounter) return;
+    const y = encounter.trigger.y + encounter.trigger.height / 2;
+    this.previousPlayerPosition = { x: encounter.trigger.x - 1, y };
+    this.playerBody.reset(encounter.trigger.x + 1, y);
+  }
+
+  private constrainPlayerToEncounterCamera() {
+    if (this.encounterCameraScrollX === null || !this.encounterSequence.activeEncounterId) return;
+    const minX = this.encounterCameraScrollX + BAMBOO_COMBAT_ROOM.walkBounds.x;
+    const maxX = this.encounterCameraScrollX + VIEWPORT_WIDTH - BAMBOO_COMBAT_ROOM.walkBounds.x;
+    const x = Phaser.Math.Clamp(this.playerBodyZone.x, minX, maxX);
+    if (x !== this.playerBodyZone.x) this.playerBody.reset(x, this.playerBodyZone.y);
+  }
+
+  private handleEncounterCleared() {
+    const encounterId = this.encounterSequence.activeEncounterId;
+    if (!encounterId) return;
+    this.encounterSequence = clearActiveEncounter(this.encounterSequence, encounterId);
+    this.encounterCameraScrollX = null;
+    this.cameraLockState = unlockCamera(this.cameraLockState, "encounter");
+    this.updateEncounterDataset();
+    if (isEncounterSequenceCleared(this.encounterSequence, BAMBOO_COMBAT_ROOM.encounters.length)) {
+      this.showAllEnemiesDefeated();
+    }
+  }
+
   private showAllEnemiesDefeated() {
     this.cameraLockState = unlockCamera(this.cameraLockState, "encounter");
     this.updateBossArenaDataset(process.env.NODE_ENV !== "production");
@@ -807,6 +881,7 @@ export default class MainScene extends Phaser.Scene {
 
   private updateDebugText() {
     this.publishGameplaySnapshot();
+    this.updateEncounterDataset();
     if (!this.debugText) return;
     const v = this.playerBody.velocity, i = this.currentInput;
     const enemies = this.enemyManager.getAllEnemies();
@@ -842,6 +917,16 @@ export default class MainScene extends Phaser.Scene {
       ...this.transitionLog,
     );
     this.debugText.setText(lines);
+  }
+
+  private updateEncounterDataset() {
+    if (process.env.NODE_ENV === "production") return;
+    this.game.canvas.dataset.encounterNextIndex = String(this.encounterSequence.nextEncounterIndex);
+    this.game.canvas.dataset.encounterActiveId = this.encounterSequence.activeEncounterId ?? "";
+    this.game.canvas.dataset.encounterClearedIds = this.encounterSequence.clearedEncounterIds.join(",");
+    this.game.canvas.dataset.encounterEnemyCount = String(this.enemyManager?.getAllEnemies().length ?? 0);
+    this.game.canvas.dataset.encounterCameraLocked = String(hasCameraLock(this.cameraLockState, "encounter"));
+    this.game.canvas.dataset.cameraLockReasons = this.cameraLockState.reasons.join(",");
   }
 
   private publishGameplaySnapshot() {
