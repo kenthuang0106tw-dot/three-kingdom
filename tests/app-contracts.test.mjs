@@ -264,6 +264,16 @@ test("PlayerLifecycle floors HP, enters dead once, and resets deterministically"
   assert.equal(lifecycle.state, "alive");
 });
 
+test("Player death schedules a cleaned-up Phaser-timed stage restart", async () => {
+  const source = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
+  assert.match(source, /const PLAYER_DEATH_RESTART_MS = 900/);
+  assert.match(source, /if \(damage\.becameDead\) \{\s*this\.transitionTo\("dead"\);\s*this\.scheduleStageRestartAfterPlayerDeath\(\)/);
+  assert.match(source, /this\.playerDeathRestartTimer = this\.time\.delayedCall\(PLAYER_DEATH_RESTART_MS/);
+  assert.match(source, /this\.scene\.isActive\(\) && this\.state === "dead"\) this\.restartStage\(\)/);
+  assert.match(source, /this\.playerDeathRestartTimer\?\.remove\(false\);\s*this\.playerDeathRestartTimer = undefined/);
+  assert.doesNotMatch(source, /setTimeout\([^)]*restartStage/);
+});
+
 test("PlayerActor owns sprite, feet anchor, and Arcade body responsibilities", async () => {
   const source = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
   const actor = await readFile(new URL("../app/game/player/PlayerActor.ts", import.meta.url), "utf8");

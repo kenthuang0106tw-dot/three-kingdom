@@ -38,6 +38,7 @@ const PLAYER_MAX_HP = 10;
 const ENEMY_FRAME_SIZE = 384;
 const ENEMY_FEET_Y = 354;
 const HURT_MS = 300;
+const PLAYER_DEATH_RESTART_MS = 900;
 const COMBO_WINDOW_MS = 360;
 const ATTACK_STATES: AttackState[] = ["attack1", "attack2", "attack3"];
 const FRAME_ORIGIN_Y: Record<string, number> = {
@@ -127,6 +128,7 @@ export default class MainScene extends Phaser.Scene {
   private resetSmokeMode = false;
   private bossSmokeMode = false;
   private bossSmokeTimer?: Phaser.Time.TimerEvent;
+  private playerDeathRestartTimer?: Phaser.Time.TimerEvent;
   private readonly bossSmokeLog: string[] = [];
   private bossArenaReleaseCount = 0;
   private bossArenaDebug?: Phaser.GameObjects.Graphics;
@@ -286,6 +288,8 @@ export default class MainScene extends Phaser.Scene {
       this.enemyManager.destroy();
       this.bossSmokeTimer?.remove(false);
       this.bossSmokeTimer = undefined;
+      this.playerDeathRestartTimer?.remove(false);
+      this.playerDeathRestartTimer = undefined;
       this.bossActor.destroy();
       if (development) this.game.canvas.dataset.bossActorCount = "0";
       this.bossArenaDebug?.destroy();
@@ -560,9 +564,18 @@ export default class MainScene extends Phaser.Scene {
     this.effectDirector.beginHitStop();
     if (damage.becameDead) {
       this.transitionTo("dead");
+      this.scheduleStageRestartAfterPlayerDeath();
     } else {
       this.time.delayedCall(HURT_MS, () => { if (this.state === "hurt") this.transitionTo("idle"); });
     }
+  }
+
+  private scheduleStageRestartAfterPlayerDeath() {
+    this.playerDeathRestartTimer?.remove(false);
+    this.playerDeathRestartTimer = this.time.delayedCall(PLAYER_DEATH_RESTART_MS, () => {
+      this.playerDeathRestartTimer = undefined;
+      if (this.scene.isActive() && this.state === "dead") this.restartStage();
+    });
   }
 
   private playHitSound() {
