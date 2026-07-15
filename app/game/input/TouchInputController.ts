@@ -1,90 +1,125 @@
 import * as Phaser from "phaser";
 import { createActionSnapshot, type ActionSnapshot, type DirectionButtons } from "./ActionSnapshot";
 
-type TouchAction = keyof DirectionButtons | "attack";
+const JOYSTICK_X = 128;
+const JOYSTICK_Y = 612;
+const JOYSTICK_RADIUS = 78;
+const JOYSTICK_DEAD_ZONE = 18;
 
-const BUTTON_LAYOUT: ReadonlyArray<{
-  action: TouchAction;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  label: string;
-}> = [
-  { action: "up", x: 112, y: 570, width: 64, height: 54, label: "▲" },
-  { action: "down", x: 112, y: 650, width: 64, height: 54, label: "▼" },
-  { action: "left", x: 42, y: 610, width: 64, height: 54, label: "◀" },
-  { action: "right", x: 182, y: 610, width: 64, height: 54, label: "▶" },
-  { action: "attack", x: 1134, y: 610, width: 112, height: 86, label: "J" },
-];
-
-/** Converts Phaser pointer button presses into the shared gameplay action snapshot. */
+/** Converts a 360-degree analog joystick and attack button into the shared input snapshot. */
 export class TouchInputController {
-  private readonly activePointers = new Map<number, TouchAction>();
-  private readonly buttons: Phaser.GameObjects.GameObject[] = [];
+  private readonly controls: Phaser.GameObjects.GameObject[] = [];
+  private joystickPointerId: number | null = null;
+  private joystickX = 0;
+  private joystickY = 0;
+  private joystickKnob!: Phaser.GameObjects.Arc;
+  private attackButton!: Phaser.GameObjects.Rectangle;
+  private readonly attackPointerIds = new Set<number>();
   private attackPressed = false;
-  private readonly onPointerCancel = (pointer: Phaser.Input.Pointer) => this.release(pointer.id);
+
+  private readonly onPointerMove = (pointer: Phaser.Input.Pointer) => {
+    if (pointer.id === this.joystickPointerId) this.updateJoystick(pointer.x, pointer.y);
+  };
+  private readonly onPointerUp = (pointer: Phaser.Input.Pointer) => this.release(pointer.id);
   private readonly onGameOut = () => this.releaseAll();
 
   constructor(private readonly scene: Phaser.Scene) {
-    for (const config of BUTTON_LAYOUT) this.createButton(config);
-    scene.input.on("pointercancel", this.onPointerCancel);
+    this.createJoystick();
+    this.createAttackButton();
+    scene.input.on("pointermove", this.onPointerMove);
+    scene.input.on("pointerup", this.onPointerUp);
+    scene.input.on("pointerupoutside", this.onPointerUp);
+    scene.input.on("pointercancel", this.onPointerUp);
     scene.input.on("gameout", this.onGameOut);
   }
 
   readSnapshot(keyboard: DirectionButtons & { attackPressed: boolean }): ActionSnapshot {
-    const touch = this.getTouchButtons();
-    const attackPressed = keyboard.attackPressed || this.consumeAttackPress();
-    return createActionSnapshot({
-      up: keyboard.up || touch.up,
-      down: keyboard.down || touch.down,
-      left: keyboard.left || touch.left,
-      right: keyboard.right || touch.right,
-    }, attackPressed);
+    const keyboardX = Number(keyboard.right) - Number(keyboard.left);
+    const keyboardY = Number(keyboard.down) - Number(keyboard.up);
+    const buttons = {
+      up: keyboard.up || this.joystickY < 0,
+      down: keyboard.down || this.joystickY > 0,
+      left: keyboard.left || this.joystickX < 0,
+      right: keyboard.right || this.joystickX > 0,
+    };
+    return createActionSnapshot(
+      buttons,
+      keyboard.attackPressed || this.consumeAttackPress(),
+      { x: keyboardX + this.joystickX, y: keyboardY + this.joystickY },
+    );
   }
 
   destroy() {
-    this.scene.input.off("pointercancel", this.onPointerCancel);
+    this.scene.input.off("pointermove", this.onPointerMove);
+    this.scene.input.off("pointerup", this.onPointerUp);
+    this.scene.input.off("pointerupoutside", this.onPointerUp);
+    this.scene.input.off("pointercancel", this.onPointerUp);
     this.scene.input.off("gameout", this.onGameOut);
     this.releaseAll();
-    for (const button of this.buttons) button.destroy();
-    this.buttons.length = 0;
+    for (const control of this.controls) control.destroy();
+    this.controls.length = 0;
   }
 
-  private createButton(config: (typeof BUTTON_LAYOUT)[number]) {
-    const background = this.scene.add.rectangle(config.x, config.y, config.width, config.height, 0x07120d, 0.52)
+  private createJoystick() {
+    const base = this.scene.add.circle(JOYSTICK_X, JOYSTICK_Y, JOYSTICK_RADIUS, 0x07120d, 0.48)
+      .setStrokeStyle(3, 0xcfe9d4, 0.62)
+      .setScrollFactor(0)
+      .setDepth(9500)
+      .setInteractive({ useHandCursor: false });
+    const guide = this.scene.add.circle(JOYSTICK_X, JOYSTICK_Y, JOYSTICK_RADIUS * 0.56, 0xffffff, 0)
+      .setStrokeStyle(2, 0xcfe9d4, 0.2)
+      .setScrollFactor(0)
+      .setDepth(9500);
+    this.joystickKnob = this.scene.add.circle(JOYSTICK_X, JOYSTICK_Y, 34, 0xb9d8c0, 0.72)
+      .setStrokeStyle(3, 0xffffff, 0.75)
+      .setScrollFactor(0)
+      .setDepth(9501);
+    this.controls.push(base, guide, this.joystickKnob);
+
+    base.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+      if (this.joystickPointerId !== null) return;
+      this.joystickPointerId = pointer.id;
+      this.updateJoystick(pointer.x, pointer.y);
+    });
+  }
+
+  private createAttackButton() {
+    this.attackButton = this.scene.add.rectangle(1134, 610, 112, 86, 0x07120d, 0.52)
       .setStrokeStyle(2, 0xcfe9d4, 0.65)
       .setScrollFactor(0)
       .setDepth(9500)
       .setInteractive({ useHandCursor: false });
-    const label = this.scene.add.text(config.x, config.y, config.label, {
+    const label = this.scene.add.text(1134, 610, "J", {
       fontFamily: "Arial, sans-serif",
-      fontSize: config.action === "attack" ? "32px" : "25px",
+      fontSize: "32px",
       color: "#ffffff",
     }).setOrigin(0.5).setAlpha(0.9).setScrollFactor(0).setDepth(9501);
-    this.buttons.push(background, label);
+    this.controls.push(this.attackButton, label);
 
-    background.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
-      this.activePointers.set(pointer.id, config.action);
-      if (config.action === "attack") this.attackPressed = true;
-      background.setFillStyle(0x7ca887, 0.72);
+    this.attackButton.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+      this.attackPointerIds.add(pointer.id);
+      this.attackPressed = true;
+      this.attackButton.setFillStyle(0x7ca887, 0.72);
     });
-    const release = (pointer: Phaser.Input.Pointer) => {
-      if (this.activePointers.get(pointer.id) !== config.action) return;
-      this.release(pointer.id);
-      background.setFillStyle(0x07120d, 0.52);
-    };
-    background.on("pointerup", release);
-    background.on("pointerupoutside", release);
-    background.on("pointerout", release);
   }
 
-  private getTouchButtons(): DirectionButtons {
-    const buttons: DirectionButtons = { up: false, down: false, left: false, right: false };
-    for (const action of this.activePointers.values()) {
-      if (action in buttons) buttons[action as keyof DirectionButtons] = true;
+  private updateJoystick(pointerX: number, pointerY: number) {
+    const dx = pointerX - JOYSTICK_X;
+    const dy = pointerY - JOYSTICK_Y;
+    const distance = Math.hypot(dx, dy);
+    const clampScale = distance > JOYSTICK_RADIUS ? JOYSTICK_RADIUS / distance : 1;
+    const clampedX = dx * clampScale;
+    const clampedY = dy * clampScale;
+    this.joystickKnob.setPosition(JOYSTICK_X + clampedX, JOYSTICK_Y + clampedY);
+
+    if (distance <= JOYSTICK_DEAD_ZONE) {
+      this.joystickX = 0;
+      this.joystickY = 0;
+      return;
     }
-    return buttons;
+    const strength = Math.min(1, (distance - JOYSTICK_DEAD_ZONE) / (JOYSTICK_RADIUS - JOYSTICK_DEAD_ZONE));
+    this.joystickX = (dx / distance) * strength;
+    this.joystickY = (dy / distance) * strength;
   }
 
   private consumeAttackPress() {
@@ -94,10 +129,22 @@ export class TouchInputController {
   }
 
   private release(pointerId: number) {
-    this.activePointers.delete(pointerId);
+    if (pointerId === this.joystickPointerId) this.resetJoystick();
+    this.attackPointerIds.delete(pointerId);
+    if (this.attackPointerIds.size === 0) this.attackButton.setFillStyle(0x07120d, 0.52);
+  }
+
+  private resetJoystick() {
+    this.joystickPointerId = null;
+    this.joystickX = 0;
+    this.joystickY = 0;
+    this.joystickKnob.setPosition(JOYSTICK_X, JOYSTICK_Y);
   }
 
   private releaseAll() {
-    this.activePointers.clear();
+    this.resetJoystick();
+    this.attackPointerIds.clear();
+    this.attackPressed = false;
+    this.attackButton.setFillStyle(0x07120d, 0.52);
   }
 }

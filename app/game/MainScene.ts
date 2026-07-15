@@ -350,7 +350,7 @@ export default class MainScene extends Phaser.Scene {
 
     const { moveX, moveY } = this.currentInput;
     if (moveX || moveY) {
-      const velocity = new Phaser.Math.Vector2(moveX, moveY).normalize().scale(WALK_SPEED);
+      const velocity = new Phaser.Math.Vector2(moveX, moveY).scale(WALK_SPEED);
       this.playerBody.setVelocity(velocity.x, velocity.y);
       if (moveX > 0) this.setFacing(1); else if (moveX < 0) this.setFacing(-1);
       this.transitionTo("walk");

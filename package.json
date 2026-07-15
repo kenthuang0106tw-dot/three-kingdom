@@ -12,7 +12,7 @@
     "build:github-pages": "vite build --config vite.github.config.ts",
     "start": "node tools/serve-production.mjs",
     "test": "node --experimental-strip-types --test --test-isolation=none tests/*.test.mjs",
-    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
+    "lint": "eslint . --ignore-pattern dist --ignore-pattern dist-github --ignore-pattern .next",
     "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.worker.json",
     "db:generate": "drizzle-kit generate"
   },

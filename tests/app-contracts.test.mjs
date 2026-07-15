@@ -109,6 +109,13 @@ test("Action snapshot releases movement and normalizes diagonal input", () => {
 
   const attack = createActionSnapshot({ up: false, down: false, left: false, right: false }, true);
   assert.equal(attack.attackPressed, true);
+
+  const analog = createActionSnapshot(
+    { up: true, down: false, left: false, right: true },
+    false,
+    { x: 0.3, y: -0.4 },
+  );
+  assert.deepEqual({ moveX: analog.moveX, moveY: analog.moveY }, { moveX: 0.3, moveY: -0.4 });
 });
 
 test("MainScene reads keyboard edge-trigger through the snapshot boundary", async () => {
@@ -122,12 +129,17 @@ test("MainScene reads keyboard edge-trigger through the snapshot boundary", asyn
 test("Touch input shares the action snapshot and releases pointer state", async () => {
   const source = await readFile(new URL("../app/game/input/TouchInputController.ts", import.meta.url), "utf8");
   const scene = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
+  assert.match(source, /360-degree analog joystick/);
+  assert.match(source, /pointermove/);
   assert.match(source, /pointercancel/);
   assert.match(source, /pointerupoutside/);
-  assert.match(source, /pointerout/);
+  assert.match(source, /JOYSTICK_DEAD_ZONE/);
+  assert.match(source, /resetJoystick/);
   assert.match(source, /createActionSnapshot/);
+  assert.doesNotMatch(source, /BUTTON_LAYOUT/);
   assert.match(scene, /new TouchInputController\(this\)/);
   assert.match(scene, /readSnapshot\(this\.inputController\.readSnapshot\(\)\)/);
+  assert.match(scene, /new Phaser\.Math\.Vector2\(moveX, moveY\)\.scale\(WALK_SPEED\)/);
 });
 
 test("Mobile landscape keeps the Phaser canvas in a safe-area fitted contract", async () => {
