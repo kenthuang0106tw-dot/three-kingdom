@@ -2,14 +2,14 @@
 
 ## Sprint Goal
 
-在已完成的三畫面橫向捲軸與兩場依序 encounter 上，下一步只建立 Boss arena entry sequencing。完成 5R.3 前，不加入 Boss locomotion／damage、HUD、Pause、Result、Audio、新角色或新戰鬥內容。
+在已完成的三畫面、兩場 encounter 與 Boss entry 上，下一步只建立 Boss locomotion、facing 與 Y alignment。完成 5R.4 前，不加入 Boss damage、HUD、Pause、Result、Audio、新角色或新戰鬥內容。
 
 ## Cadence
 
 - Duration：2 weeks
 - Capacity：1 developer + AI，約 40–55 hours
 - Milestone：M5R — Vertical Slice Recovery
-- Scope rule：一次只做一個 Recovery Task；5R.2 已完成，下一個唯一 Task 是 5R.3
+- Scope rule：一次只做一個 Recovery Task；5R.3 已完成，下一個唯一 Task 是 5R.4
 
 ## Task List
 
@@ -17,7 +17,8 @@
 |---:|---|---:|---|---|
 | 1 | ✅ M5R / Task 5R.1 — Three-screen world and visible camera scrolling | 12–18h | 3840px world、三段竹林背景、可見 camera scroll | tests + desktop/mobile browser smoke passed |
 | 2 | ✅ M5R / Task 5R.2 — Two encounter triggers and gates | 14–20h | 兩場依序 encounter | trigger/lock/clear browser acceptance passed |
-| 3 | ▶ M5R / Task 5R.3 — Boss arena entry sequencing | 8–12h | Boss 延後啟用與 arena entry | no premature Boss/lock smoke |
+| 3 | ✅ M5R / Task 5R.3 — Boss arena entry sequencing | 8–12h | Boss 延後啟用與 arena entry | desktop/mobile entry smoke passed |
+| 4 | ▶ M5R / Task 5R.4 — Boss locomotion, facing, and Y alignment | 16–24h | Boss 會接近、面向與對線 | movement/alignment browser acceptance |
 
 ## Recovery Planning Correction — 2026-07-14
 
@@ -52,6 +53,18 @@
 - [x] `pnpm test` 60/60、`pnpm build`、`pnpm build:github-pages`、`pnpm typecheck`、lint 0 errors（既有 8 個 `<img>` warnings）通過。
 - [x] Scene create 明確重設 encounter sequence、camera gate 與前一幀玩家位置；契約測試覆蓋 reset、順序、spawn-once 與 camera ownership。
 - [ ] 實體手機與瀏覽器補充 debug 欄位重測因本輪 Browser 連線中斷未執行；主流程 desktop browser smoke 已通過，不阻擋 5R.2 closeout，保留於後續 physical-device QA。
+
+## M5R / Task 5R.3 Closeout
+
+- [x] `BAMBOO_BOSS_ARENA` 定義 Stage-owned `entryTrigger`；純 `BossEntryState` 只允許 `locked → eligible → active`，倒退、Y 未對線與重複跨界均不啟用。
+- [x] 正常 Scene 建立時 Boss actor 數量為 0、無 `boss` camera lock；兩場 encounter 全清後只將 entry 標為 eligible，不直接建立或操作 Boss。
+- [x] 玩家向前跨入 arena 後才建立唯一 `BossActor`、取得 `boss` lock、將 camera 固定到 `scrollX=2560`，並把玩家限制在 arena bounds 內。
+- [x] Boss cleanup 仍只釋放 `boss` lock；Boss defeat 後 arena release 1 次、stage-complete event 1 次且發布時 lock 已釋放。
+- [x] Desktop browser：第一場進行中 Boss 仍為 0；兩場全清並跨入 entry 後 Boss 1、entry `active`、Boss lock true、普通敵人 0、console error 0。
+- [x] 844×390 landscape 與 390×844 portrait FIT 均完成兩場 encounter 與 Boss entry；Canvas 保持邏輯 1280×720、各只有一個 Canvas、console error 0。
+- [x] 10 次 Scene restart：Boss 0、entry `locked`、camera lock 空、completion 0、一個 Canvas、console error 0。
+- [x] `pnpm test` 62/62、`pnpm build`、`pnpm build:github-pages`、`pnpm typecheck`、lint 0 errors（既有 8 個 `<img>` warnings）通過。
+- [ ] Boss locomotion、facing、Y alignment、attack hitbox 與 player damage 未加入；依序保留給 5R.4／5R.5。
 
 ## Historical Closeout Evidence
 

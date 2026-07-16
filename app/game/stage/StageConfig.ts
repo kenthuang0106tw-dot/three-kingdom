@@ -176,6 +176,7 @@ export const BAMBOO_COMBAT_ROOM: StageConfig = validateStageConfig({
 // uses the Stage walk boundary; arena activation remains Task 5R.3.
 export const BAMBOO_BOSS_ARENA = Object.freeze({
   id: "bamboo-boss-arena",
+  entryTrigger: Object.freeze({ x: 2630, y: 390, width: 120, height: 245 }),
   bounds: Object.freeze({ x: 2630, y: 390, width: 1140, height: 245 }),
   cameraScroll: Object.freeze({ x: 2560, y: 0 }),
   spawn: Object.freeze({ x: 3420, y: 560 }),

@@ -1,69 +1,74 @@
 # Next Task
 
-## M5R / Task 5R.3 — Boss arena entry sequencing
+## M5R / Task 5R.4 — Boss locomotion, facing, and Y alignment
 
 ### Why this is next
 
-The three-screen world and both ordered ordinary encounters now work. The Boss
-still exists from Scene creation and is not owned by a real stage-entry
-sequence, so the playable path can expose Boss state and arena ownership before
-the player has cleared the second encounter. Sequencing entry is the smallest
-next step that joins the accepted Stage and Boss contracts without prematurely
-implementing Boss locomotion or damage.
+The player can now clear both ordinary encounters and enter a correctly gated
+Boss arena, but the Boss remains stationary and can select attacks without
+approaching or aligning with the player. Movement and facing must be correct
+before Task 5R.5 can attach player-damaging attack hitboxes to trustworthy
+positions and directions.
 
 ### Completion criteria
 
-- Normal play starts with no active or visible Boss actor and no `boss` camera
-  lock; existing development smoke modes may create their isolated fixture.
-- Clearing both ordinary encounters makes one Boss-entry trigger eligible in
-  authoritative Stage data. It cannot activate early or more than once.
-- Entering the Boss arena creates/activates exactly one existing Boss actor,
-  acquires the existing `boss` camera lock at the authoritative arena bounds,
-  and prevents backward escape while the fight is active.
-- Encounter completion must not directly call Boss internals; Stage progression
-  only exposes eligibility, while MainScene remains the Phaser orchestration
-  boundary.
-- Boss death/cleanup continues to release only `boss` ownership and publish the
-  existing stage-completion event exactly once. Do not change Boss combat,
-  movement, facing, damage, art, HP, timing, or phase behavior.
-- Scene restart resets Boss-entry eligibility, actor ownership, arena locks, and
-  completion state with one Canvas and no stale listener or object.
-- Preserve Title/start, three-screen traversal, both encounter gates, existing
-  enemies, player combat, touch/keyboard input, and camera scroll bounds.
-- Do not add Boss locomotion, Boss player damage, HUD, Pause, Result, Audio,
-  assets, actors, attacks, enemy types, balance changes, or stage polish.
+- Inspect the committed Boss lifecycle and attack frames before changing art or
+  metadata. If no genuine walk frames exist, create the smallest original
+  feet-aligned walk strip required for this Boss; do not animate movement by
+  translating, rotating, or scaling an idle frame.
+- Add one explicit locomotion decision path for the existing Boss: approach the
+  player, align feet Y, stop inside configured attack range, and preserve the
+  existing deterministic recovery/attack selection policy.
+- Boss world movement uses its Arcade body velocity and the existing arena
+  bounds. Sprite, body, feet anchor, depth, and facing remain synchronized.
+- Horizontal facing follows the player and the source-art orientation metadata;
+  the Boss must not walk or attack backward. Pure vertical movement preserves
+  the last horizontal facing.
+- Boss attacks may begin only when X distance and feet-Y difference are within
+  explicit configurable thresholds. The Boss stops during attack, hurt, phase,
+  dead, and cleaned states.
+- Player and Boss remain inside arena bounds and do not overlap into an
+  unrecoverable position. Do not add Boss attack hitboxes or player damage.
+- Existing Boss entry, phase/hurt/death, cleanup, stage completion, Title,
+  encounters, player combat, and mobile input remain unchanged.
+- Do not add new attacks, Boss phases, HP/balance changes, HUD, Pause, Result,
+  Audio, stage art, enemy types, or Task 5R.5 behavior.
 
 ### Validation
 
-- Deterministic tests prove Boss entry is ineligible before both encounter
-  clears, triggers once after them, owns one Boss actor/lock, and resets cleanly.
+- Deterministic tests cover approach direction, Y alignment priority, stop
+  range, facing, attack eligibility, non-movement states, and arena clamping.
+- Asset/metadata tests prove any walk frames are genuine, share the existing
+  Boss scale and feet anchor, and do not overlap adjacent atlas frames.
 - `pnpm test`, `pnpm build`, `pnpm build:github-pages`, `pnpm lint`, and
   `pnpm typecheck` pass.
-- Desktop browser smoke starts from Title, clears both ordinary encounters,
-  proves no Boss exists beforehand, enters the arena once, and observes one
-  `boss` camera lock with zero console errors.
-- Existing Boss defeat smoke still releases the arena and emits one completion
-  event; ten Scene restarts retain one Canvas, zero premature Boss actors, no
-  stale completion, and no camera lock.
-- 844×390 landscape touch and 390×844 portrait FIT retain aligned controls and
-  can reach the Boss entry without Canvas stretching.
+- Desktop browser smoke reaches the gated arena, then proves Boss X/Y world
+  coordinates change toward a displaced player, feet Y aligns before attack,
+  facing is correct on both sides, and no console error occurs.
+- 844×390 landscape touch and 390×844 portrait FIT retain one Canvas, usable
+  controls, correct Boss movement/facing, and unchanged arena entry.
+- Existing Boss defeat smoke publishes one completion event after one arena
+  release; ten Scene restarts retain zero premature Boss actors and no leaks.
 
 ### Expected files
 
-- `app/game/stage/StageConfig.ts`
-- `app/game/stage/EncounterFlow.ts` or one small Stage-owned entry contract
+- `app/game/boss/BossActor.ts`
+- `app/game/boss/BossDecisionPolicy.ts` or one small locomotion policy module
+- `app/game/boss/BossAttackMetadata.ts` only for source-facing metadata
 - `app/game/MainScene.ts`
-- `app/game/BossActor.ts` only if activation ownership cannot remain in Scene
+- `public/art/boss/*walk*` and reproducible asset metadata/tool only if genuine
+  walk frames are missing
 - `tests/app-contracts.test.mjs`
 - Project status/evidence documents
 
 ### Risks
 
-- The existing Boss is constructed eagerly; changing ownership can break
-  restart cleanup or development Boss smoke fixtures.
-- Reusing `encounter` and `boss` lock reasons incorrectly can release the wrong
-  gate or leave the player soft-locked.
-- Coupling the second encounter callback directly to Boss construction would
-  make future Stage sequencing difficult to test and reset.
-- Existing completion tests assume one Boss lifecycle; entry gating must retain
-  exactly-once cleanup and publication behavior.
+- Existing Boss assets do not include a walk strip; using idle-frame transforms
+  would violate the animation rules and hide missing art.
+- The current Boss body is immovable; changing movement ownership can desync its
+  body zone, sprite, depth, or knockback callback.
+- Source-facing assumptions can reverse both walk and later attack direction.
+- Allowing attack selection before Y alignment would preserve the current
+  unreachable-attack problem and make Task 5R.5 invalid.
+- Mixing attack-hitbox work into locomotion would make failures difficult to
+  isolate; player damage remains strictly deferred.

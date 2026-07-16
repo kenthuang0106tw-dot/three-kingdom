@@ -1,4 +1,4 @@
-import type { StageEncounter, StagePoint } from "./StageConfig";
+import type { StageEncounter, StagePoint, StageRect } from "./StageConfig";
 
 export type EncounterStatus = "ready" | "active" | "cleared";
 
@@ -72,4 +72,26 @@ export function clearActiveEncounter(state: EncounterSequenceState, encounterId:
 
 export function isEncounterSequenceCleared(state: EncounterSequenceState, encounterCount: number): boolean {
   return state.activeEncounterId === null && state.nextEncounterIndex >= encounterCount;
+}
+
+export type BossEntryState = "locked" | "eligible" | "active";
+
+export function createBossEntryState(): BossEntryState {
+  return "locked";
+}
+
+export function makeBossEntryEligible(state: BossEntryState): BossEntryState {
+  return state === "locked" ? "eligible" : state;
+}
+
+export function triggerBossEntry(
+  state: BossEntryState,
+  trigger: StageRect,
+  previous: StagePoint,
+  current: StagePoint,
+): BossEntryState | null {
+  if (state !== "eligible" || current.x <= previous.x) return null;
+  const crossedX = previous.x < trigger.x + trigger.width && current.x >= trigger.x;
+  const alignedY = current.y >= trigger.y && current.y <= trigger.y + trigger.height;
+  return crossedX && alignedY ? "active" : null;
 }

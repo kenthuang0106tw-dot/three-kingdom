@@ -514,6 +514,25 @@ Boss activation. Scene creation resets the sequence and manager ownership, so
 restart cannot retain completed triggers, actors, or camera locks. Boss entry is
 deliberately not coupled to encounter completion in this task.
 
+## Boss Arena Entry Contract (M5R / Task 5R.3)
+
+`BAMBOO_BOSS_ARENA.entryTrigger` is the authoritative Stage coordinate for Boss
+entry. The Phaser-free `BossEntryState` owns only `locked`, `eligible`, and
+`active`: clearing both ordinary encounters makes it eligible; one forward,
+Y-aligned trigger crossing makes it active; active entry cannot retrigger.
+
+`MainScene` remains the composition boundary. Encounter all-clear changes only
+entry eligibility and never calls Boss internals. On entry activation, the Scene
+creates the one Scene-owned `BossActor`, acquires the existing `boss` camera-lock
+reason, sets the authoritative arena scroll, and clamps the player to arena
+bounds while that lock exists. Normal Scene creation owns no Boss actor.
+
+Boss cleanup retains the existing order: destroy actor resources, release only
+the `boss` lock, then publish the one stage-completion event for a defeated Boss.
+Restart resets entry state, Boss ownership, camera locks, and completion. The
+development Boss smoke remains an isolated fixture and does not run ordinary
+encounter progression.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

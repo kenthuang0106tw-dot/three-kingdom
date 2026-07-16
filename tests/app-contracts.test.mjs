@@ -18,7 +18,7 @@ import { resolveAttack } from "../app/game/combat/CombatResolver.ts";
 import { BAMBOO_BOSS_ARENA, BAMBOO_COMBAT_ROOM, clampStagePoint, clampStageX, clampStageY, isStagePointWithin, validateStageConfig } from "../app/game/stage/StageConfig.ts";
 import { calculateCameraScroll } from "../app/game/camera/CameraFollow.ts";
 import { createCameraLockState, hasCameraLock, isCameraLocked, lockCamera, unlockCamera } from "../app/game/camera/CameraLock.ts";
-import { beginEncounter, clearActiveEncounter, createEncounterFlow, createEncounterSequence, isEncounterCleared, isEncounterSequenceCleared, recordEnemyRemoved, triggerNextEncounter } from "../app/game/stage/EncounterFlow.ts";
+import { beginEncounter, clearActiveEncounter, createBossEntryState, createEncounterFlow, createEncounterSequence, isEncounterCleared, isEncounterSequenceCleared, makeBossEntryEligible, recordEnemyRemoved, triggerBossEntry, triggerNextEncounter } from "../app/game/stage/EncounterFlow.ts";
 import { canRequestStageExit, createStageExitState, makeExitAvailable, requestStageExit, resetStageExit } from "../app/game/stage/StageExit.ts";
 import { DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemySpriteShouldFlip, validateEnemyConfig } from "../app/game/enemy/EnemyConfig.ts";
 import { BossLifecycle } from "../app/game/boss/BossLifecycle.ts";
@@ -566,6 +566,7 @@ test("Camera lock contract preserves independent encounter and Boss ownership", 
 
 test("Boss arena occupies the final viewport and releases its lock", async () => {
   const scene = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
+  assert.deepEqual(BAMBOO_BOSS_ARENA.entryTrigger, { x: 2630, y: 390, width: 120, height: 245 });
   assert.deepEqual(BAMBOO_BOSS_ARENA.bounds, { x: 2630, y: 390, width: 1140, height: 245 });
   assert.deepEqual(BAMBOO_BOSS_ARENA.cameraScroll, { x: 2560, y: 0 });
   assert.equal(isStagePointWithin(BAMBOO_BOSS_ARENA.spawn, BAMBOO_BOSS_ARENA.bounds), true);
@@ -581,7 +582,9 @@ test("Boss arena occupies the final viewport and releases its lock", async () =>
 
 test("Recovery traversal starts unlocked while preserving explicit diagnostic lock ownership", async () => {
   const source = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
-  assert.match(source, /if \(this\.bossSmokeMode\) \{\s+this\.cameraLockState = lockCamera\(this\.cameraLockState, "encounter"\)/);
+  assert.match(source, /if \(this\.bossSmokeMode\) \{/);
+  assert.match(source, /this\.cameraLockState = lockCamera\(this\.cameraLockState, "encounter"\)/);
+  assert.match(source, /if \(!this\.bossSmokeMode\) \{\s+this\.updateEncounterSmoke\(\)/);
   assert.match(source, /unlockCamera\(this\.cameraLockState, "encounter"\)/);
   assert.match(source, /if \(!isCameraLocked\(this\.cameraLockState\)\)/);
   assert.match(source, /dataset\.cameraScrollX/);
@@ -626,6 +629,36 @@ test("Encounter sequence triggers two ordered groups once and resets determinist
   assert.deepEqual(createEncounterSequence(), ready);
 });
 
+test("Boss entry remains locked until eligible, triggers once, and resets deterministically", () => {
+  const trigger = BAMBOO_BOSS_ARENA.entryTrigger;
+  const locked = createBossEntryState();
+  assert.equal(locked, "locked");
+  assert.equal(triggerBossEntry(locked, trigger, { x: 2600, y: 560 }, { x: 2640, y: 560 }), null);
+
+  const eligible = makeBossEntryEligible(locked);
+  assert.equal(triggerBossEntry(eligible, trigger, { x: 2640, y: 560 }, { x: 2600, y: 560 }), null);
+  assert.equal(triggerBossEntry(eligible, trigger, { x: 2600, y: 300 }, { x: 2640, y: 300 }), null);
+  const active = triggerBossEntry(eligible, trigger, { x: 2600, y: 560 }, { x: 2640, y: 560 });
+  assert.equal(active, "active");
+  assert.equal(triggerBossEntry(active, trigger, { x: 2600, y: 560 }, { x: 2640, y: 560 }), null);
+  assert.equal(createBossEntryState(), "locked");
+});
+
+test("MainScene creates one Boss only after Stage-owned entry activation", async () => {
+  const source = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
+  assert.match(source, /private bossActor\?: BossActor/);
+  assert.match(source, /this\.bossEntryState = createBossEntryState\(\)/);
+  assert.match(source, /this\.bossEntryState = makeBossEntryEligible\(this\.bossEntryState\)/);
+  assert.match(source, /triggerBossEntry\(/);
+  assert.match(source, /this\.createBossActor\(development\)/);
+  assert.match(source, /this\.activateBossArena\(development\)/);
+  assert.match(source, /this\.constrainPlayerToBossArena\(\)/);
+  assert.match(source, /dataset\.bossActorCount = "0"/);
+  assert.equal((source.match(/new BossActor\(/g) ?? []).length, 1);
+  const createSection = source.slice(source.indexOf("create()"), source.indexOf("update()"));
+  assert.doesNotMatch(createSection, /this\.bossActor = new BossActor/);
+});
+
 test("MainScene owns encounter gates without eager spawning or Boss coupling", async () => {
   const source = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
   assert.match(source, /this\.encounterSequence = createEncounterSequence\(\)/);
@@ -633,10 +666,10 @@ test("MainScene owns encounter gates without eager spawning or Boss coupling", a
   assert.match(source, /this\.cameraLockState = lockCamera\(this\.cameraLockState, "encounter"\)/);
   assert.match(source, /this\.cameraLockState = unlockCamera\(this\.cameraLockState, "encounter"\)/);
   assert.match(source, /this\.constrainPlayerToEncounterCamera\(\)/);
-  assert.match(source, /this\.encounterSmokeMode = development && query\.get\("encounterSmoke"\) === "1"/);
+  assert.match(source, /query\.get\("encounterSmoke"\) === "1" \|\| this\.bossEntrySmokeMode/);
   assert.doesNotMatch(source, /spawnAll\(BAMBOO_COMBAT_ROOM\.spawnPoints\)/);
   const handler = source.slice(source.indexOf("private handleEncounterCleared"), source.indexOf("private showAllEnemiesDefeated"));
-  assert.doesNotMatch(handler, /Boss|activateBossArena/);
+  assert.doesNotMatch(handler, /createBossActor|activateBossArena|new BossActor/);
 });
 
 test("EnemyManager owns spawn and all-clear contract while MainScene owns presentation", async () => {
@@ -959,7 +992,7 @@ test("Boss actor owns feet-aligned hurt, phase, death, and Scene cleanup", async
   assert.match(actorSource, /deathFadeMs: 500/);
   assert.match(actorSource, /this\.body\.enable = false/);
   assert.equal((sceneSource.match(/new BossActor\(/g) ?? []).length, 1);
-  assert.match(sceneSource, /this\.bossActor\.destroy\(\)/);
+  assert.match(sceneSource, /this\.bossActor\?\.destroy\(\)/);
   assert.match(sceneSource, /dataset\.bossActorCount = "1"/);
   assert.match(sceneSource, /dataset\.bossActorCount = "0"/);
   assert.match(sceneSource, /query\.get\("bossSmoke"\)/);

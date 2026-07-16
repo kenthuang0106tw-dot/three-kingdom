@@ -714,3 +714,22 @@
 | Quality gates | Pass | `pnpm test` 60/60; app and GitHub Pages builds; typecheck; lint 0 errors with 8 existing warnings |
 | Scope | Pass | No Boss entry/behavior, player move, art, UI, audio, or enemy rebalance added |
 | Next task | Selected | M5R / Task 5R.3 — Boss arena entry sequencing |
+
+## M5R / Task 5R.3 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M5R / Task 5R.3 — Boss arena entry sequencing |
+| Stage entry data | Pass | Arena entry trigger is `{ x:2630, y:390, width:120, height:245 }` in `StageConfig` |
+| Pure entry state | Pass | Tests cover locked, eligible, forward/Y-aligned activation, duplicate rejection, and reset |
+| Initial ownership | Pass | Normal Title starts with Boss actor 0, Boss lock false, entry `locked` |
+| Encounter boundary | Pass | Ordinary all-clear only marks entry eligible; it does not construct or activate Boss internals |
+| Arena activation | Pass | Forward entry creates one Boss, locks at `scrollX=2560`, and constrains player to arena bounds |
+| Desktop browser | Pass | Boss 0 during encounter 1; after both clears and entry: Boss 1, ordinary enemies 0, only `boss` lock, zero errors |
+| Landscape mobile | Pass | 844×390; logical Canvas 1280×720; entry active with one Boss/Canvas |
+| Portrait FIT | Pass | 390×844; fitted Canvas 325×182.8125; entry active with one Boss/Canvas |
+| Boss regression | Pass | Defeat releases arena once and publishes one completion event after release; zero errors |
+| Restart ownership | Pass | 10 restarts: one Canvas, Boss 0, entry locked, no camera lock or stale completion |
+| Quality gates | Pass | `pnpm test` 62/62; app and GitHub Pages builds; typecheck; lint 0 errors with 8 existing warnings |
+| Scope | Pass | No Boss locomotion/damage, player changes, art, HUD, audio, or balance changes |
+| Next task | Selected | M5R / Task 5R.4 — Boss locomotion, facing, and Y alignment |
