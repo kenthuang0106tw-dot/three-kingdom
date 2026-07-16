@@ -24,6 +24,7 @@ import { DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemyS
 import { BossLifecycle } from "../app/game/boss/BossLifecycle.ts";
 import { BOSS_ATTACKS } from "../app/game/boss/BossAttackMetadata.ts";
 import { BossDecisionPolicy } from "../app/game/boss/BossDecisionPolicy.ts";
+import { BOSS_LOCOMOTION_CONFIG, clampBossFeet, decideBossLocomotion } from "../app/game/boss/BossLocomotion.ts";
 import { selectFairAttackCandidate } from "../app/game/enemy/AttackSlotPolicy.ts";
 import { GameFlowStateMachine } from "../app/game/flow/GameFlowStateMachine.ts";
 import { TitleStartController } from "../app/game/flow/TitleStartController.ts";
@@ -978,7 +979,7 @@ test("Boss actor owns feet-aligned hurt, phase, death, and Scene cleanup", async
   const metadata = JSON.parse(metadataText);
   const frameNames = [
     "idle-0", "idle-1", "hurt-0", "hurt-1", "phase-0", "phase-1", "phase-2",
-    "dead-0", "dead-1", "dead-2", "dead-3",
+    "dead-0", "dead-1", "dead-2", "dead-3", "walk-0", "walk-1", "walk-2", "walk-3",
   ];
 
   assert.deepEqual(Object.keys(atlas.frames), frameNames);
@@ -1001,6 +1002,75 @@ test("Boss actor owns feet-aligned hurt, phase, death, and Scene cleanup", async
   assert.match(sceneSource, /dataset\.bossSmokeLog/);
   assert.doesNotMatch(sceneSource, /setTimeout|setInterval/);
   assert.doesNotMatch(enemyManager, /BossActor|BossLifecycle|game\/boss|boss\//i);
+});
+
+test("Boss locomotion aligns Y, approaches, separates, faces, stops, and clamps", () => {
+  const position = { x: 3300, y: 560 };
+  const align = decideBossLocomotion("idle", position, { x: 3000, y: 430 }, -1);
+  assert.deepEqual(align, {
+    velocityX: 0,
+    velocityY: -BOSS_LOCOMOTION_CONFIG.walkSpeedY,
+    facing: -1,
+    isMoving: true,
+    attackEligible: false,
+  });
+
+  const approachLeft = decideBossLocomotion("idle", position, { x: 3000, y: 560 }, 1);
+  assert.equal(approachLeft.velocityX, -BOSS_LOCOMOTION_CONFIG.walkSpeedX);
+  assert.equal(approachLeft.facing, -1);
+  const approachRight = decideBossLocomotion("idle", position, { x: 3600, y: 560 }, -1);
+  assert.equal(approachRight.velocityX, BOSS_LOCOMOTION_CONFIG.walkSpeedX);
+  assert.equal(approachRight.facing, 1);
+
+  const ready = decideBossLocomotion("idle", position, { x: 3150, y: 575 }, -1);
+  assert.equal(ready.isMoving, false);
+  assert.equal(ready.attackEligible, true);
+  const separate = decideBossLocomotion("idle", position, { x: 3250, y: 560 }, -1);
+  assert.equal(separate.velocityX, BOSS_LOCOMOTION_CONFIG.walkSpeedX);
+  assert.equal(separate.facing, 1);
+  assert.equal(separate.attackEligible, false);
+
+  for (const state of ["inactive", "attack", "hurt", "dead", "cleaned"]) {
+    assert.deepEqual(decideBossLocomotion(state, position, { x: 3600, y: 430 }, -1), {
+      velocityX: 0, velocityY: 0, facing: -1, isMoving: false, attackEligible: false,
+    });
+  }
+  assert.deepEqual(clampBossFeet(
+    { x: 2000, y: 800 },
+    BAMBOO_BOSS_ARENA.bounds,
+    96,
+    48,
+  ), { x: BAMBOO_BOSS_ARENA.bounds.x + 48, y: BAMBOO_BOSS_ARENA.bounds.y + BAMBOO_BOSS_ARENA.bounds.height });
+});
+
+test("Boss walk frames are genuine feet-aligned atlas poses", async () => {
+  const [atlasText, metadataText, actorSource, toolSource] = await Promise.all([
+    readFile(new URL("../public/art/boss/warlord-lifecycle.atlas.json", import.meta.url), "utf8"),
+    readFile(new URL("../public/art/boss/warlord-lifecycle.metadata.json", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/boss/BossActor.ts", import.meta.url), "utf8"),
+    readFile(new URL("../tools/build_boss_lifecycle_art.py", import.meta.url), "utf8"),
+  ]);
+  const atlas = JSON.parse(atlasText);
+  const metadata = JSON.parse(metadataText);
+  const walk = metadata.frames.filter(frame => frame.name.startsWith("walk-"));
+  assert.deepEqual(walk.map(frame => frame.name), ["walk-0", "walk-1", "walk-2", "walk-3"]);
+  assert.equal(new Set(walk.map(frame => JSON.stringify(frame.alphaBounds))).size, 4);
+  assert.ok(walk.every(frame => frame.feetAnchor.x === 224 && frame.feetAnchor.y === 420));
+  assert.ok(walk.every(frame => frame.displayScale === 0.9));
+  assert.ok(walk.every(frame => frame.sourceRect.x + frame.sourceRect.width <= 2172));
+  assert.ok(walk.every(frame => atlas.frames[frame.name].frame.w === 448 && atlas.frames[frame.name].frame.h === 448));
+  assert.match(toolSource, /warlord-walk-transparent\.png/);
+  assert.match(actorSource, /this\.body\.setVelocity\(locomotion\.velocityX, locomotion\.velocityY\)/);
+  assert.match(actorSource, /locomotion\.attackEligible/);
+  assert.match(actorSource, /facing !== BOSS_SOURCE_FACING/);
+  assert.match(actorSource, /setBoundsRectangle/);
+  assert.match(actorSource, /BOSS_SOURCE_FACING/);
+  assert.match(actorSource, /WALK_ANIMATION/);
+  const sceneSource = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
+  assert.match(sceneSource, /query\.get\("bossMovementSmoke"\)/);
+  assert.match(sceneSource, /dataset\.bossMovementSmokeComplete = "true"/);
+  assert.match(sceneSource, /bossActor\?\.update\(/);
+  assert.match(sceneSource, /BAMBOO_BOSS_ARENA\.bounds/);
 });
 
 test("Boss decision policy is deterministic and enforces attack recovery", () => {

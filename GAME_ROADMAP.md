@@ -264,7 +264,7 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 | 5R.1 | Three-screen world and visible camera scrolling（Completed 2026-07-14） | P0 | High | M3 contracts | world width ≥3840；三段背景無空白；玩家可離開首屏；camera `scrollX` 實際變化且不越界 | StageConfig/MainScene/camera tests | camera lock 阻止捲動、重複背景接縫 |
 | 5R.2 | Two encounter triggers and gates（Completed 2026-07-15） | P0 | High | 5R.1, M4 | 進區才生成；戰鬥時鎖定；清敵後解除；兩場依序完成 | stage director/config/tests | spawn ownership、soft lock |
 | 5R.3 | Boss arena entry sequencing（Completed 2026-07-16） | P0 | Medium | 5R.2, M5 arena | 普通 encounter 完成後才啟用 Boss 與 Boss lock；Boss 不在起點同時出現 | stage/Boss orchestration | premature activation |
-| 5R.4 | Boss locomotion, facing, and Y alignment | P0 | High | 5R.3, Boss walk assets | Boss 會接近、停止、面向與對線；不倒走、不瞬移、不出界 | BossActor/metadata/assets/tests | 缺 walk frames、腳底漂移 |
+| 5R.4 | Boss locomotion, facing, and Y alignment（Completed 2026-07-16） | P0 | High | 5R.3, Boss walk assets | Boss 會接近、停止、面向與對線；不倒走、不瞬移、不出界 | BossActor/metadata/assets/tests | 缺 walk frames、腳底漂移 |
 | 5R.5 | Boss attack hitbox and player damage | P0 | High | 5R.4, M2 combat | startup/active/recovery；active frame 每招只命中一次；Player flash/hit-stop/knockback/HP 正常 | boss/combat/tests | 動畫 frame 與 hitbox 時序錯位 |
 | 5R.6 | Player failure and deterministic restart | P0 | High | 5R.5, M6 flow | HP 0 → `failed`；輸入停止；restart 完整重置關卡且 10 次無 leak | flow/MainScene/tests | stale timer/listener/lock |
 | 5R.7 | Boss defeat and cleared flow | P0 | Medium | 5R.5, M5 completion, M6 flow | Boss defeat cleanup 後一次進入 `cleared`；arena release 與 event ordering 正確 | flow/events/MainScene/tests | duplicate completion |
@@ -411,7 +411,8 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 - M5R / Task 5R.1 (three-screen world and visible camera scrolling) completed on 2026-07-14.
 - M5R / Task 5R.2 (two encounter triggers and gates) completed on 2026-07-15.
 - M5R / Task 5R.3 (Boss arena entry sequencing) completed on 2026-07-16.
-- Next eligible task: M5R / Task 5R.4 (Boss locomotion, facing, and Y alignment).
+- M5R / Task 5R.4 (Boss locomotion, facing, and Y alignment) completed on 2026-07-16.
+- Next eligible task: M5R / Task 5R.5 (Boss attack hitbox and player damage).
 
 ## 4. Global Acceptance Rules
 

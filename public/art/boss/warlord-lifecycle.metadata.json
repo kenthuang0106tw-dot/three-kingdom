@@ -380,6 +380,142 @@
       },
       "sourceScale": 0.5769230769230769,
       "displayScale": 0.9
+    },
+    {
+      "name": "walk-0",
+      "sourceImage": "warlord-walk-transparent.png",
+      "sourceRect": {
+        "x": 0,
+        "y": 0,
+        "width": 546,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 52,
+        "y": 158,
+        "width": 476,
+        "height": 412
+      },
+      "frame": {
+        "x": 1344,
+        "y": 896,
+        "width": 448,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 86,
+      "displayOffsetY": 182,
+      "visibleWidth": 275,
+      "visibleHeight": 238,
+      "feetAnchor": {
+        "x": 224,
+        "y": 420
+      },
+      "sourceScale": 0.5769230769230769,
+      "displayScale": 0.9
+    },
+    {
+      "name": "walk-1",
+      "sourceImage": "warlord-walk-transparent.png",
+      "sourceRect": {
+        "x": 546,
+        "y": 0,
+        "width": 506,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 40,
+        "y": 160,
+        "width": 435,
+        "height": 410
+      },
+      "frame": {
+        "x": 0,
+        "y": 1344,
+        "width": 448,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 98,
+      "displayOffsetY": 183,
+      "visibleWidth": 251,
+      "visibleHeight": 237,
+      "feetAnchor": {
+        "x": 224,
+        "y": 420
+      },
+      "sourceScale": 0.5769230769230769,
+      "displayScale": 0.9
+    },
+    {
+      "name": "walk-2",
+      "sourceImage": "warlord-walk-transparent.png",
+      "sourceRect": {
+        "x": 1052,
+        "y": 0,
+        "width": 520,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 35,
+        "y": 161,
+        "width": 460,
+        "height": 409
+      },
+      "frame": {
+        "x": 448,
+        "y": 1344,
+        "width": 448,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 91,
+      "displayOffsetY": 184,
+      "visibleWidth": 265,
+      "visibleHeight": 236,
+      "feetAnchor": {
+        "x": 224,
+        "y": 420
+      },
+      "sourceScale": 0.5769230769230769,
+      "displayScale": 0.9
+    },
+    {
+      "name": "walk-3",
+      "sourceImage": "warlord-walk-transparent.png",
+      "sourceRect": {
+        "x": 1572,
+        "y": 0,
+        "width": 600,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 35,
+        "y": 189,
+        "width": 485,
+        "height": 381
+      },
+      "frame": {
+        "x": 896,
+        "y": 1344,
+        "width": 448,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 84,
+      "displayOffsetY": 200,
+      "visibleWidth": 280,
+      "visibleHeight": 220,
+      "feetAnchor": {
+        "x": 224,
+        "y": 420
+      },
+      "sourceScale": 0.5769230769230769,
+      "displayScale": 0.9
     }
   ]
 }

@@ -1,5 +1,8 @@
 export type BossAttackPhase = "startup" | "active" | "recovery";
 
+/** The committed Boss source art faces screen-left. */
+export const BOSS_SOURCE_FACING = -1 as const;
+
 export type BossAttackDefinition = Readonly<{
   key: "attack1" | "attack2" | "attack3";
   animationKey: string;

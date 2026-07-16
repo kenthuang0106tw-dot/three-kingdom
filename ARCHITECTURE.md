@@ -533,6 +533,25 @@ Restart resets entry state, Boss ownership, camera locks, and completion. The
 development Boss smoke remains an isolated fixture and does not run ordinary
 encounter progression.
 
+## Boss Locomotion Contract (M5R / Task 5R.4)
+
+`BossLocomotion.ts` is a Phaser-free policy boundary. Given Boss state, Boss
+feet, player feet, and the previous facing, it returns velocity, facing,
+movement, and attack-eligibility decisions. Idle locomotion first aligns the Y
+axis, then approaches or separates on X; attack eligibility is true only in the
+configured X band and Y tolerance. Non-idle lifecycle states always return zero
+velocity.
+
+`BossActor` owns the Arcade body, one shared display scale, animation switching,
+source-facing conversion, and arena clamping. `MainScene` supplies only the
+player feet and Stage-owned arena bounds. The decision policy may choose an
+attack only after locomotion reports eligibility; attack hitboxes and player
+damage remain a separate 5R.5 responsibility.
+
+The lifecycle atlas contains four distinct `walk-*` frames at the same feet
+anchor as idle/hurt/phase/dead. Animation frames never move the world body, and
+movement never uses sprite-only tweens.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

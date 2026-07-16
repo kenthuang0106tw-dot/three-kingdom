@@ -17,6 +17,8 @@ GROUPS = [
      ["phase-0", "phase-1", "phase-2"]),
     (ART / "warlord-death-transparent.png", [0, 536, 1066, 1619, 2172],
      ["dead-0", "dead-1", "dead-2", "dead-3"]),
+    (ART / "warlord-walk-transparent.png", [0, 546, 1052, 1572, 2172],
+     ["walk-0", "walk-1", "walk-2", "walk-3"]),
 ]
 
 SHEET = ART / "warlord-lifecycle.png"

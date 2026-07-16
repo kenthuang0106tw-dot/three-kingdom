@@ -2,14 +2,14 @@
 
 ## Sprint Goal
 
-在已完成的三畫面、兩場 encounter 與 Boss entry 上，下一步只建立 Boss locomotion、facing 與 Y alignment。完成 5R.4 前，不加入 Boss damage、HUD、Pause、Result、Audio、新角色或新戰鬥內容。
+在已完成的三畫面、兩場 encounter、Boss entry 與 locomotion 上，下一步只建立 Boss attack hitbox 與 player damage。完成 5R.5 前，不加入 HUD、Pause、Result、Audio、新角色或新戰鬥內容。
 
 ## Cadence
 
 - Duration：2 weeks
 - Capacity：1 developer + AI，約 40–55 hours
 - Milestone：M5R — Vertical Slice Recovery
-- Scope rule：一次只做一個 Recovery Task；5R.3 已完成，下一個唯一 Task 是 5R.4
+- Scope rule：一次只做一個 Recovery Task；5R.4 已完成，下一個唯一 Task 是 5R.5
 
 ## Task List
 
@@ -18,7 +18,8 @@
 | 1 | ✅ M5R / Task 5R.1 — Three-screen world and visible camera scrolling | 12–18h | 3840px world、三段竹林背景、可見 camera scroll | tests + desktop/mobile browser smoke passed |
 | 2 | ✅ M5R / Task 5R.2 — Two encounter triggers and gates | 14–20h | 兩場依序 encounter | trigger/lock/clear browser acceptance passed |
 | 3 | ✅ M5R / Task 5R.3 — Boss arena entry sequencing | 8–12h | Boss 延後啟用與 arena entry | desktop/mobile entry smoke passed |
-| 4 | ▶ M5R / Task 5R.4 — Boss locomotion, facing, and Y alignment | 16–24h | Boss 會接近、面向與對線 | movement/alignment browser acceptance |
+| 4 | ✅ M5R / Task 5R.4 — Boss locomotion, facing, and Y alignment | 16–24h | Boss 會接近、面向與對線 | movement/alignment browser acceptance passed |
+| 5 | ▶ M5R / Task 5R.5 — Boss attack hitbox and player damage | 16–24h | Boss active frames 可單次傷害玩家 | hitbox/timing/damage browser acceptance |
 
 ## Recovery Planning Correction — 2026-07-14
 
@@ -64,7 +65,17 @@
 - [x] 844×390 landscape 與 390×844 portrait FIT 均完成兩場 encounter 與 Boss entry；Canvas 保持邏輯 1280×720、各只有一個 Canvas、console error 0。
 - [x] 10 次 Scene restart：Boss 0、entry `locked`、camera lock 空、completion 0、一個 Canvas、console error 0。
 - [x] `pnpm test` 62/62、`pnpm build`、`pnpm build:github-pages`、`pnpm typecheck`、lint 0 errors（既有 8 個 `<img>` warnings）通過。
-- [ ] Boss locomotion、facing、Y alignment、attack hitbox 與 player damage 未加入；依序保留給 5R.4／5R.5。
+- [x] Boss locomotion、facing、Y alignment 已由 5R.4 完成；attack hitbox 與 player damage 保留給 5R.5。
+
+## M5R / Task 5R.4 Closeout
+
+- [x] 補入四張真正逐幀、來源朝左、共同腳底 anchor 的 Boss walk frames；未以 transform 偽造行走。
+- [x] Boss idle 時以 Arcade velocity 先完成 Y 對線，再依距離靠近或拉開；到攻擊距離才停止並允許既有 decision policy 選招。
+- [x] Boss facing 依水平目標方向更新，攻擊／hurt／phase／dead／cleaned 均保持零速度；arena clamp 防止腳底與 body 出界。
+- [x] Desktop 與 844×390 landscape smoke 通過：左／右 facing 為 -1／+1，Y 由 560 對線至 478.4，再移至 591.7；一個 Canvas、browser error 0。
+- [x] Boss defeat regression：arena release 1 次、stage completion 1 次；10 次 restart 無殘留 Boss、lock、completion 或 Canvas。
+- [x] `pnpm test` 64/64、`pnpm typecheck`、lint 0 errors（既有 8 warnings）通過；production builds 完成後記錄於 commit。
+- [ ] Boss attack hitbox 與 player damage 未加入，唯一保留給 5R.5。
 
 ## Historical Closeout Evidence
 

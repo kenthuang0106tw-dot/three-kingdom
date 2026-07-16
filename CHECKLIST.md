@@ -733,3 +733,21 @@
 | Quality gates | Pass | `pnpm test` 62/62; app and GitHub Pages builds; typecheck; lint 0 errors with 8 existing warnings |
 | Scope | Pass | No Boss locomotion/damage, player changes, art, HUD, audio, or balance changes |
 | Next task | Selected | M5R / Task 5R.4 — Boss locomotion, facing, and Y alignment |
+
+## M5R / Task 5R.4 Evidence
+
+| Item | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M5R / Task 5R.4 — Boss locomotion, facing, and Y alignment |
+| Walk art | Pass | Four distinct runtime frames, 8 FPS loop, common `(224, 420)` feet anchor, source-facing left |
+| Arcade movement | Pass | Idle Boss aligns Y first, then approaches/separates with `86px/s` X and `68px/s` Y velocity |
+| Facing | Pass | Desktop smoke checkpoints: left `-1`, right `+1`; no reverse-walk transform or sprite-only movement |
+| Attack gate | Pass | Eligible only at X `112–170px` and Y tolerance `30px`; no hitbox/player damage added |
+| Lifecycle stop | Pass | Attack, hurt, phase, dead, and cleaned policy decisions always return zero velocity |
+| Bounds | Pass | Feet/body clamp to Stage-owned Boss arena; Arcade custom bounds prevent escape |
+| Desktop browser | Pass | Y `560 → 478.4 → 591.7`; walk/idle state and nonzero/zero velocities observed; one Canvas, zero errors |
+| Mobile landscape | Pass | 844×390 FIT completed the same movement smoke with correct facing and Y alignment |
+| Boss defeat regression | Pass | One arena release followed by one stage completion; Boss actor cleaned |
+| Restart regression | Pass | 10 resets: Boss 0, entry locked, no camera lock/stale completion, one Canvas, zero errors |
+| Quality gates | Pass | `pnpm test` 64/64; typecheck; lint 0 errors with 8 existing warnings; both production builds |
+| Next task | Selected | M5R / Task 5R.5 — Boss attack hitbox and player damage |

@@ -87,8 +87,8 @@ weapon pixels from contaminating frames.
 | Source strips | `warlord-idle-hurt-source.png`, `warlord-phase-source.png`, `warlord-death-source.png` |
 | Processed strips | Matching `*-transparent.png` files |
 | Runtime sheet | `warlord-lifecycle.png` |
-| Frames | 11; idle 2, hurt 2, phase 3, death 4 |
-| Runtime layout | 4×3, 448×448 cells |
+| Frames | 15; idle 2, hurt 2, phase 3, death 4, walk 4 |
+| Runtime layout | 4×4, 448×448 cells |
 | Feet anchor | `(224, 420)` for every frame |
 | Display scale | `0.9`, shared with attack frames |
 | Metadata | `warlord-lifecycle.atlas.json`, `warlord-lifecycle.metadata.json` |
@@ -97,8 +97,10 @@ weapon pixels from contaminating frames.
 
 The lifecycle strips were generated from the same indigo-and-antique-gold
 warlord reference. Explicit strip boundaries, chroma removal, and a common
-feet anchor prevent neighboring-frame contamination and animation jump. Walk
-and arena-specific art remain missing.
+feet anchor prevent neighboring-frame contamination and animation jump. The
+four walk frames are distinct consecutive poses, share the same source-facing
+and feet anchor, and are rebuilt from `warlord-walk-transparent.png`; arena-
+specific art remains deferred.
 
 ### Runtime manifest (M1 / Task 1.5)
 
@@ -185,7 +187,7 @@ Metadata 最少欄位：
 - **M2:** Guan Yu hurt、dead、完整 combo transitions。
 - **M3:** 第二／第三種近戰小兵全套動畫。
 - **M4:** Stage layers、foreground、props、collision/encounter metadata。
-- **M5:** Boss attack 1–3、idle、hurt、phase、dead 已完成；仍缺 walk 與 arena assets。
+- **M5:** Boss attack 1–3、idle、walk、hurt、phase、dead 已完成；仍缺 arena-specific assets。
 - **M5R:** 三段連續竹林 Stage layout、Boss walk frames 與可驗證 arena entry presentation。
 - **M5R.1 runtime:** 已用現有 `forest-camp.png` 建立三段明確、無 uncovered area 的暫時 section；三段獨特場景美術仍屬後續 content polish，不阻擋 encounter work。
 - **M6:** 最小 Title 使用 Phaser system text，無新增 asset；仍缺 HUD、custom font、title/result art。

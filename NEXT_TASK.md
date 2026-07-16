@@ -1,74 +1,75 @@
 # Next Task
 
-## M5R / Task 5R.4 — Boss locomotion, facing, and Y alignment
+## M5R / Task 5R.5 — Boss attack hitbox and player damage
 
 ### Why this is next
 
-The player can now clear both ordinary encounters and enter a correctly gated
-Boss arena, but the Boss remains stationary and can select attacks without
-approaching or aligning with the player. Movement and facing must be correct
-before Task 5R.5 can attach player-damaging attack hitboxes to trustworthy
-positions and directions.
+Boss entry, locomotion, facing, Y alignment, lifecycle animation, and arena
+bounds are now trustworthy. The remaining blocker to an actual Boss fight is
+that existing Boss attack animations do not create an active hitbox and cannot
+damage the player. This must be completed before failure/restart and cleared
+flow can be accepted.
 
 ### Completion criteria
 
-- Inspect the committed Boss lifecycle and attack frames before changing art or
-  metadata. If no genuine walk frames exist, create the smallest original
-  feet-aligned walk strip required for this Boss; do not animate movement by
-  translating, rotating, or scaling an idle frame.
-- Add one explicit locomotion decision path for the existing Boss: approach the
-  player, align feet Y, stop inside configured attack range, and preserve the
-  existing deterministic recovery/attack selection policy.
-- Boss world movement uses its Arcade body velocity and the existing arena
-  bounds. Sprite, body, feet anchor, depth, and facing remain synchronized.
-- Horizontal facing follows the player and the source-art orientation metadata;
-  the Boss must not walk or attack backward. Pure vertical movement preserves
-  the last horizontal facing.
-- Boss attacks may begin only when X distance and feet-Y difference are within
-  explicit configurable thresholds. The Boss stops during attack, hurt, phase,
-  dead, and cleaned states.
-- Player and Boss remain inside arena bounds and do not overlap into an
-  unrecoverable position. Do not add Boss attack hitboxes or player damage.
-- Existing Boss entry, phase/hurt/death, cleanup, stage completion, Title,
-  encounters, player combat, and mobile input remain unchanged.
-- Do not add new attacks, Boss phases, HP/balance changes, HUD, Pause, Result,
-  Audio, stage art, enemy types, or Task 5R.5 behavior.
+- Each existing Boss attack keeps its current startup, active, and recovery
+  frame contract; no new attacks or art are added.
+- One independent Arcade Physics attack zone follows the Boss facing and is
+  disabled outside active frames.
+- Attack metadata, not visual transforms or elapsed-time guesses, controls the
+  hitbox size, offset, and active frames.
+- One Boss attack can hit the player at most once, even across multiple active
+  frames or overlap updates.
+- A valid hit reduces Player HP once and reuses the established Player flash,
+  hit stop, horizontal knockback, hurt lockout, and recovery behavior.
+- Wrong Y alignment, startup frames, recovery frames, disabled/dead Boss, or an
+  already-consumed swing cannot damage the player.
+- Boss locomotion remains stopped throughout attack and resumes only through
+  the existing lifecycle/decision completion path.
+- Boss facing and hitbox direction remain correct on both sides of the player.
+- No Boss HP/phase rebalance, failure screen, stage-clear changes, HUD, audio,
+  new animation, new enemy, or Task 5R.6 behavior is added.
 
 ### Validation
 
-- Deterministic tests cover approach direction, Y alignment priority, stop
-  range, facing, attack eligibility, non-movement states, and arena clamping.
-- Asset/metadata tests prove any walk frames are genuine, share the existing
-  Boss scale and feet anchor, and do not overlap adjacent atlas frames.
-- `pnpm test`, `pnpm build`, `pnpm build:github-pages`, `pnpm lint`, and
-  `pnpm typecheck` pass.
-- Desktop browser smoke reaches the gated arena, then proves Boss X/Y world
-  coordinates change toward a displaced player, feet Y aligns before attack,
-  facing is correct on both sides, and no console error occurs.
-- 844×390 landscape touch and 390×844 portrait FIT retain one Canvas, usable
-  controls, correct Boss movement/facing, and unchanged arena entry.
-- Existing Boss defeat smoke publishes one completion event after one arena
-  release; ten Scene restarts retain zero premature Boss actors and no leaks.
+- Pure/contract tests cover every attack's startup/active/recovery frame map,
+  left/right hitbox placement, Y rejection, and once-per-swing hit record.
+- Browser smoke observes a player HP decrement from a real active-frame overlap,
+  Player hurt/flash/knockback, and no damage during startup/recovery.
+- Repeat at least ten Boss swings and verify exactly one damage event per landed
+  swing with no listener, collider, timer, or hit-record accumulation.
+- Verify an attack on the wrong Y lane misses and Boss first realigns before a
+  later attack can connect.
+- Re-run Boss defeat cleanup and ten Scene restarts; confirm one Canvas, no
+  stale attack zone/collider/timer, and zero browser errors.
+- Verify desktop and 844×390 landscape touch viewports.
+- Run `pnpm test`, `pnpm typecheck`, `pnpm lint`, `pnpm build`, and
+  `pnpm build:github-pages`.
 
-### Expected files
+### Estimated files
 
 - `app/game/boss/BossActor.ts`
-- `app/game/boss/BossDecisionPolicy.ts` or one small locomotion policy module
-- `app/game/boss/BossAttackMetadata.ts` only for source-facing metadata
+- `app/game/boss/BossAttackMetadata.ts`
 - `app/game/MainScene.ts`
-- `public/art/boss/*walk*` and reproducible asset metadata/tool only if genuine
-  walk frames are missing
+- Existing combat/player effect boundary only if required to reuse the current
+  damage path without duplication
 - `tests/app-contracts.test.mjs`
-- Project status/evidence documents
+- `GAME_ROADMAP.md`
+- `SPRINT.md`
+- `NEXT_TASK.md`
+- `ARCHITECTURE.md`
+- `TECH_DEBT.md`
+- `CHECKLIST.md`
 
-### Risks
+### Estimated risk
 
-- Existing Boss assets do not include a walk strip; using idle-frame transforms
-  would violate the animation rules and hide missing art.
-- The current Boss body is immovable; changing movement ownership can desync its
-  body zone, sprite, depth, or knockback callback.
-- Source-facing assumptions can reverse both walk and later attack direction.
-- Allowing attack selection before Y alignment would preserve the current
-  unreachable-attack problem and make Task 5R.5 invalid.
-- Mixing attack-hitbox work into locomotion would make failures difficult to
-  isolate; player damage remains strictly deferred.
+- Animation frame events and attack-zone timing can drift, producing invisible
+  early/late hits.
+- A scene-level overlap callback can fire every update unless the per-swing hit
+  record is owned and reset at one explicit attack boundary.
+- Flipping the sprite without mirroring the attack offset would make one facing
+  direction miss or strike behind the Boss.
+- Reimplementing Player damage effects inside Boss code would duplicate combat
+  timing and make later failure flow inconsistent.
+- Collider/listener cleanup omissions can survive Scene restart and cause
+  duplicate damage; ten-restart validation is mandatory.
