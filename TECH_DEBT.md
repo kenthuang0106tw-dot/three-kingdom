@@ -10,7 +10,7 @@
 - **Impact:** Later UI work can proceed on top of an incomplete vertical slice, hiding the absence of the core scrolling-stage and Boss-combat loop.
 - **Resolution:** Preserve accepted contracts, reopen playable-result acceptance, and complete M5R Tasks 5R.1–5R.8 before resuming M6.3.
 - **Target:** M5R Vertical Slice Recovery.
-- **Progress 2026-07-16:** M5R.1–5R.3 completed the three-screen world, two ordered encounter gates, and gated Boss entry. M5R.4 added genuine four-frame walk art, feet-aligned Arcade locomotion, source-correct facing, Y alignment, attack-distance eligibility, and arena bounds. M5R.5 added metadata-driven active-frame Boss hitboxes, once-per-swing Player damage, and existing hurt-effect reuse. M5R.6 replaced automatic death restart with exactly-once failed flow, full combat suspension, explicit Phaser restart input, and ten-cycle reset evidence. Boss-cleared and end-to-end acceptance remain open in 5R.7–5R.8.
+- **Progress 2026-07-16:** M5R.1–5R.3 completed the three-screen world, two ordered encounter gates, and gated Boss entry. M5R.4 added genuine four-frame walk art, feet-aligned Arcade locomotion, source-correct facing, Y alignment, attack-distance eligibility, and arena bounds. M5R.5 added metadata-driven active-frame Boss hitboxes, once-per-swing Player damage, and existing hurt-effect reuse. M5R.6 replaced automatic death restart with exactly-once failed flow, full combat suspension, explicit Phaser restart input, and ten-cycle reset evidence. M5R.7 now orders defeated Boss cleanup, arena release, one completion publication, and one terminal cleared transition while suspending further combat. Only end-to-end acceptance remains open in 5R.8.
 
 ## High
 

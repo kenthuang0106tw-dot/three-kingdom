@@ -786,3 +786,20 @@
 | Automated checks | Pass | 67/67 tests, typecheck, lint 0 errors (8 existing warnings), both production builds |
 | Scope | Pass | No cleared flow, HUD, audio, combat balance, new content, or 5R.7 behavior added |
 | Next task | Selected | M5R / Task 5R.7 — Boss defeat and cleared flow |
+
+## M5R / Task 5R.7 Acceptance — 2026-07-16
+
+| Check | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M5R / Task 5R.7 — Boss defeat and cleared flow |
+| Terminal ordering | Pass | Boss cleanup → arena release 1 → completion publication 1 → `playing → cleared` entry 1 |
+| Cleanup rejection | Pass | `destroyed`, duplicate gate, Title, and `failed` paths cannot publish or clear |
+| Cleared suspension | Pass | Player velocity/input/hitbox stopped; EnemyManager suspended; update returns before gameplay progression |
+| Terminal exclusivity | Pass | Pure contract rejects `cleared → failed` and `failed → cleared`; same-state requests are ignored |
+| Desktop browser | Pass | Boss 0, release 1, completion 1, cleared 1, input/actors stopped, values stable after 1 second, one Canvas, zero errors |
+| Landscape mobile | Pass | 844×390 viewport, fitted 693×390 Canvas, same cleared result and zero errors |
+| Failure regression | Pass | 10 real Boss-hit failure/restart cycles; Title and HP 10 restored; one Canvas |
+| Combat regressions | Pass | Boss attack 10 starts/10 completes/9 hits/HP1; two encounters clear in order and Boss entry becomes eligible |
+| Automated checks | Pass | 69/69 tests, typecheck, lint 0 errors (8 existing warnings), both production builds |
+| Scope | Pass | No Result UI, replay, HUD, audio, scoring, content, art, balance, or 5R.8 implementation added |
+| Next task | Selected | M5R / Task 5R.8 — End-to-end Vertical Slice acceptance |

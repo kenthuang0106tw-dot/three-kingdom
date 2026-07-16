@@ -1,50 +1,49 @@
 # Next Task
 
-## M5R / Task 5R.7 — Boss defeat and cleared flow
+## M5R / Task 5R.8 — End-to-end Vertical Slice acceptance
 
 ### Why this is next
 
-Player failure, combat suspension, and deterministic restart are now accepted.
-The remaining flow gap before end-to-end Vertical Slice acceptance is the
-successful terminal path: defeating the Boss already cleans the actor and
-publishes a stage-completion event, but normal gameplay does not yet enter the
-single authoritative `cleared` game-flow state.
+Tasks 5R.1–5R.7 now provide the complete three-screen traversal, two ordered
+encounters, gated Boss arena, reciprocal Boss combat, deterministic failure and
+restart, and exactly-once cleared terminal flow. The remaining recovery gate is
+to prove these pieces work together through real player input without diagnostic
+shortcuts before product UI work resumes.
 
 ### Completion criteria
 
-- A genuinely defeated Boss completes its death animation/fade and cleanup,
-  releases the Boss arena lock, publishes stage completion, and transitions
-  game flow exactly once from `playing` to `cleared` in that order.
-- Scene shutdown, diagnostic destruction, duplicate cleanup callbacks, and a
-  non-defeat Boss removal cannot enter `cleared` or publish another completion.
-- In `cleared`, Player input, enemy/Boss AI, movement, attack hitboxes, damage,
-  encounter progression, and camera progression stop.
-- `failed` and `cleared` remain mutually exclusive terminal modes until a later
-  explicit new-run/replay task; no implicit restart is added.
-- Existing Boss death animation, 500ms fade, actor cleanup, arena release,
-  completion payload, and Player failure behavior remain unchanged.
-- No Result UI, replay button, HUD, audio, scoring, new content, combat balance,
-  or Task 5R.8 end-to-end acceptance behavior is added.
+- Starting from the Phaser Title, a player can traverse the full three-screen
+  Stage, trigger and clear both encounters in order, enter the Boss arena,
+  defeat the Boss, and reach `cleared` without a smoke shortcut.
+- A separate real run can reach `failed`, use the existing explicit retry, and
+  restart at Title with Player HP, Stage progression, actors, locks, timers,
+  hitboxes, and camera state reset.
+- Desktop, 844×390 landscape touch, and 390×844 portrait FIT each complete the
+  required run with one Canvas, no soft lock, and zero runtime errors.
+- Encounter and Boss gates cannot be skipped, duplicated, or entered backward;
+  normal movement and vertical dodging remain usable throughout the run.
+- Acceptance may fix only defects that block this existing Vertical Slice. No
+  HUD, Pause, Result/replay, audio, scoring, persistence, new content, art,
+  attacks, enemies, balance pass, or next Milestone work is added.
 
 ### Validation
 
-- Pure/contract tests cover `playing → cleared`, duplicate transition rejection,
-  failed/cleared exclusivity, and non-defeat cleanup rejection.
-- Source/contract tests verify ordering: Boss cleanup, arena release, one
-  completion publication, then one cleared transition.
-- Browser smoke defeats a real Boss and verifies Boss 0, arena released,
-  completion count 1, flow `cleared`, stopped input/combat, and no later duplicate.
-- Re-run Player failure/restart, Boss attack damage, and ordinary encounter
-  regressions.
-- Verify desktop and 844×390 landscape touch viewports with zero browser errors.
+- Add or update deterministic integration coverage only where a discovered
+  end-to-end ownership defect requires it.
+- Perform real browser runs from Title through `cleared` at desktop, 844×390
+  landscape touch, and 390×844 portrait FIT; diagnostic query shortcuts do not
+  count as the main acceptance evidence.
+- Perform one real Player failure and explicit retry path, then verify the
+  documented initial state and one Canvas.
+- Re-run Boss attack, Boss clear ordering, encounter sequencing, and Scene reset
+  regressions with zero browser errors.
 - Run `pnpm test`, `pnpm typecheck`, `pnpm lint`, `pnpm build`, and
   `pnpm build:github-pages`.
 
 ### Estimated files
 
-- `app/game/MainScene.ts`
-- Existing flow/completion contract only if a minimal pure seam is required
-- `tests/app-contracts.test.mjs`
+- `tests/app-contracts.test.mjs` only if a missing deterministic seam is found
+- Existing Stage/MainScene/input modules only if a real acceptance blocker is found
 - `GAME_ROADMAP.md`
 - `SPRINT.md`
 - `NEXT_TASK.md`
@@ -54,11 +53,9 @@ single authoritative `cleared` game-flow state.
 
 ### Estimated risk
 
-- Transitioning before Boss cleanup or arena release can leave a terminal soft
-  lock with live physics ownership.
-- Both cleanup callback and completion-event code may attempt to enter cleared,
-  causing duplicate publication or an invalid terminal transition.
-- Scene shutdown can look like Boss cleanup unless the existing defeated versus
-  destroyed reason remains authoritative.
-- Reusing failed-mode suspension carelessly could also create a failure overlay
-  or restart listener on the successful path.
+- Diagnostic smokes can hide a real traversal, input, gate, or combat soft lock;
+  they cannot substitute for full player-input runs.
+- Mobile touch runs may expose pointer ownership or viewport-fit defects not
+  visible in desktop keyboard play.
+- Fixing an acceptance blocker can easily expand into balance, UI, or content;
+  any change must remain the smallest correction to the existing Vertical Slice.

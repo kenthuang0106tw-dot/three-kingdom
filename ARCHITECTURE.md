@@ -587,6 +587,24 @@ shutdown removes the keyboard listener, smoke timer, overlay, actors, hitboxes,
 colliders, and managers; the next `create()` resets flow to Title and rebuilds
 the documented initial Stage state.
 
+## Boss Defeat and Cleared Flow Contract (M5R / Task 5R.7)
+
+`BossActor` still owns death animation, the 500ms fade, and idempotent resource
+cleanup. Its cleanup callback reports `defeated` or `destroyed`; `MainScene`
+then clears the actor reference and releases the Boss arena for either reason.
+Only a `defeated` callback received while game flow is `playing` may continue.
+
+The successful terminal order is fixed: Boss cleanup, arena release, one
+`StageCompletionGate` publication, then one `GameFlowStateMachine` transition
+to `cleared`. Duplicate callbacks, ordinary destruction, Title, `failed`, and
+an already-completed gate cannot publish again or enter cleared.
+
+Cleared mode has no Result presentation or replay ownership yet. It stops the
+Player body and attack zone, suspends `EnemyManager`, clears the current action
+snapshot, and returns from Scene `update()` before input, encounter progression,
+AI, damage, or camera progression. `failed` and `cleared` remain terminal and
+mutually exclusive until a later explicit product-flow task.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

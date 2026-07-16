@@ -285,6 +285,20 @@ test("Player failure is exactly once and resets through the explicit new-run pat
   assert.equal(flow.state, "title");
 });
 
+test("Cleared and failed flows are mutually exclusive exact-once terminal paths", () => {
+  const flow = new GameFlowStateMachine();
+  flow.transition("playing");
+  assert.deepEqual(flow.transition("cleared"), { previous: "playing", next: "cleared" });
+  assert.equal(flow.transition("cleared"), undefined);
+  assert.throws(() => flow.transition("failed"), /Invalid game-flow transition: cleared -> failed/);
+
+  flow.resetForNewRun();
+  flow.transition("playing");
+  assert.deepEqual(flow.transition("failed"), { previous: "playing", next: "failed" });
+  assert.equal(flow.transition("failed"), undefined);
+  assert.throws(() => flow.transition("cleared"), /Invalid game-flow transition: failed -> cleared/);
+});
+
 test("MainScene owns failed combat suspension and explicit Phaser restart", async () => {
   const [scene, manager, boss] = await Promise.all([
     readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8"),
@@ -293,7 +307,7 @@ test("MainScene owns failed combat suspension and explicit Phaser restart", asyn
   ]);
   assert.match(scene, /if \(damage\.becameDead\) \{\s*this\.transitionTo\("dead"\);\s*this\.enterFailedState\(\)/);
   assert.match(scene, /this\.gameFlow\.transition\("failed"\)/);
-  assert.match(scene, /if \(this\.gameFlow\.state === "failed"\) \{\s*this\.playerBody\.setVelocity\(0, 0\)/);
+  assert.match(scene, /if \(this\.gameFlow\.state === "failed" \|\| this\.gameFlow\.state === "cleared"\) \{\s*this\.playerBody\.setVelocity\(0, 0\)/);
   assert.match(scene, /this\.enemyManager\.suspendCombat\(\)/);
   assert.match(scene, /this\.bossActor\?\.suspendCombat\(\)/);
   assert.match(scene, /keyboard\.once\("keydown", this\.handleFailureKeyboardRestart, this\)/);
@@ -414,12 +428,36 @@ test("MainScene publishes stage completion only for defeated Boss cleanup", asyn
     readFile(new URL("../app/game/events/StageCompletion.ts", import.meta.url), "utf8"),
   ]);
   assert.match(scene, /this\.stageCompletion\.reset\(\)/);
-  assert.match(scene, /this\.releaseBossArena\(development\);\s+if \(reason === "defeated"\) this\.publishStageComplete\(development\)/);
+  assert.match(scene, /onCleaned: reason => this\.handleBossCleaned\(reason, development\)/);
+  assert.match(scene, /if \(reason !== "defeated" \|\| this\.gameFlow\.state !== "playing"\) return/);
   assert.match(completion, /type: "stage-completed"/);
   assert.match(scene, /dataset\.stageCompleteCount/);
   assert.match(scene, /dataset\.stageCompleteAfterArenaRelease/);
   assert.match(actor, /onCleaned\?: \(reason: BossCleanupReason\) => void/);
   assert.match(actor, /const reason: BossCleanupReason = this\.state === "dead" \? "defeated" : "destroyed"/);
+});
+
+test("Boss clear flow releases, publishes, transitions, and suspends exactly once", async () => {
+  const scene = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
+  const start = scene.indexOf("private handleBossCleaned");
+  const end = scene.indexOf("private updateBossCombatSmoke", start);
+  const cleanup = scene.slice(start, end);
+  assert.ok(start >= 0 && end > start);
+  assert.ok(cleanup.indexOf("this.releaseBossArena(development)") < cleanup.indexOf("this.publishStageComplete(development)"));
+  assert.ok(cleanup.indexOf("this.publishStageComplete(development)") < cleanup.indexOf("this.enterClearedState(development)"));
+  assert.match(cleanup, /reason !== "defeated"/);
+  assert.match(cleanup, /this\.gameFlow\.state !== "playing"/);
+
+  assert.match(scene, /this\.gameFlow\.transition\("cleared"\)/);
+  assert.match(scene, /this\.playerBody\.stop\(\);\s*this\.disableAttackHitbox\(\);\s*this\.enemyManager\.suspendCombat\(\)/);
+  assert.match(scene, /if \(this\.gameFlow\.state === "failed" \|\| this\.gameFlow\.state === "cleared"\) \{/);
+  assert.match(scene, /dataset\.clearedEntryCount/);
+  assert.match(scene, /dataset\.clearedAfterArenaRelease/);
+  assert.match(scene, /dataset\.clearedAfterStageComplete/);
+  assert.match(scene, /query\.get\("bossClearedSmoke"\) === "1"/);
+  assert.match(scene, /if \(this\.bossClearedSmokeMode\) this\.startGame\("smoke"\)/);
+  assert.match(scene, /dataset\.bossClearedSmokeComplete/);
+  assert.doesNotMatch(scene, /createResultOverlay|restartAfterCleared|RESULT|VICTORY/);
 });
 
 test("M5 full-stage acceptance preserves ordering, exactly-once completion, and restart ownership", () => {

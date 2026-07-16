@@ -2,14 +2,14 @@
 
 ## Sprint Goal
 
-在已完成的三畫面、兩場 encounter、Boss 戰與 deterministic failure/restart 上，下一步只完成 Boss defeat 與 cleared flow。完成 5R.7 前，不加入 HUD、Pause、Result、Audio、新角色或新戰鬥內容。
+在已完成的三畫面、兩場 encounter、Boss 戰、deterministic failure/restart 與 cleared flow 上，下一步只完成端到端 Vertical Slice 驗收。完成 5R.8 前，不加入 HUD、Pause、Result、Audio、新角色或新戰鬥內容。
 
 ## Cadence
 
 - Duration：2 weeks
 - Capacity：1 developer + AI，約 40–55 hours
 - Milestone：M5R — Vertical Slice Recovery
-- Scope rule：一次只做一個 Recovery Task；5R.6 已完成，下一個唯一 Task 是 5R.7
+- Scope rule：一次只做一個 Recovery Task；5R.7 已完成，下一個唯一 Task 是 5R.8
 
 ## Task List
 
@@ -21,7 +21,8 @@
 | 4 | ✅ M5R / Task 5R.4 — Boss locomotion, facing, and Y alignment | 16–24h | Boss 會接近、面向與對線 | movement/alignment browser acceptance passed |
 | 5 | ✅ M5R / Task 5R.5 — Boss attack hitbox and player damage | 16–24h | Boss active frames 可單次傷害玩家 | hitbox/timing/damage browser acceptance passed |
 | 6 | ✅ M5R / Task 5R.6 — Player failure and deterministic restart | 12–18h | HP 0 進入 failed 並可完整重啟 | failure/restart browser acceptance passed |
-| 7 | ▶ M5R / Task 5R.7 — Boss defeat and cleared flow | 8–12h | Boss cleanup 後一次進入 cleared | defeat/clear ordering browser acceptance |
+| 7 | ✅ M5R / Task 5R.7 — Boss defeat and cleared flow | 8–12h | Boss cleanup 後一次進入 cleared | defeat/clear ordering browser acceptance passed |
+| 8 | ▶ M5R / Task 5R.8 — End-to-end Vertical Slice acceptance | 16–24h | 從 Title 真實完成整關與失敗重試 | desktop/mobile full-run acceptance |
 
 ## Recovery Planning Correction — 2026-07-14
 
@@ -526,4 +527,15 @@ The next eligible task is M6 / Task 6.3. Do not begin it until the next task-run
 - [x] Desktop and 844×390 browser smoke completed 10 real Boss-hit failure/restart cycles with one Canvas, all input blocked, all actors suspended, and zero runtime errors.
 - [x] Boss attack, Boss defeat/arena-release, and two-encounter regressions remained green.
 - [x] `pnpm test` 67/67, typecheck, lint 0 errors (8 existing warnings), and both production builds passed.
-- [ ] Boss defeat and exactly-once `cleared` flow remain the unique next task, M5R / Task 5R.7.
+- [x] Boss defeat and exactly-once `cleared` flow was selected after 5R.6 and is now completed as M5R / Task 5R.7.
+
+## M5R / Task 5R.7 Closeout
+
+- [x] Defeated Boss completes the existing death animation and 500ms fade before idempotent cleanup reports `defeated`.
+- [x] MainScene ordering is cleanup → Boss arena release → one `stage-completed` publication → one `playing → cleared` transition.
+- [x] Destroyed/non-defeat cleanup and non-playing terminal flow cannot publish completion or enter `cleared`; `failed` and `cleared` remain mutually exclusive.
+- [x] Cleared mode stops Player input/velocity/attack hitbox, suspends EnemyManager combat, and returns before encounter, Boss, damage, or camera progression.
+- [x] Desktop and 844×390 browser smoke each produced Boss 0, arena release 1, completion 1, cleared entry 1, stopped combat, one Canvas, and zero runtime errors.
+- [x] Failure/restart 10-cycle, Boss attack 10/10/9/HP1, and two ordered encounter regressions remained green.
+- [x] `pnpm test` 69/69, typecheck, lint 0 errors (8 existing warnings), and both production builds passed.
+- [ ] End-to-end Vertical Slice acceptance remains the unique next task, M5R / Task 5R.8.
