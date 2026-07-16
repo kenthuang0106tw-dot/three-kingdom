@@ -567,6 +567,26 @@ or hurt recovery. Animation completion, Boss damage, and Scene shutdown all
 disable the zone; actor destruction removes both animation listeners and the
 zone so restart cannot retain a collider or hit record.
 
+## Player Failure and Deterministic Restart Contract (M5R / Task 5R.6)
+
+`PlayerLifecycle` remains the sole HP/death owner and `GameFlowStateMachine`
+remains the sole product-mode owner. When terminal damage is accepted,
+`MainScene` transitions Player state to `dead` and game flow exactly once to
+`failed`; it no longer schedules an automatic death restart.
+
+Failed mode is a Scene orchestration boundary. Player velocity and attack
+hitbox are stopped, `EnemyManager.suspendCombat()` stops every body, attack
+zone, animation, Attack Slot, and owned state timer, and
+`BossActor.suspendCombat()` stops its body, animation, and attack zone. Scene
+`update()` returns before input, encounter, Enemy, Boss, or combat processing.
+
+One Phaser-owned failure overlay accepts a keyboard or pointer/touch edge and
+routes both through `restartAfterFailure()`. That method is valid only while
+flow is `failed` and uses the existing `scene.restart()` lifecycle. Scene
+shutdown removes the keyboard listener, smoke timer, overlay, actors, hitboxes,
+colliders, and managers; the next `create()` resets flow to Title and rebuilds
+the documented initial Stage state.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

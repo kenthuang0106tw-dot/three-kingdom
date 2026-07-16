@@ -56,6 +56,7 @@ export class BossActor {
   private startedAttacks = 0;
   private completedAttacks = 0;
   private playerHits = 0;
+  private combatSuspended = false;
 
   constructor(
     scene: Phaser.Scene,
@@ -103,9 +104,10 @@ export class BossActor {
   get attackCompleteCount(): number { return this.completedAttacks; }
   get playerHitCount(): number { return this.playerHits; }
   get isAttackHitboxEnabled(): boolean { return this.attackBody.enable; }
+  get isCombatSuspended(): boolean { return this.combatSuspended; }
 
   update(target: BossPoint, arenaBounds: BossBounds): void {
-    if (this.state === "cleaned") return;
+    if (this.state === "cleaned" || this.combatSuspended) return;
     this.body.setVelocity(0, 0);
     this.clampToArena(arenaBounds);
     if (this.attackBody.enable) this.positionAttackHitbox();
@@ -158,6 +160,14 @@ export class BossActor {
   }
 
   destroy(): void { this.cleanup(); }
+
+  suspendCombat(): void {
+    if (this.state === "cleaned" || this.combatSuspended) return;
+    this.combatSuspended = true;
+    this.body.stop();
+    this.disableAttackHitbox();
+    this.sprite.anims.pause();
+  }
 
   tryConsumePlayerHit(playerFeetY: number): boolean {
     const canHit = canConsumeBossAttackHit({
@@ -313,6 +323,7 @@ export class BossActor {
   private cleanup(): boolean {
     const reason: BossCleanupReason = this.state === "dead" ? "defeated" : "destroyed";
     if (!this.lifecycle.cleanup()) return false;
+    this.combatSuspended = false;
     this.decision.reset();
     this.disableAttackHitbox();
     if (this.deathTween) {

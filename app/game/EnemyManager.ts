@@ -84,6 +84,7 @@ export class EnemyManager {
   private nextEnemyId = 1;
   private lastAttackerId: number | null = null;
   private directorReadyAt = 0;
+  private combatSuspended = false;
   private readonly clock: GameplayClock;
   private readonly random: RandomSource;
 
@@ -135,6 +136,7 @@ export class EnemyManager {
   }
 
   update() {
+    if (this.combatSuspended) return;
     const alive = this.getLivingEnemies();
     this.drawSlots(alive);
     for (const enemy of alive) {
@@ -358,6 +360,21 @@ export class EnemyManager {
   getLivingEnemies() { return this.enemies.filter(enemy => enemy.state !== "dead"); }
   getAllEnemies() { return [...this.enemies]; }
   get currentAttackerId() { return this.currentAttacker?.id ?? null; }
+  get isCombatSuspended() { return this.combatSuspended; }
+
+  suspendCombat() {
+    if (this.combatSuspended) return;
+    this.combatSuspended = true;
+    if (this.currentAttacker) this.currentAttacker.hasAttackSlot = false;
+    this.currentAttacker = null;
+    for (const timer of this.stateTimers.values()) timer.paused = true;
+    for (const enemy of this.enemies) {
+      enemy.body.stop();
+      this.disableAttackHitbox(enemy);
+      enemy.sprite.anims.pause();
+    }
+    this.slotGraphics?.clear();
+  }
 
   destroy() {
     this.colliders.forEach(collider => collider.destroy());
@@ -367,6 +384,7 @@ export class EnemyManager {
     this.colliderOwners.clear();
     this.stateTimers.clear();
     this.currentAttacker = null;
+    this.combatSuspended = false;
     this.encounterFlow = createEncounterFlow();
     this.nextEnemyId = 1;
     this.slotGraphics?.destroy();

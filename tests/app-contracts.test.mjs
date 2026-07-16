@@ -266,14 +266,49 @@ test("PlayerLifecycle floors HP, enters dead once, and resets deterministically"
   assert.equal(lifecycle.state, "alive");
 });
 
-test("Player death schedules a cleaned-up Phaser-timed stage restart", async () => {
-  const source = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
-  assert.match(source, /const PLAYER_DEATH_RESTART_MS = 900/);
-  assert.match(source, /if \(damage\.becameDead\) \{\s*this\.transitionTo\("dead"\);\s*this\.scheduleStageRestartAfterPlayerDeath\(\)/);
-  assert.match(source, /this\.playerDeathRestartTimer = this\.time\.delayedCall\(PLAYER_DEATH_RESTART_MS/);
-  assert.match(source, /this\.scene\.isActive\(\) && this\.state === "dead"\) this\.restartStage\(\)/);
-  assert.match(source, /this\.playerDeathRestartTimer\?\.remove\(false\);\s*this\.playerDeathRestartTimer = undefined/);
-  assert.doesNotMatch(source, /setTimeout\([^)]*restartStage/);
+test("Player failure is exactly once and resets through the explicit new-run path", () => {
+  const flow = new GameFlowStateMachine();
+  const lifecycle = new PlayerLifecycle(2);
+  flow.transition("playing");
+
+  assert.equal(lifecycle.applyDamage(1).becameDead, false);
+  const terminalDamage = lifecycle.applyDamage(1);
+  assert.equal(terminalDamage.becameDead, true);
+  assert.deepEqual(flow.transition("failed"), { previous: "playing", next: "failed" });
+  assert.equal(lifecycle.applyDamage(1).applied, false);
+  assert.equal(flow.transition("failed"), undefined);
+
+  lifecycle.reset();
+  flow.resetForNewRun();
+  assert.equal(lifecycle.hp, 2);
+  assert.equal(lifecycle.state, "alive");
+  assert.equal(flow.state, "title");
+});
+
+test("MainScene owns failed combat suspension and explicit Phaser restart", async () => {
+  const [scene, manager, boss] = await Promise.all([
+    readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/EnemyManager.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/boss/BossActor.ts", import.meta.url), "utf8"),
+  ]);
+  assert.match(scene, /if \(damage\.becameDead\) \{\s*this\.transitionTo\("dead"\);\s*this\.enterFailedState\(\)/);
+  assert.match(scene, /this\.gameFlow\.transition\("failed"\)/);
+  assert.match(scene, /if \(this\.gameFlow\.state === "failed"\) \{\s*this\.playerBody\.setVelocity\(0, 0\)/);
+  assert.match(scene, /this\.enemyManager\.suspendCombat\(\)/);
+  assert.match(scene, /this\.bossActor\?\.suspendCombat\(\)/);
+  assert.match(scene, /keyboard\.once\("keydown", this\.handleFailureKeyboardRestart, this\)/);
+  assert.match(scene, /keyboard\.off\("keydown", this\.handleFailureKeyboardRestart, this\)/);
+  assert.match(scene, /if \(this\.gameFlow\.state !== "failed"\) return false/);
+  assert.match(scene, /this\.restartStage\(\)/);
+  assert.match(scene, /query\.get\("failureSmoke"\) === "1"/);
+  assert.match(scene, /this\.failureSmokeIteration === 10[\s\S]*this\.failureRestartCount === 10[\s\S]*this\.failureTotalEntryCount === 10/);
+  assert.match(scene, /this\.failureSmokeTimer\?\.remove\(false\)/);
+  assert.doesNotMatch(scene, /PLAYER_DEATH_RESTART_MS|scheduleStageRestartAfterPlayerDeath|setTimeout\([^)]*restartStage/);
+  assert.match(manager, /suspendCombat\(\) \{/);
+  assert.match(manager, /for \(const timer of this\.stateTimers\.values\(\)\) timer\.paused = true/);
+  assert.match(manager, /enemy\.sprite\.anims\.pause\(\)/);
+  assert.match(boss, /suspendCombat\(\): void/);
+  assert.match(boss, /this\.disableAttackHitbox\(\)/);
 });
 
 test("PlayerActor owns sprite, feet anchor, and Arcade body responsibilities", async () => {
@@ -584,9 +619,9 @@ test("Boss arena occupies the final viewport and releases its lock", async () =>
 
 test("Recovery traversal starts unlocked while preserving explicit diagnostic lock ownership", async () => {
   const source = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
-  assert.match(source, /if \(this\.bossSmokeMode \|\| this\.bossCombatSmokeMode\) \{/);
+  assert.match(source, /if \(this\.bossSmokeMode \|\| this\.bossCombatSmokeMode \|\| this\.failureSmokeCycleActive\) \{/);
   assert.match(source, /this\.cameraLockState = lockCamera\(this\.cameraLockState, "encounter"\)/);
-  assert.match(source, /if \(!this\.bossSmokeMode && !this\.bossCombatSmokeMode\) \{\s+this\.updateEncounterSmoke\(\)/);
+  assert.match(source, /if \(!this\.bossSmokeMode && !this\.bossCombatSmokeMode && !this\.failureSmokeCycleActive\) \{\s+this\.updateEncounterSmoke\(\)/);
   assert.match(source, /unlockCamera\(this\.cameraLockState, "encounter"\)/);
   assert.match(source, /if \(!isCameraLocked\(this\.cameraLockState\)\)/);
   assert.match(source, /dataset\.cameraScrollX/);

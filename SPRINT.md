@@ -2,14 +2,14 @@
 
 ## Sprint Goal
 
-在已完成的三畫面、兩場 encounter、Boss entry、locomotion 與攻擊傷害上，下一步只完成 Player failure 與 deterministic restart。完成 5R.6 前，不加入 HUD、Pause、Result、Audio、新角色或新戰鬥內容。
+在已完成的三畫面、兩場 encounter、Boss 戰與 deterministic failure/restart 上，下一步只完成 Boss defeat 與 cleared flow。完成 5R.7 前，不加入 HUD、Pause、Result、Audio、新角色或新戰鬥內容。
 
 ## Cadence
 
 - Duration：2 weeks
 - Capacity：1 developer + AI，約 40–55 hours
 - Milestone：M5R — Vertical Slice Recovery
-- Scope rule：一次只做一個 Recovery Task；5R.5 已完成，下一個唯一 Task 是 5R.6
+- Scope rule：一次只做一個 Recovery Task；5R.6 已完成，下一個唯一 Task 是 5R.7
 
 ## Task List
 
@@ -20,7 +20,8 @@
 | 3 | ✅ M5R / Task 5R.3 — Boss arena entry sequencing | 8–12h | Boss 延後啟用與 arena entry | desktop/mobile entry smoke passed |
 | 4 | ✅ M5R / Task 5R.4 — Boss locomotion, facing, and Y alignment | 16–24h | Boss 會接近、面向與對線 | movement/alignment browser acceptance passed |
 | 5 | ✅ M5R / Task 5R.5 — Boss attack hitbox and player damage | 16–24h | Boss active frames 可單次傷害玩家 | hitbox/timing/damage browser acceptance passed |
-| 6 | ▶ M5R / Task 5R.6 — Player failure and deterministic restart | 12–18h | HP 0 進入 failed 並可完整重啟 | failure/restart browser acceptance |
+| 6 | ✅ M5R / Task 5R.6 — Player failure and deterministic restart | 12–18h | HP 0 進入 failed 並可完整重啟 | failure/restart browser acceptance passed |
+| 7 | ▶ M5R / Task 5R.7 — Boss defeat and cleared flow | 8–12h | Boss cleanup 後一次進入 cleared | defeat/clear ordering browser acceptance |
 
 ## Recovery Planning Correction — 2026-07-14
 
@@ -514,4 +515,15 @@ The next eligible task is M6 / Task 6.3. Do not begin it until the next task-run
 - [x] Desktop and 844×390 smoke: 10 starts/completes, nine intentional hits, Player HP 10→1, one wrong-Y miss, disabled hitbox and zero Boss velocity at completion.
 - [x] Boss defeat released the arena once and published one completion; 10 restarts retained Boss 0, entry locked, no camera lock or stale completion.
 - [x] `pnpm test` 66/66, typecheck, lint 0 errors (8 existing warnings), both production builds, and browser runtime passed.
-- [ ] Player failure and deterministic restart remain the unique next task, M5R / Task 5R.6.
+- [x] Player failure and deterministic restart was selected after 5R.5 and is now completed as M5R / Task 5R.6.
+
+## M5R / Task 5R.6 Closeout
+
+- [x] Player HP 0 now transitions once from `playing` to terminal `failed`; duplicate damage and repeated failure requests are ignored.
+- [x] Failed mode stops Player velocity/input, disables Player attack, suspends EnemyManager/Boss movement and attack hitboxes, and pauses owned enemy state timers.
+- [x] Removed the previous 900ms automatic death restart; keyboard or pointer/touch uses one explicit failure restart method and the existing Phaser Scene lifecycle.
+- [x] Scene creation restores Title, HP 10, Player x=180, encounter index 0, Boss 0, entry locked, camera locks empty, and completion count 0.
+- [x] Desktop and 844×390 browser smoke completed 10 real Boss-hit failure/restart cycles with one Canvas, all input blocked, all actors suspended, and zero runtime errors.
+- [x] Boss attack, Boss defeat/arena-release, and two-encounter regressions remained green.
+- [x] `pnpm test` 67/67, typecheck, lint 0 errors (8 existing warnings), and both production builds passed.
+- [ ] Boss defeat and exactly-once `cleared` flow remain the unique next task, M5R / Task 5R.7.

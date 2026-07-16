@@ -768,4 +768,21 @@
 | Automated checks | Pass | 66/66 tests, typecheck, lint 0 errors (8 existing warnings), both production builds |
 | Scope | Pass | No failure screen, HUD, audio, new attack/art, Boss rebalance, or 5R.6 behavior added |
 | Next task | Selected | M5R / Task 5R.6 — Player failure and deterministic restart |
-| Next task | Selected | M5R / Task 5R.5 — Boss attack hitbox and player damage |
+
+## M5R / Task 5R.6 Acceptance — 2026-07-16
+
+| Check | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M5R / Task 5R.6 — Player failure and deterministic restart |
+| Exactly-once failure | Pass | HP 0 changes Player to dead and flow `playing → failed` once; duplicate damage/transition are rejected |
+| Failed input gate | Pass | Scene update returns before input/gameplay; Player velocity and attack hitbox remain zero/disabled |
+| Combat suspension | Pass | Enemy/Boss bodies stop, attack zones disable, animations pause, enemy timers pause, Attack Slot clears |
+| Explicit restart | Pass | Keyboard and pointer/touch share one failed-only `restartAfterFailure()` and Phaser `scene.restart()` path |
+| Automatic restart removal | Pass | Previous 900ms death restart timer/path removed; no `setTimeout`, page reload, DOM, or parallel reset path |
+| Desktop browser | Pass | 10 real Boss-hit fail/restart cycles; all input blocked, all actors suspended, one Canvas, zero runtime errors |
+| Landscape mobile | Pass | 844×390 viewport, fitted 693×390 Canvas, same ten-cycle result and zero runtime errors |
+| Initial state restored | Pass | Title, HP 10, Player x=180, encounter index 0, Boss 0, entry locked, no camera locks, completion 0 |
+| Combat regressions | Pass | Boss attack 10/10/9/HP1, Boss defeat release/completion 1/1, two encounters clear in order |
+| Automated checks | Pass | 67/67 tests, typecheck, lint 0 errors (8 existing warnings), both production builds |
+| Scope | Pass | No cleared flow, HUD, audio, combat balance, new content, or 5R.7 behavior added |
+| Next task | Selected | M5R / Task 5R.7 — Boss defeat and cleared flow |

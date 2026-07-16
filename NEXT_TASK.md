@@ -1,41 +1,41 @@
 # Next Task
 
-## M5R / Task 5R.6 — Player failure and deterministic restart
+## M5R / Task 5R.7 — Boss defeat and cleared flow
 
 ### Why this is next
 
-The Boss can now approach, align, attack, and damage the Player through the
-established combat effects. HP reaching zero still lacks an accepted product
-flow: input, combat ownership, timers, camera locks, and stage actors must enter
-one explicit `failed` mode and restart without leaking state. This must be
-trusted before Boss-cleared flow and end-to-end Vertical Slice acceptance.
+Player failure, combat suspension, and deterministic restart are now accepted.
+The remaining flow gap before end-to-end Vertical Slice acceptance is the
+successful terminal path: defeating the Boss already cleans the actor and
+publishes a stage-completion event, but normal gameplay does not yet enter the
+single authoritative `cleared` game-flow state.
 
 ### Completion criteria
 
-- Player HP reaching zero transitions game flow exactly once from `playing` to
-  `failed`; repeated damage or callbacks cannot publish a second failure.
-- In `failed`, Player movement and attack input are ignored, active Player and
-  enemy/Boss attack hitboxes are disabled, and combat AI no longer advances.
-- Restart uses the existing Phaser Scene lifecycle and title/start ownership;
-  no DOM state, page reload, `setTimeout`, or parallel reset path is introduced.
-- Restart restores Player HP/state/position, stage progression, encounters,
-  Boss ownership, camera locks, timers, hit records, and completion/failure
-  counters to their documented initial values.
-- Ten consecutive fail-and-restart cycles retain exactly one Canvas, one input
-  registration set, and no stale actor, collider, timer, lock, or event.
-- No Result UI styling, Boss-cleared behavior, HUD, audio, new content, combat
-  balance, or Task 5R.7 behavior is added.
+- A genuinely defeated Boss completes its death animation/fade and cleanup,
+  releases the Boss arena lock, publishes stage completion, and transitions
+  game flow exactly once from `playing` to `cleared` in that order.
+- Scene shutdown, diagnostic destruction, duplicate cleanup callbacks, and a
+  non-defeat Boss removal cannot enter `cleared` or publish another completion.
+- In `cleared`, Player input, enemy/Boss AI, movement, attack hitboxes, damage,
+  encounter progression, and camera progression stop.
+- `failed` and `cleared` remain mutually exclusive terminal modes until a later
+  explicit new-run/replay task; no implicit restart is added.
+- Existing Boss death animation, 500ms fade, actor cleanup, arena release,
+  completion payload, and Player failure behavior remain unchanged.
+- No Result UI, replay button, HUD, audio, scoring, new content, combat balance,
+  or Task 5R.8 end-to-end acceptance behavior is added.
 
 ### Validation
 
-- Pure/contract tests cover the legal `playing → failed` transition, exactly-once
-  failure ownership, ignored duplicate damage, and new-run reset.
-- Browser smoke lets a real Boss reduce Player HP to zero, then verifies failed
-  mode blocks movement/attack/AI before invoking the documented restart path.
-- Repeat fail/restart ten times and verify Player HP/position, encounter index,
-  Boss count, camera locks, completion count, Canvas count, and listener/timer
-  ownership after every cycle.
-- Re-run Boss attack, Boss defeat cleanup, and ordinary encounter regressions.
+- Pure/contract tests cover `playing → cleared`, duplicate transition rejection,
+  failed/cleared exclusivity, and non-defeat cleanup rejection.
+- Source/contract tests verify ordering: Boss cleanup, arena release, one
+  completion publication, then one cleared transition.
+- Browser smoke defeats a real Boss and verifies Boss 0, arena released,
+  completion count 1, flow `cleared`, stopped input/combat, and no later duplicate.
+- Re-run Player failure/restart, Boss attack damage, and ordinary encounter
+  regressions.
 - Verify desktop and 844×390 landscape touch viewports with zero browser errors.
 - Run `pnpm test`, `pnpm typecheck`, `pnpm lint`, `pnpm build`, and
   `pnpm build:github-pages`.
@@ -43,8 +43,7 @@ trusted before Boss-cleared flow and end-to-end Vertical Slice acceptance.
 ### Estimated files
 
 - `app/game/MainScene.ts`
-- `app/game/state/GameFlowState.ts`
-- Existing Player lifecycle/reset boundary if required
+- Existing flow/completion contract only if a minimal pure seam is required
 - `tests/app-contracts.test.mjs`
 - `GAME_ROADMAP.md`
 - `SPRINT.md`
@@ -55,10 +54,11 @@ trusted before Boss-cleared flow and end-to-end Vertical Slice acceptance.
 
 ### Estimated risk
 
-- The current delayed Player-death restart may bypass an observable failed mode
-  or race with Boss attack completion and hit-stop clocks.
-- Resetting visual state without resetting encounter, camera-lock, and actor
-  ownership would pass once but leak across repeated runs.
-- A second failure event from a late overlap/timer can duplicate restart work.
-- Pausing the whole Scene incorrectly can also pause the only restart input or
-  timer; failure ownership and restart ownership must remain explicit.
+- Transitioning before Boss cleanup or arena release can leave a terminal soft
+  lock with live physics ownership.
+- Both cleanup callback and completion-event code may attempt to enter cleared,
+  causing duplicate publication or an invalid terminal transition.
+- Scene shutdown can look like Boss cleanup unless the existing defeated versus
+  destroyed reason remains authoritative.
+- Reusing failed-mode suspension carelessly could also create a failure overlay
+  or restart listener on the successful path.

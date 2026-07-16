@@ -24,7 +24,8 @@ import { GameFlowStateMachine } from "./flow/GameFlowStateMachine";
 import { TitleStartController } from "./flow/TitleStartController";
 
 type AttackState = "attack1" | "attack2" | "attack3";
-type TitleStartSource = "keyboard" | "pointer";
+type TitleStartSource = "keyboard" | "pointer" | "smoke";
+type FailureRestartSource = "keyboard" | "pointer" | "smoke";
 type PreviewFrame = {
   name: string; x: number; y: number; width: number; height: number;
   originY: number; offsetX: number; offsetY: number; classification: string;
@@ -39,7 +40,6 @@ const PLAYER_MAX_HP = 10;
 const ENEMY_FRAME_SIZE = 384;
 const ENEMY_FEET_Y = 354;
 const HURT_MS = 300;
-const PLAYER_DEATH_RESTART_MS = 900;
 const COMBO_WINDOW_MS = 360;
 const ATTACK_STATES: AttackState[] = ["attack1", "attack2", "attack3"];
 const FRAME_ORIGIN_Y: Record<string, number> = {
@@ -102,9 +102,12 @@ export default class MainScene extends Phaser.Scene {
   private readonly gameFlow = new GameFlowStateMachine();
   private readonly titleStartController = new TitleStartController(this.gameFlow);
   private titleOverlay?: Phaser.GameObjects.Container;
+  private failureOverlay?: Phaser.GameObjects.Container;
   private titleStartCount = 0;
   private readonly handleTitleKeyboardStart = () => this.startGame("keyboard");
   private readonly handleTitlePointerStart = () => this.startGame("pointer");
+  private readonly handleFailureKeyboardRestart = () => this.restartAfterFailure("keyboard");
+  private readonly handleFailurePointerRestart = () => this.restartAfterFailure("pointer");
   private debugText?: Phaser.GameObjects.Text;
   private get state(): PlayerState { return this.playerStateMachine.state; }
   private facing: 1 | -1 = 1;
@@ -134,9 +137,17 @@ export default class MainScene extends Phaser.Scene {
   private bossMovementSmokeStepStartedAt = 0;
   private bossCombatSmokeMode = false;
   private bossCombatSmokeStep = 0;
+  private failureSmokeMode = false;
+  private failureSmokeCycleActive = false;
+  private failureSmokeIteration = 0;
+  private failureRestartCount = 0;
+  private failureTotalEntryCount = 0;
+  private failureEntryCount = 0;
+  private failureSmokeAllInputBlocked = true;
+  private failureSmokeAllActorsSuspended = true;
+  private failureSmokeTimer?: Phaser.Time.TimerEvent;
   private bossSmokeMode = false;
   private bossSmokeTimer?: Phaser.Time.TimerEvent;
-  private playerDeathRestartTimer?: Phaser.Time.TimerEvent;
   private readonly bossSmokeLog: string[] = [];
   private bossArenaReleaseCount = 0;
   private bossArenaDebug?: Phaser.GameObjects.Graphics;
@@ -192,6 +203,8 @@ export default class MainScene extends Phaser.Scene {
     this.resetSmokeMode = development && query.get("resetSmoke") === "1";
     this.bossMovementSmokeMode = development && query.get("bossMovementSmoke") === "1";
     this.bossCombatSmokeMode = development && query.get("bossCombatSmoke") === "1";
+    this.failureSmokeMode = development && query.get("failureSmoke") === "1";
+    this.failureSmokeCycleActive = this.failureSmokeMode && this.failureSmokeIteration < 10;
     this.bossEntrySmokeMode = development && (query.get("bossEntrySmoke") === "1" || this.bossMovementSmokeMode);
     this.encounterSmokeMode = development && (query.get("encounterSmoke") === "1" || this.bossEntrySmokeMode);
     this.bossSmokeMode = development && query.get("bossSmoke") === "1";
@@ -200,6 +213,7 @@ export default class MainScene extends Phaser.Scene {
     this.bossMovementSmokeStep = 0;
     this.bossMovementSmokeStepStartedAt = 0;
     this.bossCombatSmokeStep = 0;
+    this.failureEntryCount = 0;
     this.stageCompletion.reset();
     this.stageCompleteEventCount = 0;
     this.gameFlow.resetForNewRun();
@@ -215,6 +229,12 @@ export default class MainScene extends Phaser.Scene {
       delete this.game.canvas.dataset.bossMovementSmokeComplete;
       delete this.game.canvas.dataset.bossCombatSmokeAlignmentGate;
       delete this.game.canvas.dataset.bossCombatSmokeComplete;
+      delete this.game.canvas.dataset.failureSmokeComplete;
+      delete this.game.canvas.dataset.failureInputBlocked;
+      delete this.game.canvas.dataset.failureActorsSuspended;
+      this.game.canvas.dataset.failureEntryCount = "0";
+      this.game.canvas.dataset.failureTotalEntryCount = String(this.failureTotalEntryCount);
+      this.game.canvas.dataset.failureRestartCount = String(this.failureRestartCount);
     }
     this.playerStateMachine.reset();
     this.playerLifecycle.reset();
@@ -281,7 +301,7 @@ export default class MainScene extends Phaser.Scene {
     }, development, { clock: new PhaserGameplayClock(this), random: new SeededRandom(0x3a6f2d1) });
     this.updateEncounterDataset();
     if (development) this.game.canvas.dataset.bossActorCount = "0";
-    if (this.bossSmokeMode || this.bossCombatSmokeMode) {
+    if (this.bossSmokeMode || this.bossCombatSmokeMode || this.failureSmokeCycleActive) {
       this.bossEntryState = "active";
       this.createBossActor(development);
       if (this.bossSmokeMode) this.scheduleBossSmokeHit();
@@ -301,6 +321,7 @@ export default class MainScene extends Phaser.Scene {
     }
     this.updateCamera();
     this.createTitleOverlay(keyboard);
+    this.prepareFailureSmokeCycle();
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.playerSprite.off(Phaser.Animations.Events.ANIMATION_UPDATE, this.handleAnimationUpdate, this);
@@ -312,8 +333,8 @@ export default class MainScene extends Phaser.Scene {
       this.enemyManager.destroy();
       this.bossSmokeTimer?.remove(false);
       this.bossSmokeTimer = undefined;
-      this.playerDeathRestartTimer?.remove(false);
-      this.playerDeathRestartTimer = undefined;
+      this.failureSmokeTimer?.remove(false);
+      this.failureSmokeTimer = undefined;
       this.bossActor?.destroy();
       this.bossActor = undefined;
       if (development) this.game.canvas.dataset.bossActorCount = "0";
@@ -321,8 +342,11 @@ export default class MainScene extends Phaser.Scene {
       this.bossArenaDebug = undefined;
       this.playerActor.destroy();
       keyboard.off("keydown", this.handleTitleKeyboardStart, this);
+      keyboard.off("keydown", this.handleFailureKeyboardRestart, this);
       this.titleOverlay?.destroy(true);
       this.titleOverlay = undefined;
+      this.failureOverlay?.destroy(true);
+      this.failureOverlay = undefined;
     });
 
     if (this.resetSmokeMode) {
@@ -338,10 +362,15 @@ export default class MainScene extends Phaser.Scene {
     if (this.enemyPreviewMode) { this.updateEnemyAlignmentPreview(); return; }
     if (this.previewMode) { this.updatePreviewMode(); return; }
     if (this.gameFlow.state === "title") return;
+    if (this.gameFlow.state === "failed") {
+      this.playerBody.setVelocity(0, 0);
+      this.updateDebugText();
+      return;
+    }
     if (this.lifecycleClock.isPaused()) { this.updateDebugText(); return; }
     this.playerBody.setVelocity(0, 0);
     this.currentInput = this.touchInputController.readSnapshot(this.inputController.readSnapshot());
-    if (!this.bossSmokeMode && !this.bossCombatSmokeMode) {
+    if (!this.bossSmokeMode && !this.bossCombatSmokeMode && !this.failureSmokeCycleActive) {
       this.updateEncounterSmoke();
       this.updateEncounterProgress();
       this.constrainPlayerToEncounterCamera();
@@ -586,7 +615,7 @@ export default class MainScene extends Phaser.Scene {
   }
 
   private applyHitToPlayer(attackerId: number, attackerFacing: 1 | -1, sourceId: string) {
-    if (this.state === "hurt") return;
+    if (this.gameFlow.state !== "playing" || this.state === "hurt") return;
     const damage = this.playerLifecycle.applyDamage(1);
     if (!damage.applied) return;
     this.gameplayEvents.publish({ type: "player-hit", enemyId: attackerId, at: this.time.now });
@@ -610,18 +639,10 @@ export default class MainScene extends Phaser.Scene {
     this.effectDirector.beginHitStop();
     if (damage.becameDead) {
       this.transitionTo("dead");
-      this.scheduleStageRestartAfterPlayerDeath();
+      this.enterFailedState();
     } else {
       this.time.delayedCall(HURT_MS, () => { if (this.state === "hurt") this.transitionTo("idle"); });
     }
-  }
-
-  private scheduleStageRestartAfterPlayerDeath() {
-    this.playerDeathRestartTimer?.remove(false);
-    this.playerDeathRestartTimer = this.time.delayedCall(PLAYER_DEATH_RESTART_MS, () => {
-      this.playerDeathRestartTimer = undefined;
-      if (this.scene.isActive() && this.state === "dead") this.restartStage();
-    });
   }
 
   private playHitSound() {
@@ -700,6 +721,111 @@ export default class MainScene extends Phaser.Scene {
       fontFamily: "Consolas, monospace", fontSize: "36px", color: "#ffffff",
       backgroundColor: "rgba(0,0,0,.72)", padding: { x: 20, y: 12 },
     }).setOrigin(0.5).setScrollFactor(0).setDepth(10000);
+  }
+
+  private enterFailedState() {
+    if (this.gameFlow.state !== "playing" && this.gameFlow.state !== "paused") return;
+    this.gameFlow.transition("failed");
+    this.failureEntryCount += 1;
+    this.failureTotalEntryCount += 1;
+    this.playerBody.stop();
+    this.disableAttackHitbox();
+    this.enemyManager.suspendCombat();
+    this.bossActor?.suspendCombat();
+    this.createFailureOverlay();
+    this.updateTitleDataset();
+
+    if (process.env.NODE_ENV !== "production") {
+      this.game.canvas.dataset.failureEntryCount = String(this.failureEntryCount);
+      this.game.canvas.dataset.failureTotalEntryCount = String(this.failureTotalEntryCount);
+      const inputBlocked = this.playerBody.velocity.x === 0 && this.playerBody.velocity.y === 0 && !this.attackBody.enable;
+      const actorsSuspended = this.enemyManager.isCombatSuspended
+        && (!this.bossActor || (this.bossActor.isCombatSuspended && !this.bossActor.isAttackHitboxEnabled));
+      this.game.canvas.dataset.failureInputBlocked = String(inputBlocked);
+      this.game.canvas.dataset.failureActorsSuspended = String(actorsSuspended);
+      if (this.failureSmokeCycleActive) {
+        this.failureSmokeAllInputBlocked &&= inputBlocked;
+        this.failureSmokeAllActorsSuspended &&= actorsSuspended;
+      }
+    }
+
+    if (this.failureSmokeCycleActive) {
+      this.failureSmokeIteration += 1;
+      this.failureSmokeTimer?.remove(false);
+      this.failureSmokeTimer = this.time.delayedCall(180, () => {
+        this.failureSmokeTimer = undefined;
+        this.restartAfterFailure("smoke");
+      });
+    }
+  }
+
+  private createFailureOverlay() {
+    if (this.failureOverlay) return;
+    const keyboard = this.input.keyboard;
+    if (!keyboard) return;
+    const shade = this.add.rectangle(VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2, VIEWPORT_WIDTH, VIEWPORT_HEIGHT, 0x120707, 0.82)
+      .setScrollFactor(0)
+      .setInteractive();
+    const title = this.add.text(VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2 - 32, "DEFEATED", {
+      fontFamily: "Georgia, serif", fontSize: "58px", color: "#f0d5c2",
+      stroke: "#5b170d", strokeThickness: 7,
+    }).setOrigin(0.5).setScrollFactor(0);
+    const prompt = this.add.text(VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2 + 48, "PRESS ANY KEY / TAP TO RETRY", {
+      fontFamily: "Consolas, monospace", fontSize: "24px", color: "#ffffff",
+    }).setOrigin(0.5).setScrollFactor(0);
+    this.failureOverlay = this.add.container(0, 0, [shade, title, prompt]).setDepth(20000);
+    shade.once("pointerdown", this.handleFailurePointerRestart, this);
+    keyboard.once("keydown", this.handleFailureKeyboardRestart, this);
+  }
+
+  private restartAfterFailure(source: FailureRestartSource) {
+    if (this.gameFlow.state !== "failed") return false;
+    this.input.keyboard?.off("keydown", this.handleFailureKeyboardRestart, this);
+    this.failureOverlay?.destroy(true);
+    this.failureOverlay = undefined;
+    this.failureRestartCount += 1;
+    if (process.env.NODE_ENV !== "production") {
+      this.game.canvas.dataset.failureRestartCount = String(this.failureRestartCount);
+      this.game.canvas.dataset.failureRestartSource = source;
+    }
+    this.restartStage();
+    return true;
+  }
+
+  private prepareFailureSmokeCycle() {
+    if (!this.failureSmokeMode) return;
+    if (!this.failureSmokeCycleActive) {
+      const initialStateRestored = this.gameFlow.state === "title"
+        && this.playerHp === PLAYER_MAX_HP
+        && this.playerBodyZone.x === START_X
+        && this.encounterSequence.nextEncounterIndex === 0
+        && this.bossEntryState === "locked"
+        && this.bossActor === undefined
+        && !isCameraLocked(this.cameraLockState)
+        && this.stageCompleteEventCount === 0;
+      this.game.canvas.dataset.failureSmokeComplete = String(
+        this.failureSmokeIteration === 10
+        && this.failureRestartCount === 10
+        && this.failureTotalEntryCount === 10
+        && this.failureSmokeAllInputBlocked
+        && this.failureSmokeAllActorsSuspended
+        && initialStateRestored,
+      );
+      this.game.canvas.dataset.failureSmokeAllInputBlocked = String(this.failureSmokeAllInputBlocked);
+      this.game.canvas.dataset.failureSmokeAllActorsSuspended = String(this.failureSmokeAllActorsSuspended);
+      return;
+    }
+
+    const bossActor = this.bossActor;
+    if (!bossActor) return;
+    this.playerLifecycle.applyDamage(PLAYER_MAX_HP - 1);
+    this.game.canvas.dataset.playerHp = String(this.playerHp);
+    this.playerBody.reset(bossActor.bodyZone.x - 145, bossActor.bodyZone.y);
+    this.syncVisualsToBody();
+    this.failureSmokeTimer = this.time.delayedCall(20, () => {
+      this.failureSmokeTimer = undefined;
+      if (this.gameFlow.state === "title") this.startGame("smoke");
+    });
   }
 
   private restartStage() {
