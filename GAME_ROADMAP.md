@@ -265,7 +265,7 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 | 5R.2 | Two encounter triggers and gates（Completed 2026-07-15） | P0 | High | 5R.1, M4 | 進區才生成；戰鬥時鎖定；清敵後解除；兩場依序完成 | stage director/config/tests | spawn ownership、soft lock |
 | 5R.3 | Boss arena entry sequencing（Completed 2026-07-16） | P0 | Medium | 5R.2, M5 arena | 普通 encounter 完成後才啟用 Boss 與 Boss lock；Boss 不在起點同時出現 | stage/Boss orchestration | premature activation |
 | 5R.4 | Boss locomotion, facing, and Y alignment（Completed 2026-07-16） | P0 | High | 5R.3, Boss walk assets | Boss 會接近、停止、面向與對線；不倒走、不瞬移、不出界 | BossActor/metadata/assets/tests | 缺 walk frames、腳底漂移 |
-| 5R.5 | Boss attack hitbox and player damage | P0 | High | 5R.4, M2 combat | startup/active/recovery；active frame 每招只命中一次；Player flash/hit-stop/knockback/HP 正常 | boss/combat/tests | 動畫 frame 與 hitbox 時序錯位 |
+| 5R.5 | Boss attack hitbox and player damage（Completed 2026-07-16） | P0 | High | 5R.4, M2 combat | startup/active/recovery；active frame 每招只命中一次；Player flash/hit-stop/knockback/HP 正常 | boss/combat/tests | 動畫 frame 與 hitbox 時序錯位 |
 | 5R.6 | Player failure and deterministic restart | P0 | High | 5R.5, M6 flow | HP 0 → `failed`；輸入停止；restart 完整重置關卡且 10 次無 leak | flow/MainScene/tests | stale timer/listener/lock |
 | 5R.7 | Boss defeat and cleared flow | P0 | Medium | 5R.5, M5 completion, M6 flow | Boss defeat cleanup 後一次進入 `cleared`；arena release 與 event ordering 正確 | flow/events/MainScene/tests | duplicate completion |
 | 5R.8 | End-to-end Vertical Slice acceptance | P0 | High | 5R.1–5R.7 | Desktop、landscape touch、portrait fitted 各從 Title 完成整關；可失敗重試；零 soft lock/error | browser/checklist/docs | 只測捷徑而非真實流程 |
@@ -412,7 +412,8 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 - M5R / Task 5R.2 (two encounter triggers and gates) completed on 2026-07-15.
 - M5R / Task 5R.3 (Boss arena entry sequencing) completed on 2026-07-16.
 - M5R / Task 5R.4 (Boss locomotion, facing, and Y alignment) completed on 2026-07-16.
-- Next eligible task: M5R / Task 5R.5 (Boss attack hitbox and player damage).
+- M5R / Task 5R.5 (Boss attack hitbox and player damage) completed on 2026-07-16.
+- Next eligible task: M5R / Task 5R.6 (Player failure and deterministic restart).
 
 ## 4. Global Acceptance Rules
 

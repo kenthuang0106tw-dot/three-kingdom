@@ -750,4 +750,22 @@
 | Boss defeat regression | Pass | One arena release followed by one stage completion; Boss actor cleaned |
 | Restart regression | Pass | 10 resets: Boss 0, entry locked, no camera lock/stale completion, one Canvas, zero errors |
 | Quality gates | Pass | `pnpm test` 64/64; typecheck; lint 0 errors with 8 existing warnings; both production builds |
+
+## M5R / Task 5R.5 Acceptance — 2026-07-16
+
+| Check | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M5R / Task 5R.5 — Boss attack hitbox and player damage |
+| Frame timing | Pass | All three attacks use metadata startup/active/recovery; only active source frame enables the zone |
+| Independent hitbox | Pass | One Boss-owned Arcade Zone, separate from the feet/body collider and mirrored by facing |
+| Once per swing | Pass | Per-attack hit record resets at `beginAttack`; 10 starts/completes produced nine intentional hits and one Y-lane miss |
+| Player damage reuse | Pass | Boss hit uses existing HP -1, flash, 4-frame hit stop, 26px horizontal knockback, and 300ms hurt path |
+| Wrong-lane rejection | Pass | Feet-Y difference above 30px rejected the tenth active-frame overlap; Player remained HP 1 |
+| Desktop browser | Pass | 10 starts, 10 completes, 9 hits, HP 1, hitbox disabled, Boss velocity 0, zero runtime errors |
+| Landscape mobile | Pass | 844×390 viewport, fitted 693×390 Canvas, same 10/10/9/HP1 result |
+| Boss defeat regression | Pass | Boss 0 after cleanup, arena release 1, stage completion 1 |
+| Restart regression | Pass | 10 restarts: Boss 0, entry locked, camera locks empty, completion 0 |
+| Automated checks | Pass | 66/66 tests, typecheck, lint 0 errors (8 existing warnings), both production builds |
+| Scope | Pass | No failure screen, HUD, audio, new attack/art, Boss rebalance, or 5R.6 behavior added |
+| Next task | Selected | M5R / Task 5R.6 — Player failure and deterministic restart |
 | Next task | Selected | M5R / Task 5R.5 — Boss attack hitbox and player damage |

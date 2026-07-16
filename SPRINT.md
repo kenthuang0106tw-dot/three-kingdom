@@ -2,14 +2,14 @@
 
 ## Sprint Goal
 
-在已完成的三畫面、兩場 encounter、Boss entry 與 locomotion 上，下一步只建立 Boss attack hitbox 與 player damage。完成 5R.5 前，不加入 HUD、Pause、Result、Audio、新角色或新戰鬥內容。
+在已完成的三畫面、兩場 encounter、Boss entry、locomotion 與攻擊傷害上，下一步只完成 Player failure 與 deterministic restart。完成 5R.6 前，不加入 HUD、Pause、Result、Audio、新角色或新戰鬥內容。
 
 ## Cadence
 
 - Duration：2 weeks
 - Capacity：1 developer + AI，約 40–55 hours
 - Milestone：M5R — Vertical Slice Recovery
-- Scope rule：一次只做一個 Recovery Task；5R.4 已完成，下一個唯一 Task 是 5R.5
+- Scope rule：一次只做一個 Recovery Task；5R.5 已完成，下一個唯一 Task 是 5R.6
 
 ## Task List
 
@@ -19,7 +19,8 @@
 | 2 | ✅ M5R / Task 5R.2 — Two encounter triggers and gates | 14–20h | 兩場依序 encounter | trigger/lock/clear browser acceptance passed |
 | 3 | ✅ M5R / Task 5R.3 — Boss arena entry sequencing | 8–12h | Boss 延後啟用與 arena entry | desktop/mobile entry smoke passed |
 | 4 | ✅ M5R / Task 5R.4 — Boss locomotion, facing, and Y alignment | 16–24h | Boss 會接近、面向與對線 | movement/alignment browser acceptance passed |
-| 5 | ▶ M5R / Task 5R.5 — Boss attack hitbox and player damage | 16–24h | Boss active frames 可單次傷害玩家 | hitbox/timing/damage browser acceptance |
+| 5 | ✅ M5R / Task 5R.5 — Boss attack hitbox and player damage | 16–24h | Boss active frames 可單次傷害玩家 | hitbox/timing/damage browser acceptance passed |
+| 6 | ▶ M5R / Task 5R.6 — Player failure and deterministic restart | 12–18h | HP 0 進入 failed 並可完整重啟 | failure/restart browser acceptance |
 
 ## Recovery Planning Correction — 2026-07-14
 
@@ -503,3 +504,14 @@ The next eligible task is M6 / Task 6.2. Do not begin it until the next task-run
 - [ ] HUD, Pause, Failure, Result, audio, persistence, and custom Title art remain deferred.
 
 The next eligible task is M6 / Task 6.3. Do not begin it until the next task-runner cycle.
+
+## M5R / Task 5R.5 Closeout
+
+- [x] All three existing Boss attacks use metadata-owned startup, active, recovery, and independent hitbox geometry.
+- [x] `BossActor` owns one Arcade Physics attack zone; only active frames enable it, facing mirrors it, and completion/damage/destroy disable it.
+- [x] A per-attack hit record resets at `beginAttack`, so one swing damages Player at most once across overlap updates.
+- [x] Boss hits reuse Player HP -1, flash, 4-frame hit stop, 26px horizontal knockback, and 300ms hurt recovery.
+- [x] Desktop and 844×390 smoke: 10 starts/completes, nine intentional hits, Player HP 10→1, one wrong-Y miss, disabled hitbox and zero Boss velocity at completion.
+- [x] Boss defeat released the arena once and published one completion; 10 restarts retained Boss 0, entry locked, no camera lock or stale completion.
+- [x] `pnpm test` 66/66, typecheck, lint 0 errors (8 existing warnings), both production builds, and browser runtime passed.
+- [ ] Player failure and deterministic restart remain the unique next task, M5R / Task 5R.6.

@@ -552,6 +552,21 @@ The lifecycle atlas contains four distinct `walk-*` frames at the same feet
 anchor as idle/hurt/phase/dead. Animation frames never move the world body, and
 movement never uses sprite-only tweens.
 
+## Boss Attack Hitbox and Player Damage Contract (M5R / Task 5R.5)
+
+`BossAttackMetadata.ts` is authoritative for each attack's startup, active,
+recovery, and hitbox geometry. `BossAttackCombat.ts` keeps active-frame,
+left/right placement, feet-lane tolerance, and once-per-swing eligibility as a
+Phaser-free contract. `BossActor` alone owns the independent Arcade Physics
+attack zone and its one Scene-lifecycle animation-update listener.
+
+`MainScene` resolves overlap between that zone and the Player ground body, then
+routes a consumed Boss hit through the same Player damage path already used by
+ordinary enemies. Boss code does not own Player HP, flash, hit stop, knockback,
+or hurt recovery. Animation completion, Boss damage, and Scene shutdown all
+disable the zone; actor destruction removes both animation listeners and the
+zone so restart cannot retain a collider or hit record.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

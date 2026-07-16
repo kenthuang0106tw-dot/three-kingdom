@@ -25,6 +25,7 @@ import { BossLifecycle } from "../app/game/boss/BossLifecycle.ts";
 import { BOSS_ATTACKS } from "../app/game/boss/BossAttackMetadata.ts";
 import { BossDecisionPolicy } from "../app/game/boss/BossDecisionPolicy.ts";
 import { BOSS_LOCOMOTION_CONFIG, clampBossFeet, decideBossLocomotion } from "../app/game/boss/BossLocomotion.ts";
+import { canConsumeBossAttackHit, getBossAttackHitboxCenter, isBossAttackActiveFrame } from "../app/game/boss/BossAttackCombat.ts";
 import { selectFairAttackCandidate } from "../app/game/enemy/AttackSlotPolicy.ts";
 import { GameFlowStateMachine } from "../app/game/flow/GameFlowStateMachine.ts";
 import { TitleStartController } from "../app/game/flow/TitleStartController.ts";
@@ -583,9 +584,9 @@ test("Boss arena occupies the final viewport and releases its lock", async () =>
 
 test("Recovery traversal starts unlocked while preserving explicit diagnostic lock ownership", async () => {
   const source = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
-  assert.match(source, /if \(this\.bossSmokeMode\) \{/);
+  assert.match(source, /if \(this\.bossSmokeMode \|\| this\.bossCombatSmokeMode\) \{/);
   assert.match(source, /this\.cameraLockState = lockCamera\(this\.cameraLockState, "encounter"\)/);
-  assert.match(source, /if \(!this\.bossSmokeMode\) \{\s+this\.updateEncounterSmoke\(\)/);
+  assert.match(source, /if \(!this\.bossSmokeMode && !this\.bossCombatSmokeMode\) \{\s+this\.updateEncounterSmoke\(\)/);
   assert.match(source, /unlockCamera\(this\.cameraLockState, "encounter"\)/);
   assert.match(source, /if \(!isCameraLocked\(this\.cameraLockState\)\)/);
   assert.match(source, /dataset\.cameraScrollX/);
@@ -949,6 +950,8 @@ test("Boss attack art and metadata define three real telegraphed attacks", async
     assert.deepEqual(attack.activeFrames, [1]);
     assert.deepEqual(attack.recoveryFrames, [2]);
     assert.deepEqual(attack.telegraphFrames, [0]);
+    assert.ok(attack.hitbox.width > 0 && attack.hitbox.height > 0);
+    assert.ok(attack.hitbox.forwardOffset > 0 && attack.hitbox.verticalOffset < 0);
     assert.equal(new Set(attack.frames).size, 3);
   }
   assert.deepEqual(Object.keys(atlas.frames), expectedFrames);
@@ -965,6 +968,57 @@ test("Boss attack art and metadata define three real telegraphed attacks", async
   assert.match(buildTool, /ATTACKS = \[/);
   assert.ok(sheet.length > 1000);
   assert.ok(debug.length > 1000);
+});
+
+test("Boss attack hitbox follows metadata and consumes one aligned active hit", () => {
+  for (const attack of BOSS_ATTACKS) {
+    assert.equal(isBossAttackActiveFrame(attack, 0), false);
+    assert.equal(isBossAttackActiveFrame(attack, 1), true);
+    assert.equal(isBossAttackActiveFrame(attack, 2), false);
+
+    const left = getBossAttackHitboxCenter({ x: 3300, y: 560 }, -1, attack);
+    const right = getBossAttackHitboxCenter({ x: 3300, y: 560 }, 1, attack);
+    assert.equal(left.x, 3300 - attack.hitbox.forwardOffset);
+    assert.equal(right.x, 3300 + attack.hitbox.forwardOffset);
+    assert.equal(left.y, 560 + attack.hitbox.verticalOffset);
+    assert.equal(right.y, left.y);
+
+    const base = {
+      state: "attack",
+      attack,
+      sourceFrameIndex: 1,
+      alreadyHitPlayer: false,
+      bossFeetY: 560,
+      playerFeetY: 590,
+      alignmentToleranceY: 30,
+    };
+    assert.equal(canConsumeBossAttackHit(base), true);
+    assert.equal(canConsumeBossAttackHit({ ...base, sourceFrameIndex: 0 }), false);
+    assert.equal(canConsumeBossAttackHit({ ...base, sourceFrameIndex: 2 }), false);
+    assert.equal(canConsumeBossAttackHit({ ...base, alreadyHitPlayer: true }), false);
+    assert.equal(canConsumeBossAttackHit({ ...base, playerFeetY: 591 }), false);
+    assert.equal(canConsumeBossAttackHit({ ...base, state: "hurt" }), false);
+  }
+});
+
+test("Boss actor owns one active-frame attack zone and MainScene reuses player damage", async () => {
+  const [actorSource, sceneSource] = await Promise.all([
+    readFile(new URL("../app/game/boss/BossActor.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8"),
+  ]);
+  assert.match(actorSource, /readonly attackZone: Phaser\.GameObjects\.Zone/);
+  assert.match(actorSource, /ANIMATION_UPDATE, this\.handleAnimationUpdate/);
+  assert.match(actorSource, /frame\.index - 1/);
+  assert.match(actorSource, /isBossAttackActiveFrame/);
+  assert.match(actorSource, /tryConsumePlayerHit/);
+  assert.match(actorSource, /this\.attackHitPlayer = true/);
+  assert.match(actorSource, /this\.attackZone\.destroy\(\)/);
+  assert.match(actorSource, /\.off\(Phaser\.Animations\.Events\.ANIMATION_UPDATE/);
+  assert.equal((actorSource.match(/scene\.add\.zone\(/g) ?? []).length, 2);
+  assert.match(sceneSource, /physics\.overlap\(bossActor\.attackZone, this\.playerBodyZone\)/);
+  assert.match(sceneSource, /applyHitToPlayer\(bossActor\.targetId, bossActor\.facing, "boss"\)/);
+  assert.match(sceneSource, /query\.get\("bossCombatSmoke"\)/);
+  assert.match(sceneSource, /dataset\.bossCombatSmokeComplete/);
 });
 
 test("Boss actor owns feet-aligned hurt, phase, death, and Scene cleanup", async () => {
