@@ -249,7 +249,7 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 
 ## Milestone 5R — Vertical Slice Recovery
 
-**Status:** Active P0 recovery milestone。M6.1–6.2 保留；M6.3 之後暫停至 5R.8 通過。
+**Status:** Completed 2026-07-17。M6.1–6.2 保留，M6.3 現在可依單一 Task 流程恢復。
 
 **Playable Result:** 玩家從 Title 開始，在至少三個畫面寬的竹林中前進，完成兩場分段 encounter，進入 Boss arena，與會移動且能傷害玩家的 Boss 互相攻防，最後進入 `cleared` 或 `failed`。
 
@@ -268,7 +268,7 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 | 5R.5 | Boss attack hitbox and player damage（Completed 2026-07-16） | P0 | High | 5R.4, M2 combat | startup/active/recovery；active frame 每招只命中一次；Player flash/hit-stop/knockback/HP 正常 | boss/combat/tests | 動畫 frame 與 hitbox 時序錯位 |
 | 5R.6 | Player failure and deterministic restart（Completed 2026-07-16） | P0 | High | 5R.5, M6 flow | HP 0 → `failed`；輸入停止；restart 完整重置關卡且 10 次無 leak | flow/MainScene/tests | stale timer/listener/lock |
 | 5R.7 | Boss defeat and cleared flow（Completed 2026-07-16） | P0 | Medium | 5R.5, M5 completion, M6 flow | Boss defeat cleanup 後一次進入 `cleared`；arena release 與 event ordering 正確 | flow/events/MainScene/tests | duplicate completion |
-| 5R.8 | End-to-end Vertical Slice acceptance | P0 | High | 5R.1–5R.7 | Desktop、landscape touch、portrait fitted 各從 Title 完成整關；可失敗重試；零 soft lock/error | browser/checklist/docs | 只測捷徑而非真實流程 |
+| 5R.8 | End-to-end Vertical Slice acceptance（Completed 2026-07-17） | P0 | High | 5R.1–5R.7 | Desktop、landscape touch、portrait fitted 各從 Title 完成整關；可失敗重試；零 soft lock/error | browser/checklist/docs | 只測捷徑而非真實流程 |
 
 ### Recovery exclusions
 
@@ -279,7 +279,7 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 
 ## Milestone 6 — Product Flow and UI
 
-**Status:** 6.1–6.2 completed；6.3–6.7 blocked by Milestone 5R recovery。
+**Status:** 6.1–6.2 completed；M5R recovery 已通過，下一個唯一 Task 是 6.3。
 
 **Playable Result:** 玩家可從 Title 開始、查看 HUD、暫停、失敗、重試、擊敗 Boss 並看到 Result。
 
@@ -407,7 +407,7 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 - M6 / Task 6.1 (game-flow modes/reset ownership) completed on 2026-07-14.
 - M6 / Task 6.2 (Title/start) completed on 2026-07-14.
 - M3 and M5 playable-result acceptance corrected on 2026-07-14; their contract foundations remain accepted.
-- M6 / Task 6.3 is paused until Vertical Slice Recovery completes.
+- M6 / Task 6.3 resumed after Vertical Slice Recovery completed on 2026-07-17.
 - M5R / Task 5R.1 (three-screen world and visible camera scrolling) completed on 2026-07-14.
 - M5R / Task 5R.2 (two encounter triggers and gates) completed on 2026-07-15.
 - M5R / Task 5R.3 (Boss arena entry sequencing) completed on 2026-07-16.
@@ -415,7 +415,8 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 - M5R / Task 5R.5 (Boss attack hitbox and player damage) completed on 2026-07-16.
 - M5R / Task 5R.6 (Player failure and deterministic restart) completed on 2026-07-16.
 - M5R / Task 5R.7 (Boss defeat and cleared flow) completed on 2026-07-16.
-- Next eligible task: M5R / Task 5R.8 (End-to-end Vertical Slice acceptance).
+- M5R / Task 5R.8 (End-to-end Vertical Slice acceptance) completed on 2026-07-17.
+- Next eligible task: M6 / Task 6.3 (Player/Boss HUD).
 
 ## 4. Global Acceptance Rules
 

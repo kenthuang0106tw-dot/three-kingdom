@@ -60,6 +60,7 @@ test("Enemy and combat source retain the current three-enemy contracts", async (
   assert.equal(BAMBOO_COMBAT_ROOM.spawnPoints.length, 3);
   assert.match(manager, /get currentAttackerId\(\)/);
   assert.match(scene, /this\.physics\.overlap\(this\.attackZone, enemy\.bodyZone\)/);
+  assert.match(scene, /playerBodyZone\.y - 48/, "player attack hitbox must overlap feet-based enemy bodies when Y-aligned");
   assert.match(scene, /resolveAttack\(\{/);
 });
 

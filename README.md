@@ -128,8 +128,8 @@ tools/build_enemy_art.py     Enemy sheet/atlas rebuild pipeline
 
 ## Current Priority
 
-M5R.1 已完成真正的 3840×720 三畫面竹林世界、共享 walk bounds 與可見的 0–2560 camera scrolling。M5 Boss contracts 保留，但 Boss 仍不能移動或傷害玩家；M6.1–6.2 完成，M6.3 暫停。
+M5R 已完成並通過真正的 Vertical Slice：3840×720 三畫面竹林、兩場依序 encounter、可互相攻防的 Boss、failed/retry 與 cleared 流程，桌機、844×390 橫向觸控及 390×844 直向 FIT 均以真實輸入通關。
 
-The next single task is M5R / Task 5R.2: add two ordered encounter triggers and camera gates using only the existing enemies.
+The next single task is M6 / Task 6.3: add a Player/Boss HUD that only reads the existing gameplay snapshot.
 
-Recovery 期間不加入 HUD、Result、音效或新內容；先完成真正關卡、Boss 戰與 clear/failed 流程。
+本 Task 只做 HUD；Pause、Result、音效與新內容仍依 Roadmap 延後。

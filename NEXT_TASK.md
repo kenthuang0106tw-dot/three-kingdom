@@ -1,49 +1,35 @@
 # Next Task
 
-## M5R / Task 5R.8 — End-to-end Vertical Slice acceptance
+## M6 / Task 6.3 — Player/Boss HUD
 
 ### Why this is next
 
-Tasks 5R.1–5R.7 now provide the complete three-screen traversal, two ordered
-encounters, gated Boss arena, reciprocal Boss combat, deterministic failure and
-restart, and exactly-once cleared terminal flow. The remaining recovery gate is
-to prove these pieces work together through real player input without diagnostic
-shortcuts before product UI work resumes.
+M5R 已以桌機、手機橫向與手機直向的真實輸入完成整個 Vertical Slice，M6.1 的 game-flow contract 與 M6.2 的 Title/start 也已通過。下一個最小可玩增量是讓玩家在戰鬥中讀到 Player HP，並在 Boss arena 顯示 Boss HP；這能直接改善現有完整流程，又不需要先引入 Pause、Result 或新的 gameplay state。
 
 ### Completion criteria
 
-- Starting from the Phaser Title, a player can traverse the full three-screen
-  Stage, trigger and clear both encounters in order, enter the Boss arena,
-  defeat the Boss, and reach `cleared` without a smoke shortcut.
-- A separate real run can reach `failed`, use the existing explicit retry, and
-  restart at Title with Player HP, Stage progression, actors, locks, timers,
-  hitboxes, and camera state reset.
-- Desktop, 844×390 landscape touch, and 390×844 portrait FIT each complete the
-  required run with one Canvas, no soft lock, and zero runtime errors.
-- Encounter and Boss gates cannot be skipped, duplicated, or entered backward;
-  normal movement and vertical dodging remain usable throughout the run.
-- Acceptance may fix only defects that block this existing Vertical Slice. No
-  HUD, Pause, Result/replay, audio, scoring, persistence, new content, art,
-  attacks, enemies, balance pass, or next Milestone work is added.
+- 建立 Phaser-owned HUD；React 仍只負責外框與 Phaser lifecycle，不以 DOM 或 React state 顯示戰鬥數值。
+- HUD 只讀既有 readonly gameplay snapshot／event boundary，不持有或直接操作 Player、Enemy、Boss actor。
+- Player HP 在 `playing`、`failed` 與 `cleared` 流程中顯示正確；新 run／retry 後恢復為 10。
+- Boss HP bar 只在 Boss actor 啟用後出現，傷害時由 8 正確下降，Boss cleanup／新 run 後隱藏並重設。
+- HUD 使用 `setScrollFactor(0)` 並建立一次；update 不重建 GameObject、listener 或 React tree。
+- Desktop、844×390 landscape 與 390×844 portrait FIT 都可讀，且不遮住 360° 搖桿、攻擊鍵或主要戰鬥區。
+- Development debug 可與 HUD 共存；production 不顯示 debug，但保留正式 HUD。
+- 不加入 Pause、Failure/Result 美化、replay、audio、scoring、persistence、新內容或 gameplay balance。
 
 ### Validation
 
-- Add or update deterministic integration coverage only where a discovered
-  end-to-end ownership defect requires it.
-- Perform real browser runs from Title through `cleared` at desktop, 844×390
-  landscape touch, and 390×844 portrait FIT; diagnostic query shortcuts do not
-  count as the main acceptance evidence.
-- Perform one real Player failure and explicit retry path, then verify the
-  documented initial state and one Canvas.
-- Re-run Boss attack, Boss clear ordering, encounter sequencing, and Scene reset
-  regressions with zero browser errors.
-- Run `pnpm test`, `pnpm typecheck`, `pnpm lint`, `pnpm build`, and
-  `pnpm build:github-pages`.
+- 新增 HUD ownership／snapshot consumption 的 deterministic contract test。
+- 驗證 Title → playing、普通 encounter、Boss active、Boss damage、failed/retry、Boss defeat/cleared 的顯示與 reset。
+- 在 desktop、844×390 landscape、390×844 portrait FIT 做 browser acceptance；每種尺寸保持一個 Canvas、HUD 可讀、touch controls 可用、零 runtime error。
+- 重跑 encounter sequencing、Boss combat、failed/retry、cleared 與 Scene reset regressions。
+- 執行 `pnpm test`、`pnpm typecheck`、`pnpm lint`、`pnpm build`、`pnpm build:github-pages`。
 
 ### Estimated files
 
-- `tests/app-contracts.test.mjs` only if a missing deterministic seam is found
-- Existing Stage/MainScene/input modules only if a real acceptance blocker is found
+- `app/game/MainScene.ts`
+- `app/game/ui/GameHud.ts`（若獨立 Phaser HUD ownership 能降低 MainScene 耦合）
+- `tests/app-contracts.test.mjs`
 - `GAME_ROADMAP.md`
 - `SPRINT.md`
 - `NEXT_TASK.md`
@@ -53,9 +39,7 @@ shortcuts before product UI work resumes.
 
 ### Estimated risk
 
-- Diagnostic smokes can hide a real traversal, input, gate, or combat soft lock;
-  they cannot substitute for full player-input runs.
-- Mobile touch runs may expose pointer ownership or viewport-fit defects not
-  visible in desktop keyboard play.
-- Fixing an acceptance blocker can easily expand into balance, UI, or content;
-  any change must remain the smallest correction to the existing Vertical Slice.
+- 若 HUD 直接查詢 actor，會繞過既有 snapshot boundary 並增加 MainScene 耦合。
+- 每幀建立文字、Graphics 或 listener 會造成物件 leak 與手機效能問題。
+- Portrait FIT 的 Canvas 很小；固定像素字級或不考慮 touch control 區域可能造成遮擋。
+- Boss cleanup、failed retry 與 Scene restart 若未共用同一 reset ownership，可能留下 stale HP bar。

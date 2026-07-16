@@ -2,16 +2,6 @@
 
 更新規則：每項債務必須有 Evidence、Impact、Resolution、Target。修復後移至文末 Resolved，不直接刪除紀錄。
 
-## Critical
-
-### TD-C05 — Contract acceptance was reported as playable Stage/Boss completion
-
-- **Evidence:** Runtime `worldBounds.width` is 1280, equal to the viewport; the Boss has no locomotion, attack hitbox, or player-damage path, while M3 and M5 were described as playable/full-stage complete.
-- **Impact:** Later UI work can proceed on top of an incomplete vertical slice, hiding the absence of the core scrolling-stage and Boss-combat loop.
-- **Resolution:** Preserve accepted contracts, reopen playable-result acceptance, and complete M5R Tasks 5R.1–5R.8 before resuming M6.3.
-- **Target:** M5R Vertical Slice Recovery.
-- **Progress 2026-07-16:** M5R.1–5R.3 completed the three-screen world, two ordered encounter gates, and gated Boss entry. M5R.4 added genuine four-frame walk art, feet-aligned Arcade locomotion, source-correct facing, Y alignment, attack-distance eligibility, and arena bounds. M5R.5 added metadata-driven active-frame Boss hitboxes, once-per-swing Player damage, and existing hurt-effect reuse. M5R.6 replaced automatic death restart with exactly-once failed flow, full combat suspension, explicit Phaser restart input, and ten-cycle reset evidence. M5R.7 now orders defeated Boss cleanup, arena release, one completion publication, and one terminal cleared transition while suspending further combat. Only end-to-end acceptance remains open in 5R.8.
-
 ## High
 
 ### TD-H03 — MainScene owns too many responsibilities
@@ -389,3 +379,8 @@ Result, and persistence remain separate tasks.
 
 - **Resolved:** 2026-07-12，M1 / Task 1.1。
 - **Evidence:** `app/game/input/ActionSnapshot.ts` 統一方向與 edge-trigger attack；6 tests、browser keyboard smoke、build、lint、typecheck 通過。
+
+### TD-C05 — Contract acceptance was reported as playable Stage/Boss completion
+
+- **Resolved:** 2026-07-17，M5R / Task 5R.8。
+- **Evidence:** M5R.1–5R.7 completed the 3840×720 three-screen world, two ordered encounters, gated moving/damaging Boss, deterministic failed/retry, and exactly-once cleared flow. M5R.8 then completed real-input runs from Title through both encounters and Boss on desktop, 844×390 landscape touch, and 390×844 portrait FIT; a separate real failure/retry restored the documented initial state. All runs retained one Canvas and zero runtime errors.

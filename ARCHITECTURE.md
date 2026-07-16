@@ -480,6 +480,26 @@ contracts rather than introduce parallel Stage, Camera, Boss, or flow state.
 M6.1–6.2 remain valid consumers; M6.3 and later product UI are blocked until the
 Recovery end-to-end gate passes.
 
+## End-to-end Vertical Slice Acceptance Contract (M5R / Task 5R.8)
+
+The recovery boundary is now closed by real-input acceptance rather than a
+diagnostic shortcut. Desktop keyboard/pointer and both mobile FIT viewports
+traverse the Stage-owned encounter sequence, activate the Boss through the
+Stage-owned entry gate, and reach the existing terminal flow. A separate failed
+run uses the same explicit Scene restart ownership and returns to Title with all
+actors, locks, timers, hitboxes, camera state, HP, and progression reset.
+
+Player attacks continue to resolve only against independent Arcade Physics
+zones. The attack zone is vertically aligned with the feet-based occupancy
+bodies, so a valid 2.5D Y alignment can overlap without changing sprite origin,
+damage, animation timing, or actor body ownership. Development-only Canvas
+datasets expose readonly state, position, HP, and encounter observations for
+acceptance; they do not drive gameplay and are absent from production behavior.
+
+M6 may now resume at Task 6.3. Product UI must consume the readonly gameplay
+snapshot/event boundary and must not reopen Stage, Boss, input, or reset
+ownership.
+
 ## Three-screen Traversal Contract (M5R / Task 5R.1)
 
 `BAMBOO_COMBAT_ROOM` now describes one 3840×720 world with three explicit,

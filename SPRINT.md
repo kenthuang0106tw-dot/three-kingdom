@@ -1,15 +1,15 @@
-# Current Sprint — Vertical Slice Recovery
+# Current Sprint — Product Flow and UI
 
 ## Sprint Goal
 
-在已完成的三畫面、兩場 encounter、Boss 戰、deterministic failure/restart 與 cleared flow 上，下一步只完成端到端 Vertical Slice 驗收。完成 5R.8 前，不加入 HUD、Pause、Result、Audio、新角色或新戰鬥內容。
+M5R 已由桌機、手機橫向與手機直向的真實輸入完整通關驗收關閉。下一步只建立讀取既有 gameplay snapshot 的 Player/Boss HUD，不同時加入 Pause、Result、Audio 或新戰鬥內容。
 
 ## Cadence
 
 - Duration：2 weeks
 - Capacity：1 developer + AI，約 40–55 hours
-- Milestone：M5R — Vertical Slice Recovery
-- Scope rule：一次只做一個 Recovery Task；5R.7 已完成，下一個唯一 Task 是 5R.8
+- Milestone：M6 — Product Flow and UI
+- Scope rule：一次只做一個 UI Task；M5R 已完成，下一個唯一 Task 是 M6 / 6.3
 
 ## Task List
 
@@ -22,7 +22,7 @@
 | 5 | ✅ M5R / Task 5R.5 — Boss attack hitbox and player damage | 16–24h | Boss active frames 可單次傷害玩家 | hitbox/timing/damage browser acceptance passed |
 | 6 | ✅ M5R / Task 5R.6 — Player failure and deterministic restart | 12–18h | HP 0 進入 failed 並可完整重啟 | failure/restart browser acceptance passed |
 | 7 | ✅ M5R / Task 5R.7 — Boss defeat and cleared flow | 8–12h | Boss cleanup 後一次進入 cleared | defeat/clear ordering browser acceptance passed |
-| 8 | ▶ M5R / Task 5R.8 — End-to-end Vertical Slice acceptance | 16–24h | 從 Title 真實完成整關與失敗重試 | desktop/mobile full-run acceptance |
+| 8 | ✅ M5R / Task 5R.8 — End-to-end Vertical Slice acceptance | 16–24h | 從 Title 真實完成整關與失敗重試 | desktop/mobile full-run acceptance passed |
 
 ## Recovery Planning Correction — 2026-07-14
 
@@ -538,4 +538,15 @@ The next eligible task is M6 / Task 6.3. Do not begin it until the next task-run
 - [x] Desktop and 844×390 browser smoke each produced Boss 0, arena release 1, completion 1, cleared entry 1, stopped combat, one Canvas, and zero runtime errors.
 - [x] Failure/restart 10-cycle, Boss attack 10/10/9/HP1, and two ordered encounter regressions remained green.
 - [x] `pnpm test` 69/69, typecheck, lint 0 errors (8 existing warnings), and both production builds passed.
-- [ ] End-to-end Vertical Slice acceptance remains the unique next task, M5R / Task 5R.8.
+- [x] End-to-end Vertical Slice acceptance completed as M5R / Task 5R.8 on 2026-07-17.
+
+## M5R / Task 5R.8 Closeout
+
+- [x] Desktop 從 Phaser Title 以真實方向與攻擊輸入依序完成 `forest-entry`、`forest-ambush`、Boss arena 與 `cleared`，無 diagnostic shortcut。
+- [x] 844×390 landscape 以畫面 360° 搖桿與攻擊鍵完成同一完整流程；單一 693×390 Canvas，零 runtime error。
+- [x] 390×844 portrait FIT 以畫面搖桿與攻擊鍵完成同一完整流程；單一 325×183 Canvas，零 runtime error。
+- [x] 獨立實玩進入 `failed`，按 Enter 明確 retry 後回到 Title；HP 10、Player x=180、encounter 0、Boss locked、actors/locks/camera 全部重設。
+- [x] 實玩定位並修正 Player attack hitbox 高於 feet-based Enemy body 的阻斷；修正後同一招可在合理 Y 對線範圍命中，未更改傷害、動畫或內容。
+- [x] 三種 viewport 均保持 encounter 順序、上下走位、Boss HP 8→0、stage completion 1、cleared entry 1、單一 Canvas與零 console error。
+- [x] `pnpm test` 69/69 通過；typecheck、lint（0 errors、8 existing warnings）與兩種 production build 於 closeout 重跑。
+- [x] Vertical Slice Recovery 完成；下一個唯一 Task 恢復為 M6 / Task 6.3 — Player/Boss HUD。

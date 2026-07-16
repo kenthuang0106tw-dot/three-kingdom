@@ -294,7 +294,7 @@ export default class MainScene extends Phaser.Scene {
     this.playerActor = new PlayerActor(this, START_X, START_FOOT_Y);
     this.showIdleFrame();
 
-    this.attackZone = this.add.zone(START_X, START_FOOT_Y - 92, 142, 86).setOrigin(0.5);
+    this.attackZone = this.add.zone(START_X, START_FOOT_Y - 48, 142, 86).setOrigin(0.5);
     this.physics.add.existing(this.attackZone);
     this.attackBody = this.attackZone.body as Phaser.Physics.Arcade.Body;
     this.attackBody.setAllowGravity(false);
@@ -1017,6 +1017,8 @@ export default class MainScene extends Phaser.Scene {
     if (!bossActor) return;
     this.game.canvas.dataset.bossWorldX = bossActor.bodyZone.x.toFixed(1);
     this.game.canvas.dataset.bossWorldY = bossActor.bodyZone.y.toFixed(1);
+    this.game.canvas.dataset.bossHp = String(bossActor.hp);
+    this.game.canvas.dataset.bossState = bossActor.state;
     this.game.canvas.dataset.bossVelocityX = bossActor.body.velocity.x.toFixed(1);
     this.game.canvas.dataset.bossVelocityY = bossActor.body.velocity.y.toFixed(1);
     this.game.canvas.dataset.bossFacing = String(bossActor.facing);
@@ -1238,7 +1240,7 @@ export default class MainScene extends Phaser.Scene {
   private showIdleFrame() { this.playerActor.showIdleFrame(); }
   private setFacing(direction: 1 | -1) { this.facing = direction; this.playerActor.setFacing(direction); }
   private syncVisualsToBody() { this.playerActor.syncVisuals(); if (this.attackBody.enable) this.positionAttackHitbox(); }
-  private positionAttackHitbox() { const x = Math.round(this.playerBodyZone.x + this.facing * 104), y = Math.round(this.playerBodyZone.y - 94); this.attackZone.setPosition(x, y); this.attackBody.reset(x, y); }
+  private positionAttackHitbox() { const x = Math.round(this.playerBodyZone.x + this.facing * 104), y = Math.round(this.playerBodyZone.y - 48); this.attackZone.setPosition(x, y); this.attackBody.reset(x, y); }
   private enableAttackHitbox() { this.attackZone.setActive(true); this.attackBody.enable = true; this.positionAttackHitbox(); }
   private disableAttackHitbox() { if (!this.attackBody) return; this.attackBody.stop(); this.attackBody.enable = false; this.attackZone.setActive(false); }
 
@@ -1285,10 +1287,21 @@ export default class MainScene extends Phaser.Scene {
 
   private updateEncounterDataset() {
     if (process.env.NODE_ENV === "production") return;
+    const enemies = this.enemyManager?.getAllEnemies() ?? [];
+    this.game.canvas.dataset.playerState = this.state;
+    this.game.canvas.dataset.playerWorldY = String(Math.round(this.playerBodyZone.y));
+    this.game.canvas.dataset.playerHitCount = String(this.hitCount);
+    this.game.canvas.dataset.enemyStates = enemies.map(enemy => [
+      enemy.id,
+      enemy.state,
+      enemy.hp,
+      Math.round(enemy.bodyZone.x - this.playerBodyZone.x),
+      Math.round(enemy.bodyZone.y - this.playerBodyZone.y),
+    ].join(":")).join(",");
     this.game.canvas.dataset.encounterNextIndex = String(this.encounterSequence.nextEncounterIndex);
     this.game.canvas.dataset.encounterActiveId = this.encounterSequence.activeEncounterId ?? "";
     this.game.canvas.dataset.encounterClearedIds = this.encounterSequence.clearedEncounterIds.join(",");
-    this.game.canvas.dataset.encounterEnemyCount = String(this.enemyManager?.getAllEnemies().length ?? 0);
+    this.game.canvas.dataset.encounterEnemyCount = String(enemies.length);
     this.game.canvas.dataset.encounterCameraLocked = String(hasCameraLock(this.cameraLockState, "encounter"));
     this.game.canvas.dataset.cameraLockReasons = this.cameraLockState.reasons.join(",");
   }

@@ -803,3 +803,21 @@
 | Automated checks | Pass | 69/69 tests, typecheck, lint 0 errors (8 existing warnings), both production builds |
 | Scope | Pass | No Result UI, replay, HUD, audio, scoring, content, art, balance, or 5R.8 implementation added |
 | Next task | Selected | M5R / Task 5R.8 — End-to-end Vertical Slice acceptance |
+
+## M5R / Task 5R.8 Acceptance — 2026-07-17
+
+| Check | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M5R / Task 5R.8 — End-to-end Vertical Slice acceptance |
+| Desktop full run | Pass | Real input from Title cleared `forest-entry`, then `forest-ambush`, then Boss HP 8→0; flow `cleared`, completion 1, cleared entry 1, one Canvas, zero errors |
+| Landscape touch | Pass | 844×390 viewport used the visible 360° joystick and attack button for the same full run; fitted 693×390 Canvas, HP 2 at clear, zero errors |
+| Portrait touch | Pass | 390×844 viewport used the visible joystick and attack button for the same full run; fitted 325×183 Canvas, HP 7 at clear, zero errors |
+| Failure and retry | Pass | A real enemy defeat entered `failed`; Enter retry restored Title, HP 10, Player x=180, encounter index 0, Boss locked, zero actors/locks, and one Canvas |
+| Encounter ordering | Pass | `forest-entry` cleared before `forest-ambush`; next index reached 2 and Boss entry changed `locked → eligible → active` without skip or duplicate |
+| Movement and dodge | Pass | Horizontal traversal and vertical Y alignment remained usable in all three viewport runs |
+| Combat blocker | Fixed | Player attack zone Y changed from above the feet body to feet-body overlap; aligned enemy HP now decreases without changing damage, animation, art, or body ownership |
+| Boss terminal ordering | Pass | Boss actor 1→0, arena lock true→false, stage completion 1, cleared entry 1 |
+| Runtime stability | Pass | One Canvas in every viewport and zero console errors during all full runs |
+| Automated checks | Pass | 69/69 tests, typecheck, lint 0 errors (8 existing warnings), both production builds |
+| Scope | Pass | No HUD, Pause, Result, replay, audio, scoring, new content, art, or balance pass added |
+| Next task | Selected | M6 / Task 6.3 — Player/Boss HUD |
