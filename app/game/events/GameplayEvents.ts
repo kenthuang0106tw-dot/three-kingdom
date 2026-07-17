@@ -1,8 +1,15 @@
 export type PlayerSnapshot = Readonly<{
   state: string;
   hp: number;
+  maxHp: number;
   x: number;
   y: number;
+}>;
+
+export type BossSnapshot = Readonly<{
+  state: string;
+  hp: number;
+  maxHp: number;
 }>;
 
 export type EnemySnapshot = Readonly<{
@@ -19,8 +26,10 @@ export type LifecycleSnapshot = Readonly<{
 }>;
 
 export type GameplaySnapshot = Readonly<{
+  flow: "title" | "playing" | "paused" | "failed" | "cleared";
   player: PlayerSnapshot;
   enemies: ReadonlyArray<EnemySnapshot>;
+  boss: BossSnapshot | null;
   lifecycle: LifecycleSnapshot;
 }>;
 
@@ -43,8 +52,10 @@ export class GameplayEventHub {
   publishSnapshot(snapshot: GameplaySnapshot) {
     const enemies = Object.freeze(snapshot.enemies.map(enemy => Object.freeze({ ...enemy })));
     this.snapshot = Object.freeze({
+      flow: snapshot.flow,
       player: Object.freeze({ ...snapshot.player }),
       enemies,
+      boss: snapshot.boss ? Object.freeze({ ...snapshot.boss }) : null,
       lifecycle: Object.freeze({ ...snapshot.lifecycle }),
     });
   }

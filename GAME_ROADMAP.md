@@ -269,6 +269,7 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 | 5R.6 | Player failure and deterministic restart（Completed 2026-07-16） | P0 | High | 5R.5, M6 flow | HP 0 → `failed`；輸入停止；restart 完整重置關卡且 10 次無 leak | flow/MainScene/tests | stale timer/listener/lock |
 | 5R.7 | Boss defeat and cleared flow（Completed 2026-07-16） | P0 | Medium | 5R.5, M5 completion, M6 flow | Boss defeat cleanup 後一次進入 `cleared`；arena release 與 event ordering 正確 | flow/events/MainScene/tests | duplicate completion |
 | 5R.8 | End-to-end Vertical Slice acceptance（Completed 2026-07-17） | P0 | High | 5R.1–5R.7 | Desktop、landscape touch、portrait fitted 各從 Title 完成整關；可失敗重試；零 soft lock/error | browser/checklist/docs | 只測捷徑而非真實流程 |
+| 5R.9 | Encounter-clear camera handoff stability | P0 | Medium | 5R.8 | 每個 encounter 最後一敵死亡時 camera 不瞬移；lock release 後連續銜接 follow；三 viewport 通關無回歸 | camera/MainScene/tests | 平滑跟隨造成延遲或改變 gate ownership |
 
 ### Recovery exclusions
 
@@ -293,7 +294,7 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 |---|---|---:|---:|---|---|---|---|
 | 6.1 | 定義 game-flow modes/reset ownership（Completed 2026-07-14） | P0 | Medium | M5 | title/playing/paused/failed/cleared transition 可測 | flow controller | 與 Scene state 重複 |
 | 6.2 | Title/start（Completed 2026-07-14） | P0 | Low | 6.1 | keyboard/touch 可開始；無重複 Scene | UI/flow | React/Phaser 混用 |
-| 6.3 | Player/Boss HUD | P0 | Medium | M1 snapshot, M5 | UI 只讀 snapshot；不同 viewport 可讀 | UI layer | 每幀重建物件 |
+| 6.3 | Player/Boss HUD（Completed 2026-07-17） | P0 | Medium | M1 snapshot, M5 | UI 只讀 snapshot；不同 viewport 可讀 | UI layer | 每幀重建物件 |
 | 6.4 | Pause/resume | P0 | Medium | M1 clock, 6.1 | input/time/audio interface 同步 | UI/flow | 與 Hit Stop 衝突 |
 | 6.5 | Failure/continue/restart | P0 | Medium | M2 reset, 6.1 | 連續失敗重試 10 次無 leak | UI/flow tests | continue 規則膨脹 |
 | 6.6 | Result/replay | P0 | Low | M5 clear | clear 後可 replay；事件只觸發一次 | UI/flow | stale state |
@@ -407,7 +408,7 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 - M6 / Task 6.1 (game-flow modes/reset ownership) completed on 2026-07-14.
 - M6 / Task 6.2 (Title/start) completed on 2026-07-14.
 - M3 and M5 playable-result acceptance corrected on 2026-07-14; their contract foundations remain accepted.
-- M6 / Task 6.3 resumed after Vertical Slice Recovery completed on 2026-07-17.
+- M6 / Task 6.3 (Player/Boss HUD) completed on 2026-07-17.
 - M5R / Task 5R.1 (three-screen world and visible camera scrolling) completed on 2026-07-14.
 - M5R / Task 5R.2 (two encounter triggers and gates) completed on 2026-07-15.
 - M5R / Task 5R.3 (Boss arena entry sequencing) completed on 2026-07-16.
@@ -416,7 +417,7 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 - M5R / Task 5R.6 (Player failure and deterministic restart) completed on 2026-07-16.
 - M5R / Task 5R.7 (Boss defeat and cleared flow) completed on 2026-07-16.
 - M5R / Task 5R.8 (End-to-end Vertical Slice acceptance) completed on 2026-07-17.
-- Next eligible task: M6 / Task 6.3 (Player/Boss HUD).
+- Next eligible task: M5R / Task 5R.9 (Encounter-clear camera handoff stability), promoted ahead of M6.4 after visible snap was reported at every encounter clear.
 
 ## 4. Global Acceptance Rules
 

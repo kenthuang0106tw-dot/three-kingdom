@@ -804,6 +804,23 @@
 | Scope | Pass | No Result UI, replay, HUD, audio, scoring, content, art, balance, or 5R.8 implementation added |
 | Next task | Selected | M5R / Task 5R.8 — End-to-end Vertical Slice acceptance |
 
+## M6 / Task 6.3 Acceptance — 2026-07-17
+
+| Check | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M6 / Task 6.3 — Player/Boss HUD |
+| Ownership | Pass | One Phaser `GameHud`; React/DOM/actors do not own HUD state |
+| Snapshot boundary | Pass | Frozen primitive flow, Player max HP, nullable Boss HP; no actor references |
+| Player lifecycle | Pass | playing 10, failed 0, cleared correct, 10 retries restore Title/10 |
+| Boss lifecycle | Pass | active 8, damaged 7, cleanup hides bar, no stale reset state |
+| Object stability | Pass | 13 HUD GameObjects remain constant through update and 10 Scene restarts |
+| Desktop | Pass | Readable fixed HUD, debug below HUD, one Canvas, zero errors |
+| Landscape touch | Pass | 844×390 / 693×390 Canvas; joystick and attack remain usable |
+| Portrait touch | Pass | 390×844 / 325×183 Canvas; joystick and attack remain usable |
+| Production | Pass | HUD remains; debug text/dataset absent; zero runtime errors |
+| Automated checks | Pass | 70/70 tests, typecheck, lint 0 errors (8 existing warnings), both builds |
+| Deferred defect | Open | Encounter-clear camera handoff snap promoted to M5R / Task 5R.9 |
+
 ## M5R / Task 5R.8 Acceptance — 2026-07-17
 
 | Check | Result | Evidence |

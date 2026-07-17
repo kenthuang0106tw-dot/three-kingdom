@@ -333,6 +333,25 @@ the accepted room behind an opaque shade; custom Title art and font assets remai
 asset work, not a hidden dependency of the flow contract. HUD, Pause, Failure,
 Result, and persistence remain separate tasks.
 
+### TD-M06 Update — Player/Boss HUD
+
+M6 / Task 6.3 adds a Phaser-owned HUD that consumes only the frozen gameplay
+snapshot. The HUD creates a fixed 13 GameObjects per Scene and mutates only
+their drawing, text, and visibility. Boss actor references remain private to
+`MainScene`; cleanup and restart publish a nullable Boss observation instead.
+Pause, Result, replay, audio, and custom HUD art remain deferred.
+
+### TD-H07 — Encounter-clear camera handoff visibly snaps
+
+- **Severity:** High
+- **Status:** Open; promoted to M5R / Task 5R.9 before M6.4.
+- **Symptom:** when the last enemy at an encounter node dies, releasing the
+  `encounter` camera lock causes a visible one-frame camera reposition. The same
+  transition is observable at each stage node.
+- **Constraint:** preserve lock ownership, gates, integer scroll, combat timing,
+  and existing camera shake. Do not hide the defect with a timeout or alter
+  enemy death/combat behavior.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

@@ -29,6 +29,7 @@ import { canConsumeBossAttackHit, getBossAttackHitboxCenter, isBossAttackActiveF
 import { selectFairAttackCandidate } from "../app/game/enemy/AttackSlotPolicy.ts";
 import { GameFlowStateMachine } from "../app/game/flow/GameFlowStateMachine.ts";
 import { TitleStartController } from "../app/game/flow/TitleStartController.ts";
+import { createHudViewModel } from "../app/game/ui/HudViewModel.ts";
 
 test("React shell mounts only the Phaser lifecycle component", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
@@ -385,19 +386,56 @@ test("Gameplay event hub publishes frozen snapshots without actor references", (
   const events = [];
   const unsubscribe = hub.subscribe(event => events.push(event));
   hub.publishSnapshot({
-    player: { state: "idle", hp: 10, x: 1, y: 2 },
+    flow: "playing",
+    player: { state: "idle", hp: 10, maxHp: 10, x: 1, y: 2 },
     enemies: [{ id: 1, state: "idle", hp: 3, x: 4, y: 5 }],
+    boss: { state: "idle", hp: 8, maxHp: 8 },
     lifecycle: { paused: false, visibilityPaused: false },
   });
   hub.publish({ type: "enemy-hit", enemyId: 1, damage: 1, at: 12 });
   const snapshot = hub.getSnapshot();
   assert.equal(Object.isFrozen(snapshot), true);
   assert.equal(Object.isFrozen(snapshot.enemies[0]), true);
+  assert.equal(Object.isFrozen(snapshot.boss), true);
   assert.equal(Object.isFrozen(events[0]), true);
   assert.equal(snapshot.enemies[0].sprite, undefined);
   unsubscribe();
   hub.publish({ type: "lifecycle-changed", paused: true, at: 13 });
   assert.equal(events.length, 1);
+});
+
+test("Phaser HUD consumes deterministic readonly player and Boss snapshots", async () => {
+  const title = createHudViewModel({
+    flow: "title",
+    player: { state: "idle", hp: 10, maxHp: 10, x: 0, y: 0 },
+    enemies: [],
+    boss: null,
+    lifecycle: { paused: false, visibilityPaused: false },
+  });
+  assert.equal(title.visible, false);
+  assert.equal(title.player.ratio, 1);
+  assert.equal(title.boss, null);
+
+  const combat = createHudViewModel({
+    flow: "playing",
+    player: { state: "hurt", hp: 7, maxHp: 10, x: 1, y: 2 },
+    enemies: [],
+    boss: { state: "attack", hp: 5, maxHp: 8 },
+    lifecycle: { paused: false, visibilityPaused: false },
+  });
+  assert.equal(combat.visible, true);
+  assert.deepEqual(combat.player, { hp: 7, maxHp: 10, ratio: 0.7 });
+  assert.deepEqual(combat.boss, { hp: 5, maxHp: 8, ratio: 0.625 });
+  assert.equal(Object.isFrozen(combat), true);
+
+  const [hud, scene] = await Promise.all([
+    readFile(new URL("../app/game/ui/GameHud.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8"),
+  ]);
+  assert.match(hud, /events\.getSnapshot\(\)/);
+  assert.match(hud, /setScrollFactor\(0\)/);
+  assert.doesNotMatch(hud, /BossActor|PlayerActor|EnemyManager/);
+  assert.equal((scene.match(/new GameHud\(/g) ?? []).length, 1);
 });
 
 test("Stage completion publishes once after explicit completion and re-arms on reset", () => {

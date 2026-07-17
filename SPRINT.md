@@ -2,14 +2,14 @@
 
 ## Sprint Goal
 
-M5R 已由桌機、手機橫向與手機直向的真實輸入完整通關驗收關閉。下一步只建立讀取既有 gameplay snapshot 的 Player/Boss HUD，不同時加入 Pause、Result、Audio 或新戰鬥內容。
+M6.3 Player/Boss HUD 已完成。下一步先處理實玩回報的 encounter-clear camera 瞬間跳動；只穩定 camera lock 到 follow 的交接，不同時加入 Pause、Result、Audio 或新戰鬥內容。
 
 ## Cadence
 
 - Duration：2 weeks
 - Capacity：1 developer + AI，約 40–55 hours
 - Milestone：M6 — Product Flow and UI
-- Scope rule：一次只做一個 UI Task；M5R 已完成，下一個唯一 Task 是 M6 / 6.3
+- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M5R / 5R.9 camera handoff stability，完成後才回到 M6 / 6.4
 
 ## Task List
 
@@ -539,6 +539,19 @@ The next eligible task is M6 / Task 6.3. Do not begin it until the next task-run
 - [x] Failure/restart 10-cycle, Boss attack 10/10/9/HP1, and two ordered encounter regressions remained green.
 - [x] `pnpm test` 69/69, typecheck, lint 0 errors (8 existing warnings), and both production builds passed.
 - [x] End-to-end Vertical Slice acceptance completed as M5R / Task 5R.8 on 2026-07-17.
+
+## M6 / Task 6.3 Closeout
+
+- [x] 新增一次建立、Scene shutdown 銷毀的 Phaser `GameHud`；React、DOM 與 gameplay actor 不擁有 HUD state。
+- [x] `GameplaySnapshot` 以 frozen primitive data 提供 flow、Player max HP 與 nullable Boss HP；HUD 不讀取 actor reference。
+- [x] Player HP 在 playing、failed、cleared 正確；失敗顯示 0，10 次 retry 後 Title 重設為 10。
+- [x] Boss bar 在 active 時顯示 8，受傷更新到 7，Boss cleanup/cleared 後隱藏；Scene reset 無 stale bar。
+- [x] HUD 固定 13 個 Phaser GameObjects，update 僅更新 graphics/text/visibility，不建立 listener 或 React tree。
+- [x] Desktop、844×390 landscape、390×844 portrait 均為單一 Canvas；觸控移動與攻擊未被 HUD 阻擋，console error 0。
+- [x] Production 保留 HUD 且移除 development debug；70/70 tests、typecheck、lint 0 errors（8 existing warnings）、兩種 production build 通過。
+- [ ] 實玩回報每個 encounter 最後一敵死亡時 camera 會瞬間重新對齊；已提升為唯一下一個 Task 5R.9，不混入 HUD commit。
+
+The next eligible task is M5R / Task 5R.9 — Encounter-clear camera handoff stability. Do not begin it until the next task-runner cycle.
 
 ## M5R / Task 5R.8 Closeout
 

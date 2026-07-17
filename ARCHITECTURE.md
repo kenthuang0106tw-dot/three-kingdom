@@ -625,6 +625,18 @@ snapshot, and returns from Scene `update()` before input, encounter progression,
 AI, damage, or camera progression. `failed` and `cleared` remain terminal and
 mutually exclusive until a later explicit product-flow task.
 
+## Phaser HUD Observation Boundary (M6 / Task 6.3)
+
+`GameHud` owns only Phaser containers, graphics, and text. It is created once by
+`MainScene`, uses `setScrollFactor(0)`, updates existing objects, and is destroyed
+with the Scene. React remains limited to mounting the Phaser lifecycle.
+
+HUD data crosses only `GameplayEventHub.getSnapshot()`. The frozen snapshot now
+contains primitive flow, Player HP/max HP, nullable Boss HP/max HP, enemies, and
+lifecycle state; no actor, sprite, body, manager, or callback crosses the
+boundary. `HudViewModel` clamps deterministic bar values independently of
+Phaser. Boss cleanup publishes `null`, so reset cannot retain a stale Boss bar.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。
