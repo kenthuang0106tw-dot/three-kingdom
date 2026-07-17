@@ -16,7 +16,7 @@ import { PlayerStateMachine } from "../app/game/player/PlayerStateMachine.ts";
 import { PlayerLifecycle } from "../app/game/player/PlayerLifecycle.ts";
 import { resolveAttack } from "../app/game/combat/CombatResolver.ts";
 import { BAMBOO_BOSS_ARENA, BAMBOO_COMBAT_ROOM, clampStagePoint, clampStageX, clampStageY, isStagePointWithin, validateStageConfig } from "../app/game/stage/StageConfig.ts";
-import { calculateCameraScroll } from "../app/game/camera/CameraFollow.ts";
+import { advanceCameraHandoff, beginCameraHandoff, calculateCameraScroll } from "../app/game/camera/CameraFollow.ts";
 import { createCameraLockState, hasCameraLock, isCameraLocked, lockCamera, unlockCamera } from "../app/game/camera/CameraLock.ts";
 import { beginEncounter, clearActiveEncounter, createBossEntryState, createEncounterFlow, createEncounterSequence, isEncounterCleared, isEncounterSequenceCleared, makeBossEntryEligible, recordEnemyRemoved, triggerBossEntry, triggerNextEncounter } from "../app/game/stage/EncounterFlow.ts";
 import { canRequestStageExit, createStageExitState, makeExitAvailable, requestStageExit, resetStageExit } from "../app/game/stage/StageExit.ts";
@@ -659,6 +659,34 @@ test("Camera follow clamps scroll to world bounds without Phaser coupling", asyn
   assert.deepEqual(calculateCameraScroll({ x: 1920, y: 560 }, BAMBOO_COMBAT_ROOM.worldBounds, viewport), { x: 1280, y: 0 });
   assert.deepEqual(calculateCameraScroll({ x: 3770, y: 560 }, BAMBOO_COMBAT_ROOM.worldBounds, viewport), { x: 2560, y: 0 });
   assert.doesNotMatch(source, /from ["']phaser["']/);
+});
+
+test("Camera handoff limits each unlock frame and converges to bounded follow", () => {
+  const stalledFrame = advanceCameraHandoff(beginCameraHandoff({ x: 261, y: 0 }), { x: 721, y: 0 }, 1000);
+  assert.deepEqual(stalledFrame, { active: true, x: 293, y: 0 });
+
+  let state = beginCameraHandoff({ x: 261, y: 0 });
+  const target = { x: 721, y: 0 };
+  let previousX = state.x;
+  let maxDelta = 0;
+
+  for (let frame = 0; frame < 60 && state.active; frame += 1) {
+    state = advanceCameraHandoff(state, target, 1000 / 60);
+    maxDelta = Math.max(maxDelta, Math.abs(state.x - previousX));
+    previousX = state.x;
+  }
+
+  assert.equal(maxDelta <= 32, true);
+  assert.deepEqual(state, { active: false, x: 721, y: 0 });
+});
+
+test("MainScene begins camera handoff before releasing encounter ownership", async () => {
+  const source = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
+  const start = source.indexOf("private handleEncounterCleared");
+  const end = source.indexOf("private showAllEnemiesDefeated", start);
+  const clearHandler = source.slice(start, end);
+  assert.ok(clearHandler.indexOf("beginCameraHandoff") < clearHandler.indexOf("unlockCamera"));
+  assert.match(source, /advanceCameraHandoff\(this\.cameraHandoff, target, this\.game\.loop\.delta\)/);
 });
 
 test("Camera lock contract preserves independent encounter and Boss ownership", async () => {

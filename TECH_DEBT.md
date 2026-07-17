@@ -341,16 +341,23 @@ their drawing, text, and visibility. Boss actor references remain private to
 `MainScene`; cleanup and restart publish a nullable Boss observation instead.
 Pause, Result, replay, audio, and custom HUD art remain deferred.
 
-### TD-H07 — Encounter-clear camera handoff visibly snaps
+### TD-H10 — Encounter-clear camera handoff visibly snaps
 
 - **Severity:** High
-- **Status:** Open; promoted to M5R / Task 5R.9 before M6.4.
+- **Status:** Resolved 2026-07-17 by M5R / Task 5R.9.
 - **Symptom:** when the last enemy at an encounter node dies, releasing the
   `encounter` camera lock causes a visible one-frame camera reposition. The same
   transition is observable at each stage node.
 - **Constraint:** preserve lock ownership, gates, integer scroll, combat timing,
   and existing camera shake. Do not hide the defect with a timeout or alter
   enemy death/combat behavior.
+- **Root cause:** `MainScene` released the encounter lock and applied the full
+  centered follow target in the same update, producing a measured 460px jump.
+- **Resolution evidence:** the pure handoff policy starts before unlock and
+  advances at 960px/s with a 32px/update safety cap. Both encounters completed
+  at maximum observed deltas of 17px desktop, 17px landscape, and 16px portrait,
+  then converged to the normal target. Boss, failure/retry, HUD, production, and
+  72 automated tests remained green.
 
 ## Resolved
 

@@ -14,7 +14,7 @@ import { PLAYER_ATTACKS, PlayerAttackController, type AttackStep } from "./playe
 import { resolveAttack } from "./combat/CombatResolver";
 import { EffectDirector, EFFECT_PARAMS } from "./combat/EffectDirector";
 import { BAMBOO_BOSS_ARENA, BAMBOO_COMBAT_ROOM, clampStageX } from "./stage/StageConfig";
-import { calculateCameraScroll } from "./camera/CameraFollow";
+import { advanceCameraHandoff, beginCameraHandoff, calculateCameraScroll, type CameraHandoffState } from "./camera/CameraFollow";
 import { createCameraLockState, hasCameraLock, isCameraLocked, lockCamera, unlockCamera, type CameraLockState } from "./camera/CameraLock";
 import { createStageExitState, makeExitAvailable, resetStageExit, type StageExitState } from "./stage/StageExit";
 import { clearActiveEncounter, createBossEntryState, createEncounterSequence, isEncounterSequenceCleared, makeBossEntryEligible, triggerBossEntry, triggerNextEncounter, type BossEntryState, type EncounterSequenceState } from "./stage/EncounterFlow";
@@ -133,6 +133,10 @@ export default class MainScene extends Phaser.Scene {
   private enemyPreviewMode = false;
   private resetSmokeMode = false;
   private encounterSmokeMode = false;
+  private cameraHandoffSmokeMode = false;
+  private cameraScrollSamples: number[] = [];
+  private cameraMaxFrameDelta = 0;
+  private cameraHandoffMaxFrameDelta = 0;
   private bossEntrySmokeMode = false;
   private bossMovementSmokeMode = false;
   private bossMovementSmokeStep = 0;
@@ -179,6 +183,7 @@ export default class MainScene extends Phaser.Scene {
   private encounterSequence: EncounterSequenceState = createEncounterSequence();
   private previousPlayerPosition = { x: START_X, y: START_FOOT_Y };
   private encounterCameraScrollX: number | null = null;
+  private cameraHandoff: CameraHandoffState = { active: false, x: 0, y: 0 };
   private bossEntryState: BossEntryState = createBossEntryState();
   private previousBossEntryPosition = { x: START_X, y: START_FOOT_Y };
 
@@ -209,9 +214,10 @@ export default class MainScene extends Phaser.Scene {
     this.bossCombatSmokeMode = development && query.get("bossCombatSmoke") === "1";
     this.bossClearedSmokeMode = development && query.get("bossClearedSmoke") === "1";
     this.failureSmokeMode = development && query.get("failureSmoke") === "1";
+    this.cameraHandoffSmokeMode = development && query.get("cameraHandoffSmoke") === "1";
     this.failureSmokeCycleActive = this.failureSmokeMode && this.failureSmokeIteration < 10;
     this.bossEntrySmokeMode = development && (query.get("bossEntrySmoke") === "1" || this.bossMovementSmokeMode);
-    this.encounterSmokeMode = development && (query.get("encounterSmoke") === "1" || this.bossEntrySmokeMode);
+    this.encounterSmokeMode = development && (query.get("encounterSmoke") === "1" || this.bossEntrySmokeMode || this.cameraHandoffSmokeMode);
     this.bossSmokeMode = development && (query.get("bossSmoke") === "1" || this.bossClearedSmokeMode);
     if (this.bossSmokeMode) this.bossSmokeLog.length = 0;
     this.bossArenaReleaseCount = 0;
@@ -245,6 +251,7 @@ export default class MainScene extends Phaser.Scene {
       delete this.game.canvas.dataset.bossCleanupReason;
       delete this.game.canvas.dataset.bossCleanupFlowState;
       delete this.game.canvas.dataset.bossClearedSmokeComplete;
+      delete this.game.canvas.dataset.cameraHandoffSmokeComplete;
       this.game.canvas.dataset.clearedEntryCount = "0";
       this.game.canvas.dataset.failureEntryCount = "0";
       this.game.canvas.dataset.failureTotalEntryCount = String(this.failureTotalEntryCount);
@@ -258,6 +265,10 @@ export default class MainScene extends Phaser.Scene {
     this.encounterSequence = createEncounterSequence();
     this.previousPlayerPosition = { x: START_X, y: START_FOOT_Y };
     this.encounterCameraScrollX = null;
+    this.cameraHandoff = { active: false, x: 0, y: 0 };
+    this.cameraScrollSamples = [];
+    this.cameraMaxFrameDelta = 0;
+    this.cameraHandoffMaxFrameDelta = 0;
     this.bossEntryState = createBossEntryState();
     this.previousBossEntryPosition = { x: START_X, y: START_FOOT_Y };
     this.bossActor = undefined;
@@ -454,16 +465,33 @@ export default class MainScene extends Phaser.Scene {
   }
 
   private updateCamera() {
+    const wasHandoffActive = this.cameraHandoff.active;
     if (!isCameraLocked(this.cameraLockState)) {
-      const scroll = calculateCameraScroll(
+      const target = calculateCameraScroll(
         { x: this.playerBodyZone.x, y: this.playerBodyZone.y },
         BAMBOO_COMBAT_ROOM.worldBounds,
         { width: this.cameras.main.width, height: this.cameras.main.height },
       );
-      this.cameras.main.setScroll(Math.round(scroll.x), Math.round(scroll.y));
+      this.cameraHandoff = this.cameraHandoff.active
+        ? advanceCameraHandoff(this.cameraHandoff, target, this.game.loop.delta)
+        : { active: false, x: target.x, y: target.y };
+      this.cameras.main.setScroll(Math.round(this.cameraHandoff.x), Math.round(this.cameraHandoff.y));
     }
     if (process.env.NODE_ENV !== "production") {
-      this.game.canvas.dataset.cameraScrollX = String(Math.round(this.cameras.main.scrollX));
+      const cameraScrollX = Math.round(this.cameras.main.scrollX);
+      const previousScrollX = this.cameraScrollSamples.at(-1);
+      if (previousScrollX !== undefined) {
+        const frameDelta = Math.abs(cameraScrollX - previousScrollX);
+        this.cameraMaxFrameDelta = Math.max(this.cameraMaxFrameDelta, frameDelta);
+        if (wasHandoffActive) this.cameraHandoffMaxFrameDelta = Math.max(this.cameraHandoffMaxFrameDelta, frameDelta);
+      }
+      this.cameraScrollSamples.push(cameraScrollX);
+      if (this.cameraScrollSamples.length > 60) this.cameraScrollSamples.shift();
+      this.game.canvas.dataset.cameraScrollX = String(cameraScrollX);
+      this.game.canvas.dataset.cameraScrollSamples = this.cameraScrollSamples.join(",");
+      this.game.canvas.dataset.cameraMaxFrameDelta = String(this.cameraMaxFrameDelta);
+      this.game.canvas.dataset.cameraHandoffMaxFrameDelta = String(this.cameraHandoffMaxFrameDelta);
+      this.game.canvas.dataset.cameraHandoffActive = String(this.cameraHandoff.active);
       this.game.canvas.dataset.playerWorldX = String(Math.round(this.playerBodyZone.x));
     }
   }
@@ -686,6 +714,7 @@ export default class MainScene extends Phaser.Scene {
       { width: this.cameras.main.width, height: this.cameras.main.height },
     );
     this.cameras.main.setScroll(Math.round(scroll.x), Math.round(scroll.y));
+    this.cameraHandoff = { active: false, x: scroll.x, y: scroll.y };
     this.encounterCameraScrollX = Math.round(scroll.x);
     this.encounterSequence = triggered.state;
     this.cameraLockState = lockCamera(this.cameraLockState, "encounter");
@@ -696,10 +725,20 @@ export default class MainScene extends Phaser.Scene {
   private updateEncounterSmoke() {
     if (!this.encounterSmokeMode) return;
     if (this.encounterSequence.activeEncounterId) {
+      if (this.cameraHandoffSmokeMode && this.encounterCameraScrollX !== null) {
+        this.playerBody.reset(this.encounterCameraScrollX + 1100, this.playerBodyZone.y);
+      }
       for (const enemy of this.enemyManager.getLivingEnemies()) {
         if (enemy.state !== "hurt" && enemy.state !== "dead") this.enemyManager.damage(enemy);
       }
       return;
+    }
+    if (this.cameraHandoffSmokeMode && this.encounterSequence.nextEncounterIndex > 0) {
+      if (this.cameraHandoff.active) return;
+      if (this.encounterSequence.nextEncounterIndex >= BAMBOO_COMBAT_ROOM.encounters.length) {
+        this.game.canvas.dataset.cameraHandoffSmokeComplete = "true";
+        return;
+      }
     }
     const encounter = BAMBOO_COMBAT_ROOM.encounters[this.encounterSequence.nextEncounterIndex];
     if (!encounter) return;
@@ -721,6 +760,7 @@ export default class MainScene extends Phaser.Scene {
     if (!encounterId) return;
     this.encounterSequence = clearActiveEncounter(this.encounterSequence, encounterId);
     this.encounterCameraScrollX = null;
+    this.cameraHandoff = beginCameraHandoff({ x: this.cameras.main.scrollX, y: this.cameras.main.scrollY });
     this.cameraLockState = unlockCamera(this.cameraLockState, "encounter");
     this.updateEncounterDataset();
     if (isEncounterSequenceCleared(this.encounterSequence, BAMBOO_COMBAT_ROOM.encounters.length)) {
@@ -1040,6 +1080,7 @@ export default class MainScene extends Phaser.Scene {
   private activateBossArena(development: boolean) {
     this.cameraLockState = lockCamera(this.cameraLockState, "boss");
     this.cameras.main.setScroll(BAMBOO_BOSS_ARENA.cameraScroll.x, BAMBOO_BOSS_ARENA.cameraScroll.y);
+    this.cameraHandoff = { active: false, x: BAMBOO_BOSS_ARENA.cameraScroll.x, y: BAMBOO_BOSS_ARENA.cameraScroll.y };
     if (development) {
       const { x, y, width, height } = BAMBOO_BOSS_ARENA.bounds;
       this.bossArenaDebug = this.add.graphics().lineStyle(2, 0x38d9ff, 0.9)

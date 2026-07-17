@@ -838,3 +838,23 @@
 | Automated checks | Pass | 69/69 tests, typecheck, lint 0 errors (8 existing warnings), both production builds |
 | Scope | Pass | No HUD, Pause, Result, replay, audio, scoring, new content, art, or balance pass added |
 | Next task | Selected | M6 / Task 6.3 — Player/Boss HUD |
+
+## M5R / Task 5R.9 Acceptance — 2026-07-17
+
+| Check | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M5R / Task 5R.9 — Encounter-clear camera handoff stability |
+| Reproduction | Pass | Development telemetry measured the original lock-release frame at `261 → 721`, a 460px jump |
+| Pure policy | Pass | Handoff convergence and 32px/update stalled-frame cap covered by deterministic tests |
+| Ownership order | Pass | Handoff begins at current scroll before `encounter` unlock; encounter/Boss authoritative locks cancel it explicitly |
+| Two encounters | Pass | `forest-entry` and `forest-ambush` both cleared through runtime flow; each handoff converged to `scrollX=1821` without soft lock |
+| Desktop | Pass | Maximum observed handoff frame delta 17px; one Canvas and zero console errors |
+| Landscape touch | Pass | 844×390 / 693×390 Canvas; maximum delta 17px; joystick movement and attack worked after handoff |
+| Portrait touch | Pass | 390×844 / 325×183 Canvas; maximum delta 16px; joystick movement and attack worked after handoff |
+| Boss regressions | Pass | Boss entry retained arena lock at `scrollX=2560`; Boss clear released once and entered `cleared` once |
+| Failure regression | Pass | 10 failure/restart cycles restored Title, HP 10, zero locks and camera scroll 0 |
+| HUD regression | Pass | Player HUD remained visible; Boss HUD appeared only for active Boss and cleared without stale state |
+| Production | Pass | One Canvas, development telemetry absent, zero runtime errors |
+| Automated checks | Pass | 72/72 tests, typecheck, lint 0 errors (8 existing warnings), both production builds |
+| Scope | Pass | No Pause, Result, Audio, gameplay, combat, content, art, or balance feature added |
+| Next task | Selected | M6 / Task 6.4 — Pause/resume |

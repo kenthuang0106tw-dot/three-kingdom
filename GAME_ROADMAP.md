@@ -21,11 +21,11 @@
 | Player | Playable prototype | 關羽移動、idle、walk、attack1–3、hurt |
 | Combat | Playable prototype | Combo、獨立 hitbox、multi-hit、Hit Stop、Flash、Spark、Knockback、Shake |
 | Enemy | Playable prototype | 三種近戰小兵、混合 Formation、Attack Slot、hurt/dead/cleanup |
-| Boss | Recovery required | Actor lifecycle／動畫／death cleanup 已有；缺 movement、對線、attack hitbox 與 player damage |
-| Stage | Recovery in progress | 3840×720 三畫面世界與 traversal 已完成；缺兩場 encounter 與 Boss 進場流程 |
-| Camera | Visible traversal | follow、整數 scroll 與 0–2560 clamp 已接入；encounter/Boss lock sequencing 尚未接入 |
-| Mobile | Missing | 無正式 Phaser touch input；下一步 Task 1.2 |
-| UI | Title only | Phaser Title/start 已完成；無 HUD、pause、continue、result |
+| Boss | Playable prototype | locomotion、對線、attack hitbox、player damage、death cleanup 與 arena lifecycle 已接入 |
+| Stage | Playable vertical slice | 3840×720 三畫面世界、兩場 encounter、Boss 進場與 terminal flow 已完成 |
+| Camera | Stable vertical slice | bounded integer follow、encounter/Boss locks 與 encounter-clear 連續 handoff 已接入 |
+| Mobile | Playable prototype | Phaser 360° touch joystick、attack 與 FIT viewport acceptance 已完成 |
+| UI | HUD prototype | Phaser Title/start 與 Player/Boss HUD 已完成；缺 pause、continue、result |
 | Audio | Missing | 無 runtime assets |
 | Tests | Contract baseline | app shell、lifecycle、route 與 multi-enemy source contracts 已建立 |
 | Repository | Baseline | baseline、UTF-8、單一 runtime、pnpm、lint/typecheck、tests、production routes 已完成 |
@@ -249,7 +249,7 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 
 ## Milestone 5R — Vertical Slice Recovery
 
-**Status:** Completed 2026-07-17。M6.1–6.2 保留，M6.3 現在可依單一 Task 流程恢復。
+**Status:** Completed 2026-07-17。5R.1–5R.9 全部通過；下一個唯一 Task 回到 M6 / 6.4。
 
 **Playable Result:** 玩家從 Title 開始，在至少三個畫面寬的竹林中前進，完成兩場分段 encounter，進入 Boss arena，與會移動且能傷害玩家的 Boss 互相攻防，最後進入 `cleared` 或 `failed`。
 
@@ -269,7 +269,7 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 | 5R.6 | Player failure and deterministic restart（Completed 2026-07-16） | P0 | High | 5R.5, M6 flow | HP 0 → `failed`；輸入停止；restart 完整重置關卡且 10 次無 leak | flow/MainScene/tests | stale timer/listener/lock |
 | 5R.7 | Boss defeat and cleared flow（Completed 2026-07-16） | P0 | Medium | 5R.5, M5 completion, M6 flow | Boss defeat cleanup 後一次進入 `cleared`；arena release 與 event ordering 正確 | flow/events/MainScene/tests | duplicate completion |
 | 5R.8 | End-to-end Vertical Slice acceptance（Completed 2026-07-17） | P0 | High | 5R.1–5R.7 | Desktop、landscape touch、portrait fitted 各從 Title 完成整關；可失敗重試；零 soft lock/error | browser/checklist/docs | 只測捷徑而非真實流程 |
-| 5R.9 | Encounter-clear camera handoff stability | P0 | Medium | 5R.8 | 每個 encounter 最後一敵死亡時 camera 不瞬移；lock release 後連續銜接 follow；三 viewport 通關無回歸 | camera/MainScene/tests | 平滑跟隨造成延遲或改變 gate ownership |
+| 5R.9 | Encounter-clear camera handoff stability（Completed 2026-07-17） | P0 | Medium | 5R.8 | 每個 encounter 最後一敵死亡時 camera 不瞬移；lock release 後連續銜接 follow；三 viewport 通關無回歸 | camera/MainScene/tests | 平滑跟隨造成延遲或改變 gate ownership |
 
 ### Recovery exclusions
 
@@ -280,7 +280,7 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 
 ## Milestone 6 — Product Flow and UI
 
-**Status:** 6.1–6.2 completed；M5R recovery 已通過，下一個唯一 Task 是 6.3。
+**Status:** 6.1–6.3 completed；M5R recovery 與 camera handoff 已通過，下一個唯一 Task 是 6.4。
 
 **Playable Result:** 玩家可從 Title 開始、查看 HUD、暫停、失敗、重試、擊敗 Boss 並看到 Result。
 
@@ -417,7 +417,8 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 - M5R / Task 5R.6 (Player failure and deterministic restart) completed on 2026-07-16.
 - M5R / Task 5R.7 (Boss defeat and cleared flow) completed on 2026-07-16.
 - M5R / Task 5R.8 (End-to-end Vertical Slice acceptance) completed on 2026-07-17.
-- Next eligible task: M5R / Task 5R.9 (Encounter-clear camera handoff stability), promoted ahead of M6.4 after visible snap was reported at every encounter clear.
+- M5R / Task 5R.9 (Encounter-clear camera handoff stability) completed on 2026-07-17.
+- Next eligible task: M6 / Task 6.4 (Pause/resume).
 
 ## 4. Global Acceptance Rules
 
@@ -434,6 +435,6 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 
 ## 5. Required Development Order
 
-`M0 Baseline → M1 Runtime Contracts → M2 Combat Room → M3 Stage Contracts → M4 Enemy Variety → M5 Boss Contracts → M5R Vertical Slice Recovery → M6 Product Flow (resume at 6.3) → M7 Audio → M8 Polish → M9 Release`
+`M0 Baseline → M1 Runtime Contracts → M2 Combat Room → M3 Stage Contracts → M4 Enemy Variety → M5 Boss Contracts → M5R Vertical Slice Recovery → M6 Product Flow (resume at 6.4) → M7 Audio → M8 Polish → M9 Release`
 
 不得跳過 M3 先擴敵人內容；不得跳過 M1/M2 直接加入 Stage 或 Boss。

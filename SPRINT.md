@@ -2,14 +2,14 @@
 
 ## Sprint Goal
 
-M6.3 Player/Boss HUD 已完成。下一步先處理實玩回報的 encounter-clear camera 瞬間跳動；只穩定 camera lock 到 follow 的交接，不同時加入 Pause、Result、Audio 或新戰鬥內容。
+M5R.9 encounter-clear camera handoff 已完成。下一步只執行 M6.4 Pause/resume，建立與 Hit Stop 相容的明確暫停生命週期，不同時加入 Result、Audio 或新戰鬥內容。
 
 ## Cadence
 
 - Duration：2 weeks
 - Capacity：1 developer + AI，約 40–55 hours
 - Milestone：M6 — Product Flow and UI
-- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M5R / 5R.9 camera handoff stability，完成後才回到 M6 / 6.4
+- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M6 / 6.4 Pause/resume
 
 ## Task List
 
@@ -23,6 +23,8 @@ M6.3 Player/Boss HUD 已完成。下一步先處理實玩回報的 encounter-cle
 | 6 | ✅ M5R / Task 5R.6 — Player failure and deterministic restart | 12–18h | HP 0 進入 failed 並可完整重啟 | failure/restart browser acceptance passed |
 | 7 | ✅ M5R / Task 5R.7 — Boss defeat and cleared flow | 8–12h | Boss cleanup 後一次進入 cleared | defeat/clear ordering browser acceptance passed |
 | 8 | ✅ M5R / Task 5R.8 — End-to-end Vertical Slice acceptance | 16–24h | 從 Title 真實完成整關與失敗重試 | desktop/mobile full-run acceptance passed |
+| 9 | ✅ M5R / Task 5R.9 — Encounter-clear camera handoff stability | 6–10h | lock release 連續銜接 bounded follow | tests + three-viewport browser acceptance passed |
+| 10 | M6 / Task 6.4 — Pause/resume | 8–12h | 明確 pause/resume flow 與 clock/input ownership | tests + desktop/mobile browser acceptance |
 
 ## Recovery Planning Correction — 2026-07-14
 
@@ -549,9 +551,19 @@ The next eligible task is M6 / Task 6.3. Do not begin it until the next task-run
 - [x] HUD 固定 13 個 Phaser GameObjects，update 僅更新 graphics/text/visibility，不建立 listener 或 React tree。
 - [x] Desktop、844×390 landscape、390×844 portrait 均為單一 Canvas；觸控移動與攻擊未被 HUD 阻擋，console error 0。
 - [x] Production 保留 HUD 且移除 development debug；70/70 tests、typecheck、lint 0 errors（8 existing warnings）、兩種 production build 通過。
-- [ ] 實玩回報每個 encounter 最後一敵死亡時 camera 會瞬間重新對齊；已提升為唯一下一個 Task 5R.9，不混入 HUD commit。
+- [x] 實玩回報的 encounter-clear camera 瞬間重新對齊已由 M5R / Task 5R.9 修正，不混入 HUD commit。
 
-The next eligible task is M5R / Task 5R.9 — Encounter-clear camera handoff stability. Do not begin it until the next task-runner cycle.
+## M5R / Task 5R.9 Closeout
+
+- [x] 先以 development telemetry 重現 lock release 當幀 `cameraScrollX 261 → 721`，單幀跳動 460px。
+- [x] `CameraFollow` 新增 Phaser-free handoff policy；從既有 scroll 以 960px/s、每 update 最多 32px 追向動態 bounded target。
+- [x] `MainScene` 在釋放 `encounter` lock 前開始 handoff；新 encounter lock 與 Boss arena lock 會明確結束 handoff ownership。
+- [x] 兩場 encounter runtime smoke 均完成；desktop 最大單幀 17px、844×390 landscape 17px、390×844 portrait 16px，最後全部收斂至 `scrollX=1821`。
+- [x] Landscape／portrait 的 360° touch joystick 與 attack 在 handoff 後仍可用；Boss entry、Boss clear、failure/retry 與 HUD 回歸通過。
+- [x] Production 保留單一 Canvas、移除 development telemetry 且零 console error。
+- [x] `pnpm test` 72/72、typecheck、lint 0 errors（8 existing warnings）與兩種 production build 通過。
+
+The next eligible task is M6 / Task 6.4 — Pause/resume. Do not begin it until the next task-runner cycle.
 
 ## M5R / Task 5R.8 Closeout
 

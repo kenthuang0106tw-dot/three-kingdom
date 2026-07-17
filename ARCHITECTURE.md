@@ -637,6 +637,28 @@ lifecycle state; no actor, sprite, body, manager, or callback crosses the
 boundary. `HudViewModel` clamps deterministic bar values independently of
 Phaser. Boss cleanup publishes `null`, so reset cannot retain a stale Boss bar.
 
+## Encounter-clear Camera Handoff Contract (M5R / Task 5R.9)
+
+`CameraFollow.ts` owns a Phaser-free handoff policy in addition to the existing
+bounded follow calculation. `beginCameraHandoff()` captures the camera's current
+scroll before `MainScene` releases the `encounter` lock. While active,
+`advanceCameraHandoff()` follows the current bounded target at 960px/s with a
+hard maximum of 32px per update, including a stalled frame. This prevents the
+former one-frame jump while still converging if the player continues moving.
+
+`MainScene` is the composition boundary: it supplies `game.loop.delta`, rounds
+the returned scroll before applying it to the pixel camera, and keeps camera
+shake independent from follow ownership. A new encounter lock or Boss arena
+lock explicitly ends the handoff because those systems provide an authoritative
+scroll. Enemy death, combat timing, player position, gates, and lock ownership
+are not delayed or modified to hide the transition.
+
+Development-only `cameraHandoffSmoke` telemetry records consecutive scroll
+samples and maximum frame delta across both encounters. It observes the real
+Scene progression but is absent from production. The accepted three-viewport
+run reduced the former 460px release-frame jump to 16–17px and converged to the
+normal target without a soft lock.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

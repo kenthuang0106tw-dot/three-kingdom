@@ -1,34 +1,36 @@
 # Next Task
 
-## M5R / Task 5R.9 — Encounter-clear camera handoff stability
+## M6 / Task 6.4 — Pause/resume
 
 ### Why this is next
 
-實玩確認每個 encounter 的最後一名敵人死亡時，`encounter` camera lock 釋放到一般 follow 的交接會產生可見瞬移。這是既有 Vertical Slice 每個關卡節點都會遇到的體驗缺陷，應在加入 Pause 等新 UI 前獨立修正，避免後續流程建立在不穩定的 camera transition 上。
+Vertical Slice、Title、HUD 與 encounter-clear camera handoff 已完成。Pause/resume 是下一個最小產品流程缺口，也必須在 Failure/continue、Result 與 Audio 前固定 input、clock、physics、animation、tween 和 Hit Stop 的所有權，避免後續各系統自行暫停造成互相衝突。
 
 ### Completion criteria
 
-- 先以 deterministic test 與 browser smoke 重現每個 encounter clear 的 camera snap，再修改。
-- 最後一名敵人死亡、camera lock 釋放的當幀，scroll 不得瞬間跳到新的 follow target。
-- lock release 後 camera 必須從現有 scroll 連續銜接到正常 bounded follow；不得永久落後玩家。
-- 保留 integer/round-pixel policy、world bounds、encounter gate、Boss lock、camera shake 與 restart ownership。
-- 個別敵人死亡但 encounter 尚未 cleared 時不得釋放 lock 或觸發 handoff。
-- 不得使用 `setTimeout`、`setInterval`、傳送玩家、延遲敵人死亡或修改戰鬥資料來遮掩跳動。
-- Desktop、844×390 landscape、390×844 portrait 各完整走過兩個 encounter，clear 前後可控制且無 visible snap、soft lock 或 runtime error。
-- Boss entry/arena、failed/retry、cleared、HUD 與 production build 全部保持通過。
+- 只允許從 `playing` 進入 `paused`，並可回到同一個 `playing` runtime；不得重建 Phaser Game 或 Scene。
+- Keyboard 與 touch 都可明確 pause/resume；單次輸入只觸發一次 transition，不累積 listener。
+- 暫停時 Player、Enemy、Boss、Physics、animation、tween、encounter progression 與 combat timing 全部停止，attack hitbox 不產生新命中。
+- Resume 後保留原有 HP、位置、state、encounter、Boss 與 camera ownership，方向輸入必須重新讀取當前狀態且不得黏鍵。
+- Pause 與 Hit Stop 使用明確且可測的不同 ownership；在攻擊、受傷或 Hit Stop 邊界暫停／恢復不得永久凍結或提前恢復。
+- 顯示最小 Phaser-owned Pause overlay；React/DOM 不保存 gameplay 或 pause state。
+- Scene shutdown/restart 後不殘留 keyboard、pointer、timer、overlay 或 pause ownership。
+- Desktop、844×390 landscape、390×844 portrait 各完成 pause/resume；HUD、兩場 encounter、Boss、failure/retry 與 camera handoff 無回歸。
+- Production build 不顯示 development debug，單一 Canvas 且零 runtime error。
 
 ### Validation
 
-- 純 camera contract 測試覆蓋 locked scroll → release frame → follow convergence，以及 bounds/rounding。
-- Browser 記錄兩個 encounter clear 前後連續數幀的 `cameraScrollX`，確認沒有單幀不連續跳動且最後收斂。
-- 重跑 desktop、landscape touch、portrait touch traversal；每個 viewport 一個 Canvas、controls 可用、console error 0。
-- 重跑 Boss arena lock/release、failure/retry、HUD reset regression。
+- 純 game-flow／pause ownership 測試覆蓋 `playing → paused → playing`、非法 transition、Hit Stop 交錯與 restart reset。
+- Browser 在 idle、walk、attack／hurt 或 Hit Stop 邊界各驗證一次暫停與恢復；暫停期間位置、HP、動畫 frame 與 camera 不前進。
+- 重跑 keyboard、landscape touch、portrait touch；resume 後 movement/attack 可立即再次使用且無 stuck input。
+- 重跑兩場 encounter、Boss entry/clear、failure/retry、HUD 與 camera-handoff regression。
 - 執行 `pnpm test`、`pnpm typecheck`、`pnpm lint`、`pnpm build`、`pnpm build:github-pages`。
 
 ### Estimated files
 
-- `app/game/camera/CameraFollow.ts` 或一個最小 camera handoff policy module
+- `app/game/flow/GameFlowStateMachine.ts`
 - `app/game/MainScene.ts`
+- `app/game/ui/` 下最小 Pause overlay／touch control integration
 - `tests/app-contracts.test.mjs`
 - `GAME_ROADMAP.md`
 - `SPRINT.md`
@@ -39,7 +41,7 @@
 
 ### Estimated risk
 
-- 平滑 handoff 若與 encounter/Boss lock ownership混合，可能造成 camera 永久落後或 soft lock。
-- 浮點 easing 可能破壞 pixel-art 整數 scroll，必須在最終輸出保持 round pixels。
-- camera shake 與 follow handoff 若共用同一位置來源，可能互相覆蓋。
-- 手機 FIT 不改 logical camera，但較小顯示面積更容易暴露一幀跳動，三 viewport 都必須實測。
+- Phaser Clock、Arcade Physics、animation 與 tween 若由不同路徑恢復，可能造成部分系統永久凍結或在 pause 中繼續。
+- Hit Stop 與 Pause 若共用單一 boolean，resume 可能錯誤解除仍有效的另一種 freeze ownership。
+- Touch pointer 在 Pause overlay 開啟時若未正確消費／釋放，可能造成 resume 後黏住 movement 或 attack。
+- Scene restart 若未清除 pause listener／overlay，可能重複觸發或增加 GameObject。
