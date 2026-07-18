@@ -1,0 +1,577 @@
+{
+  "actor": "duelist",
+  "cell": {
+    "width": 384,
+    "height": 384
+  },
+  "feetAnchor": {
+    "x": 192,
+    "y": 354
+  },
+  "displayScale": 0.94,
+  "sourceFacing": 1,
+  "targetLogicalIdleHeight": 205,
+  "logicalIdleHeight": 212.44,
+  "animations": {
+    "idle": [
+      "idle-0",
+      "idle-1"
+    ],
+    "walk": [
+      "walk-0",
+      "walk-1",
+      "walk-2",
+      "walk-3"
+    ],
+    "attack": [
+      "attack-0",
+      "attack-1",
+      "attack-2"
+    ],
+    "hurt": [
+      "hurt-0",
+      "hurt-1"
+    ],
+    "dead": [
+      "dead-0",
+      "dead-1",
+      "dead-2",
+      "dead-3"
+    ]
+  },
+  "provenance": {
+    "original": true,
+    "source": "duelist-source.png",
+    "sourceLayout": "four-by-four-grid",
+    "processingTool": "tools/build_enemy_art.py",
+    "processingRevision": "2.0",
+    "generatedBy": "built-in image generation in earlier asset tasks; no new generation in M6A.3"
+  },
+  "frames": [
+    {
+      "name": "idle-0",
+      "animation": "idle",
+      "phase": null,
+      "sourceImage": "duelist-source-transparent.png",
+      "sourceRect": {
+        "x": 0,
+        "y": 0,
+        "width": 314,
+        "height": 314,
+        "alphaX": 89,
+        "alphaY": 64,
+        "alphaWidth": 150,
+        "alphaHeight": 226
+      },
+      "runtimeAlphaBounds": {
+        "x": 117,
+        "y": 128,
+        "width": 150,
+        "height": 226
+      },
+      "originX": 0.5,
+      "originY": 0.921875,
+      "displayOffsetX": 117,
+      "displayOffsetY": 128,
+      "feetAnchor": {
+        "x": 192,
+        "y": 354
+      },
+      "displayScale": 0.94,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "301b077049a4b82a8bfad573c98bfca251448037ddffee2a92bdfb8ce88a9ffa"
+    },
+    {
+      "name": "idle-1",
+      "animation": "idle",
+      "phase": null,
+      "sourceImage": "duelist-source-transparent.png",
+      "sourceRect": {
+        "x": 314,
+        "y": 0,
+        "width": 313,
+        "height": 314,
+        "alphaX": 75,
+        "alphaY": 64,
+        "alphaWidth": 159,
+        "alphaHeight": 226
+      },
+      "runtimeAlphaBounds": {
+        "x": 112,
+        "y": 128,
+        "width": 159,
+        "height": 226
+      },
+      "originX": 0.5,
+      "originY": 0.921875,
+      "displayOffsetX": 112,
+      "displayOffsetY": 128,
+      "feetAnchor": {
+        "x": 192,
+        "y": 354
+      },
+      "displayScale": 0.94,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "9ffca8ae6162e8a4eea2b9b566ae0322f97f4efa845a1587ecbe623a347351eb"
+    },
+    {
+      "name": "walk-0",
+      "animation": "walk",
+      "phase": null,
+      "sourceImage": "duelist-source-transparent.png",
+      "sourceRect": {
+        "x": 627,
+        "y": 0,
+        "width": 313,
+        "height": 314,
+        "alphaX": 57,
+        "alphaY": 77,
+        "alphaWidth": 162,
+        "alphaHeight": 215
+      },
+      "runtimeAlphaBounds": {
+        "x": 111,
+        "y": 139,
+        "width": 162,
+        "height": 215
+      },
+      "originX": 0.5,
+      "originY": 0.921875,
+      "displayOffsetX": 111,
+      "displayOffsetY": 139,
+      "feetAnchor": {
+        "x": 192,
+        "y": 354
+      },
+      "displayScale": 0.94,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "6d4b9a3bddb56f050c3282d018a3a10c56d43043384c5f8a84cbfd0e8081c640"
+    },
+    {
+      "name": "walk-1",
+      "animation": "walk",
+      "phase": null,
+      "sourceImage": "duelist-source-transparent.png",
+      "sourceRect": {
+        "x": 940,
+        "y": 0,
+        "width": 314,
+        "height": 314,
+        "alphaX": 51,
+        "alphaY": 77,
+        "alphaWidth": 158,
+        "alphaHeight": 215
+      },
+      "runtimeAlphaBounds": {
+        "x": 113,
+        "y": 139,
+        "width": 158,
+        "height": 215
+      },
+      "originX": 0.5,
+      "originY": 0.921875,
+      "displayOffsetX": 113,
+      "displayOffsetY": 139,
+      "feetAnchor": {
+        "x": 192,
+        "y": 354
+      },
+      "displayScale": 0.94,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "bfa5878c043ed3212a10629b4b1e60494c9f2b703f0806076b5daaa45dad0297"
+    },
+    {
+      "name": "walk-2",
+      "animation": "walk",
+      "phase": null,
+      "sourceImage": "duelist-source-transparent.png",
+      "sourceRect": {
+        "x": 0,
+        "y": 314,
+        "width": 314,
+        "height": 313,
+        "alphaX": 72,
+        "alphaY": 72,
+        "alphaWidth": 162,
+        "alphaHeight": 216
+      },
+      "runtimeAlphaBounds": {
+        "x": 111,
+        "y": 138,
+        "width": 162,
+        "height": 216
+      },
+      "originX": 0.5,
+      "originY": 0.921875,
+      "displayOffsetX": 111,
+      "displayOffsetY": 138,
+      "feetAnchor": {
+        "x": 192,
+        "y": 354
+      },
+      "displayScale": 0.94,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "3119a82f3c5cf2fe3d291261fc5ea8f2307758dde647a0f544e4257e9427aa60"
+    },
+    {
+      "name": "walk-3",
+      "animation": "walk",
+      "phase": null,
+      "sourceImage": "duelist-source-transparent.png",
+      "sourceRect": {
+        "x": 314,
+        "y": 314,
+        "width": 313,
+        "height": 313,
+        "alphaX": 64,
+        "alphaY": 76,
+        "alphaWidth": 155,
+        "alphaHeight": 212
+      },
+      "runtimeAlphaBounds": {
+        "x": 114,
+        "y": 142,
+        "width": 155,
+        "height": 212
+      },
+      "originX": 0.5,
+      "originY": 0.921875,
+      "displayOffsetX": 114,
+      "displayOffsetY": 142,
+      "feetAnchor": {
+        "x": 192,
+        "y": 354
+      },
+      "displayScale": 0.94,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "339e5178c50cfc7e198633dfa2a8dc477cdd77ce611f569efe6f1e8bf67793b9"
+    },
+    {
+      "name": "attack-0",
+      "animation": "attack",
+      "phase": "startup",
+      "sourceImage": "duelist-source-transparent.png",
+      "sourceRect": {
+        "x": 627,
+        "y": 314,
+        "width": 313,
+        "height": 313,
+        "alphaX": 60,
+        "alphaY": 56,
+        "alphaWidth": 172,
+        "alphaHeight": 230
+      },
+      "runtimeAlphaBounds": {
+        "x": 106,
+        "y": 124,
+        "width": 172,
+        "height": 230
+      },
+      "originX": 0.5,
+      "originY": 0.921875,
+      "displayOffsetX": 106,
+      "displayOffsetY": 124,
+      "feetAnchor": {
+        "x": 192,
+        "y": 354
+      },
+      "displayScale": 0.94,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "3508852410b6caa75274d804b0d4b6c9d357457af043912b079278a8929e5b1d"
+    },
+    {
+      "name": "attack-1",
+      "animation": "attack",
+      "phase": "active",
+      "sourceImage": "duelist-source-transparent.png",
+      "sourceRect": {
+        "x": 940,
+        "y": 314,
+        "width": 314,
+        "height": 313,
+        "alphaX": 21,
+        "alphaY": 83,
+        "alphaWidth": 211,
+        "alphaHeight": 203
+      },
+      "runtimeAlphaBounds": {
+        "x": 86,
+        "y": 151,
+        "width": 211,
+        "height": 203
+      },
+      "originX": 0.5,
+      "originY": 0.921875,
+      "displayOffsetX": 86,
+      "displayOffsetY": 151,
+      "feetAnchor": {
+        "x": 192,
+        "y": 354
+      },
+      "displayScale": 0.94,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "5fe7ef9cbc45d40d88f2f3b90a769c90ac18c76c95aaa60547a96508d7fb3213"
+    },
+    {
+      "name": "attack-2",
+      "animation": "attack",
+      "phase": "recovery",
+      "sourceImage": "duelist-source-transparent.png",
+      "sourceRect": {
+        "x": 0,
+        "y": 627,
+        "width": 314,
+        "height": 313,
+        "alphaX": 60,
+        "alphaY": 50,
+        "alphaWidth": 223,
+        "alphaHeight": 208
+      },
+      "runtimeAlphaBounds": {
+        "x": 80,
+        "y": 146,
+        "width": 223,
+        "height": 208
+      },
+      "originX": 0.5,
+      "originY": 0.921875,
+      "displayOffsetX": 80,
+      "displayOffsetY": 146,
+      "feetAnchor": {
+        "x": 192,
+        "y": 354
+      },
+      "displayScale": 0.94,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "51b120390407e479661e4361456213f195d865cca2002bd357b9eb5fd7491a21"
+    },
+    {
+      "name": "hurt-0",
+      "animation": "hurt",
+      "phase": null,
+      "sourceImage": "duelist-source-transparent.png",
+      "sourceRect": {
+        "x": 314,
+        "y": 627,
+        "width": 313,
+        "height": 313,
+        "alphaX": 46,
+        "alphaY": 47,
+        "alphaWidth": 217,
+        "alphaHeight": 211
+      },
+      "runtimeAlphaBounds": {
+        "x": 83,
+        "y": 143,
+        "width": 217,
+        "height": 211
+      },
+      "originX": 0.5,
+      "originY": 0.921875,
+      "displayOffsetX": 83,
+      "displayOffsetY": 143,
+      "feetAnchor": {
+        "x": 192,
+        "y": 354
+      },
+      "displayScale": 0.94,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "4410dfad7e2a28605a474fdb8d7015468eb2f1d2a0883d4a4ac48378d0125a0d"
+    },
+    {
+      "name": "hurt-1",
+      "animation": "hurt",
+      "phase": null,
+      "sourceImage": "duelist-source-transparent.png",
+      "sourceRect": {
+        "x": 627,
+        "y": 627,
+        "width": 313,
+        "height": 313,
+        "alphaX": 60,
+        "alphaY": 51,
+        "alphaWidth": 188,
+        "alphaHeight": 206
+      },
+      "runtimeAlphaBounds": {
+        "x": 98,
+        "y": 148,
+        "width": 188,
+        "height": 206
+      },
+      "originX": 0.5,
+      "originY": 0.921875,
+      "displayOffsetX": 98,
+      "displayOffsetY": 148,
+      "feetAnchor": {
+        "x": 192,
+        "y": 354
+      },
+      "displayScale": 0.94,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "eb521f39f67571d67b21ccb6e6aa2159eeaf68641f4c93fd0b67111781f4659f"
+    },
+    {
+      "name": "dead-0",
+      "animation": "dead",
+      "phase": null,
+      "sourceImage": "duelist-source-transparent.png",
+      "sourceRect": {
+        "x": 940,
+        "y": 627,
+        "width": 314,
+        "height": 313,
+        "alphaX": 6,
+        "alphaY": 104,
+        "alphaWidth": 216,
+        "alphaHeight": 158
+      },
+      "runtimeAlphaBounds": {
+        "x": 84,
+        "y": 196,
+        "width": 216,
+        "height": 158
+      },
+      "originX": 0.5,
+      "originY": 0.921875,
+      "displayOffsetX": 84,
+      "displayOffsetY": 196,
+      "feetAnchor": {
+        "x": 192,
+        "y": 354
+      },
+      "displayScale": 0.94,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "751dc97b5332a5f458d3ad91a4d817dade807a33fab6af27680888900df567c2"
+    },
+    {
+      "name": "dead-1",
+      "animation": "dead",
+      "phase": null,
+      "sourceImage": "duelist-source-transparent.png",
+      "sourceRect": {
+        "x": 0,
+        "y": 940,
+        "width": 314,
+        "height": 314,
+        "alphaX": 56,
+        "alphaY": 78,
+        "alphaWidth": 218,
+        "alphaHeight": 145
+      },
+      "runtimeAlphaBounds": {
+        "x": 83,
+        "y": 209,
+        "width": 218,
+        "height": 145
+      },
+      "originX": 0.5,
+      "originY": 0.921875,
+      "displayOffsetX": 83,
+      "displayOffsetY": 209,
+      "feetAnchor": {
+        "x": 192,
+        "y": 354
+      },
+      "displayScale": 0.94,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "2701ad113eb2737ac3dfe1ef1e54c2a44b58975eb138fb9f8b2280a727b5e10e"
+    },
+    {
+      "name": "dead-2",
+      "animation": "dead",
+      "phase": null,
+      "sourceImage": "duelist-source-transparent.png",
+      "sourceRect": {
+        "x": 314,
+        "y": 940,
+        "width": 313,
+        "height": 314,
+        "alphaX": 35,
+        "alphaY": 111,
+        "alphaWidth": 231,
+        "alphaHeight": 114
+      },
+      "runtimeAlphaBounds": {
+        "x": 76,
+        "y": 240,
+        "width": 231,
+        "height": 114
+      },
+      "originX": 0.5,
+      "originY": 0.921875,
+      "displayOffsetX": 76,
+      "displayOffsetY": 240,
+      "feetAnchor": {
+        "x": 192,
+        "y": 354
+      },
+      "displayScale": 0.94,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "f5b10a6a74765378e9ca9b4033f9b63cf5b18f190bc53c800acaf93b7964c7ca"
+    },
+    {
+      "name": "dead-3",
+      "animation": "dead",
+      "phase": null,
+      "sourceImage": "duelist-source-transparent.png",
+      "sourceRect": {
+        "x": 627,
+        "y": 940,
+        "width": 313,
+        "height": 314,
+        "alphaX": 6,
+        "alphaY": 152,
+        "alphaWidth": 244,
+        "alphaHeight": 76
+      },
+      "runtimeAlphaBounds": {
+        "x": 70,
+        "y": 278,
+        "width": 244,
+        "height": 76
+      },
+      "originX": 0.5,
+      "originY": 0.921875,
+      "displayOffsetX": 70,
+      "displayOffsetY": 278,
+      "feetAnchor": {
+        "x": 192,
+        "y": 354
+      },
+      "displayScale": 0.94,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "7c47ce49dbf0ee796c382f429ea3c72f9c71f1efd8bbe66f2466024b04316fe1"
+    }
+  ]
+}

@@ -1260,7 +1260,7 @@ test("Boss attack art and metadata define three real telegraphed attacks", async
   assert.ok(Object.values(atlas.frames).every(frame => frame.pivot.x === 0.5 && frame.pivot.y === 420 / 448));
   assert.equal(metadata.frames.length, 9);
   assert.ok(metadata.frames.every(frame => frame.feetAnchor.x === 224 && frame.feetAnchor.y === 420));
-  assert.ok(metadata.frames.every(frame => frame.sourceScale === metadata.sourceScale && frame.displayScale === 0.9));
+  assert.ok(metadata.frames.every(frame => frame.sourceScale === metadata.sourceScale && frame.displayScale === 1.27));
   assert.deepEqual(metadata.frames.map(frame => frame.phase), ["startup", "active", "recovery", "startup", "active", "recovery", "startup", "active", "recovery"]);
   assert.equal(metadata.frames[4].sourceRect.width, 851);
   assert.match(manifest, /boss-warlord-attacks/);
@@ -1338,7 +1338,7 @@ test("Boss actor owns feet-aligned hurt, phase, death, and Scene cleanup", async
   assert.deepEqual(Object.keys(atlas.frames), frameNames);
   assert.deepEqual(metadata.frames.map(frame => frame.name), frameNames);
   assert.ok(metadata.frames.every(frame => frame.feetAnchor.x === 224 && frame.feetAnchor.y === 420));
-  assert.ok(metadata.frames.every(frame => frame.sourceScale === metadata.sourceScale && frame.displayScale === 0.9));
+  assert.ok(metadata.frames.every(frame => frame.sourceScale === metadata.sourceScale && frame.displayScale === 1.27));
   assert.match(actorSource, /new BossLifecycle\(BOSS_ACTOR_CONFIG\.maxHp\)/);
   assert.match(actorSource, /new BossDecisionPolicy\(clock, random, BOSS_ATTACKS\)/);
   assert.match(actorSource, /ANIMATION_COMPLETE, this\.handleAnimationComplete/);
@@ -1409,7 +1409,7 @@ test("Boss walk frames are genuine feet-aligned atlas poses", async () => {
   assert.deepEqual(walk.map(frame => frame.name), ["walk-0", "walk-1", "walk-2", "walk-3"]);
   assert.equal(new Set(walk.map(frame => JSON.stringify(frame.alphaBounds))).size, 4);
   assert.ok(walk.every(frame => frame.feetAnchor.x === 224 && frame.feetAnchor.y === 420));
-  assert.ok(walk.every(frame => frame.displayScale === 0.9));
+  assert.ok(walk.every(frame => frame.displayScale === 1.27));
   assert.ok(walk.every(frame => frame.sourceRect.x + frame.sourceRect.width <= 2172));
   assert.ok(walk.every(frame => atlas.frames[frame.name].frame.w === 448 && atlas.frames[frame.name].frame.h === 448));
   assert.match(toolSource, /warlord-walk-transparent\.png/);
@@ -1482,7 +1482,7 @@ test("Mauler asset routes and atlas metadata are present", async () => {
     "idle-0", "idle-1", "walk-0", "walk-1", "walk-2", "walk-3",
     "attack-0", "attack-1", "attack-2", "hurt-0", "hurt-1", "dead-0", "dead-1", "dead-2", "dead-3",
   ]);
-  assert.equal(parsed.frames["attack-1"].frame.w, 313);
+  assert.equal(parsed.frames["attack-1"].frame.w, 384);
   assert.ok(metadata.length > 1000);
 });
 
@@ -1497,4 +1497,57 @@ test("Duelist config and asset routes define a third distinct melee archetype", 
   assert.ok(DUELIST_ENEMY_CONFIG.timing.recoveryMin < MAULER_ENEMY_CONFIG.timing.recoveryMin);
   assert.match(manifest, /enemy-duelist/);
   assert.equal(Object.keys(JSON.parse(atlas).frames).length, 15);
+});
+
+test("M6A enemy and Boss art share audited scale, feet, facing, and provenance contracts", async () => {
+  const actorFiles = [
+    ["soldier", "enemy-soldier", SOLDIER_ENEMY_CONFIG, 210],
+    ["mauler", "mauler", MAULER_ENEMY_CONFIG, 240],
+    ["duelist", "duelist", DUELIST_ENEMY_CONFIG, 205],
+  ];
+  for (const [actor, stem, config, targetHeight] of actorFiles) {
+    const atlasName = actor === "soldier" ? "enemy-soldier.atlas.json" : `${stem}.atlas.json`;
+    const [atlas, metadata, sheet, onion, silhouette] = await Promise.all([
+      readFile(new URL(`../public/art/enemy/${atlasName}`, import.meta.url), "utf8").then(JSON.parse),
+      readFile(new URL(`../public/art/enemy/${actor}.metadata.json`, import.meta.url), "utf8").then(JSON.parse),
+      readFile(new URL(`../public/art/enemy/${actor === "soldier" ? "enemy-soldier" : stem}.png`, import.meta.url)),
+      readFile(new URL(`../public/art/enemy/${actor}-onion.png`, import.meta.url)),
+      readFile(new URL(`../public/art/enemy/${actor}-silhouette-25.png`, import.meta.url)),
+    ]);
+    assert.equal(sheet.readUInt32BE(16), 1920);
+    assert.equal(sheet.readUInt32BE(20), 1152);
+    assert.equal(Object.keys(atlas.frames).length, 15);
+    assert.equal(metadata.frames.length, 15);
+    assert.equal(new Set(metadata.frames.map(frame => frame.pixelHash)).size, 15);
+    assert.deepEqual(metadata.feetAnchor, { x: 192, y: 354 });
+    assert.equal(metadata.displayScale, config.displayScale);
+    assert.equal(metadata.sourceFacing, config.sourceFacing);
+    assert.equal(metadata.targetLogicalIdleHeight, targetHeight);
+    assert.ok(Math.abs(metadata.logicalIdleHeight - targetHeight) <= 12);
+    assert.equal(metadata.provenance.original, true);
+    assert.match(metadata.provenance.processingTool, /build_enemy_art\.py/);
+    assert.ok(metadata.frames.every(frame => frame.accepted && frame.rejectionReason === null));
+    assert.ok(metadata.frames.every(frame => frame.feetAnchor.y === 354 && frame.displayScale === config.displayScale));
+    assert.ok(metadata.frames.every(frame => frame.runtimeAlphaBounds.y + frame.runtimeAlphaBounds.height === 354));
+    assert.deepEqual(metadata.animations.attack, ["attack-0", "attack-1", "attack-2"]);
+    assert.equal(metadata.frames.find(frame => frame.name === "attack-0").phase, "startup");
+    assert.equal(metadata.frames.find(frame => frame.name === "attack-1").phase, "active");
+    assert.equal(metadata.frames.find(frame => frame.name === "attack-2").phase, "recovery");
+    assert.ok(onion.length > 1000 && silhouette.length > 100);
+  }
+
+  const [bossAudit, bossActor, lineup, bossOnion, bossSilhouette] = await Promise.all([
+    readFile(new URL("../public/art/boss/warlord-consistency.metadata.json", import.meta.url), "utf8").then(JSON.parse),
+    readFile(new URL("../app/game/boss/BossActor.ts", import.meta.url), "utf8"),
+    readFile(new URL("../public/art/enemy/cast-lineup-debug.png", import.meta.url)),
+    readFile(new URL("../public/art/boss/warlord-onion.png", import.meta.url)),
+    readFile(new URL("../public/art/boss/warlord-silhouette-25.png", import.meta.url)),
+  ]);
+  assert.equal(bossAudit.frames.length, 24);
+  assert.equal(bossAudit.displayScale, 1.27);
+  assert.ok(Math.abs(bossAudit.logicalIdleHeight - 300) <= 15);
+  assert.ok(bossAudit.frames.every(frame => frame.feetAnchor.y === 420 && frame.displayScale === 1.27));
+  assert.equal(bossAudit.provenance.original, true);
+  assert.match(bossActor, /displayScale: 1\.27/);
+  assert.ok(lineup.length > 1000 && bossOnion.length > 1000 && bossSilhouette.length > 100);
 });

@@ -731,6 +731,25 @@ Scene progression but is absent from production. The accepted three-viewport
 run reduced the former 460px release-frame jump to 16–17px and converged to the
 normal target without a soft lock.
 
+## Cast Visual Contract (M6A / Task 6A.3)
+
+Runtime identity remains config-driven: `EnemyConfig` owns one display scale,
+source-facing direction, cell size, and feet anchor per ordinary archetype;
+`BossActor` owns the same visual contract for both Boss atlases. Animation
+switching never changes scale or world feet Y. Body and attack-zone geometry
+remain independent from source-cell dimensions.
+
+`tools/build_cast_consistency_art.py` is the reproducible orchestration boundary.
+It rebuilds three enemy atlases from preserved source art, runs the existing two
+Boss builders, and emits provenance, alpha-bound, feet-line, onion, silhouette,
+and lineup QA. The development-only cast preview observes runtime textures and
+does not participate in gameplay, AI, collision, or production presentation.
+
+The accepted logical idle heights are Soldier 213.06px, Duelist 212.44px,
+Mauler 239.8px, and Boss 300.99px against Guan Yu 230.4px. Soldier/Boss source
+art faces left; Mauler/Duelist faces right. `enemySpriteShouldFlip` and the Boss
+source-facing rule remain the only runtime mirroring boundaries.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

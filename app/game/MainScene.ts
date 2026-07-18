@@ -79,6 +79,21 @@ const ENEMY_PREVIEW_FRAMES = [
   "attack-0", "attack-1", "attack-2", "hurt-0", "hurt-1",
   "dead-0", "dead-1", "dead-2", "dead-3",
 ];
+const CAST_PREVIEW_ACTORS = [
+  { id: "soldier", texture: "enemy-soldier", scale: SOLDIER_ENEMY_CONFIG.displayScale, frameSize: 384, feetY: 354, frames: ENEMY_PREVIEW_FRAMES },
+  { id: "mauler", texture: "enemy-mauler", scale: MAULER_ENEMY_CONFIG.displayScale, frameSize: 384, feetY: 354, frames: ENEMY_PREVIEW_FRAMES },
+  { id: "duelist", texture: "enemy-duelist", scale: DUELIST_ENEMY_CONFIG.displayScale, frameSize: 384, feetY: 354, frames: ENEMY_PREVIEW_FRAMES },
+  {
+    id: "boss", texture: "boss-warlord-lifecycle", scale: BOSS_ACTOR_CONFIG.displayScale, frameSize: 448, feetY: 420,
+    frames: [
+      "idle-0", "idle-1", "walk-0", "walk-1", "walk-2", "walk-3",
+      "attack1-startup", "attack1-active", "attack1-recovery",
+      "attack2-startup", "attack2-active", "attack2-recovery",
+      "attack3-startup", "attack3-active", "attack3-recovery",
+      "hurt-0", "hurt-1", "phase-0", "phase-1", "phase-2", "dead-0", "dead-1", "dead-2", "dead-3",
+    ],
+  },
+] as const;
 
 class PlayerInputController {
   readonly cursors: Phaser.Types.Input.Keyboard.CursorKeys;
@@ -205,8 +220,9 @@ export default class MainScene extends Phaser.Scene {
   private nextPreviewFrameAt = 0;
   private enemyPreviewSprite?: Phaser.GameObjects.Sprite;
   private enemyPreviewText?: Phaser.GameObjects.Text;
-  private enemyPreviewKeys?: Record<"left" | "right", Phaser.Input.Keyboard.Key>;
+  private enemyPreviewKeys?: Record<"left" | "right" | "up" | "down", Phaser.Input.Keyboard.Key>;
   private enemyPreviewIndex = 0;
+  private enemyPreviewActorIndex = 0;
   private assetFailureListener?: (file: Phaser.Loader.File) => void;
   private cameraLockState: CameraLockState = createCameraLockState();
   private stageExitState: StageExitState = createStageExitState(BAMBOO_COMBAT_ROOM.exits);
@@ -238,6 +254,14 @@ export default class MainScene extends Phaser.Scene {
     const development = process.env.NODE_ENV !== "production";
     const query = new URLSearchParams(window.location.search);
     this.enemyPreviewMode = development && query.get("previewEnemy") === "1";
+    if (this.enemyPreviewMode) {
+      const requestedActor = query.get("previewEnemyActor");
+      const actorIndex = CAST_PREVIEW_ACTORS.findIndex(actor => actor.id === requestedActor);
+      this.enemyPreviewActorIndex = actorIndex < 0 ? 0 : actorIndex;
+      const requestedFrame = query.get("previewEnemyFrame");
+      const frameIndex = CAST_PREVIEW_ACTORS[this.enemyPreviewActorIndex].frames.findIndex(frame => frame === requestedFrame);
+      this.enemyPreviewIndex = frameIndex < 0 ? 0 : frameIndex;
+    }
     this.previewMode = development && query.get("previewAttack") === "1";
     this.resetSmokeMode = development && query.get("resetSmoke") === "1";
     this.bossMovementSmokeMode = development && query.get("bossMovementSmoke") === "1";
@@ -1364,7 +1388,7 @@ export default class MainScene extends Phaser.Scene {
     this.cameras.main.setBackgroundColor("#101512");
     const keyboard = this.input.keyboard;
     if (!keyboard) throw new Error("Keyboard input is unavailable");
-    this.enemyPreviewKeys = keyboard.addKeys({ left: "LEFT", right: "RIGHT" }) as typeof this.enemyPreviewKeys;
+    this.enemyPreviewKeys = keyboard.addKeys({ left: "LEFT", right: "RIGHT", up: "UP", down: "DOWN" }) as typeof this.enemyPreviewKeys;
     const groundY = 580;
     const guide = this.add.graphics().setDepth(20);
     guide.lineStyle(2, 0xff3b30, 1).lineBetween(100, groundY, VIEWPORT_WIDTH - 100, groundY);
@@ -1376,32 +1400,49 @@ export default class MainScene extends Phaser.Scene {
       fontFamily: "Consolas, monospace", fontSize: "18px", color: "#fff",
       backgroundColor: "rgba(0,0,0,.8)", padding: { x: 12, y: 10 }, lineSpacing: 3,
     }).setDepth(100);
-    this.showEnemyPreviewFrame(0);
+    this.showEnemyPreviewFrame(this.enemyPreviewIndex);
   }
 
   private updateEnemyAlignmentPreview() {
     const keys = this.enemyPreviewKeys!;
     if (Phaser.Input.Keyboard.JustDown(keys.left)) this.showEnemyPreviewFrame(this.enemyPreviewIndex - 1);
     if (Phaser.Input.Keyboard.JustDown(keys.right)) this.showEnemyPreviewFrame(this.enemyPreviewIndex + 1);
+    if (Phaser.Input.Keyboard.JustDown(keys.up)) this.showEnemyPreviewActor(this.enemyPreviewActorIndex - 1);
+    if (Phaser.Input.Keyboard.JustDown(keys.down)) this.showEnemyPreviewActor(this.enemyPreviewActorIndex + 1);
+  }
+
+  private showEnemyPreviewActor(index: number) {
+    this.enemyPreviewActorIndex = Phaser.Math.Wrap(index, 0, CAST_PREVIEW_ACTORS.length);
+    this.enemyPreviewIndex = 0;
+    this.showEnemyPreviewFrame(0);
   }
 
   private showEnemyPreviewFrame(index: number) {
-    this.enemyPreviewIndex = Phaser.Math.Wrap(index, 0, ENEMY_PREVIEW_FRAMES.length);
-    const name = ENEMY_PREVIEW_FRAMES[this.enemyPreviewIndex];
-    const frame = this.textures.getFrame("enemy-soldier", name);
-    this.enemyPreviewSprite!.setTexture("enemy-soldier", name)
-      .setOrigin(0.5, ENEMY_FEET_Y / ENEMY_FRAME_SIZE)
-      .setScale(SOLDIER_ENEMY_CONFIG.displayScale)
+    const actor = CAST_PREVIEW_ACTORS[this.enemyPreviewActorIndex];
+    this.enemyPreviewIndex = Phaser.Math.Wrap(index, 0, actor.frames.length);
+    const name = actor.frames[this.enemyPreviewIndex];
+    const texture = actor.id === "boss" && name.startsWith("attack") ? "boss-warlord-attacks" : actor.texture;
+    const frame = this.textures.getFrame(texture, name);
+    this.enemyPreviewSprite!.setTexture(texture, name)
+      .setOrigin(0.5, actor.feetY / actor.frameSize)
+      .setScale(actor.scale)
       .setPosition(VIEWPORT_WIDTH / 2, 580);
+    if (process.env.NODE_ENV !== "production") {
+      this.game.canvas.dataset.castPreviewActor = actor.id;
+      this.game.canvas.dataset.castPreviewFrame = name;
+      this.game.canvas.dataset.castPreviewScale = String(actor.scale);
+    }
     this.enemyPreviewText!.setText([
-      "ENEMY FEET ALIGNMENT PREVIEW",
-      `frame: ${this.enemyPreviewIndex} / ${ENEMY_PREVIEW_FRAMES.length - 1}`,
+      "CAST FEET ALIGNMENT PREVIEW",
+      `actor: ${actor.id} (${this.enemyPreviewActorIndex + 1} / ${CAST_PREVIEW_ACTORS.length})`,
+      `frame: ${this.enemyPreviewIndex} / ${actor.frames.length - 1}`,
       `name: ${name}`,
       `source: ${frame.cutX}, ${frame.cutY}, ${frame.cutWidth}, ${frame.cutHeight}`,
-      `origin: 0.5, ${(ENEMY_FEET_Y / ENEMY_FRAME_SIZE).toFixed(6)}`,
-      `feet anchor: ${ENEMY_FRAME_SIZE / 2}, ${ENEMY_FEET_Y}`,
-      `display scale: ${SOLDIER_ENEMY_CONFIG.displayScale}`,
+      `origin: 0.5, ${(actor.feetY / actor.frameSize).toFixed(6)}`,
+      `feet anchor: ${actor.frameSize / 2}, ${actor.feetY}`,
+      `display scale: ${actor.scale}`,
       "",
+      "Up / Down: previous / next actor",
       "Left / Right: previous / next frame",
       "Red line: fixed world ground  |  Cyan point: feet anchor",
     ]);

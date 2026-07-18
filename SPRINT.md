@@ -2,7 +2,7 @@
 
 ## Sprint Goal
 
-M6A.1 已鎖定視覺目標與 before baseline；M6A.2 已完成 Guan Yu 完整動畫與統一 runtime contract。下一步只執行 M6A.3 Enemy and Boss visual consistency，不同時改 Stage、Effects、UI 或 Audio。
+M6A.1 已鎖定視覺目標與 before baseline；M6A.2 已完成 Guan Yu；M6A.3 已完成三種小兵與 Boss 的比例、feet、facing 與 QA contract。下一步只執行 M6A.4 Three-screen bamboo stage upgrade，不同時改角色、Effects、UI 或 Audio。
 
 Roadmap decision（2026-07-18）：6A.3 必須以 6A.2 已接受的 Guan Yu 比例、palette、feet anchor、capture 與 provenance contract 對齊；不可重新解釋 Art Bible 或更改 gameplay timing。
 
@@ -11,7 +11,7 @@ Roadmap decision（2026-07-18）：6A.3 必須以 6A.2 已接受的 Guan Yu 比�
 - Duration：2 weeks
 - Capacity：1 developer + AI，約 40–55 hours
 - Milestone：M6A — Visual Upgrade
-- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M6A / 6A.3 Enemy and Boss visual consistency
+- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M6A / 6A.4 Three-screen bamboo stage upgrade
 
 ## Task List
 
@@ -32,7 +32,8 @@ Roadmap decision（2026-07-18）：6A.3 必須以 6A.2 已接受的 Guan Yu 比�
 | 13 | ✅ M6 / Task 6.7 — UI/mobile acceptance | 8–12h | 三 viewport 完整流程、safe area、production presentation | 77 tests + source/production browser acceptance passed |
 | 14 | ✅ M6A / Task 6A.1 — Visual target、Art Bible 與 before/after baseline | 10–16h | 可執行的美術規格與 15 張 before captures | document/visual acceptance passed；production art unchanged |
 | 15 | ✅ M6A / Task 6A.2 — Guan Yu animation quality upgrade | 24–40h | 統一 identity/scale/feet anchor 的 43-frame 主角動畫 | 78 tests + metadata/debug/onion/three-viewport/build acceptance passed |
-| 16 | M6A / Task 6A.3 — Enemy and Boss visual consistency | 32–48h | 三小兵與 Boss 對齊主角視覺契約 | actor audit/metadata/onion/three-viewport acceptance |
+| 16 | ✅ M6A / Task 6A.3 — Enemy and Boss visual consistency | 32–48h | 三小兵與 Boss 對齊主角視覺契約 | 79 tests + metadata/lineup/onion/three-viewport acceptance passed |
+| 17 | M6A / Task 6A.4 — Three-screen bamboo stage upgrade | 32–48h | 三段可辨識、無接縫的竹林與 Boss arena | layer/section/depth/three-viewport acceptance |
 
 ## Recovery Planning Correction — 2026-07-14
 
@@ -658,3 +659,17 @@ The next eligible task is M6A / Task 6A.2 — Guan Yu animation quality upgrade.
 - [x] Development preview, desktop 1280×720, landscape 844×390, portrait 390×844, and production browser smoke each retained one Canvas with zero runtime errors.
 
 The next eligible task is M6A / Task 6A.3 — Enemy and Boss visual consistency. Do not begin it until the next task-runner cycle.
+
+## M6A / Task 6A.3 Closeout — 2026-07-18
+
+- [x] Audited 45 ordinary-enemy frames and 24 Boss frames with source rects, runtime alpha bounds, facing, feet, acceptance, and provenance metadata.
+- [x] Rebuilt Soldier, Mauler, and Duelist into one 384×384 cell contract with feet `(192,354)`; each actor uses one scale across every state.
+- [x] Art Bible logical idle heights are Soldier `213.06px`, Duelist `212.44px`, Mauler `239.8px`, and Boss `300.99px`; the lineup uses one shared ground line.
+- [x] Source facing remains Soldier/Boss left and Mauler/Duelist right; startup/active/recovery frame names and active index 2 are unchanged.
+- [x] Added transparent processed sources, provenance metadata, red-box/feet-line, onion, 25% silhouette, cast lineup QA, and `tools/build_cast_consistency_art.py`.
+- [x] Boss retains 24 genuine lifecycle/attack poses, shared `(224,420)` feet anchor, and one `1.27` display scale; walk and active silhouettes are readable without transform tricks.
+- [x] Runtime cast preview covers all four actors and every required state through deterministic query checkpoints.
+- [x] Desktop, 844×390 landscape, and 390×844 portrait matrices retained one logical 1280×720 Canvas and zero browser errors.
+- [x] `pnpm test` 79/79, typecheck, lint 0 errors (8 existing warnings), `pnpm build`, and `pnpm build:github-pages` passed.
+
+The next eligible task is M6A / Task 6A.4 — Three-screen bamboo stage upgrade. Do not begin it until the next task-runner cycle.

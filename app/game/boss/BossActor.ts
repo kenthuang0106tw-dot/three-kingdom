@@ -15,7 +15,7 @@ import type { GameplayClock, RandomSource } from "../time/GameplayTime";
 
 export const BOSS_ACTOR_CONFIG = Object.freeze({
   maxHp: 8,
-  displayScale: 0.9,
+  displayScale: 1.27,
   frameSize: 448,
   feetY: 420,
   bodyWidth: 96,

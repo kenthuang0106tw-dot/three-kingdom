@@ -1,0 +1,577 @@
+{
+  "actor": "mauler",
+  "cell": {
+    "width": 384,
+    "height": 384
+  },
+  "feetAnchor": {
+    "x": 192,
+    "y": 354
+  },
+  "displayScale": 1.1,
+  "sourceFacing": 1,
+  "targetLogicalIdleHeight": 240,
+  "logicalIdleHeight": 239.8,
+  "animations": {
+    "idle": [
+      "idle-0",
+      "idle-1"
+    ],
+    "walk": [
+      "walk-0",
+      "walk-1",
+      "walk-2",
+      "walk-3"
+    ],
+    "attack": [
+      "attack-0",
+      "attack-1",
+      "attack-2"
+    ],
+    "hurt": [
+      "hurt-0",
+      "hurt-1"
+    ],
+    "dead": [
+      "dead-0",
+      "dead-1",
+      "dead-2",
+      "dead-3"
+    ]
+  },
+  "provenance": {
+    "original": true,
+    "source": "mauler-source.png",
+    "sourceLayout": "four-by-four-grid",
+    "processingTool": "tools/build_enemy_art.py",
+    "processingRevision": "2.0",
+    "generatedBy": "built-in image generation in earlier asset tasks; no new generation in M6A.3"
+  },
+  "frames": [
+    {
+      "name": "idle-0",
+      "animation": "idle",
+      "phase": null,
+      "sourceImage": "mauler-source-transparent.png",
+      "sourceRect": {
+        "x": 0,
+        "y": 0,
+        "width": 314,
+        "height": 314,
+        "alphaX": 69,
+        "alphaY": 63,
+        "alphaWidth": 187,
+        "alphaHeight": 218
+      },
+      "runtimeAlphaBounds": {
+        "x": 98,
+        "y": 136,
+        "width": 187,
+        "height": 218
+      },
+      "originX": 0.5,
+      "originY": 0.921875,
+      "displayOffsetX": 98,
+      "displayOffsetY": 136,
+      "feetAnchor": {
+        "x": 192,
+        "y": 354
+      },
+      "displayScale": 1.1,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "a999babe4deea8bc3b4dfe57deb03942492f4ea17d8fd68723ab9720ac064f67"
+    },
+    {
+      "name": "idle-1",
+      "animation": "idle",
+      "phase": null,
+      "sourceImage": "mauler-source-transparent.png",
+      "sourceRect": {
+        "x": 314,
+        "y": 0,
+        "width": 313,
+        "height": 314,
+        "alphaX": 49,
+        "alphaY": 63,
+        "alphaWidth": 192,
+        "alphaHeight": 218
+      },
+      "runtimeAlphaBounds": {
+        "x": 96,
+        "y": 136,
+        "width": 192,
+        "height": 218
+      },
+      "originX": 0.5,
+      "originY": 0.921875,
+      "displayOffsetX": 96,
+      "displayOffsetY": 136,
+      "feetAnchor": {
+        "x": 192,
+        "y": 354
+      },
+      "displayScale": 1.1,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "5e5dd35b4230bd951c623924ae2e9ee53aed0afb6002a894ffb9fcf4707563b8"
+    },
+    {
+      "name": "walk-0",
+      "animation": "walk",
+      "phase": null,
+      "sourceImage": "mauler-source-transparent.png",
+      "sourceRect": {
+        "x": 627,
+        "y": 0,
+        "width": 313,
+        "height": 314,
+        "alphaX": 31,
+        "alphaY": 70,
+        "alphaWidth": 191,
+        "alphaHeight": 215
+      },
+      "runtimeAlphaBounds": {
+        "x": 96,
+        "y": 139,
+        "width": 191,
+        "height": 215
+      },
+      "originX": 0.5,
+      "originY": 0.921875,
+      "displayOffsetX": 96,
+      "displayOffsetY": 139,
+      "feetAnchor": {
+        "x": 192,
+        "y": 354
+      },
+      "displayScale": 1.1,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "e12afdcb6938e204aa2ca6acd149568a555a5ddc9f753c60d649b3b6ce46f144"
+    },
+    {
+      "name": "walk-1",
+      "animation": "walk",
+      "phase": null,
+      "sourceImage": "mauler-source-transparent.png",
+      "sourceRect": {
+        "x": 940,
+        "y": 0,
+        "width": 314,
+        "height": 314,
+        "alphaX": 21,
+        "alphaY": 70,
+        "alphaWidth": 189,
+        "alphaHeight": 215
+      },
+      "runtimeAlphaBounds": {
+        "x": 97,
+        "y": 139,
+        "width": 189,
+        "height": 215
+      },
+      "originX": 0.5,
+      "originY": 0.921875,
+      "displayOffsetX": 97,
+      "displayOffsetY": 139,
+      "feetAnchor": {
+        "x": 192,
+        "y": 354
+      },
+      "displayScale": 1.1,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "eb14728306eaa0893c0269f5d0c171a68a4fcd87aaa81f073c87ad787cfe93ee"
+    },
+    {
+      "name": "walk-2",
+      "animation": "walk",
+      "phase": null,
+      "sourceImage": "mauler-source-transparent.png",
+      "sourceRect": {
+        "x": 0,
+        "y": 314,
+        "width": 314,
+        "height": 313,
+        "alphaX": 52,
+        "alphaY": 60,
+        "alphaWidth": 186,
+        "alphaHeight": 216
+      },
+      "runtimeAlphaBounds": {
+        "x": 99,
+        "y": 138,
+        "width": 186,
+        "height": 216
+      },
+      "originX": 0.5,
+      "originY": 0.921875,
+      "displayOffsetX": 99,
+      "displayOffsetY": 138,
+      "feetAnchor": {
+        "x": 192,
+        "y": 354
+      },
+      "displayScale": 1.1,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "90dad1051ecdf1cb952e52948bc7bf687fc54118de0c1b968937360498cd8c11"
+    },
+    {
+      "name": "walk-3",
+      "animation": "walk",
+      "phase": null,
+      "sourceImage": "mauler-source-transparent.png",
+      "sourceRect": {
+        "x": 314,
+        "y": 314,
+        "width": 313,
+        "height": 313,
+        "alphaX": 38,
+        "alphaY": 63,
+        "alphaWidth": 189,
+        "alphaHeight": 213
+      },
+      "runtimeAlphaBounds": {
+        "x": 97,
+        "y": 141,
+        "width": 189,
+        "height": 213
+      },
+      "originX": 0.5,
+      "originY": 0.921875,
+      "displayOffsetX": 97,
+      "displayOffsetY": 141,
+      "feetAnchor": {
+        "x": 192,
+        "y": 354
+      },
+      "displayScale": 1.1,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "67ae70b44e08d8fef109b391532601ed254b70822bd2cc855abd34c46c8956a1"
+    },
+    {
+      "name": "attack-0",
+      "animation": "attack",
+      "phase": "startup",
+      "sourceImage": "mauler-source-transparent.png",
+      "sourceRect": {
+        "x": 627,
+        "y": 314,
+        "width": 313,
+        "height": 313,
+        "alphaX": 23,
+        "alphaY": 47,
+        "alphaWidth": 290,
+        "alphaHeight": 229
+      },
+      "runtimeAlphaBounds": {
+        "x": 47,
+        "y": 125,
+        "width": 290,
+        "height": 229
+      },
+      "originX": 0.5,
+      "originY": 0.921875,
+      "displayOffsetX": 47,
+      "displayOffsetY": 125,
+      "feetAnchor": {
+        "x": 192,
+        "y": 354
+      },
+      "displayScale": 1.1,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "621944279d2999f01fff60d3892589b77d9649d6ed8628356bf86c890f533e51"
+    },
+    {
+      "name": "attack-1",
+      "animation": "attack",
+      "phase": "active",
+      "sourceImage": "mauler-source-transparent.png",
+      "sourceRect": {
+        "x": 940,
+        "y": 314,
+        "width": 314,
+        "height": 313,
+        "alphaX": 0,
+        "alphaY": 76,
+        "alphaWidth": 265,
+        "alphaHeight": 200
+      },
+      "runtimeAlphaBounds": {
+        "x": 59,
+        "y": 154,
+        "width": 265,
+        "height": 200
+      },
+      "originX": 0.5,
+      "originY": 0.921875,
+      "displayOffsetX": 59,
+      "displayOffsetY": 154,
+      "feetAnchor": {
+        "x": 192,
+        "y": 354
+      },
+      "displayScale": 1.1,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "8db02c89067792dad8cb2f4f885521bf6ed95f05a5ed0eefaac0d578b734ac05"
+    },
+    {
+      "name": "attack-2",
+      "animation": "attack",
+      "phase": "recovery",
+      "sourceImage": "mauler-source-transparent.png",
+      "sourceRect": {
+        "x": 0,
+        "y": 627,
+        "width": 314,
+        "height": 313,
+        "alphaX": 61,
+        "alphaY": 51,
+        "alphaWidth": 236,
+        "alphaHeight": 205
+      },
+      "runtimeAlphaBounds": {
+        "x": 74,
+        "y": 149,
+        "width": 236,
+        "height": 205
+      },
+      "originX": 0.5,
+      "originY": 0.921875,
+      "displayOffsetX": 74,
+      "displayOffsetY": 149,
+      "feetAnchor": {
+        "x": 192,
+        "y": 354
+      },
+      "displayScale": 1.1,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "47d31d0fb5c326c612bbf0a92b9fa536187752d905b14c587bd202bd63640518"
+    },
+    {
+      "name": "hurt-0",
+      "animation": "hurt",
+      "phase": null,
+      "sourceImage": "mauler-source-transparent.png",
+      "sourceRect": {
+        "x": 314,
+        "y": 627,
+        "width": 313,
+        "height": 313,
+        "alphaX": 35,
+        "alphaY": 60,
+        "alphaWidth": 222,
+        "alphaHeight": 196
+      },
+      "runtimeAlphaBounds": {
+        "x": 81,
+        "y": 158,
+        "width": 222,
+        "height": 196
+      },
+      "originX": 0.5,
+      "originY": 0.921875,
+      "displayOffsetX": 81,
+      "displayOffsetY": 158,
+      "feetAnchor": {
+        "x": 192,
+        "y": 354
+      },
+      "displayScale": 1.1,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "94d7264a0e8e35bff32a49f25acd2d101ff2277c58544ea77a999d75f794fab0"
+    },
+    {
+      "name": "hurt-1",
+      "animation": "hurt",
+      "phase": null,
+      "sourceImage": "mauler-source-transparent.png",
+      "sourceRect": {
+        "x": 627,
+        "y": 627,
+        "width": 313,
+        "height": 313,
+        "alphaX": 42,
+        "alphaY": 55,
+        "alphaWidth": 271,
+        "alphaHeight": 209
+      },
+      "runtimeAlphaBounds": {
+        "x": 56,
+        "y": 145,
+        "width": 271,
+        "height": 209
+      },
+      "originX": 0.5,
+      "originY": 0.921875,
+      "displayOffsetX": 56,
+      "displayOffsetY": 145,
+      "feetAnchor": {
+        "x": 192,
+        "y": 354
+      },
+      "displayScale": 1.1,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "1cd1257c7d1af4a03c21d09d47c25ad2013d20480fe0a98d1937676bdb8b51d1"
+    },
+    {
+      "name": "dead-0",
+      "animation": "dead",
+      "phase": null,
+      "sourceImage": "mauler-source-transparent.png",
+      "sourceRect": {
+        "x": 940,
+        "y": 627,
+        "width": 314,
+        "height": 313,
+        "alphaX": 0,
+        "alphaY": 95,
+        "alphaWidth": 220,
+        "alphaHeight": 172
+      },
+      "runtimeAlphaBounds": {
+        "x": 82,
+        "y": 182,
+        "width": 220,
+        "height": 172
+      },
+      "originX": 0.5,
+      "originY": 0.921875,
+      "displayOffsetX": 82,
+      "displayOffsetY": 182,
+      "feetAnchor": {
+        "x": 192,
+        "y": 354
+      },
+      "displayScale": 1.1,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "88042afb12adb9fc4b3a533fd736b12bb34da6e13c765e7d7b2cd5c8df50c338"
+    },
+    {
+      "name": "dead-1",
+      "animation": "dead",
+      "phase": null,
+      "sourceImage": "mauler-source-transparent.png",
+      "sourceRect": {
+        "x": 0,
+        "y": 940,
+        "width": 314,
+        "height": 314,
+        "alphaX": 45,
+        "alphaY": 86,
+        "alphaWidth": 229,
+        "alphaHeight": 151
+      },
+      "runtimeAlphaBounds": {
+        "x": 77,
+        "y": 203,
+        "width": 229,
+        "height": 151
+      },
+      "originX": 0.5,
+      "originY": 0.921875,
+      "displayOffsetX": 77,
+      "displayOffsetY": 203,
+      "feetAnchor": {
+        "x": 192,
+        "y": 354
+      },
+      "displayScale": 1.1,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "5c54ef127b400a374a984b55056d86c50d1fa0ac479017c0dcff4fbf4f22b756"
+    },
+    {
+      "name": "dead-2",
+      "animation": "dead",
+      "phase": null,
+      "sourceImage": "mauler-source-transparent.png",
+      "sourceRect": {
+        "x": 314,
+        "y": 940,
+        "width": 313,
+        "height": 314,
+        "alphaX": 21,
+        "alphaY": 128,
+        "alphaWidth": 292,
+        "alphaHeight": 118
+      },
+      "runtimeAlphaBounds": {
+        "x": 46,
+        "y": 236,
+        "width": 292,
+        "height": 118
+      },
+      "originX": 0.5,
+      "originY": 0.921875,
+      "displayOffsetX": 46,
+      "displayOffsetY": 236,
+      "feetAnchor": {
+        "x": 192,
+        "y": 354
+      },
+      "displayScale": 1.1,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "0f6051c195aa9ab89428c73cf360a593aebe97c65ca648f474736188e2dc471a"
+    },
+    {
+      "name": "dead-3",
+      "animation": "dead",
+      "phase": null,
+      "sourceImage": "mauler-source-transparent.png",
+      "sourceRect": {
+        "x": 627,
+        "y": 940,
+        "width": 313,
+        "height": 314,
+        "alphaX": 0,
+        "alphaY": 145,
+        "alphaWidth": 264,
+        "alphaHeight": 98
+      },
+      "runtimeAlphaBounds": {
+        "x": 60,
+        "y": 256,
+        "width": 264,
+        "height": 98
+      },
+      "originX": 0.5,
+      "originY": 0.921875,
+      "displayOffsetX": 60,
+      "displayOffsetY": 256,
+      "feetAnchor": {
+        "x": 192,
+        "y": 354
+      },
+      "displayScale": 1.1,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "a5abe4996af1d47fb4b8fd2c84db84c7afd8fad306559cf5eb879b01939ce891"
+    }
+  ]
+}

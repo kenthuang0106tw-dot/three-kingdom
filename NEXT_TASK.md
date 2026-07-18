@@ -1,65 +1,54 @@
 # Next Task
 
-## M6A / Task 6A.3 — Enemy and Boss visual consistency
+## M6A / Task 6A.4 — Three-screen bamboo stage upgrade
 
 ### Why this is next
 
-M6A.2 established the accepted player-facing visual contract: one original
-identity, one display scale, one feet anchor, explicit atlas metadata, genuine
-frames, and reproducible QA artifacts. The three current enemy archetypes and
-Boss are now the largest visible mismatch. They must be brought to the same
-proportion, palette, facing, pixel-density, and alignment standard before Stage
-art, effects, or product UI can be judged against the cast.
+The Player, three enemy archetypes, and Boss now share the accepted visual
+contract. The largest remaining mismatch is the 3840×720 world repeating the
+same prototype `forest-camp.png` three times. Stage art must become readable
+before Effects or product UI can be judged against the final combat backdrop.
 
 ### Completion criteria
 
-- Audit every current Soldier, Mauler, Duelist, and Boss frame; record source
-  bounds, facing, feet anchor, usable poses, and rejected/contaminated poses.
-- Preserve the four existing identities and gameplay roles; do not create a new
-  enemy type, move, phase, AI behavior, damage value, or encounter.
-- Give each actor one internally consistent display scale and common feet-world
-  contract across idle, walk, attack, hurt, phase (Boss), and dead animations.
-- Correct Ninja/Duelist locomotion facing, Mauler attack-facing readability,
-  Boss walk readability, and any frame-specific size or feet drift through
-  source/atlas metadata—not runtime transform tricks.
-- Preserve active-frame indexes, attack timing, body geometry, hitboxes,
-  movement speed, attack-slot policy, encounter flow, Boss decisions, and camera.
-- Commit source, processed runtime sheets, atlas/metadata, provenance, red-box,
-  feet-line, onion-skin, and silhouette QA assets plus reproducible tooling.
-- Do not modify Guan Yu, Stage, Effects, UI, Audio, balance, or add content.
+- Preserve the existing 3840×720 world, two encounter triggers, Boss entry,
+  walk bounds, camera locks, handoff policy, physics, and all world coordinates.
+- Create three visually distinct but seamless sections: Forest Entry, Forest
+  Ambush, and Boss Arena, following `ART_BIBLE.md` landmarks and value bands.
+- Separate background, ground, and foreground-occlusion layers with explicit
+  depth metadata; no layer may hide active poses, telegraphs, HUD, or controls.
+- Keep the ground feet plane readable across every seam and viewport.
+- Commit source, processed runtime assets, metadata, provenance, seam/depth QA,
+  three-section overview, and reproducible tooling.
+- Do not modify actors, animation, combat, AI, balance, Effects, UI, Audio, or
+  add encounters/content.
 
 ### Validation
 
-- Native-size and 25% silhouette review confirms readable archetype silhouettes,
-  accepted Guan Yu-relative height ratios, shared light direction, and palette.
-- Frame/onion review confirms no crop, neighbor contamination, duplicate pose,
-  feet drift, reversed movement, or false transform frame.
-- Automated metadata tests cover names/counts, alpha bounds, feet anchors,
-  per-actor scale, facing, atlas/image dimensions, and provenance.
-- Runtime browser acceptance covers all four actors in idle, walk, attack, hurt,
-  and dead/phase states at desktop, 844×390 landscape, and 390×844 portrait FIT,
-  with one Canvas and no console error.
-- Existing player, combat, attack-slot, encounter, Boss, failure, result, and
-  M6A.2 contracts remain green.
+- Native-size and 25% review distinguishes all three sections immediately.
+- A 3840px overview and seam crops show no gap, repeat, stretch, or color break.
+- Runtime traversal verifies background/foreground depth, camera handoff, both
+  encounters, Boss arena, Failure, and Result at desktop, 844×390 landscape,
+  and 390×844 portrait FIT.
+- One Canvas, no console errors, and existing gameplay contracts remain green.
 - Run `pnpm test`, `pnpm typecheck`, `pnpm lint`, `pnpm build`, and
   `pnpm build:github-pages`.
 
 ### Expected files
 
-- Existing `public/art/enemy/` and `public/art/boss/` source/runtime assets,
-  atlases, metadata, provenance, and QA sheets
-- Focused reproducible enemy/Boss art build tools
-- Minimal enemy/Boss actor, animation metadata, and asset-manifest integration
-- Focused tests plus `ASSET_PIPELINE.md`, `CHECKLIST.md`, `SPRINT.md`,
-  `GAME_ROADMAP.md`, `TECH_DEBT.md`, and `NEXT_TASK.md`
+- `public/scene/` source/runtime section and layer assets
+- Stage asset metadata, provenance, overview/seam/depth QA
+- Focused reproducible Stage art build tooling
+- Minimal Stage rendering/manifest integration and focused tests
+- `ASSET_PIPELINE.md`, `CHECKLIST.md`, `SPRINT.md`, `GAME_ROADMAP.md`,
+  `TECH_DEBT.md`, `README.md`, and `NEXT_TASK.md`
 
 ### Risks
 
-- Batch generation may drift costume, anatomy, facing, weapon, or palette
-  between states; reject inconsistent sets instead of repairing with transforms.
-- Replacing frames can silently move active timing or hitboxes; keep phase/frame
-  contracts under automated tests before and after integration.
-- Actor proportion fixes can tempt body/AI retuning; gameplay geometry and
-  balance remain frozen unless a visual alignment defect is proven.
-- Scope can expand into Stage, effects, UI, Audio, or new content; all remain
-  explicitly deferred to later M6A tasks.
+- New layers can accidentally alter collision or camera ownership; geometry and
+  Stage flow are frozen.
+- Foreground art can obscure combat or mobile controls; depth and occlusion need
+  explicit runtime review.
+- Three independently generated sections may drift in horizon, light, palette,
+  or seam continuity; reject inconsistent art rather than hiding seams with
+  camera or gameplay changes.

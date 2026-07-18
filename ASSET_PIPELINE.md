@@ -54,12 +54,12 @@ Vertical Slice 不接入兩名角色，維持 Backlog P2。
 | Animations | idle 2、walk 4、attack 3、hurt 2、dead 4 |
 | Feet anchor | `(192, 354)` |
 | Origin | `(0.5, 0.921875)` |
-| Display scale | `1.4` |
-| Metadata | `enemy-soldier.atlas.json`, `enemy-frame-metadata.json` |
-| QA | `enemy-soldier-debug.png` |
+| Display scale | `1.34` |
+| Metadata | `enemy-soldier.atlas.json`, `soldier.metadata.json` |
+| QA | `enemy-soldier-debug.png`, `soldier-onion.png`, `soldier-silhouette-25.png` |
 | Rebuild tool | `tools/build_enemy_art.py` |
 
-目前所有 frame alpha bottom 為 354。工具會清除低 alpha chroma residue，避免 Hurt frame 因隱形像素跳位。
+Mauler 與 Duelist 也使用 5×3、384×384、feet `(192,354)` runtime contract，display scale 分別為 `1.10` 與 `0.94`。三者 source-facing 分別為 Soldier left、Mauler right、Duelist right；attack frame 順序仍為 startup／active／recovery，active index 與 gameplay timing 未更動。`tools/build_cast_consistency_art.py` 會從 source 重建 processed transparent、atlas、metadata、red-box/feet-line、onion、25% silhouette 與共同 lineup。
 
 ### Effects
 
@@ -78,7 +78,7 @@ Vertical Slice 不接入兩名角色，維持 Backlog P2。
 | Frames | 9; three attacks × startup / active / recovery |
 | Runtime layout | 3×3, 448×448 cells |
 | Feet anchor | `(224, 420)` for every frame |
-| Display scale | `0.9` |
+| Display scale | `1.27` |
 | Metadata | `warlord-attacks.atlas.json`, `warlord-attacks.metadata.json` |
 | QA | `warlord-attacks-debug.png` |
 | Rebuild tool | `tools/build_boss_art.py` |
@@ -100,7 +100,7 @@ weapon pixels from contaminating frames.
 | Frames | 15; idle 2, hurt 2, phase 3, death 4, walk 4 |
 | Runtime layout | 4×4, 448×448 cells |
 | Feet anchor | `(224, 420)` for every frame |
-| Display scale | `0.9`, shared with attack frames |
+| Display scale | `1.27`, shared with attack frames |
 | Metadata | `warlord-lifecycle.atlas.json`, `warlord-lifecycle.metadata.json` |
 | QA | `warlord-lifecycle-debug.png` |
 | Rebuild tool | `tools/build_boss_lifecycle_art.py` |
@@ -111,6 +111,11 @@ feet anchor prevent neighboring-frame contamination and animation jump. The
 four walk frames are distinct consecutive poses, share the same source-facing
 and feet anchor, and are rebuilt from `warlord-walk-transparent.png`; arena-
 specific art remains deferred.
+
+M6A.3 adds `warlord-consistency.metadata.json`, `warlord-onion.png`,
+`warlord-silhouette-25.png`, and the shared `cast-lineup-debug.png`. Boss idle
+height is `300.99px` at runtime scale; all 24 attack/lifecycle frames retain the
+existing `(224,420)` feet anchor, frame names, timing, body, and hitbox contract.
 
 ### Runtime manifest (M1 / Task 1.5)
 
@@ -227,7 +232,7 @@ Metadata 最少欄位：
 - **M6:** 功能性 Title/HUD/Pause/Failure/Result 已完成；本 Milestone 不製作 custom art。
 - **M6A.1 (Completed):** Visual target、比例、色盤、光源、pixel density、UI language 與 15 張 before baseline 已保存。
 - **M6A.2 (Completed):** Guan Yu 43-frame source/runtime atlas、metadata/provenance、legacy audit、debug/onion/silhouette QA 與 reproducible component-isolation pipeline 已接入。
-- **M6A.3:** 三種小兵與 Boss 的角色比例、色盤、面向、feet anchor 與 animation consistency pass。
+- **M6A.3 (Completed):** 69 個 Enemy/Boss frames 的比例、面向、feet、atlas、provenance、onion/silhouette 與三 viewport runtime matrix 已驗收。
 - **M6A.4:** 三個可辨識竹林 section、前景遮擋、地面層、Boss arena 與無接縫 layer assets。
 - **M6A.5:** 正式 Hit Spark/impact/dust/shadow、Title/HUD/Pause/Failure/Result、custom pixel font 與 mobile control assets。
 - **M6A.6:** 三 viewport before/after captures、完整 asset provenance、atlas/load baseline 與 visual freeze record。

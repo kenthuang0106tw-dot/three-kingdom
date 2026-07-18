@@ -986,3 +986,22 @@
 | Quality gates | Pass | typecheck; lint 0 errors/8 existing warnings; Vinext production build; GitHub Pages build |
 | Scope | Pass | No Enemy, Boss, Stage, Effects, UI, Audio, content, balance, AI, camera, or combat-rule changes |
 | Next task | Selected | M6A / Task 6A.3 — Enemy and Boss visual consistency |
+
+## M6A / Task 6A.3 Acceptance — 2026-07-18
+
+| Check | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M6A / Task 6A.3 — Enemy and Boss visual consistency |
+| Frame audit | Pass | 45 enemy + 24 Boss frames record source rect, alpha bounds, facing, feet, acceptance, and provenance |
+| Logical proportions | Pass | Soldier 213.06px, Duelist 212.44px, Mauler 239.8px, Boss 300.99px against Guan Yu 230.4px |
+| Enemy alignment | Pass | All three enemy atlases use 384×384 cells, feet `(192,354)`, one display scale per actor, and alpha bottom 354 |
+| Boss alignment | Pass | Attack/lifecycle frames share 448×448 cells, feet `(224,420)`, scale `1.27`, and source-facing left |
+| Facing/readability | Pass | Soldier/Boss left source; Mauler/Duelist right source; walk and attack silhouettes remain direction-readable |
+| Gameplay freeze | Pass | Active index, attack timing, body, hitbox, movement, AI, Attack Slot, encounters, Boss decisions, and camera unchanged |
+| QA assets | Pass | Processed sources, metadata, red-box/feet-line, onion, 25% silhouette, and shared lineup generated reproducibly |
+| Desktop matrix | Pass | All actors and idle/walk/attack/hurt/dead plus Boss phase; one 1280×720 Canvas; zero errors |
+| Landscape matrix | Pass | 844×390 viewport, 693×390 Canvas; all 21 actor/state checkpoints; zero errors |
+| Portrait matrix | Pass | 390×844 viewport, 325×182.8125 Canvas; all 21 actor/state checkpoints; zero errors |
+| Automated checks | Pass | 79/79 tests, typecheck, lint 0 errors (8 existing warnings), both production builds |
+| Scope | Pass | No Guan Yu, Stage, Effects, UI, Audio, content, balance, AI, or camera changes |
+| Next task | Selected | M6A / Task 6A.4 — Three-screen bamboo stage upgrade |

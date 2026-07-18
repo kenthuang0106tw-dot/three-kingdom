@@ -408,6 +408,15 @@ Remaining production art debt stays ordered rather than opportunistic: Enemy
 and Boss visual density/facing/alignment is 6A.3; the three reused Stage sections
 are 6A.4; Effects/UI prototype art is 6A.5; final comparison/freeze is 6A.6.
 
+M6A / Task 6A.3 resolves the cast proportion and alignment mismatch. Soldier,
+Mauler, and Duelist now share one 384×384 cell and `(192,354)` feet contract,
+while each actor uses exactly one Art-Bible-derived display scale. Boss attack
+and lifecycle sets share scale `1.27` and `(224,420)` feet. Source-facing,
+active frame index, timing, body, hitbox, AI, balance, and camera remain frozen.
+The reproducible pipeline now emits processed sources, atlas metadata,
+provenance, red-box/feet-line, onion, silhouette, and shared lineup QA. The next
+ordered visual debt is the repeated three-section Stage art in 6A.4.
+
 ### TD-H10 — Encounter-clear camera handoff visibly snaps
 
 - **Severity:** High
