@@ -375,6 +375,19 @@ Result remains functional prototype art. Scoring, persistence, post-stage
 progression, custom Result art, Audio, and visual polish remain intentionally
 deferred to their roadmap milestones.
 
+### TD-M06 Update — UI/mobile acceptance and production debug boundary
+
+M6 / Task 6.7 closes Product Flow acceptance across desktop keyboard, 844×390
+landscape touch, and 390×844 portrait FIT. The acceptance pass found that the
+vinext build did not reliably replace the client-side `process.env.NODE_ENV`, so
+production still exposed Physics debug and diagnostic text. `vite.config.ts` now
+defines the value from Vite mode, matching the GitHub Pages production config;
+production browser evidence confirms one Canvas, no development telemetry or
+debug presentation, and zero browser errors.
+
+Physical iOS/Android device feel, portrait readability as a release target, and
+custom UI art remain later release/visual-upgrade QA rather than hidden M6 scope.
+
 ### TD-H10 — Encounter-clear camera handoff visibly snaps
 
 - **Severity:** High

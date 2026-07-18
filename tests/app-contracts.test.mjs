@@ -33,6 +33,21 @@ import { createHudViewModel } from "../app/game/ui/HudViewModel.ts";
 import { FailureRestartGate } from "../app/game/flow/FailureRestartGate.ts";
 import { ResultReplayGate } from "../app/game/flow/ResultReplayGate.ts";
 
+test("Production builds compile Phaser development presentation out", async () => {
+  const [viteConfig, githubConfig, host, scene] = await Promise.all([
+    readFile(new URL("../vite.config.ts", import.meta.url), "utf8"),
+    readFile(new URL("../vite.github.config.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/PhaserGame.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(viteConfig, /defineConfig\(async \(\{ mode \}\)/);
+  assert.match(viteConfig, /"process\.env\.NODE_ENV": JSON\.stringify\(mode === "production" \? "production" : "development"\)/);
+  assert.match(githubConfig, /"process\.env\.NODE_ENV": JSON\.stringify\("production"\)/);
+  assert.match(host, /debug: process\.env\.NODE_ENV !== "production"/);
+  assert.match(scene, /process\.env\.NODE_ENV/);
+});
+
 test("React shell mounts only the Phaser lifecycle component", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   assert.match(page, /import PhaserGame from "\.\/game\/PhaserGame"/);

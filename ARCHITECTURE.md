@@ -619,11 +619,12 @@ The successful terminal order is fixed: Boss cleanup, arena release, one
 to `cleared`. Duplicate callbacks, ordinary destruction, Title, `failed`, and
 an already-completed gate cannot publish again or enter cleared.
 
-Cleared mode has no Result presentation or replay ownership yet. It stops the
-Player body and attack zone, suspends `EnemyManager`, clears the current action
-snapshot, and returns from Scene `update()` before input, encounter progression,
-AI, damage, or camera progression. `failed` and `cleared` remain terminal and
-mutually exclusive until a later explicit product-flow task.
+Cleared mode stops the Player body and attack zone, suspends `EnemyManager`,
+clears the current action snapshot, and returns from Scene `update()` before
+gameplay input, encounter progression, AI, damage, or camera progression. The
+Phaser-owned `ResultController` remains responsive and accepts exactly one replay
+request; `failed` and `cleared` stay mutually exclusive until their explicit
+Scene restart paths rebuild a new Title run.
 
 ## Phaser HUD Observation Boundary (M6 / Task 6.3)
 
@@ -694,6 +695,19 @@ Failure and Result keep independent gates that remain closed outside their own
 terminal mode. Scene shutdown removes both Result input handlers, cancels the
 development smoke timer, and destroys the camera-fixed overlay. Development
 telemetry verifies lifecycle ownership but is not emitted by production builds.
+
+## UI/Mobile Acceptance Boundary (M6 / Task 6.7)
+
+The world remains 1280×720 and Phaser Scale FIT/CENTER_BOTH maps it into desktop,
+844×390 landscape, and 390×844 portrait viewports. CSS owns only the arcade shell,
+safe-area padding, aspect ratio, pixel rendering, and host focus; it does not own
+gameplay state or animation. Title, HUD, Pause, Failure, Result, joystick, and
+attack input remain Phaser objects with camera-fixed coordinates.
+
+Both production build paths explicitly compile `process.env.NODE_ENV` from the
+Vite mode. This is an architectural boundary: development may expose Physics
+debug and dataset telemetry, while production must contain neither. React still
+owns exactly one Phaser mount/destroy lifecycle and no product-flow state.
 
 ## Encounter-clear Camera Handoff Contract (M5R / Task 5R.9)
 

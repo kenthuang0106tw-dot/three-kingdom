@@ -9,8 +9,8 @@
 - **Rendering:** 1280×720、16:9、nearest-neighbor、腳底 Y depth sorting。
 - **Current player:** 關羽。
 - **Current combat:** 八方向移動、三段 Combo、Hurt、Hit Stop、Flash、Spark、Knockback、Camera Shake。
-- **Current enemies:** 三名相同近戰小兵、Formation Slot、單一 Attack Slot、獨立 HP/state/death cleanup。
-- **Current stage:** 單張竹林背景；尚未有捲軸 Camera 或正式關卡流程。
+- **Current enemies:** 三種近戰小兵、Formation Slot、單一 Attack Slot、獨立 HP/state/death cleanup。
+- **Current stage:** 3840×720 三畫面竹林、兩場依序 encounter、Boss arena、failed/retry 與 cleared/replay。
 - **Release target:** Desktop Web + Mobile landscape Web。
 - **First Vertical Slice:** 關羽、一完整關卡、2–3 種近戰小兵、一名 Boss。
 
@@ -36,7 +36,7 @@ React 不管理 gameplay state。所有角色、輸入、動畫、碰撞、AI、
 - pnpm
 - Windows 可使用 repository 根目錄的 `啟動遊戲.cmd`
 
-目前 repository 已完成 Sprint 0：baseline、單一 Phaser runtime、pnpm、browser／worker typecheck、tests 與 production routes 均已建立。第一次接手請先閱讀 [SPRINT.md](SPRINT.md) 與 [NEXT_TASK.md](NEXT_TASK.md)，不要直接新增功能。
+目前 repository 已完成 M6 Product Flow and UI：可從 Title 完成整個 Vertical Slice，並通過 desktop、landscape touch、portrait FIT 與 production 驗收。第一次接手請先閱讀 [SPRINT.md](SPRINT.md) 與 [NEXT_TASK.md](NEXT_TASK.md)，不要直接新增功能。
 
 ## Run
 
@@ -71,8 +71,9 @@ pnpm test       # Current test command
 |---|---|
 | Move | WASD / Arrow keys |
 | Attack / Combo input | J |
+| Pause / Resume | P |
 
-Mobile Phaser touch controls 尚未完成，排在 Milestone 1。正式 runtime 不包含 DOM gameplay controls。
+Mobile 使用 Phaser 360° 搖桿、攻擊鍵與 Pause 按鈕；正式 runtime 不包含 DOM gameplay controls。
 
 ## Debug Modes
 
@@ -128,8 +129,8 @@ tools/build_enemy_art.py     Enemy sheet/atlas rebuild pipeline
 
 ## Current Priority
 
-M5R 已完成並通過真正的 Vertical Slice：3840×720 三畫面竹林、兩場依序 encounter、可互相攻防的 Boss、failed/retry 與 cleared 流程，桌機、844×390 橫向觸控及 390×844 直向 FIT 均以真實輸入通關。
+M6 已完成：Title、HUD、Pause、Failure/retry、Result/replay 與 mobile controls 均由 Phaser 擁有，desktop、844×390 橫向觸控、390×844 直向 FIT 及 production 驗收通過。
 
-The next single task is M6 / Task 6.3: add a Player/Boss HUD that only reads the existing gameplay snapshot.
+The next single task is M6A / Task 6A.1: lock the visual target, Art Bible, and reproducible before baselines.
 
-本 Task 只做 HUD；Pause、Result、音效與新內容仍依 Roadmap 延後。
+下一個 Task 只做視覺規格與 baseline，不生成或替換 production art；Audio 與新內容仍依 Roadmap 延後。

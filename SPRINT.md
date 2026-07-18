@@ -1,17 +1,17 @@
-# Current Sprint — Product Flow and UI
+# Current Sprint — Visual Upgrade Foundation
 
 ## Sprint Goal
 
-M6.6 Result/replay 已完成。下一步只執行 M6.7 UI/mobile acceptance，驗收完整產品流程在 desktop、landscape touch 與 portrait touch 的一致性，不同時加入 Audio、美術升級或新戰鬥內容。
+M6 Product Flow and UI 已完成並通過 desktop、landscape touch、portrait touch 與 production 驗收。下一步只執行 M6A.1，先鎖定視覺目標、Art Bible 與三 viewport before baseline，不直接重製素材。
 
-Roadmap decision（2026-07-18）：M6.6 與 M6.7 完成後插入 M6A Visual Upgrade，再進入 M7 Audio。M6A 尚未進入本 Sprint，不可提前零散替換素材。
+Roadmap decision（2026-07-18）：M6A Visual Upgrade 已在 M6 完成後正式開始；6A.1 驗收前不可零散替換角色、敵人、背景、特效或 UI 素材。
 
 ## Cadence
 
 - Duration：2 weeks
 - Capacity：1 developer + AI，約 40–55 hours
-- Milestone：M6 — Product Flow and UI
-- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M6 / 6.7 UI/mobile acceptance
+- Milestone：M6A — Visual Upgrade
+- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M6A / 6A.1 Visual target、Art Bible 與 before/after baseline
 
 ## Task List
 
@@ -29,6 +29,8 @@ Roadmap decision（2026-07-18）：M6.6 與 M6.7 完成後插入 M6A Visual Upgr
 | 10 | ✅ M6 / Task 6.4 — Pause/resume | 8–12h | 明確 pause/resume flow 與 clock/input ownership | tests + desktop/mobile browser acceptance passed |
 | 11 | ✅ M6 / Task 6.5 — Failure/continue/restart | 8–12h | 正式 Failure UI、單一路徑 retry 與 deterministic reset | 74 tests + desktop/mobile/10-cycle acceptance passed |
 | 12 | ✅ M6 / Task 6.6 — Result/replay | 6–10h | 正式 Result UI、單一路徑 replay 與 deterministic new run | 76 tests + desktop/mobile/10-cycle acceptance passed |
+| 13 | ✅ M6 / Task 6.7 — UI/mobile acceptance | 8–12h | 三 viewport 完整流程、safe area、production presentation | 77 tests + source/production browser acceptance passed |
+| 14 | M6A / Task 6A.1 — Visual target、Art Bible 與 before/after baseline | 10–16h | 可執行的美術規格與三 viewport before captures | document/visual acceptance；不得重製 production art |
 
 ## Recovery Planning Correction — 2026-07-14
 
@@ -617,3 +619,15 @@ The next eligible task is M6 / Task 6.6 — Result/replay. Do not begin it until
 - [x] `pnpm test` 76/76、typecheck、lint 0 errors（8 existing warnings）、production build 與 GitHub Pages build 通過。
 
 The next eligible task is M6 / Task 6.7 — UI/mobile acceptance. Do not begin it until the next task-runner cycle.
+
+## M6 / Task 6.7 Closeout — 2026-07-18
+
+- [x] Desktop keyboard 驗收 Title、movement/attack、Pause/resume、Result/replay；encounter、Boss、Failure 與 terminal regressions保持通過。
+- [x] 844×390 landscape touch 使用 360° 搖桿、攻擊與觸控 Pause；Canvas 為 693×390、控制可達且只有一個 Canvas。
+- [x] 390×844 portrait touch 保持 16:9 FIT 與 safe-area；Canvas 為 325×183、搖桿、攻擊與 Pause 均可達。
+- [x] 連續 10 次 failure/restart 與 10 次 clear/replay 均維持一個 Canvas，沒有 stale flow 或 listener accumulation。
+- [x] 修正 vinext production 未編譯掉 `process.env.NODE_ENV` 的阻斷；正式 build 不再顯示 Physics debug、診斷文字或 development datasets。
+- [x] `pnpm test` 77/77、typecheck、lint 0 errors（8 existing warnings）、`pnpm build`、`pnpm build:github-pages` 全部通過。
+- [x] Source 與 production browser 均為一個 Canvas、零 browser error；M6 完成。
+
+The next eligible task is M6A / Task 6A.1 — Visual target, Art Bible, and before/after baseline. Do not begin it until the next task-runner cycle.

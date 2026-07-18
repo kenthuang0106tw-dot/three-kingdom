@@ -1,69 +1,59 @@
 # Next Task
 
-## M6 / Task 6.7 — UI/mobile acceptance
+## M6A / Task 6A.1 — Visual target, Art Bible, and before/after baseline
 
 ### Why this is next
 
-All M6 product-flow features now exist: Title/start, HUD, Pause/resume,
-Failure/retry, and Result/replay. Before the approved M6A Visual Upgrade can
-begin, the complete flow needs one acceptance pass across the three supported
-viewport contracts. This freezes behavior, safe-area placement, input ownership,
-and functional UI layout so M6A can replace art without reopening gameplay flow.
+M6 now provides a complete, accepted playable flow across desktop, landscape
+touch, portrait FIT, production, Failure/retry, and Result/replay. The approved
+post-M6 art upgrade must begin by freezing a measurable visual target before any
+production asset is replaced; otherwise character, enemy, stage, effect, and UI
+work will drift independently and create avoidable rework.
 
 ### Completion criteria
 
-- One complete desktop keyboard run covers Title → playing → Pause/resume → two
-  encounters → Boss → Result → replay → Title without a soft lock or duplicate
-  Phaser instance/Canvas.
-- One 844×390 landscape touch run covers the same product flow using the 360°
-  joystick, attack, Pause, Failure retry or Result replay, with no clipped or
-  unreachable control.
-- One 390×844 portrait touch run confirms FIT scaling, safe-area behavior,
-  readable functional UI, and reachable terminal actions without changing the
-  1280×720 Phaser world contract.
-- Title, HUD, Pause, Failure, and Result remain Phaser-owned; React remains only
-  the shell and Phaser lifecycle owner.
-- Pause, Failure, and Result overlays are mutually exclusive and camera-fixed.
-- The HUD remains readable and does not intercept movement, attack, pause,
-  retry, or replay input.
-- Repeated start, pause/resume, failure/retry, and clear/replay cycles retain one
-  Phaser instance, one Canvas, and no listener, GameObject, timer, actor, camera
-  lock, completion, or input-state accumulation.
-- Production contains the same functional UI and mobile controls without any
-  development telemetry or physics/debug presentation.
-- Any defect found is fixed only when it blocks this acceptance; no custom art,
-  Audio, scoring, content, combat, balance, or M6A work is added.
+- Update `ART_BIBLE.md` with one coherent original Three Kingdoms Japanese
+  realistic pixel-art target: silhouette, anatomy, scale, feet anchor, palette,
+  lighting, pixel density, outline/shading, weapon readability, and UI language.
+- Record current before baselines for desktop default, 844×390 landscape, and
+  390×844 portrait FIT at the same reproducible checkpoints: Title, representative
+  combat, Boss arena, Failure, and Result.
+- Define explicit visual acceptance criteria for Guan Yu, three melee enemies,
+  Boss, the three bamboo sections, combat effects, font, HUD, terminal overlays,
+  joystick, and attack control.
+- Define asset provenance, source/master/export naming, atlas metadata, feet
+  alignment, and debug-sheet requirements without modifying runtime contracts.
+- Produce a prioritized gap list and the approved order for 6A.2–6A.6.
+- Do not generate, edit, or replace production art in this task.
 
 ### Validation
 
-- Contract tests for React/Phaser ownership, terminal exclusivity, fixed overlay
-  coordinates, listener cleanup, safe-area CSS, and single-instance lifecycle.
-- Full browser acceptance at desktop default viewport, 844×390 landscape, and
-  390×844 portrait using the matching real input surface.
-- Regression smoke for two encounters, camera handoff, Boss entry/combat,
-  stage-completion ordering, Failure reset, Result replay, HUD, and Pause.
-- Ten-cycle lifecycle smoke for restart/replay with one Canvas and zero browser
-  errors.
-- Run `pnpm test`, `pnpm typecheck`, `pnpm lint`, `pnpm build`, and
-  `pnpm build:github-pages`.
+- Every visual rule has an objective comparison method or a named manual review.
+- All three viewport baselines use the same gameplay revision and reproducible
+  checkpoints; filenames and locations are documented.
+- The Art Bible preserves animation timing, hitbox/body geometry, world
+  coordinates, camera, combat, AI, flow, and mobile input contracts.
+- `pnpm test`, `pnpm typecheck`, `pnpm lint`, `pnpm build`, and
+  `pnpm build:github-pages` remain green after documentation-only work.
 
 ### Expected files
 
-- `tests/app-contracts.test.mjs`
+- `ART_BIBLE.md`
+- `ASSET_PIPELINE.md`
 - `CHECKLIST.md`
 - `GAME_ROADMAP.md`
 - `SPRINT.md`
 - `NEXT_TASK.md`
-- Only the smallest existing `app/game/` or responsive CSS file needed for an
-  acceptance-blocking defect discovered during validation.
+- A documented baseline capture directory only; no production asset or runtime
+  source file.
 
 ### Risks
 
-- A full manual run is long enough to hide viewport-specific input or lifecycle
-  accumulation unless each checkpoint is recorded explicitly.
-- Touch controls and fixed overlays can be visually present but have misaligned
-  pointer hit areas after camera movement or FIT scaling.
-- Fixing acceptance defects can drift into redesign; preserve current functional
-  presentation and defer all visual replacement to M6A.
-- Do not begin M6A, Audio, scoring, persistence, post-stage progression, new
-  content, custom UI art, or unrelated refactoring in this task.
+- A subjective style description without measurable references will cause every
+  later sprite task to reopen the target.
+- Captures from different game states or revisions will make before/after
+  comparisons invalid.
+- Starting image generation or atlas edits during 6A.1 would mix planning with
+  6A.2–6A.5 and violate the one-task workflow.
+- Copyright-sensitive imitation must be translated into original visual rules,
+  not copied characters, frames, logos, or stage art.

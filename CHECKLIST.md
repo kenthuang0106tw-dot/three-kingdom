@@ -932,3 +932,20 @@
 | Automated checks | Pass | 76/76 tests, typecheck, lint 0 errors (8 existing warnings), both production builds |
 | Scope | Pass | No Audio, scoring, persistence, content, custom art, balance, M6A or M6.7 work added |
 | Next task | Selected | M6 / Task 6.7 — UI/mobile acceptance |
+
+## M6 / Task 6.7 Acceptance — 2026-07-18
+
+| Check | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M6 / Task 6.7 — UI/mobile acceptance |
+| Desktop keyboard | Pass | Enter start、movement/attack、P pause/resume、Result Enter replay；one Canvas |
+| Landscape touch | Pass | 844×390 viewport、693×390 fitted Canvas、360° joystick、attack、touch Pause reachable |
+| Portrait touch | Pass | 390×844 viewport、325×183 fitted Canvas、safe-area/FIT preserved、terminal controls reachable |
+| Phaser ownership | Pass | Title、HUD、Pause、Failure、Result、touch controls remain Phaser-owned and camera-fixed |
+| Terminal exclusivity | Pass | Pause、Failure、Result remain state-gated; failed and cleared requests cannot cross-consume |
+| Encounter/Boss regression | Pass | Two ordered encounters, Boss clear ordering, arena release, completion and replay remained green |
+| Lifecycle regression | Pass | 10 failure/restart and 10 clear/replay cycles retained one Canvas and deterministic new-run state |
+| Production | Pass | One Canvas; no Physics debug, diagnostic text, development datasets, or browser errors |
+| Automated checks | Pass | 77/77 tests, typecheck, lint 0 errors (8 existing warnings), both production builds |
+| Scope | Pass | Only the production environment define blocker was fixed; no art, Audio, gameplay, balance, or M6A implementation |
+| Next task | Selected | M6A / Task 6A.1 — Visual target, Art Bible, and before/after baseline |
