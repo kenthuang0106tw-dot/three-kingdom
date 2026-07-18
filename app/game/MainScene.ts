@@ -11,6 +11,7 @@ import { PlayerStateMachine, type PlayerState } from "./player/PlayerStateMachin
 import { PlayerLifecycle } from "./player/PlayerLifecycle";
 import { PlayerActor } from "./player/PlayerActor";
 import { PLAYER_ATTACKS, PlayerAttackController, type AttackStep } from "./player/PlayerAttackController";
+import { GUANYU_ANIMATION_FRAMES, GUANYU_ATTACK_PHASES, GUANYU_DISPLAY_SCALE, GUANYU_ORIGIN_Y, GUANYU_TEXTURE_KEY } from "./player/GuanYuAnimationMetadata.ts";
 import { resolveAttack } from "./combat/CombatResolver";
 import { EffectDirector, EFFECT_PARAMS } from "./combat/EffectDirector";
 import { BAMBOO_BOSS_ARENA, BAMBOO_COMBAT_ROOM, clampStageX } from "./stage/StageConfig";
@@ -50,19 +51,29 @@ const FAILURE_SMOKE_RESTART_MS = 500;
 const RESULT_SMOKE_REPLAY_MS = 500;
 const RESULT_SMOKE_BOSS_HIT_MS = 35;
 const ATTACK_STATES: AttackState[] = ["attack1", "attack2", "attack3"];
-const FRAME_ORIGIN_Y: Record<string, number> = {
-  "walk-0": 739 / 793, "walk-1": 736 / 793, "walk-2": 746 / 793, "walk-3": 741 / 793,
-  "attack-0": 586 / 724, "attack-1": 582 / 724, "attack-2": 586 / 724,
-  "attack-3": 586 / 724, "attack-4": 586 / 724, "attack-5": 587 / 724,
-};
-const PREVIEW_FRAMES: PreviewFrame[] = [
-  { name: "attack-0", x: 0, y: 0, width: 512, height: 724, originY: 586 / 724, offsetX: 106, offsetY: 135, classification: "attack1 startup / recovery" },
-  { name: "attack-1", x: 512, y: 0, width: 512, height: 724, originY: 582 / 724, offsetX: 75, offsetY: 147, classification: "attack1 active straight punch" },
-  { name: "attack-2", x: 1024, y: 0, width: 512, height: 724, originY: 586 / 724, offsetX: 122, offsetY: 138, classification: "attack2 startup / recovery" },
-  { name: "attack-3", x: 1536, y: 0, width: 512, height: 724, originY: 586 / 724, offsetX: 97, offsetY: 148, classification: "attack2 active short punch" },
-  { name: "attack-4", x: 2048, y: 0, width: 512, height: 724, originY: 586 / 724, offsetX: 86, offsetY: 130, classification: "attack3 startup / recovery raised arm" },
-  { name: "attack-5", x: 2560, y: 0, width: 512, height: 724, originY: 587 / 724, offsetX: 30, offsetY: 165, classification: "attack3 active palm strike" },
-];
+const GUANYU_CELL_WIDTH = 640;
+const GUANYU_CELL_HEIGHT = 448;
+const GUANYU_ATLAS_COLUMNS = 8;
+const GUANYU_ATTACK_FRAME_OFFSET = GUANYU_ANIMATION_FRAMES.idle.length + GUANYU_ANIMATION_FRAMES.walk.length;
+const PREVIEW_FRAMES: PreviewFrame[] = (["attack1", "attack2", "attack3"] as const).flatMap(animation =>
+  GUANYU_ANIMATION_FRAMES[animation].map((name, localIndex) => {
+    const previousCount = animation === "attack1" ? 0 : animation === "attack2"
+      ? GUANYU_ANIMATION_FRAMES.attack1.length
+      : GUANYU_ANIMATION_FRAMES.attack1.length + GUANYU_ANIMATION_FRAMES.attack2.length;
+    const atlasIndex = GUANYU_ATTACK_FRAME_OFFSET + previousCount + localIndex;
+    return {
+      name,
+      x: (atlasIndex % GUANYU_ATLAS_COLUMNS) * GUANYU_CELL_WIDTH,
+      y: Math.floor(atlasIndex / GUANYU_ATLAS_COLUMNS) * GUANYU_CELL_HEIGHT,
+      width: GUANYU_CELL_WIDTH,
+      height: GUANYU_CELL_HEIGHT,
+      originY: GUANYU_ORIGIN_Y,
+      offsetX: 0,
+      offsetY: 0,
+      classification: `${animation} ${GUANYU_ATTACK_PHASES[animation][localIndex]}`,
+    };
+  }),
+);
 const ENEMY_PREVIEW_FRAMES = [
   "idle-0", "idle-1", "walk-0", "walk-1", "walk-2", "walk-3",
   "attack-0", "attack-1", "attack-2", "hurt-0", "hurt-1",
@@ -579,11 +590,14 @@ export default class MainScene extends Phaser.Scene {
 
   private createCombatAnimations() {
     if (this.anims.exists("guanyu-walk")) return;
-    this.anims.create({ key: "guanyu-walk", frames: [0, 1, 2, 3].map(i => ({ key: "guanyu-walk", frame: `walk-${i}` })), frameRate: 8, repeat: -1 });
+    this.anims.create({ key: "guanyu-idle", frames: GUANYU_ANIMATION_FRAMES.idle.map(frame => ({ key: GUANYU_TEXTURE_KEY, frame })), frameRate: 4, repeat: -1 });
+    this.anims.create({ key: "guanyu-walk", frames: GUANYU_ANIMATION_FRAMES.walk.map(frame => ({ key: GUANYU_TEXTURE_KEY, frame })), frameRate: 8, repeat: -1 });
+    this.anims.create({ key: "guanyu-hurt", frames: GUANYU_ANIMATION_FRAMES.hurt.map(frame => ({ key: GUANYU_TEXTURE_KEY, frame })), duration: HURT_MS, repeat: 0 });
+    this.anims.create({ key: "guanyu-dead", frames: GUANYU_ANIMATION_FRAMES.dead.map(frame => ({ key: GUANYU_TEXTURE_KEY, frame })), frameRate: 8, repeat: 0 });
     for (const attack of Object.values(PLAYER_ATTACKS)) {
       this.anims.create({
         key: attack.animationKey,
-        frames: attack.frames.map(frame => ({ key: "guanyu-attack", frame })),
+        frames: attack.frames.map((frame, index) => ({ key: GUANYU_TEXTURE_KEY, frame, duration: attack.extraFrameDurationsMs[index] })),
         frameRate: attack.frameRate,
         repeat: 0,
       });
@@ -660,8 +674,7 @@ export default class MainScene extends Phaser.Scene {
     this.gameplayEvents.publish({ type: "player-attack-started", step, at: this.time.now });
     this.playerBody.setVelocity(0, 0);
     this.disableAttackHitbox();
-    const firstFrame = PREVIEW_FRAMES[(step - 1) * 2];
-    this.playerActor.playAttack(attack.animationKey, firstFrame.originY);
+    this.playerActor.playAttack(attack.animationKey);
   }
 
   private handleAnimationComplete(animation: Phaser.Animations.Animation) {
@@ -674,8 +687,6 @@ export default class MainScene extends Phaser.Scene {
   }
 
   private handleAnimationUpdate(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
-    const frameName = String(frame.textureFrame);
-    this.playerActor.setAnimationOrigin(FRAME_ORIGIN_Y[frameName] ?? this.playerSprite.originY);
     if (this.attackController.isActiveFrame(animation.key, frame.index)) this.enableAttackHitbox(); else this.disableAttackHitbox();
   }
 
@@ -1343,8 +1354,10 @@ export default class MainScene extends Phaser.Scene {
     const { previous } = transition;
     this.gameplayEvents.publish({ type: "player-state-changed", previous, next, at: this.time.now });
     this.transitionLog.push(`${previous} -> ${next}`); if (this.transitionLog.length > 20) this.transitionLog.shift();
-    if (next === "idle" || next === "hurt" || next === "dead") this.playerActor.showIdleFrame();
-    else if (next === "walk") this.playerActor.playWalk(FRAME_ORIGIN_Y["walk-0"]);
+    if (next === "idle") this.playerActor.showIdleFrame();
+    else if (next === "walk") this.playerActor.playWalk();
+    else if (next === "hurt") this.playerActor.playHurt();
+    else if (next === "dead") this.playerActor.playDead();
   }
 
   private createEnemyAlignmentPreview() {
@@ -1399,8 +1412,8 @@ export default class MainScene extends Phaser.Scene {
     const keyboard = this.input.keyboard;
     if (!keyboard) throw new Error("Keyboard input is unavailable");
     this.previewKeys = keyboard.addKeys({ left: "LEFT", right: "RIGHT", play: "SPACE", slower: "DOWN", faster: "UP", loop: "L", onion: "O" }) as typeof this.previewKeys;
-    this.onionSprite = this.add.sprite(VIEWPORT_WIDTH / 2, 600, "guanyu-attack", "attack-0").setAlpha(0.32).setTint(0x69cfff).setScale(0.64).setVisible(false);
-    this.previewSprite = this.add.sprite(VIEWPORT_WIDTH / 2, 600, "guanyu-attack", "attack-0").setScale(0.64);
+    this.onionSprite = this.add.sprite(VIEWPORT_WIDTH / 2, 600, GUANYU_TEXTURE_KEY, PREVIEW_FRAMES[0].name).setAlpha(0.32).setTint(0x69cfff).setScale(GUANYU_DISPLAY_SCALE).setVisible(false);
+    this.previewSprite = this.add.sprite(VIEWPORT_WIDTH / 2, 600, GUANYU_TEXTURE_KEY, PREVIEW_FRAMES[0].name).setScale(GUANYU_DISPLAY_SCALE);
     this.previewText = this.add.text(24, 22, "", { fontFamily: "Consolas, monospace", fontSize: "18px", color: "#fff", backgroundColor: "rgba(0,0,0,.8)", padding: { x: 12, y: 10 }, lineSpacing: 3 }).setDepth(100);
     this.showPreviewFrame(0);
   }
@@ -1426,9 +1439,9 @@ export default class MainScene extends Phaser.Scene {
   private showPreviewFrame(index: number) {
     this.previewIndex = Phaser.Math.Wrap(index, 0, PREVIEW_FRAMES.length);
     const current = PREVIEW_FRAMES[this.previewIndex];
-    this.previewSprite!.setTexture("guanyu-attack", current.name).setOrigin(0.5, current.originY).setPosition(VIEWPORT_WIDTH / 2, 600);
+    this.previewSprite!.setTexture(GUANYU_TEXTURE_KEY, current.name).setOrigin(0.5, current.originY).setPosition(VIEWPORT_WIDTH / 2, 600);
     const previous = PREVIEW_FRAMES[Phaser.Math.Wrap(this.previewIndex - 1, 0, PREVIEW_FRAMES.length)];
-    this.onionSprite!.setTexture("guanyu-attack", previous.name).setOrigin(0.5, previous.originY).setPosition(VIEWPORT_WIDTH / 2, 600).setVisible(this.onionEnabled);
+    this.onionSprite!.setTexture(GUANYU_TEXTURE_KEY, previous.name).setOrigin(0.5, previous.originY).setPosition(VIEWPORT_WIDTH / 2, 600).setVisible(this.onionEnabled);
     this.refreshPreviewText();
   }
 
@@ -1441,7 +1454,7 @@ export default class MainScene extends Phaser.Scene {
       `classification: ${frame.classification}`, `speed: ${this.previewSpeeds[this.previewFpsIndex]} FPS`,
       `playing: ${this.previewPlaying}  loop: ${this.previewLoop}  onion: ${this.onionEnabled}`, "",
       "Left/Right frame | Space play/pause | Up/Down FPS | L loop | O onion-skin",
-      "Material note: each pair lacks a dedicated recovery and inter-attack transition frame.",
+      "All frames use the shared 640x448 cell, feet anchor (320, 420), and display scale 0.64.",
     ]);
   }
 

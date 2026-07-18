@@ -23,13 +23,15 @@ review gates 定義於 `ART_BIBLE.md`。Asset pipeline 負責忠實產出該規�
 
 | Asset | Runtime Status | Metadata | Known Gap |
 |---|---|---|---|
-| `guanyu-master.png` | idle 已接入 | idle atlas | 只有單幀 idle |
-| `guanyu-walk.png` | 4-frame walk 已接入 | walk atlas | 產生工具未保留 |
-| `guanyu-combo-frames.png` | 6 attack frames 已接入 | attack atlas、debug sheet | 每段缺少完整 transition/recovery 中間幀 |
-| `guanyu-air-hit.png` | 未接入 Phaser | 無正式 atlas | Hurt/death/airborne flow 未完成 |
-| `*-source.png` | 保存 | N/A | 需記錄來源與生成參數 |
+| `guanyu-v2.png` | 43-frame runtime atlas 已接入 | `guanyu-v2.atlas.json`、`guanyu-v2.metadata.json` | M6A.2 無阻斷 gap |
+| `guanyu-idle-v2-source.png` | 6-frame original source | provenance in metadata | 保留 chroma source 與 transparent derivative |
+| `guanyu-actions-v2-source.png` | walk/attack1–3/hurt/dead source | per-component source rects | source layout 非等寬，必須由 component isolation 重建 |
+| `guanyu-dead-final-v2-source.png` | final grounded dead pose source | per-component source rect | 單獨來源用於 dead-5 |
+| legacy Guan Yu sheets | runtime 已停用、保留 audit/reference | 17-frame `legacyAudit` | 不再回退為正式 runtime |
 
-現有 Player scale 依 animation 類型仍由 MainScene 設定；M6A.2 必須將 frame metadata 與顯示契約集中，不可再以不同 scale 修 alignment。
+M6A.2 runtime contract：idle 6、walk 8、attack1 5、attack2 6、attack3 8、hurt 4、dead 6；每格 640×448、feet anchor `(320,420)`、origin `(0.5,0.9375)`、display scale `0.64`、logical idle height `230.4px`。所有 state 共用同一 texture/scale/origin；`tools/build_guanyu_v2_art.py` 以 connected-component isolation 避免非等寬 source 相鄰 frame 污染，並產生 atlas、metadata、red-box/feet-line、onion-skin 與 25% silhouette QA。
+
+三段攻擊保留原本每段 375ms：startup 125ms、active 125ms、recovery 125ms。新增 frames 只細分既有 phase，不改 Combo、damage、hitbox window、body 或世界座標。
 
 ### Player — Zhang Fei / Zhao Yun
 
@@ -224,7 +226,7 @@ Metadata 最少欄位：
 - **M5R.1 runtime:** 已用現有 `forest-camp.png` 建立三段明確、無 uncovered area 的暫時 section；三段獨特場景美術仍屬後續 content polish，不阻擋 encounter work。
 - **M6:** 功能性 Title/HUD/Pause/Failure/Result 已完成；本 Milestone 不製作 custom art。
 - **M6A.1 (Completed):** Visual target、比例、色盤、光源、pixel density、UI language 與 15 張 before baseline 已保存。
-- **M6A.2:** Guan Yu idle/walk/attack1–3/hurt/dead 完整 source、runtime sheet、atlas、metadata 與 debug sheet。
+- **M6A.2 (Completed):** Guan Yu 43-frame source/runtime atlas、metadata/provenance、legacy audit、debug/onion/silhouette QA 與 reproducible component-isolation pipeline 已接入。
 - **M6A.3:** 三種小兵與 Boss 的角色比例、色盤、面向、feet anchor 與 animation consistency pass。
 - **M6A.4:** 三個可辨識竹林 section、前景遮擋、地面層、Boss arena 與無接縫 layer assets。
 - **M6A.5:** 正式 Hit Spark/impact/dust/shadow、Title/HUD/Pause/Failure/Result、custom pixel font 與 mobile control assets。

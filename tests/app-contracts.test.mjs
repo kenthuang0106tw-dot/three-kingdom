@@ -32,6 +32,8 @@ import { TitleStartController } from "../app/game/flow/TitleStartController.ts";
 import { createHudViewModel } from "../app/game/ui/HudViewModel.ts";
 import { FailureRestartGate } from "../app/game/flow/FailureRestartGate.ts";
 import { ResultReplayGate } from "../app/game/flow/ResultReplayGate.ts";
+import { PLAYER_ATTACKS } from "../app/game/player/PlayerAttackController.ts";
+import { GUANYU_ANIMATION_FRAMES, GUANYU_DISPLAY_SCALE, GUANYU_ORIGIN_Y } from "../app/game/player/GuanYuAnimationMetadata.ts";
 
 test("Production builds compile Phaser development presentation out", async () => {
   const [viteConfig, githubConfig, host, scene] = await Promise.all([
@@ -196,11 +198,40 @@ test("Runtime asset manifest preserves keys and reports missing required assets"
   assert.match(source, /load\.on\("loaderror"/);
   assert.match(source, /load\.off\("loaderror"/);
   assert.deepEqual(RUNTIME_ASSET_MANIFEST.map(asset => asset.key), [
-    "forest", "guanyu-idle", "guanyu-walk", "guanyu-attack", "enemy-soldier", "enemy-mauler", "enemy-duelist", "boss-warlord-attacks", "boss-warlord-lifecycle",
+    "forest", "guanyu-v2", "enemy-soldier", "enemy-mauler", "enemy-duelist", "boss-warlord-attacks", "boss-warlord-lifecycle",
   ]);
   const messages = [];
-  createAssetFailureReporter(RUNTIME_ASSET_MANIFEST, message => messages.push(message))("guanyu-walk");
-  assert.deepEqual(messages, ["Required runtime asset failed to load: guanyu-walk"]);
+  createAssetFailureReporter(RUNTIME_ASSET_MANIFEST, message => messages.push(message))("guanyu-v2");
+  assert.deepEqual(messages, ["Required runtime asset failed to load: guanyu-v2"]);
+});
+
+test("Guan Yu v2 atlas preserves frame counts, feet anchor, scale, and source provenance", async () => {
+  const atlas = JSON.parse(await readFile(new URL("../public/art/guanyu/guanyu-v2.atlas.json", import.meta.url), "utf8"));
+  const metadata = JSON.parse(await readFile(new URL("../public/art/guanyu/guanyu-v2.metadata.json", import.meta.url), "utf8"));
+  const png = await readFile(new URL("../public/art/guanyu/guanyu-v2.png", import.meta.url));
+  const expectedCounts = { idle: 6, walk: 8, attack1: 5, attack2: 6, attack3: 8, hurt: 4, dead: 6 };
+  const frameNames = metadata.frames.map(frame => frame.name);
+
+  assert.equal(png.readUInt32BE(16), atlas.meta.size.w);
+  assert.equal(png.readUInt32BE(20), atlas.meta.size.h);
+  assert.equal(frameNames.length, 43);
+  assert.equal(new Set(frameNames).size, frameNames.length);
+  assert.deepEqual(Object.keys(atlas.frames), frameNames);
+  for (const [animation, count] of Object.entries(expectedCounts)) {
+    assert.equal(metadata.animations[animation].frames.length, count);
+  }
+  for (const frame of metadata.frames) {
+    assert.deepEqual(frame.feetAnchor, { x: 320, y: 420 });
+    assert.equal(frame.displayScale, GUANYU_DISPLAY_SCALE);
+    assert.equal(frame.originY, GUANYU_ORIGIN_Y);
+    assert.ok(frame.runtimeAlphaBounds.x >= 0 && frame.runtimeAlphaBounds.y >= 0);
+    assert.ok(frame.runtimeAlphaBounds.x + frame.runtimeAlphaBounds.width <= metadata.cell.width);
+    assert.ok(frame.runtimeAlphaBounds.y + frame.runtimeAlphaBounds.height <= metadata.cell.height);
+  }
+  assert.equal(metadata.logicalIdleHeight, 230.4);
+  assert.equal(metadata.provenance.original, true);
+  assert.equal(metadata.provenance.generationPromptSummary.length, 3);
+  assert.equal(metadata.legacyAudit.length, 17);
 });
 
 test("Runtime asset URLs support the GitHub Pages repository base path", () => {
@@ -408,7 +439,17 @@ test("PlayerAttackController defines independent three-stage timing metadata", a
   assert.match(controller, /startupFrames/);
   assert.match(controller, /activeFrames/);
   assert.match(controller, /recoveryFrames/);
-  assert.match(controller, /frameRate: 8/);
+  assert.deepEqual(Object.values(PLAYER_ATTACKS).map(attack => attack.frames.length), [5, 6, 8]);
+  assert.deepEqual(GUANYU_ANIMATION_FRAMES.attack1, PLAYER_ATTACKS[1].frames);
+  for (const attack of Object.values(PLAYER_ATTACKS)) {
+    const baseFrameMs = 1000 / attack.frameRate;
+    const phaseDuration = indexes => indexes.reduce(
+      (total, frameIndex) => total + baseFrameMs + attack.extraFrameDurationsMs[frameIndex - 1], 0,
+    );
+    assert.ok(Math.abs(phaseDuration(attack.startupFrames) - 125) < 0.001);
+    assert.ok(Math.abs(phaseDuration(attack.activeFrames) - 125) < 0.001);
+    assert.ok(Math.abs(phaseDuration(attack.recoveryFrames) - 125) < 0.001);
+  }
 });
 
 test("Clock pause reasons remain independent and resume only when all reasons clear", () => {

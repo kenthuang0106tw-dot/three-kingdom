@@ -397,11 +397,16 @@ gates. Fifteen revision-pinned before captures cover desktop, landscape, and
 portrait at five matching product checkpoints; the capture README records the
 development instrumentation that must remain constant in later comparisons.
 
-Actual production art debt remains open by design: Guan Yu uses animation-specific
-scales and incomplete transitions; actor sets have inconsistent visual density;
-the three Stage sections reuse one background; Effects/UI remain prototype art.
-These gaps are now ordered explicitly across 6A.2–6A.6 rather than being fixed
-opportunistically.
+M6A / Task 6A.2 resolves Guan Yu's animation-specific scales, one-frame idle,
+incomplete walk/attack transitions, and missing grounded hurt/dead runtime art.
+The accepted replacement has 43 distinct frames, one scale/origin/feet contract,
+explicit provenance, a reproducible component-isolation build, and automated
+phase-timing/atlas checks. Legacy frames remain only as a documented audit and
+fallback reference, not active runtime content.
+
+Remaining production art debt stays ordered rather than opportunistic: Enemy
+and Boss visual density/facing/alignment is 6A.3; the three reused Stage sections
+are 6A.4; Effects/UI prototype art is 6A.5; final comparison/freeze is 6A.6.
 
 ### TD-H10 — Encounter-clear camera handoff visibly snaps
 

@@ -2,16 +2,16 @@
 
 ## Sprint Goal
 
-M6A.1 已鎖定視覺目標、Art Bible 與三 viewport before baseline。下一步只執行 M6A.2 Guan Yu animation quality upgrade，不同時改敵人、Boss、Stage、Effects 或 UI。
+M6A.1 已鎖定視覺目標與 before baseline；M6A.2 已完成 Guan Yu 完整動畫與統一 runtime contract。下一步只執行 M6A.3 Enemy and Boss visual consistency，不同時改 Stage、Effects、UI 或 Audio。
 
-Roadmap decision（2026-07-18）：6A.2 必須遵守已接受的比例、palette、feet anchor、capture 與 provenance contract；不可重新解釋 Art Bible。
+Roadmap decision（2026-07-18）：6A.3 必須以 6A.2 已接受的 Guan Yu 比例、palette、feet anchor、capture 與 provenance contract 對齊；不可重新解釋 Art Bible 或更改 gameplay timing。
 
 ## Cadence
 
 - Duration：2 weeks
 - Capacity：1 developer + AI，約 40–55 hours
 - Milestone：M6A — Visual Upgrade
-- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M6A / 6A.2 Guan Yu animation quality upgrade
+- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M6A / 6A.3 Enemy and Boss visual consistency
 
 ## Task List
 
@@ -31,7 +31,8 @@ Roadmap decision（2026-07-18）：6A.2 必須遵守已接受的比例、palette
 | 12 | ✅ M6 / Task 6.6 — Result/replay | 6–10h | 正式 Result UI、單一路徑 replay 與 deterministic new run | 76 tests + desktop/mobile/10-cycle acceptance passed |
 | 13 | ✅ M6 / Task 6.7 — UI/mobile acceptance | 8–12h | 三 viewport 完整流程、safe area、production presentation | 77 tests + source/production browser acceptance passed |
 | 14 | ✅ M6A / Task 6A.1 — Visual target、Art Bible 與 before/after baseline | 10–16h | 可執行的美術規格與 15 張 before captures | document/visual acceptance passed；production art unchanged |
-| 15 | M6A / Task 6A.2 — Guan Yu animation quality upgrade | 24–40h | 統一 identity/scale/feet anchor 的完整主角動畫 | metadata/debug/onion-skin/three-viewport acceptance |
+| 15 | ✅ M6A / Task 6A.2 — Guan Yu animation quality upgrade | 24–40h | 統一 identity/scale/feet anchor 的 43-frame 主角動畫 | 78 tests + metadata/debug/onion/three-viewport/build acceptance passed |
+| 16 | M6A / Task 6A.3 — Enemy and Boss visual consistency | 32–48h | 三小兵與 Boss 對齊主角視覺契約 | actor audit/metadata/onion/three-viewport acceptance |
 
 ## Recovery Planning Correction — 2026-07-14
 
@@ -644,3 +645,16 @@ The next eligible task is M6A / Task 6A.1 — Visual target, Art Bible, and befo
 - [x] 本 Task 未生成或替換任何 production art，未修改 runtime、gameplay 或 balance。
 
 The next eligible task is M6A / Task 6A.2 — Guan Yu animation quality upgrade. Do not begin it until the next task-runner cycle.
+
+## M6A / Task 6A.2 Closeout — 2026-07-18
+
+- [x] Audited 17 legacy Guan Yu frames and recorded source bounds, facing, feet status, and accept/reject decisions.
+- [x] Added 43 distinct genuine poses: idle 6, walk 8, attack1 5, attack2 6, attack3 8, hurt 4, dead 6.
+- [x] Runtime uses one `guanyu-v2` atlas, 640×448 cells, feet anchor `(320,420)`, origin `(0.5,0.9375)`, display scale `0.64`, and logical idle height `230.4px`.
+- [x] Attack phase durations remain startup 125ms / active 125ms / recovery 125ms for all three attacks; Combo, damage, body, hitbox, movement, AI, Stage, camera, and input contracts are unchanged.
+- [x] Added reproducible component-isolation pipeline, explicit atlas/metadata, provenance, red-box/feet-line, onion-skin, and 25% silhouette QA sheets.
+- [x] Attack preview exposes all 19 attack frames; visual review found no crop, neighbor contamination, duplicate pose, or feet-anchor drift.
+- [x] `pnpm test` 78/78, typecheck, lint 0 errors (8 existing warnings), `pnpm build`, and `pnpm build:github-pages` passed.
+- [x] Development preview, desktop 1280×720, landscape 844×390, portrait 390×844, and production browser smoke each retained one Canvas with zero runtime errors.
+
+The next eligible task is M6A / Task 6A.3 — Enemy and Boss visual consistency. Do not begin it until the next task-runner cycle.

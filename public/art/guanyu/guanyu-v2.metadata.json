@@ -1,0 +1,2190 @@
+{
+  "provenance": {
+    "tool": "OpenAI built-in image generator plus chroma-key removal and tools/build_guanyu_v2_art.py",
+    "generatedAt": "2026-07-18",
+    "original": true,
+    "reference": "project-owned guanyu-master-source.png identity and motion reference sheets",
+    "generationPromptSummary": [
+      "Original 1990s Japanese-realistic Three Kingdoms pixel-art Guan Yu; jade, blue-black, antique-gold, and red costume; right-facing; flat magenta chroma background; six subtle grounded idle poses with fixed feet.",
+      "Same original Guan Yu identity and palette; genuine right-facing walk, three attack, grounded hurt, and death action rows; fixed feet; no text, shadow, watermark, interpolation, or transform-derived poses.",
+      "Same original Guan Yu identity; one distinct final grounded settled death pose on flat magenta chroma background; no text, shadow, watermark, or third-party character copy."
+    ],
+    "sourceRevision": "b752653",
+    "manualReviewer": "Codex Technical Lead",
+    "acceptedBaseline": "docs/visual-baselines/m6a-6a1-before/desktop-combat.png"
+  },
+  "runtimeTextureKey": "guanyu-v2",
+  "animationKeys": [
+    "guanyu-idle",
+    "guanyu-walk",
+    "guanyu-attack1",
+    "guanyu-attack2",
+    "guanyu-attack3",
+    "guanyu-hurt",
+    "guanyu-dead"
+  ],
+  "cell": {
+    "width": 640,
+    "height": 448
+  },
+  "feetAnchor": {
+    "x": 320,
+    "y": 420
+  },
+  "displayScale": 0.64,
+  "logicalIdleHeight": 230.4,
+  "sourceScales": {
+    "guanyu-idle-v2-transparent.png": 0.6741573033707865,
+    "guanyu-actions-v2-transparent.png": 1.9251336898395721,
+    "guanyu-dead-final-v2-transparent.png": 0.2362006133466871
+  },
+  "animations": {
+    "idle": {
+      "frames": [
+        "idle-0",
+        "idle-1",
+        "idle-2",
+        "idle-3",
+        "idle-4",
+        "idle-5"
+      ],
+      "phase": "loop"
+    },
+    "walk": {
+      "frames": [
+        "walk-0",
+        "walk-1",
+        "walk-2",
+        "walk-3",
+        "walk-4",
+        "walk-5",
+        "walk-6",
+        "walk-7"
+      ],
+      "phase": "locomotion"
+    },
+    "attack1": {
+      "frames": [
+        "attack1-0",
+        "attack1-1",
+        "attack1-2",
+        "attack1-3",
+        "attack1-4"
+      ],
+      "phases": [
+        "startup",
+        "startup",
+        "active",
+        "active",
+        "recovery"
+      ]
+    },
+    "attack2": {
+      "frames": [
+        "attack2-0",
+        "attack2-1",
+        "attack2-2",
+        "attack2-3",
+        "attack2-4",
+        "attack2-5"
+      ],
+      "phases": [
+        "startup",
+        "startup",
+        "active",
+        "active",
+        "recovery",
+        "recovery"
+      ]
+    },
+    "attack3": {
+      "frames": [
+        "attack3-0",
+        "attack3-1",
+        "attack3-2",
+        "attack3-3",
+        "attack3-4",
+        "attack3-5",
+        "attack3-6",
+        "attack3-7"
+      ],
+      "phases": [
+        "startup",
+        "startup",
+        "startup",
+        "active",
+        "active",
+        "active",
+        "recovery",
+        "recovery"
+      ]
+    },
+    "hurt": {
+      "frames": [
+        "hurt-0",
+        "hurt-1",
+        "hurt-2",
+        "hurt-3"
+      ],
+      "phase": "hurt"
+    },
+    "dead": {
+      "frames": [
+        "dead-0",
+        "dead-1",
+        "dead-2",
+        "dead-3",
+        "dead-4",
+        "dead-5"
+      ],
+      "phase": "dead"
+    }
+  },
+  "frames": [
+    {
+      "name": "idle-0",
+      "animation": "idle",
+      "phase": "loop",
+      "sourceImage": "guanyu-idle-v2-transparent.png",
+      "sourceRect": {
+        "x": 45,
+        "y": 84,
+        "width": 309,
+        "height": 534
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 309,
+        "height": 534
+      },
+      "runtimeAlphaBounds": {
+        "x": 228,
+        "y": 60,
+        "width": 208,
+        "height": 360
+      },
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 228,
+      "displayOffsetY": 60,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 0.6741573033707865,
+      "displayScale": 0.64
+    },
+    {
+      "name": "idle-1",
+      "animation": "idle",
+      "phase": "loop",
+      "sourceImage": "guanyu-idle-v2-transparent.png",
+      "sourceRect": {
+        "x": 399,
+        "y": 86,
+        "width": 323,
+        "height": 532
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 323,
+        "height": 532
+      },
+      "runtimeAlphaBounds": {
+        "x": 223,
+        "y": 61,
+        "width": 218,
+        "height": 359
+      },
+      "frame": {
+        "x": 640,
+        "y": 0,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 223,
+      "displayOffsetY": 61,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 0.6741573033707865,
+      "displayScale": 0.64
+    },
+    {
+      "name": "idle-2",
+      "animation": "idle",
+      "phase": "loop",
+      "sourceImage": "guanyu-idle-v2-transparent.png",
+      "sourceRect": {
+        "x": 749,
+        "y": 84,
+        "width": 323,
+        "height": 534
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 323,
+        "height": 534
+      },
+      "runtimeAlphaBounds": {
+        "x": 215,
+        "y": 60,
+        "width": 218,
+        "height": 360
+      },
+      "frame": {
+        "x": 1280,
+        "y": 0,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 215,
+      "displayOffsetY": 60,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 0.6741573033707865,
+      "displayScale": 0.64
+    },
+    {
+      "name": "idle-3",
+      "animation": "idle",
+      "phase": "loop",
+      "sourceImage": "guanyu-idle-v2-transparent.png",
+      "sourceRect": {
+        "x": 1097,
+        "y": 87,
+        "width": 319,
+        "height": 531
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 319,
+        "height": 531
+      },
+      "runtimeAlphaBounds": {
+        "x": 205,
+        "y": 62,
+        "width": 215,
+        "height": 358
+      },
+      "frame": {
+        "x": 1920,
+        "y": 0,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 205,
+      "displayOffsetY": 62,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 0.6741573033707865,
+      "displayScale": 0.64
+    },
+    {
+      "name": "idle-4",
+      "animation": "idle",
+      "phase": "loop",
+      "sourceImage": "guanyu-idle-v2-transparent.png",
+      "sourceRect": {
+        "x": 1452,
+        "y": 83,
+        "width": 323,
+        "height": 535
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 323,
+        "height": 535
+      },
+      "runtimeAlphaBounds": {
+        "x": 201,
+        "y": 59,
+        "width": 218,
+        "height": 361
+      },
+      "frame": {
+        "x": 2560,
+        "y": 0,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 201,
+      "displayOffsetY": 59,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 0.6741573033707865,
+      "displayScale": 0.64
+    },
+    {
+      "name": "idle-5",
+      "animation": "idle",
+      "phase": "loop",
+      "sourceImage": "guanyu-idle-v2-transparent.png",
+      "sourceRect": {
+        "x": 1804,
+        "y": 84,
+        "width": 321,
+        "height": 534
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 321,
+        "height": 534
+      },
+      "runtimeAlphaBounds": {
+        "x": 194,
+        "y": 60,
+        "width": 216,
+        "height": 360
+      },
+      "frame": {
+        "x": 3200,
+        "y": 0,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 194,
+      "displayOffsetY": 60,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 0.6741573033707865,
+      "displayScale": 0.64
+    },
+    {
+      "name": "walk-0",
+      "animation": "walk",
+      "phase": "locomotion",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 38,
+        "y": 23,
+        "width": 121,
+        "height": 186
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 121,
+        "height": 186
+      },
+      "runtimeAlphaBounds": {
+        "x": 219,
+        "y": 62,
+        "width": 233,
+        "height": 358
+      },
+      "frame": {
+        "x": 3840,
+        "y": 0,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 219,
+      "displayOffsetY": 62,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "walk-1",
+      "animation": "walk",
+      "phase": "locomotion",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 218,
+        "y": 23,
+        "width": 115,
+        "height": 187
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 115,
+        "height": 187
+      },
+      "runtimeAlphaBounds": {
+        "x": 217,
+        "y": 60,
+        "width": 221,
+        "height": 360
+      },
+      "frame": {
+        "x": 4480,
+        "y": 0,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 217,
+      "displayOffsetY": 60,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "walk-2",
+      "animation": "walk",
+      "phase": "locomotion",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 393,
+        "y": 23,
+        "width": 132,
+        "height": 187
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 132,
+        "height": 187
+      },
+      "runtimeAlphaBounds": {
+        "x": 205,
+        "y": 60,
+        "width": 254,
+        "height": 360
+      },
+      "frame": {
+        "x": 0,
+        "y": 448,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 205,
+      "displayOffsetY": 60,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "walk-3",
+      "animation": "walk",
+      "phase": "locomotion",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 576,
+        "y": 23,
+        "width": 122,
+        "height": 187
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 122,
+        "height": 187
+      },
+      "runtimeAlphaBounds": {
+        "x": 209,
+        "y": 60,
+        "width": 235,
+        "height": 360
+      },
+      "frame": {
+        "x": 640,
+        "y": 448,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 209,
+      "displayOffsetY": 60,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "walk-4",
+      "animation": "walk",
+      "phase": "locomotion",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 773,
+        "y": 23,
+        "width": 99,
+        "height": 187
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 99,
+        "height": 187
+      },
+      "runtimeAlphaBounds": {
+        "x": 240,
+        "y": 60,
+        "width": 191,
+        "height": 360
+      },
+      "frame": {
+        "x": 1280,
+        "y": 448,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 240,
+      "displayOffsetY": 60,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "walk-5",
+      "animation": "walk",
+      "phase": "locomotion",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 935,
+        "y": 23,
+        "width": 124,
+        "height": 187
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 124,
+        "height": 187
+      },
+      "runtimeAlphaBounds": {
+        "x": 204,
+        "y": 60,
+        "width": 239,
+        "height": 360
+      },
+      "frame": {
+        "x": 1920,
+        "y": 448,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 204,
+      "displayOffsetY": 60,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "walk-6",
+      "animation": "walk",
+      "phase": "locomotion",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 1114,
+        "y": 23,
+        "width": 134,
+        "height": 187
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 134,
+        "height": 187
+      },
+      "runtimeAlphaBounds": {
+        "x": 200,
+        "y": 60,
+        "width": 258,
+        "height": 360
+      },
+      "frame": {
+        "x": 2560,
+        "y": 448,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 200,
+      "displayOffsetY": 60,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "walk-7",
+      "animation": "walk",
+      "phase": "locomotion",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 1299,
+        "y": 23,
+        "width": 96,
+        "height": 186
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 96,
+        "height": 186
+      },
+      "runtimeAlphaBounds": {
+        "x": 207,
+        "y": 62,
+        "width": 185,
+        "height": 358
+      },
+      "frame": {
+        "x": 3200,
+        "y": 448,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 207,
+      "displayOffsetY": 62,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "attack1-0",
+      "animation": "attack1",
+      "phase": "startup",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 30,
+        "y": 236,
+        "width": 139,
+        "height": 181
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 139,
+        "height": 181
+      },
+      "runtimeAlphaBounds": {
+        "x": 204,
+        "y": 72,
+        "width": 268,
+        "height": 348
+      },
+      "frame": {
+        "x": 3840,
+        "y": 448,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 204,
+      "displayOffsetY": 72,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "attack1-1",
+      "animation": "attack1",
+      "phase": "startup",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 207,
+        "y": 235,
+        "width": 158,
+        "height": 182
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 158,
+        "height": 182
+      },
+      "runtimeAlphaBounds": {
+        "x": 196,
+        "y": 70,
+        "width": 304,
+        "height": 350
+      },
+      "frame": {
+        "x": 4480,
+        "y": 448,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 196,
+      "displayOffsetY": 70,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "attack1-2",
+      "animation": "attack1",
+      "phase": "active",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 392,
+        "y": 235,
+        "width": 195,
+        "height": 182
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 195,
+        "height": 182
+      },
+      "runtimeAlphaBounds": {
+        "x": 204,
+        "y": 70,
+        "width": 375,
+        "height": 350
+      },
+      "frame": {
+        "x": 0,
+        "y": 896,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 204,
+      "displayOffsetY": 70,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "attack1-3",
+      "animation": "attack1",
+      "phase": "active",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 584,
+        "y": 241,
+        "width": 187,
+        "height": 176
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 187,
+        "height": 176
+      },
+      "runtimeAlphaBounds": {
+        "x": 225,
+        "y": 81,
+        "width": 360,
+        "height": 339
+      },
+      "frame": {
+        "x": 640,
+        "y": 896,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 225,
+      "displayOffsetY": 81,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "attack1-4",
+      "animation": "attack1",
+      "phase": "recovery",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 781,
+        "y": 236,
+        "width": 140,
+        "height": 181
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 140,
+        "height": 181
+      },
+      "runtimeAlphaBounds": {
+        "x": 256,
+        "y": 72,
+        "width": 270,
+        "height": 348
+      },
+      "frame": {
+        "x": 1280,
+        "y": 896,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 256,
+      "displayOffsetY": 72,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "attack2-0",
+      "animation": "attack2",
+      "phase": "startup",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 31,
+        "y": 441,
+        "width": 139,
+        "height": 181
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 139,
+        "height": 181
+      },
+      "runtimeAlphaBounds": {
+        "x": 205,
+        "y": 72,
+        "width": 268,
+        "height": 348
+      },
+      "frame": {
+        "x": 1920,
+        "y": 896,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 205,
+      "displayOffsetY": 72,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "attack2-1",
+      "animation": "attack2",
+      "phase": "startup",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 207,
+        "y": 441,
+        "width": 145,
+        "height": 180
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 145,
+        "height": 180
+      },
+      "runtimeAlphaBounds": {
+        "x": 196,
+        "y": 73,
+        "width": 279,
+        "height": 347
+      },
+      "frame": {
+        "x": 2560,
+        "y": 896,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 196,
+      "displayOffsetY": 73,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "attack2-2",
+      "animation": "attack2",
+      "phase": "active",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 388,
+        "y": 447,
+        "width": 154,
+        "height": 171
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 154,
+        "height": 171
+      },
+      "runtimeAlphaBounds": {
+        "x": 196,
+        "y": 91,
+        "width": 296,
+        "height": 329
+      },
+      "frame": {
+        "x": 3200,
+        "y": 896,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 196,
+      "displayOffsetY": 91,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "attack2-3",
+      "animation": "attack2",
+      "phase": "active",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 576,
+        "y": 441,
+        "width": 158,
+        "height": 180
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 158,
+        "height": 180
+      },
+      "runtimeAlphaBounds": {
+        "x": 209,
+        "y": 73,
+        "width": 304,
+        "height": 347
+      },
+      "frame": {
+        "x": 3840,
+        "y": 896,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 209,
+      "displayOffsetY": 73,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "attack2-4",
+      "animation": "attack2",
+      "phase": "recovery",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 776,
+        "y": 445,
+        "width": 154,
+        "height": 176
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 154,
+        "height": 176
+      },
+      "runtimeAlphaBounds": {
+        "x": 246,
+        "y": 81,
+        "width": 296,
+        "height": 339
+      },
+      "frame": {
+        "x": 4480,
+        "y": 896,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 246,
+      "displayOffsetY": 81,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "attack2-5",
+      "animation": "attack2",
+      "phase": "recovery",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 968,
+        "y": 445,
+        "width": 140,
+        "height": 176
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 140,
+        "height": 176
+      },
+      "runtimeAlphaBounds": {
+        "x": 267,
+        "y": 81,
+        "width": 270,
+        "height": 339
+      },
+      "frame": {
+        "x": 0,
+        "y": 1344,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 267,
+      "displayOffsetY": 81,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "attack3-0",
+      "animation": "attack3",
+      "phase": "startup",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 30,
+        "y": 630,
+        "width": 126,
+        "height": 174
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 126,
+        "height": 174
+      },
+      "runtimeAlphaBounds": {
+        "x": 204,
+        "y": 85,
+        "width": 243,
+        "height": 335
+      },
+      "frame": {
+        "x": 640,
+        "y": 1344,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 204,
+      "displayOffsetY": 85,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "attack3-1",
+      "animation": "attack3",
+      "phase": "startup",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 193,
+        "y": 632,
+        "width": 164,
+        "height": 170
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 164,
+        "height": 170
+      },
+      "runtimeAlphaBounds": {
+        "x": 169,
+        "y": 93,
+        "width": 316,
+        "height": 327
+      },
+      "frame": {
+        "x": 1280,
+        "y": 1344,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 169,
+      "displayOffsetY": 93,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "attack3-2",
+      "animation": "attack3",
+      "phase": "startup",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 388,
+        "y": 634,
+        "width": 142,
+        "height": 168
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 142,
+        "height": 168
+      },
+      "runtimeAlphaBounds": {
+        "x": 196,
+        "y": 97,
+        "width": 273,
+        "height": 323
+      },
+      "frame": {
+        "x": 1920,
+        "y": 1344,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 196,
+      "displayOffsetY": 97,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "attack3-3",
+      "animation": "attack3",
+      "phase": "active",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 555,
+        "y": 630,
+        "width": 163,
+        "height": 172
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 163,
+        "height": 172
+      },
+      "runtimeAlphaBounds": {
+        "x": 169,
+        "y": 89,
+        "width": 314,
+        "height": 331
+      },
+      "frame": {
+        "x": 2560,
+        "y": 1344,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 169,
+      "displayOffsetY": 89,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "attack3-4",
+      "animation": "attack3",
+      "phase": "active",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 740,
+        "y": 631,
+        "width": 172,
+        "height": 171
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 172,
+        "height": 171
+      },
+      "runtimeAlphaBounds": {
+        "x": 177,
+        "y": 91,
+        "width": 331,
+        "height": 329
+      },
+      "frame": {
+        "x": 3200,
+        "y": 1344,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 177,
+      "displayOffsetY": 91,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "attack3-5",
+      "animation": "attack3",
+      "phase": "active",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 913,
+        "y": 631,
+        "width": 158,
+        "height": 171
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 158,
+        "height": 171
+      },
+      "runtimeAlphaBounds": {
+        "x": 161,
+        "y": 91,
+        "width": 304,
+        "height": 329
+      },
+      "frame": {
+        "x": 3840,
+        "y": 1344,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 161,
+      "displayOffsetY": 91,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "attack3-6",
+      "animation": "attack3",
+      "phase": "recovery",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 1084,
+        "y": 630,
+        "width": 135,
+        "height": 172
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 135,
+        "height": 172
+      },
+      "runtimeAlphaBounds": {
+        "x": 142,
+        "y": 89,
+        "width": 260,
+        "height": 331
+      },
+      "frame": {
+        "x": 4480,
+        "y": 1344,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 142,
+      "displayOffsetY": 89,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "attack3-7",
+      "animation": "attack3",
+      "phase": "recovery",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 1237,
+        "y": 630,
+        "width": 130,
+        "height": 172
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 130,
+        "height": 172
+      },
+      "runtimeAlphaBounds": {
+        "x": 88,
+        "y": 89,
+        "width": 250,
+        "height": 331
+      },
+      "frame": {
+        "x": 0,
+        "y": 1792,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 88,
+      "displayOffsetY": 89,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "hurt-0",
+      "animation": "hurt",
+      "phase": "hurt",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 41,
+        "y": 816,
+        "width": 120,
+        "height": 160
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 120,
+        "height": 160
+      },
+      "runtimeAlphaBounds": {
+        "x": 225,
+        "y": 112,
+        "width": 231,
+        "height": 308
+      },
+      "frame": {
+        "x": 640,
+        "y": 1792,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 225,
+      "displayOffsetY": 112,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "hurt-1",
+      "animation": "hurt",
+      "phase": "hurt",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 201,
+        "y": 808,
+        "width": 128,
+        "height": 169
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 128,
+        "height": 169
+      },
+      "runtimeAlphaBounds": {
+        "x": 184,
+        "y": 95,
+        "width": 246,
+        "height": 325
+      },
+      "frame": {
+        "x": 1280,
+        "y": 1792,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 184,
+      "displayOffsetY": 95,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "hurt-2",
+      "animation": "hurt",
+      "phase": "hurt",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 386,
+        "y": 817,
+        "width": 118,
+        "height": 159
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 118,
+        "height": 159
+      },
+      "runtimeAlphaBounds": {
+        "x": 192,
+        "y": 114,
+        "width": 227,
+        "height": 306
+      },
+      "frame": {
+        "x": 1920,
+        "y": 1792,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 192,
+      "displayOffsetY": 114,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "hurt-3",
+      "animation": "hurt",
+      "phase": "hurt",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 559,
+        "y": 812,
+        "width": 119,
+        "height": 165
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 119,
+        "height": 165
+      },
+      "runtimeAlphaBounds": {
+        "x": 177,
+        "y": 102,
+        "width": 229,
+        "height": 318
+      },
+      "frame": {
+        "x": 2560,
+        "y": 1792,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 177,
+      "displayOffsetY": 102,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "dead-0",
+      "animation": "dead",
+      "phase": "dead",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 30,
+        "y": 971,
+        "width": 174,
+        "height": 97
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 174,
+        "height": 97
+      },
+      "runtimeAlphaBounds": {
+        "x": 204,
+        "y": 233,
+        "width": 335,
+        "height": 187
+      },
+      "frame": {
+        "x": 3200,
+        "y": 1792,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 204,
+      "displayOffsetY": 233,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "dead-1",
+      "animation": "dead",
+      "phase": "dead",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 220,
+        "y": 986,
+        "width": 145,
+        "height": 83
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 145,
+        "height": 83
+      },
+      "runtimeAlphaBounds": {
+        "x": 221,
+        "y": 260,
+        "width": 279,
+        "height": 160
+      },
+      "frame": {
+        "x": 3840,
+        "y": 1792,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 221,
+      "displayOffsetY": 260,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "dead-2",
+      "animation": "dead",
+      "phase": "dead",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 405,
+        "y": 994,
+        "width": 171,
+        "height": 72
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 171,
+        "height": 72
+      },
+      "runtimeAlphaBounds": {
+        "x": 229,
+        "y": 281,
+        "width": 329,
+        "height": 139
+      },
+      "frame": {
+        "x": 4480,
+        "y": 1792,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 229,
+      "displayOffsetY": 281,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "dead-3",
+      "animation": "dead",
+      "phase": "dead",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 593,
+        "y": 1002,
+        "width": 178,
+        "height": 67
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 178,
+        "height": 67
+      },
+      "runtimeAlphaBounds": {
+        "x": 242,
+        "y": 291,
+        "width": 343,
+        "height": 129
+      },
+      "frame": {
+        "x": 0,
+        "y": 2240,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 242,
+      "displayOffsetY": 291,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "dead-4",
+      "animation": "dead",
+      "phase": "dead",
+      "sourceImage": "guanyu-actions-v2-transparent.png",
+      "sourceRect": {
+        "x": 788,
+        "y": 1010,
+        "width": 181,
+        "height": 59
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 181,
+        "height": 59
+      },
+      "runtimeAlphaBounds": {
+        "x": 269,
+        "y": 306,
+        "width": 348,
+        "height": 114
+      },
+      "frame": {
+        "x": 640,
+        "y": 2240,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 269,
+      "displayOffsetY": 306,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 1.9251336898395721,
+      "displayScale": 0.64
+    },
+    {
+      "name": "dead-5",
+      "animation": "dead",
+      "phase": "dead",
+      "sourceImage": "guanyu-dead-final-v2-transparent.png",
+      "sourceRect": {
+        "x": 35,
+        "y": 320,
+        "width": 1463,
+        "height": 381
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 1463,
+        "height": 381
+      },
+      "runtimeAlphaBounds": {
+        "x": 147,
+        "y": 330,
+        "width": 346,
+        "height": 90
+      },
+      "frame": {
+        "x": 1280,
+        "y": 2240,
+        "width": 640,
+        "height": 448
+      },
+      "originX": 0.5,
+      "originY": 0.9375,
+      "displayOffsetX": 147,
+      "displayOffsetY": 330,
+      "feetAnchor": {
+        "x": 320,
+        "y": 420
+      },
+      "sourceScale": 0.2362006133466871,
+      "displayScale": 0.64
+    }
+  ],
+  "legacyAudit": [
+    {
+      "name": "idle-0",
+      "image": "guanyu-master.png",
+      "sourceRect": {
+        "x": 118,
+        "y": 75,
+        "width": 790,
+        "height": 1314
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 790,
+        "height": 1314
+      },
+      "facing": "right",
+      "feetAnchor": "frame-specific legacy pivot",
+      "decision": "identity reference only; rejected as one-frame runtime"
+    },
+    {
+      "name": "walk-0",
+      "image": "guanyu-walk.png",
+      "sourceRect": {
+        "x": 43,
+        "y": 82,
+        "width": 394,
+        "height": 658
+      },
+      "alphaBounds": {
+        "x": 1,
+        "y": 0,
+        "width": 393,
+        "height": 658
+      },
+      "facing": "right",
+      "feetAnchor": "frame-specific legacy pivot",
+      "decision": "four usable key poses; rejected as incomplete cycle and separate scale"
+    },
+    {
+      "name": "walk-1",
+      "image": "guanyu-walk.png",
+      "sourceRect": {
+        "x": 484,
+        "y": 97,
+        "width": 499,
+        "height": 640
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 499,
+        "height": 639
+      },
+      "facing": "right",
+      "feetAnchor": "frame-specific legacy pivot",
+      "decision": "four usable key poses; rejected as incomplete cycle and separate scale"
+    },
+    {
+      "name": "walk-2",
+      "image": "guanyu-walk.png",
+      "sourceRect": {
+        "x": 1069,
+        "y": 93,
+        "width": 386,
+        "height": 654
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 1,
+        "width": 386,
+        "height": 653
+      },
+      "facing": "right",
+      "feetAnchor": "frame-specific legacy pivot",
+      "decision": "four usable key poses; rejected as incomplete cycle and separate scale"
+    },
+    {
+      "name": "walk-3",
+      "image": "guanyu-walk.png",
+      "sourceRect": {
+        "x": 1530,
+        "y": 87,
+        "width": 406,
+        "height": 655
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 1,
+        "width": 405,
+        "height": 654
+      },
+      "facing": "right",
+      "feetAnchor": "frame-specific legacy pivot",
+      "decision": "four usable key poses; rejected as incomplete cycle and separate scale"
+    },
+    {
+      "name": "attack-0",
+      "image": "guanyu-combo-frames.png",
+      "sourceRect": {
+        "x": 0,
+        "y": 0,
+        "width": 512,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 107,
+        "y": 135,
+        "width": 315,
+        "height": 452
+      },
+      "facing": "right",
+      "feetAnchor": "frame-specific legacy pivot",
+      "decision": "six usable key poses; rejected as incomplete transitions and separate scale"
+    },
+    {
+      "name": "attack-1",
+      "image": "guanyu-combo-frames.png",
+      "sourceRect": {
+        "x": 512,
+        "y": 0,
+        "width": 512,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 75,
+        "y": 147,
+        "width": 430,
+        "height": 436
+      },
+      "facing": "right",
+      "feetAnchor": "frame-specific legacy pivot",
+      "decision": "six usable key poses; rejected as incomplete transitions and separate scale"
+    },
+    {
+      "name": "attack-2",
+      "image": "guanyu-combo-frames.png",
+      "sourceRect": {
+        "x": 1024,
+        "y": 0,
+        "width": 512,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 122,
+        "y": 138,
+        "width": 326,
+        "height": 449
+      },
+      "facing": "right",
+      "feetAnchor": "frame-specific legacy pivot",
+      "decision": "six usable key poses; rejected as incomplete transitions and separate scale"
+    },
+    {
+      "name": "attack-3",
+      "image": "guanyu-combo-frames.png",
+      "sourceRect": {
+        "x": 1536,
+        "y": 0,
+        "width": 512,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 97,
+        "y": 148,
+        "width": 320,
+        "height": 439
+      },
+      "facing": "right",
+      "feetAnchor": "frame-specific legacy pivot",
+      "decision": "six usable key poses; rejected as incomplete transitions and separate scale"
+    },
+    {
+      "name": "attack-4",
+      "image": "guanyu-combo-frames.png",
+      "sourceRect": {
+        "x": 2048,
+        "y": 0,
+        "width": 512,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 87,
+        "y": 130,
+        "width": 313,
+        "height": 457
+      },
+      "facing": "right",
+      "feetAnchor": "frame-specific legacy pivot",
+      "decision": "six usable key poses; rejected as incomplete transitions and separate scale"
+    },
+    {
+      "name": "attack-5",
+      "image": "guanyu-combo-frames.png",
+      "sourceRect": {
+        "x": 2560,
+        "y": 0,
+        "width": 512,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 30,
+        "y": 166,
+        "width": 375,
+        "height": 421
+      },
+      "facing": "right",
+      "feetAnchor": "frame-specific legacy pivot",
+      "decision": "six usable key poses; rejected as incomplete transitions and separate scale"
+    },
+    {
+      "name": "air-hit-0",
+      "image": "guanyu-air-hit.png",
+      "sourceRect": {
+        "x": 0,
+        "y": 0,
+        "width": 362,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 18,
+        "y": 234,
+        "width": 296,
+        "height": 343
+      },
+      "facing": "right",
+      "feetAnchor": "not normalized",
+      "decision": "usable hurt reference"
+    },
+    {
+      "name": "air-hit-1",
+      "image": "guanyu-air-hit.png",
+      "sourceRect": {
+        "x": 362,
+        "y": 0,
+        "width": 362,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 9,
+        "y": 85,
+        "width": 353,
+        "height": 419
+      },
+      "facing": "right",
+      "feetAnchor": "not normalized",
+      "decision": "rejected airborne transition"
+    },
+    {
+      "name": "air-hit-2",
+      "image": "guanyu-air-hit.png",
+      "sourceRect": {
+        "x": 724,
+        "y": 0,
+        "width": 362,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 104,
+        "width": 362,
+        "height": 401
+      },
+      "facing": "right",
+      "feetAnchor": "not normalized",
+      "decision": "rejected unrelated kick"
+    },
+    {
+      "name": "air-hit-3",
+      "image": "guanyu-air-hit.png",
+      "sourceRect": {
+        "x": 1086,
+        "y": 0,
+        "width": 362,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 173,
+        "width": 362,
+        "height": 402
+      },
+      "facing": "right",
+      "feetAnchor": "not normalized",
+      "decision": "usable hurt reference"
+    },
+    {
+      "name": "air-hit-4",
+      "image": "guanyu-air-hit.png",
+      "sourceRect": {
+        "x": 1448,
+        "y": 0,
+        "width": 362,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 235,
+        "width": 362,
+        "height": 330
+      },
+      "facing": "right",
+      "feetAnchor": "not normalized",
+      "decision": "rejected airborne fall"
+    },
+    {
+      "name": "air-hit-5",
+      "image": "guanyu-air-hit.png",
+      "sourceRect": {
+        "x": 1810,
+        "y": 0,
+        "width": 362,
+        "height": 724
+      },
+      "alphaBounds": {
+        "x": 0,
+        "y": 449,
+        "width": 353,
+        "height": 142
+      },
+      "facing": "right",
+      "feetAnchor": "not normalized",
+      "decision": "usable grounded death reference"
+    }
+  ]
+}

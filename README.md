@@ -131,8 +131,8 @@ tools/build_enemy_art.py     Enemy sheet/atlas rebuild pipeline
 
 M6 已完成：Title、HUD、Pause、Failure/retry、Result/replay 與 mobile controls 均由 Phaser 擁有，desktop、844×390 橫向觸控、390×844 直向 FIT 及 production 驗收通過。
 
-M6A.1 已鎖定 [ART_BIBLE.md](ART_BIBLE.md) 與三 viewport、五 checkpoint 的 15 張 reproducible before baselines。
+M6A.1 已鎖定 [ART_BIBLE.md](ART_BIBLE.md) 與三 viewport、五 checkpoint 的 15 張 reproducible before baselines；M6A.2 已接入關羽 43-frame 完整動畫、統一 scale/feet anchor 與 reproducible atlas pipeline。
 
-The next single task is M6A / Task 6A.2: upgrade Guan Yu's complete animation set with one identity, scale, and feet-anchor contract.
+The next single task is M6A / Task 6A.3: align all three enemy archetypes and the Boss to the accepted Guan Yu visual contract.
 
-下一個 Task 只重製並接入關羽動畫；敵人、Boss、Stage、Effects、UI、Audio 與新內容仍依 Roadmap 延後。
+下一個 Task 只處理三種小兵與 Boss 的比例、面向、腳底、輪廓、色盤與動畫一致性；Stage、Effects、UI、Audio 與新內容仍依 Roadmap 延後。

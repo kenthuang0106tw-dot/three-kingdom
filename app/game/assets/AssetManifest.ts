@@ -14,9 +14,7 @@ const assetUrl = (path: string) => resolveRuntimeAssetUrl(path);
 
 export const RUNTIME_ASSET_MANIFEST: readonly RuntimeAsset[] = [
   { kind: "image", key: "forest", url: assetUrl("/scene/forest-camp.png") },
-  { kind: "atlas", key: "guanyu-idle", textureURL: assetUrl("/art/guanyu/guanyu-master.png"), atlasURL: assetUrl("/art/guanyu/guanyu-idle.atlas.json") },
-  { kind: "atlas", key: "guanyu-walk", textureURL: assetUrl("/art/guanyu/guanyu-walk.png"), atlasURL: assetUrl("/art/guanyu/guanyu-walk.atlas.json") },
-  { kind: "atlas", key: "guanyu-attack", textureURL: assetUrl("/art/guanyu/guanyu-combo-frames.png"), atlasURL: assetUrl("/art/guanyu/guanyu-attack.atlas.json") },
+  { kind: "atlas", key: "guanyu-v2", textureURL: assetUrl("/art/guanyu/guanyu-v2.png"), atlasURL: assetUrl("/art/guanyu/guanyu-v2.atlas.json") },
   { kind: "atlas", key: "enemy-soldier", textureURL: assetUrl("/art/enemy/enemy-soldier.png"), atlasURL: assetUrl("/art/enemy/enemy-soldier.atlas.json") },
   { kind: "atlas", key: "enemy-mauler", textureURL: assetUrl("/art/enemy/mauler.png"), atlasURL: assetUrl("/art/enemy/mauler.atlas.json") },
   { kind: "atlas", key: "enemy-duelist", textureURL: assetUrl("/art/enemy/duelist.png"), atlasURL: assetUrl("/art/enemy/duelist.atlas.json") },

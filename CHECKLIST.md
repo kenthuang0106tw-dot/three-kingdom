@@ -967,3 +967,22 @@
 | Browser capture | Pass | Three viewport matrix captured with one Canvas and zero browser errors |
 | Scope | Pass | No runtime code, gameplay, balance, Audio, or production art changed |
 | Next task | Selected | M6A / Task 6A.2 — Guan Yu animation quality upgrade |
+
+## M6A / Task 6A.2 Acceptance — 2026-07-18
+
+| Check | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M6A / Task 6A.2 — Guan Yu animation quality upgrade |
+| Legacy audit | Pass | 17 legacy idle/walk/attack/air-hit records include source rect, alpha bounds, facing, feet status, and decision |
+| Genuine frame counts | Pass | 43 unique poses: idle 6, walk 8, attack1 5, attack2 6, attack3 8, hurt 4, dead 6 |
+| Unified runtime contract | Pass | One `guanyu-v2` atlas; 640×448 cells; feet `(320,420)`; origin `(0.5,0.9375)`; scale `0.64`; idle height `230.4px` |
+| Crop/contamination | Pass | Component isolation, alpha-bound validation, red-box/feet-line sheet, onion sheet, and silhouette sheet show no overflow or duplicate hash |
+| Attack timing | Pass | All attacks preserve startup/active/recovery at 125/125/125ms; existing Combo/hitbox/damage contracts unchanged |
+| Preview | Pass | `?previewAttack=1` loaded all 19 attack frames with frame name, phase, cell, origin, feet, scale, 2–10 FPS, loop, and onion controls |
+| Desktop | Pass | 1280×720 development gameplay and production title each rendered one Canvas with zero errors |
+| Mobile landscape | Pass | 844×390 FIT retained one Canvas, readable Guan Yu, controls, and zero errors |
+| Mobile portrait | Pass | 390×844 FIT retained one centered 16:9 Canvas and zero errors |
+| Automated tests | Pass | `pnpm test` 78/78; metadata asserts image/atlas dimensions, counts, bounds, provenance, common feet/scale, and attack timing |
+| Quality gates | Pass | typecheck; lint 0 errors/8 existing warnings; Vinext production build; GitHub Pages build |
+| Scope | Pass | No Enemy, Boss, Stage, Effects, UI, Audio, content, balance, AI, camera, or combat-rule changes |
+| Next task | Selected | M6A / Task 6A.3 — Enemy and Boss visual consistency |
