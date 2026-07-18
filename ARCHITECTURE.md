@@ -659,6 +659,22 @@ current input normally. Scene shutdown removes listeners and GameObjects, clears
 pause reasons, restores clock time scale, and safely resumes managers that still
 exist during Phaser shutdown ordering.
 
+## Failure/Restart Ownership (M6 / Task 6.5)
+
+`FailureController` owns one persistent Phaser keyboard listener, one fixed
+pointer surface, and one three-object failure overlay for the Scene lifetime.
+The controller never changes game flow or restarts the Scene. Keyboard and touch
+edges enter `FailureRestartGate`, which accepts at most one source each time the
+failed presentation opens; `MainScene.update()` consumes that request and remains
+the only caller of the failed-only `restartAfterFailure()` lifecycle path.
+
+All overlay children use camera-fixed coordinates. This is required for Phaser
+pointer hit testing after the camera reaches the Boss arena, not only for visual
+placement. `hide()` closes the request gate before `scene.restart()`, and Scene
+shutdown removes both input handlers and destroys the fixed GameObjects. The
+next `create()` rebuilds Title, Player, Stage, encounter, Boss, camera, Pause,
+HUD, and Failure ownership from their documented initial state.
+
 ## Encounter-clear Camera Handoff Contract (M5R / Task 5R.9)
 
 `CameraFollow.ts` owns a Phaser-free handoff policy in addition to the existing

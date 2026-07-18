@@ -1,44 +1,40 @@
 # Next Task
 
-## M6 / Task 6.5 — Failure/continue/restart
+## M6 / Task 6.6 — Result/replay
 
 ### Why this is next
 
-Pause/resume is now accepted, and the Vertical Slice already has a deterministic
-`failed` state plus explicit Scene restart contract. The next smallest playable
-product-flow improvement is to turn that existing development-grade failure path
-into the one formal continue/restart experience before Result/replay and Audio.
+Failure/retry now has one accepted product path. The remaining terminal mode is
+`cleared`, which already publishes exactly once but has no Result presentation
+or explicit replay action. Formalizing that existing boundary completes the
+smallest playable product-flow step before UI/mobile acceptance and Audio.
 
 ### Completion criteria
 
-- Player HP reaching zero enters `failed` exactly once and suspends Player,
-  ordinary enemies, Boss, attacks, timers, encounter progression, and camera
-  progression without changing combat balance.
-- One Phaser-owned Failure overlay presents a clear retry/continue action on
-  desktop and touch layouts; React and DOM own no gameplay state.
-- Keyboard and pointer/touch each request restart through one method and cannot
-  trigger duplicate Scene restarts.
-- Restart rebuilds the documented new-run state: Title, Player HP 10 and start
-  position, encounter index 0, no actors or attack slots, Boss locked/inactive,
-  no camera locks, no stage completion, and no stale Pause state.
-- Failure, Pause, Title, and Cleared modes remain mutually consistent; failed and
-  cleared stay terminal until the explicit restart lifecycle.
-- Scene shutdown removes every Failure listener, pointer handler, overlay,
-  timer, collider, and owned reference.
-- Ten consecutive failure/restart cycles retain one Phaser instance and one
-  Canvas with no listener, GameObject, timer, actor, or camera-state accumulation.
-- Production keeps the Failure UI but exposes no development debug telemetry.
+- Entering `cleared` presents one Phaser-owned Result overlay after the existing
+  Boss cleanup, arena release, and exactly-once stage-complete publication.
+- Keyboard and pointer/touch request replay through one exactly-once method;
+  neither React nor DOM owns gameplay state.
+- Replay performs the documented new-run Scene lifecycle and returns to Title
+  with HP 10, encounter 0, Boss locked/inactive, no actors, locks, stale Pause,
+  Failure, completion, or Result state.
+- `failed` cannot show Result or request replay; `cleared` cannot request Failure
+  retry. Title, playing, paused, failed, and cleared remain mutually consistent.
+- Scene shutdown removes every Result listener, pointer handler, overlay and
+  owned reference.
+- Ten clear/replay cycles retain one Phaser instance and one Canvas without
+  listener, GameObject, timer, actor, completion, or camera-state accumulation.
+- Production keeps Result/replay UI and exposes no development telemetry.
 
 ### Validation
 
-- Contract tests for exactly-once failure, one restart request, legal flow
-  transitions, reset state, Pause isolation, and shutdown cleanup.
-- Browser acceptance for one real Player defeat and retry on desktop keyboard,
-  844×390 landscape touch, and 390×844 portrait touch.
-- Development smoke for ten failure/restart cycles, one Canvas, restored initial
-  state, and zero runtime errors.
-- Regression smoke for Title/start, Pause/resume, two encounters, camera handoff,
-  Boss entry/clear, HUD, and terminal `cleared` flow.
+- Contract tests for exactly-once Result entry, one replay request, terminal
+  exclusivity, reset state, and shutdown cleanup.
+- Browser acceptance for Boss clear and replay on desktop keyboard, 844×390
+  landscape touch, and 390×844 portrait touch.
+- Development ten-cycle clear/replay smoke with one Canvas and zero errors.
+- Regression smoke for Title/start, Pause, Failure/retry, two encounters, camera
+  handoff, Boss entry/combat, HUD, and completion ordering.
 - Run `pnpm test`, `pnpm typecheck`, `pnpm lint`, `pnpm build`, and
   `pnpm build:github-pages`.
 
@@ -57,11 +53,10 @@ into the one formal continue/restart experience before Result/replay and Audio.
 
 ### Risks
 
-- Failure currently shares Scene restart ownership with development smoke paths;
-  a second restart listener could cause duplicate instances or skipped Title.
-- Retrying while a hit-stop, Pause, tween, or attack callback is active can leave
-  global managers paused unless shutdown ordering remains guarded.
-- Touch input that began before failure may leak into the next run unless all
-  transient pointer ownership is released during transition and shutdown.
-- Failure UI must not pre-implement Result/replay, persistence, scoring, Audio,
-  new content, or unrelated gameplay changes.
+- Result replay could duplicate the existing stage-completion callback or skip
+  Title if it invents a second reset path.
+- Failure and Result input listeners can conflict unless each terminal overlay
+  owns a closed request gate outside its matching state.
+- Boss fade/cleanup callbacks must finish before Result becomes interactive.
+- Do not add scoring, persistence, Audio, new content, post-stage progression,
+  custom Result art, or M6.7 mobile acceptance work.

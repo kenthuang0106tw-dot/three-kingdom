@@ -30,6 +30,7 @@ import { selectFairAttackCandidate } from "../app/game/enemy/AttackSlotPolicy.ts
 import { GameFlowStateMachine } from "../app/game/flow/GameFlowStateMachine.ts";
 import { TitleStartController } from "../app/game/flow/TitleStartController.ts";
 import { createHudViewModel } from "../app/game/ui/HudViewModel.ts";
+import { FailureRestartGate } from "../app/game/flow/FailureRestartGate.ts";
 
 test("React shell mounts only the Phaser lifecycle component", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
@@ -301,19 +302,37 @@ test("Cleared and failed flows are mutually exclusive exact-once terminal paths"
   assert.throws(() => flow.transition("cleared"), /Invalid game-flow transition: failed -> cleared/);
 });
 
+test("Failure restart gate accepts exactly one explicit request per failed state", () => {
+  const gate = new FailureRestartGate();
+  assert.equal(gate.request("keyboard"), false);
+  gate.open();
+  assert.equal(gate.request("keyboard"), true);
+  assert.equal(gate.request("pointer"), false);
+  assert.equal(gate.consume(), "keyboard");
+  assert.equal(gate.consume(), undefined);
+  assert.equal(gate.request("pointer"), false);
+  gate.close();
+  gate.open();
+  assert.equal(gate.request("pointer"), true);
+  assert.equal(gate.consume(), "pointer");
+});
+
 test("MainScene owns failed combat suspension and explicit Phaser restart", async () => {
-  const [scene, manager, boss] = await Promise.all([
+  const [scene, manager, boss, failureController] = await Promise.all([
     readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/game/EnemyManager.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/game/boss/BossActor.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/ui/FailureController.ts", import.meta.url), "utf8"),
   ]);
   assert.match(scene, /if \(damage\.becameDead\) \{\s*this\.transitionTo\("dead"\);\s*this\.enterFailedState\(\)/);
   assert.match(scene, /this\.gameFlow\.transition\("failed"\)/);
   assert.match(scene, /if \(this\.gameFlow\.state === "failed" \|\| this\.gameFlow\.state === "cleared"\) \{\s*this\.playerBody\.setVelocity\(0, 0\)/);
   assert.match(scene, /this\.enemyManager\.suspendCombat\(\)/);
   assert.match(scene, /this\.bossActor\?\.suspendCombat\(\)/);
-  assert.match(scene, /keyboard\.once\("keydown", this\.handleFailureKeyboardRestart, this\)/);
-  assert.match(scene, /keyboard\.off\("keydown", this\.handleFailureKeyboardRestart, this\)/);
+  assert.match(scene, /this\.failureController\.show\(\)/);
+  assert.match(scene, /this\.failureController\.consumeRestartRequest\(\)/);
+  assert.match(scene, /this\.failureController\.hide\(\)/);
+  assert.match(scene, /this\.failureController\.destroy\(\)/);
   assert.match(scene, /if \(this\.gameFlow\.state !== "failed"\) return false/);
   assert.match(scene, /this\.restartStage\(\)/);
   assert.match(scene, /query\.get\("failureSmoke"\) === "1"/);
@@ -325,6 +344,11 @@ test("MainScene owns failed combat suspension and explicit Phaser restart", asyn
   assert.match(manager, /enemy\.sprite\.anims\.pause\(\)/);
   assert.match(boss, /suspendCombat\(\): void/);
   assert.match(boss, /this\.disableAttackHitbox\(\)/);
+  assert.match(failureController, /keyboard\.on\("keydown", this\.onFailureKey\)/);
+  assert.match(failureController, /keyboard\?\.off\("keydown", this\.onFailureKey\)/);
+  assert.match(failureController, /this\.shade\.on\("pointerdown", this\.onFailurePointer\)/);
+  assert.match(failureController, /this\.shade\.off\("pointerdown", this\.onFailurePointer\)/);
+  assert.doesNotMatch(failureController, /window|document|React|setTimeout|setInterval/);
 });
 
 test("PlayerActor owns sprite, feet anchor, and Arcade body responsibilities", async () => {

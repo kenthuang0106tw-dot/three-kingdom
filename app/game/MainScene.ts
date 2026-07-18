@@ -24,10 +24,11 @@ import { GameFlowStateMachine } from "./flow/GameFlowStateMachine";
 import { TitleStartController } from "./flow/TitleStartController";
 import { GameHud } from "./ui/GameHud";
 import { PauseController } from "./ui/PauseController";
+import { FailureController, type FailureRestartSource as ExplicitFailureRestartSource } from "./ui/FailureController";
 
 type AttackState = "attack1" | "attack2" | "attack3";
 type TitleStartSource = "keyboard" | "pointer" | "smoke";
-type FailureRestartSource = "keyboard" | "pointer" | "smoke";
+type FailureRestartSource = ExplicitFailureRestartSource | "smoke";
 type PreviewFrame = {
   name: string; x: number; y: number; width: number; height: number;
   originY: number; offsetX: number; offsetY: number; classification: string;
@@ -43,6 +44,7 @@ const ENEMY_FRAME_SIZE = 384;
 const ENEMY_FEET_Y = 354;
 const HURT_MS = 300;
 const COMBO_WINDOW_MS = 360;
+const FAILURE_SMOKE_RESTART_MS = 500;
 const ATTACK_STATES: AttackState[] = ["attack1", "attack2", "attack3"];
 const FRAME_ORIGIN_Y: Record<string, number> = {
   "walk-0": 739 / 793, "walk-1": 736 / 793, "walk-2": 746 / 793, "walk-3": 741 / 793,
@@ -108,16 +110,14 @@ export default class MainScene extends Phaser.Scene {
   private readonly gameFlow = new GameFlowStateMachine();
   private readonly titleStartController = new TitleStartController(this.gameFlow);
   private titleOverlay?: Phaser.GameObjects.Container;
-  private failureOverlay?: Phaser.GameObjects.Container;
   private hud!: GameHud;
   private pauseController!: PauseController;
+  private failureController!: FailureController;
   private titleStartCount = 0;
   private pauseCount = 0;
   private resumeCount = 0;
   private readonly handleTitleKeyboardStart = () => this.startGame("keyboard");
   private readonly handleTitlePointerStart = () => this.startGame("pointer");
-  private readonly handleFailureKeyboardRestart = () => this.restartAfterFailure("keyboard");
-  private readonly handleFailurePointerRestart = () => this.restartAfterFailure("pointer");
   private debugText?: Phaser.GameObjects.Text;
   private get state(): PlayerState { return this.playerStateMachine.state; }
   private facing: 1 | -1 = 1;
@@ -357,6 +357,8 @@ export default class MainScene extends Phaser.Scene {
     }
     this.hud = new GameHud(this, this.gameplayEvents, development);
     this.pauseController = new PauseController(this);
+    this.failureController = new FailureController(this);
+    this.updateFailureDataset();
     this.updateCamera();
     this.createTitleOverlay(keyboard);
     this.updatePauseDataset();
@@ -380,16 +382,14 @@ export default class MainScene extends Phaser.Scene {
       this.bossActor = undefined;
       this.hud.destroy();
       this.pauseController.destroy();
+      this.failureController.destroy();
       if (development) this.game.canvas.dataset.bossActorCount = "0";
       this.bossArenaDebug?.destroy();
       this.bossArenaDebug = undefined;
       this.playerActor.destroy();
       keyboard.off("keydown", this.handleTitleKeyboardStart, this);
-      keyboard.off("keydown", this.handleFailureKeyboardRestart, this);
       this.titleOverlay?.destroy(true);
       this.titleOverlay = undefined;
-      this.failureOverlay?.destroy(true);
-      this.failureOverlay = undefined;
     });
 
     if (this.resetSmokeMode) {
@@ -405,6 +405,11 @@ export default class MainScene extends Phaser.Scene {
     if (this.enemyPreviewMode) { this.updateEnemyAlignmentPreview(); return; }
     if (this.previewMode) { this.updatePreviewMode(); return; }
     if (this.pauseController.consumeToggleRequest()) this.togglePause();
+    const failureRestartSource = this.failureController.consumeRestartRequest();
+    if (failureRestartSource) {
+      this.restartAfterFailure(failureRestartSource);
+      return;
+    }
     if (this.gameFlow.state === "title") return;
     if (this.gameFlow.state === "paused") {
       this.playerBody.setVelocity(0, 0);
@@ -836,7 +841,8 @@ export default class MainScene extends Phaser.Scene {
     this.disableAttackHitbox();
     this.enemyManager.suspendCombat();
     this.bossActor?.suspendCombat();
-    this.createFailureOverlay();
+    this.failureController.show();
+    this.updateFailureDataset();
     this.updateTitleDataset();
     this.updatePauseDataset();
 
@@ -857,42 +863,22 @@ export default class MainScene extends Phaser.Scene {
     if (this.failureSmokeCycleActive) {
       this.failureSmokeIteration += 1;
       this.failureSmokeTimer?.remove(false);
-      this.failureSmokeTimer = this.time.delayedCall(180, () => {
+      this.failureSmokeTimer = this.time.delayedCall(FAILURE_SMOKE_RESTART_MS, () => {
         this.failureSmokeTimer = undefined;
         this.restartAfterFailure("smoke");
       });
     }
   }
 
-  private createFailureOverlay() {
-    if (this.failureOverlay) return;
-    const keyboard = this.input.keyboard;
-    if (!keyboard) return;
-    const shade = this.add.rectangle(VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2, VIEWPORT_WIDTH, VIEWPORT_HEIGHT, 0x120707, 0.82)
-      .setScrollFactor(0)
-      .setInteractive();
-    const title = this.add.text(VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2 - 32, "DEFEATED", {
-      fontFamily: "Georgia, serif", fontSize: "58px", color: "#f0d5c2",
-      stroke: "#5b170d", strokeThickness: 7,
-    }).setOrigin(0.5).setScrollFactor(0);
-    const prompt = this.add.text(VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2 + 48, "PRESS ANY KEY / TAP TO RETRY", {
-      fontFamily: "Consolas, monospace", fontSize: "24px", color: "#ffffff",
-    }).setOrigin(0.5).setScrollFactor(0);
-    this.failureOverlay = this.add.container(0, 0, [shade, title, prompt]).setDepth(20000);
-    shade.once("pointerdown", this.handleFailurePointerRestart, this);
-    keyboard.once("keydown", this.handleFailureKeyboardRestart, this);
-  }
-
   private restartAfterFailure(source: FailureRestartSource) {
     if (this.gameFlow.state !== "failed") return false;
-    this.input.keyboard?.off("keydown", this.handleFailureKeyboardRestart, this);
-    this.failureOverlay?.destroy(true);
-    this.failureOverlay = undefined;
+    this.failureController.hide();
     this.failureRestartCount += 1;
     if (process.env.NODE_ENV !== "production") {
       this.game.canvas.dataset.failureRestartCount = String(this.failureRestartCount);
       this.game.canvas.dataset.failureRestartSource = source;
     }
+    this.updateFailureDataset();
     this.restartStage();
     return true;
   }
@@ -995,6 +981,14 @@ export default class MainScene extends Phaser.Scene {
     dataset.pauseAnimation = this.playerSprite.anims.currentAnim?.key ?? "idle";
     dataset.pauseAnimationFrame = String(this.playerSprite.anims.currentFrame?.index ?? 0);
     dataset.pauseSceneTime = String(Math.round(this.time.now));
+  }
+
+  private updateFailureDataset() {
+    const development = (import.meta as ImportMeta & { env: { DEV: boolean } }).env.DEV;
+    if (!development || !this.failureController) return;
+    const dataset = this.game.canvas.dataset;
+    dataset.failureOverlayVisible = String(this.failureController.isVisible);
+    dataset.failureObjectCount = "3";
   }
 
   private updateBossEntrySmoke() {

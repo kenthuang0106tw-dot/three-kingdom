@@ -352,6 +352,17 @@ and overlay. Desktop, two mobile viewports, production, camera handoff, Boss,
 and ten-cycle failure/restart acceptance passed. Audio pause remains explicitly
 deferred to M7 because no runtime audio system exists yet.
 
+### TD-M06 Update — Failure/restart ownership
+
+M6 / Task 6.5 replaces per-failure overlay/listener creation with one
+Phaser-owned `FailureController` and an exactly-once restart request gate.
+Keyboard and pointer no longer call restart through parallel handlers, and all
+Failure children are camera-fixed so the touch hit area remains aligned in the
+Boss arena. Ten deterministic failure/restart cycles, desktop keyboard retry,
+landscape/portrait pointer retry, and production builds passed. Continue lives
+only as a fresh-run retry; lives, checkpoints, scoring, persistence, Result,
+and Audio remain deferred rather than being hidden in this controller.
+
 ### TD-H10 — Encounter-clear camera handoff visibly snaps
 
 - **Severity:** High

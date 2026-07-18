@@ -881,3 +881,20 @@
 | Automated checks | Pass | 73/73 tests, typecheck, lint 0 errors (8 existing warnings), both production builds |
 | Scope | Pass | No Result, replay, audio, combat, content, art, balance, or unrelated refactor added |
 | Next task | Selected | M6 / Task 6.5 — Failure/continue/restart |
+
+## M6 / Task 6.5 Acceptance — 2026-07-18
+
+| Check | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M6 / Task 6.5 — Failure/continue/restart |
+| Ownership | Pass | One persistent Phaser `FailureController`; React/DOM own no failure state or input |
+| Exactly-once request | Pass | Pure gate rejects closed, duplicate, consumed, and cross-source requests until reopened |
+| Keyboard retry | Pass | Real failed state accepted `keyboard`; one Scene restart and one Canvas |
+| Touch retry | Pass | Landscape and portrait runs accepted `pointer`; Boss-arena hit area remained camera-aligned |
+| Terminal suspension | Pass | HP 0 entered failed once; Player, Enemy, Boss, attacks, timers, encounter and camera progression stayed stopped |
+| Deterministic reset | Pass | Title, HP 10, encounter 0, Boss 0/locked, no camera locks or stale completion/pause |
+| Ten-cycle smoke | Pass | 10 entries, 10 restarts, one Canvas, three stable Failure objects, zero runtime errors |
+| Cleanup | Pass | Shutdown removes keyboard/pointer handlers, overlay, smoke timer and owned references |
+| Automated checks | Pass | 74/74 tests, typecheck, lint 0 errors (8 existing warnings), both production builds |
+| Scope | Pass | No Result, replay, Audio, scoring, persistence, combat, content, art or balance changes |
+| Next task | Selected | M6 / Task 6.6 — Result/replay |

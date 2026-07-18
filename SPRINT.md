@@ -2,14 +2,14 @@
 
 ## Sprint Goal
 
-M6.4 Pause/resume 已完成。下一步只執行 M6.5 Failure/continue/restart，將既有失敗重啟 contract 收斂為正式產品流程，不同時加入 Result、Audio 或新戰鬥內容。
+M6.5 Failure/continue/restart 已完成。下一步只執行 M6.6 Result/replay，為既有 `cleared` terminal flow 提供正式結果與重玩入口，不同時加入 Audio、計分或新戰鬥內容。
 
 ## Cadence
 
 - Duration：2 weeks
 - Capacity：1 developer + AI，約 40–55 hours
 - Milestone：M6 — Product Flow and UI
-- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M6 / 6.5 Failure/continue/restart
+- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M6 / 6.6 Result/replay
 
 ## Task List
 
@@ -25,6 +25,7 @@ M6.4 Pause/resume 已完成。下一步只執行 M6.5 Failure/continue/restart�
 | 8 | ✅ M5R / Task 5R.8 — End-to-end Vertical Slice acceptance | 16–24h | 從 Title 真實完成整關與失敗重試 | desktop/mobile full-run acceptance passed |
 | 9 | ✅ M5R / Task 5R.9 — Encounter-clear camera handoff stability | 6–10h | lock release 連續銜接 bounded follow | tests + three-viewport browser acceptance passed |
 | 10 | ✅ M6 / Task 6.4 — Pause/resume | 8–12h | 明確 pause/resume flow 與 clock/input ownership | tests + desktop/mobile browser acceptance passed |
+| 11 | ✅ M6 / Task 6.5 — Failure/continue/restart | 8–12h | 正式 Failure UI、單一路徑 retry 與 deterministic reset | 74 tests + desktop/mobile/10-cycle acceptance passed |
 
 ## Recovery Planning Correction — 2026-07-14
 
@@ -589,3 +590,15 @@ The next eligible task is M6 / Task 6.4 — Pause/resume. Do not begin it until 
 - [x] Production browser 顯示 Pause overlay、一個 Canvas、零 development datasets、零 runtime errors。
 
 The next eligible task is M6 / Task 6.5 — Failure/continue/restart. Do not begin it until the next task-runner cycle.
+
+## M6 / Task 6.5 Closeout — 2026-07-18
+
+- [x] 新增一次建立、Scene shutdown 銷毀的 Phaser `FailureController`；overlay、keyboard listener 與 pointer handler 不再於每次失敗重建。
+- [x] `FailureRestartGate` 在每次 failed state 最多接受一次 keyboard 或 pointer request；MainScene 只由 `restartAfterFailure()` 執行 Scene restart。
+- [x] Failure shade、標題與提示固定於 Camera；修正 Boss 最後一幕看得到 overlay 但 pointer hit test 偏移的阻斷。
+- [x] HP 0 維持 exactly-once failed、停止 Player/Enemy/Boss/attack/progression；retry 回到 Title、HP 10、encounter 0、Boss locked、零 camera lock。
+- [x] Development smoke 連續 10 次 failure/restart：10 次 entry、10 次 restart、單一 Canvas、三個固定 Failure GameObjects、零 runtime error。
+- [x] Desktop keyboard、844×390 landscape pointer、390×844 portrait pointer 均由明確 source 完成 retry；沒有 duplicate restart。
+- [x] `pnpm test` 74/74、`pnpm typecheck`、lint 0 errors（8 個既有 warnings）、兩種 production build 通過。
+
+The next eligible task is M6 / Task 6.6 — Result/replay. Do not begin it until the next task-runner cycle.
