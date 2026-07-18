@@ -2,16 +2,16 @@
 
 ## Sprint Goal
 
-M6 Product Flow and UI 已完成並通過 desktop、landscape touch、portrait touch 與 production 驗收。下一步只執行 M6A.1，先鎖定視覺目標、Art Bible 與三 viewport before baseline，不直接重製素材。
+M6A.1 已鎖定視覺目標、Art Bible 與三 viewport before baseline。下一步只執行 M6A.2 Guan Yu animation quality upgrade，不同時改敵人、Boss、Stage、Effects 或 UI。
 
-Roadmap decision（2026-07-18）：M6A Visual Upgrade 已在 M6 完成後正式開始；6A.1 驗收前不可零散替換角色、敵人、背景、特效或 UI 素材。
+Roadmap decision（2026-07-18）：6A.2 必須遵守已接受的比例、palette、feet anchor、capture 與 provenance contract；不可重新解釋 Art Bible。
 
 ## Cadence
 
 - Duration：2 weeks
 - Capacity：1 developer + AI，約 40–55 hours
 - Milestone：M6A — Visual Upgrade
-- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M6A / 6A.1 Visual target、Art Bible 與 before/after baseline
+- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M6A / 6A.2 Guan Yu animation quality upgrade
 
 ## Task List
 
@@ -30,7 +30,8 @@ Roadmap decision（2026-07-18）：M6A Visual Upgrade 已在 M6 完成後正式�
 | 11 | ✅ M6 / Task 6.5 — Failure/continue/restart | 8–12h | 正式 Failure UI、單一路徑 retry 與 deterministic reset | 74 tests + desktop/mobile/10-cycle acceptance passed |
 | 12 | ✅ M6 / Task 6.6 — Result/replay | 6–10h | 正式 Result UI、單一路徑 replay 與 deterministic new run | 76 tests + desktop/mobile/10-cycle acceptance passed |
 | 13 | ✅ M6 / Task 6.7 — UI/mobile acceptance | 8–12h | 三 viewport 完整流程、safe area、production presentation | 77 tests + source/production browser acceptance passed |
-| 14 | M6A / Task 6A.1 — Visual target、Art Bible 與 before/after baseline | 10–16h | 可執行的美術規格與三 viewport before captures | document/visual acceptance；不得重製 production art |
+| 14 | ✅ M6A / Task 6A.1 — Visual target、Art Bible 與 before/after baseline | 10–16h | 可執行的美術規格與 15 張 before captures | document/visual acceptance passed；production art unchanged |
+| 15 | M6A / Task 6A.2 — Guan Yu animation quality upgrade | 24–40h | 統一 identity/scale/feet anchor 的完整主角動畫 | metadata/debug/onion-skin/three-viewport acceptance |
 
 ## Recovery Planning Correction — 2026-07-14
 
@@ -631,3 +632,15 @@ The next eligible task is M6 / Task 6.7 — UI/mobile acceptance. Do not begin i
 - [x] Source 與 production browser 均為一個 Canvas、零 browser error；M6 完成。
 
 The next eligible task is M6A / Task 6A.1 — Visual target, Art Bible, and before/after baseline. Do not begin it until the next task-runner cycle.
+
+## M6A / Task 6A.1 Closeout — 2026-07-18
+
+- [x] `ART_BIBLE.md` 鎖定原創日式寫實三國 Pixel Art 的 silhouette、anatomy、display-height ratio、palette、lighting、pixel density、Stage、Effects 與產品 UI language。
+- [x] 明確保留 damage、Combo、AI、Camera、Stage flow、world coordinates、Physics、active frame 與 hitbox timing contracts。
+- [x] `docs/visual-baselines/m6a-6a1-before/` 保存同一 gameplay revision `3183f1f` 的 15 張 PNG：三 viewport × Title/combat/Boss/Failure/Result。
+- [x] Baseline README 記錄 viewport、fitted Canvas、query、capture condition、命名與 development instrumentation 限制；browser error 0。
+- [x] `ASSET_PIPELINE.md` 新增 provenance、shared stem naming、manual reviewer、baseline 與 matching after 規則。
+- [x] Gap order 固定為 6A.2 Guan Yu → 6A.3 Enemy/Boss → 6A.4 Stage → 6A.5 Effects/UI → 6A.6 visual freeze。
+- [x] 本 Task 未生成或替換任何 production art，未修改 runtime、gameplay 或 balance。
+
+The next eligible task is M6A / Task 6A.2 — Guan Yu animation quality upgrade. Do not begin it until the next task-runner cycle.

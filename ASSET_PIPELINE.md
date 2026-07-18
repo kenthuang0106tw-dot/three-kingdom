@@ -8,6 +8,14 @@
 - 禁止用 rotate／scale／translate 偽造中間動作。
 - Runtime 使用 nearest-neighbor；非整數 scale 可以使用，但要人工檢查 pixel shimmer。
 - 素材必須原創或具有可記錄授權。
+- 每次 M6A 替換必須保留對應 before/after capture；沒有 provenance 與
+  reproducible checkpoint 的圖片不得進 runtime manifest。
+
+### M6A visual target
+
+Authoritative style、比例、palette、lighting、pixel-density、UI language 與
+review gates 定義於 `ART_BIBLE.md`。Asset pipeline 負責忠實產出該規格，不能在
+個別 sprite Task 中自行改變視覺方向。
 
 ## 2. Current Inventory
 
@@ -121,7 +129,8 @@ the listener is removed on Scene shutdown.
 | `enemies.png` | 舊 enemy reference，正式 runtime 未使用 |
 | `*-source.png` | Source/reference |
 
-目前背景是單張圖片，沒有 parallax layers、collision map、foreground mask、tile seam 或 stage metadata。
+目前 3840×720 world 將同一張 `forest-camp.png` 重複用於三個 section；沒有
+獨立 landmark、parallax layers、foreground mask 或 visual seam metadata。
 
 ### UI / Font / Audio
 
@@ -141,6 +150,17 @@ character-action.atlas.json
 character-action.metadata.json
 character-action-debug.png
 ```
+
+正式命名使用小寫 kebab-case：`{actor}-{action}-{variant}`。同一內容的 source、
+processed、runtime、atlas、metadata、debug 必須共享 stem；禁止使用 `final2`、
+`new`、`fixed` 等不可追蹤名稱。每次 visual Task 在 metadata 記錄：
+
+- author/tool and generation date
+- original／licensed provenance or prompt/reference record
+- source revision and processing tool revision
+- runtime texture key and consuming animation keys
+- logical target height、feet anchor、display scale
+- manual reviewer and accepted baseline filename
 
 Metadata 最少欄位：
 
@@ -180,6 +200,18 @@ Metadata 最少欄位：
 - [ ] Preview mode 沒有跳位或錯序。
 - [ ] Source、metadata、tool 都已提交。
 - [ ] 素材授權／原創來源已記錄。
+- [ ] 與 `ART_BIBLE.md` 的 silhouette、palette、lighting、pixel-density gate 相符。
+- [ ] Matching before/after checkpoint 可重現且沒有改變 gameplay contract。
+
+## 5A. M6A Before Baseline
+
+- Revision: `3183f1f`
+- Directory: `docs/visual-baselines/m6a-6a1-before/`
+- Matrix: desktop、844×390 landscape、390×844 portrait × Title、combat、Boss、
+  Failure、Result，共 15 張 PNG。
+- Capture contract、Canvas 尺寸、query 與 development instrumentation 限制記錄
+  在 baseline 目錄的 `README.md`。
+- 6A.2–6A.5 不得覆寫 before；6A.6 使用 matching filename 建立 sibling after。
 
 ## 6. Missing Assets by Milestone
 
@@ -191,7 +223,7 @@ Metadata 最少欄位：
 - **M5R:** 三段連續竹林 Stage layout、Boss walk frames 與可驗證 arena entry presentation。
 - **M5R.1 runtime:** 已用現有 `forest-camp.png` 建立三段明確、無 uncovered area 的暫時 section；三段獨特場景美術仍屬後續 content polish，不阻擋 encounter work。
 - **M6:** 功能性 Title/HUD/Pause/Failure/Result 已完成；本 Milestone 不製作 custom art。
-- **M6A.1:** Visual target、比例、色盤、光源、pixel density、UI language 與 before/after baseline。
+- **M6A.1 (Completed):** Visual target、比例、色盤、光源、pixel density、UI language 與 15 張 before baseline 已保存。
 - **M6A.2:** Guan Yu idle/walk/attack1–3/hurt/dead 完整 source、runtime sheet、atlas、metadata 與 debug sheet。
 - **M6A.3:** 三種小兵與 Boss 的角色比例、色盤、面向、feet anchor 與 animation consistency pass。
 - **M6A.4:** 三個可辨識竹林 section、前景遮擋、地面層、Boss arena 與無接縫 layer assets。

@@ -388,6 +388,21 @@ debug presentation, and zero browser errors.
 Physical iOS/Android device feel, portrait readability as a release target, and
 custom UI art remain later release/visual-upgrade QA rather than hidden M6 scope.
 
+### TD-M6A Update — Visual direction and comparison baseline
+
+M6A / Task 6A.1 resolves the absence of a shared visual target before asset
+replacement. `ART_BIBLE.md` now defines measurable actor ratios, palette,
+lighting, pixel-density, Stage, Effects, UI, feet-anchor and runtime-contract
+gates. Fifteen revision-pinned before captures cover desktop, landscape, and
+portrait at five matching product checkpoints; the capture README records the
+development instrumentation that must remain constant in later comparisons.
+
+Actual production art debt remains open by design: Guan Yu uses animation-specific
+scales and incomplete transitions; actor sets have inconsistent visual density;
+the three Stage sections reuse one background; Effects/UI remain prototype art.
+These gaps are now ordered explicitly across 6A.2–6A.6 rather than being fixed
+opportunistically.
+
 ### TD-H10 — Encounter-clear camera handoff visibly snaps
 
 - **Severity:** High

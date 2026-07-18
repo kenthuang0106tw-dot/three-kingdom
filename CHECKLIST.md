@@ -67,7 +67,7 @@
 
 ## M6A Visual Upgrade
 
-- [ ] 6A.1 已保存 desktop、844×390、390×844 的 before baseline 與 visual target。
+- [x] 6A.1 已保存 desktop、844×390、390×844 的 before baseline 與 visual target。
 - [ ] 關羽、三種小兵與 Boss 的身高比例、輪廓、色盤、光源與 pixel density 一致。
 - [ ] 每個 actor 的所有站立 frame 使用單一 display scale 與共同 feet anchor。
 - [ ] Idle、walk、attack、hurt、dead 沒有裁切、鄰格污染、跳位或 transform 偽造中間動作。
@@ -949,3 +949,21 @@
 | Automated checks | Pass | 77/77 tests, typecheck, lint 0 errors (8 existing warnings), both production builds |
 | Scope | Pass | Only the production environment define blocker was fixed; no art, Audio, gameplay, balance, or M6A implementation |
 | Next task | Selected | M6A / Task 6A.1 — Visual target, Art Bible, and before/after baseline |
+
+## M6A / Task 6A.1 Acceptance — 2026-07-18
+
+| Check | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M6A / Task 6A.1 — Visual target, Art Bible, and before/after baseline |
+| Original visual target | Pass | Art Bible specifies non-derivative Three Kingdoms Japanese-realistic pixel-art direction |
+| Objective actor scale | Pass | Logical idle-height targets and Guan Yu-relative ratios defined for Player, three enemies, and Boss |
+| Palette/light/pixel density | Pass | Shared anchor palette, warm-left/cool-right lighting, value bands, cluster and zoom gates documented |
+| Animation protection | Pass | One scale/actor, shared feet anchor, no transform fakes, preserved phase duration and hitbox windows |
+| Stage/effects/UI | Pass | Three landmarks, effect occlusion limits, UI hierarchy and mobile touch-size gates documented |
+| Baseline matrix | Pass | 15 PNG: desktop, 844×390, 390×844 × Title, combat, Boss, Failure, Result |
+| Reproducibility | Pass | Revision `3183f1f`, URLs, actions, dataset conditions, Canvas sizes and filenames recorded |
+| Asset governance | Pass | Provenance, shared-stem naming, metadata, debug sheet, reviewer and matching-after rules recorded |
+| Gap order | Pass | 6A.2 Guan Yu → 6A.3 Enemy/Boss → 6A.4 Stage → 6A.5 Effects/UI → 6A.6 freeze |
+| Browser capture | Pass | Three viewport matrix captured with one Canvas and zero browser errors |
+| Scope | Pass | No runtime code, gameplay, balance, Audio, or production art changed |
+| Next task | Selected | M6A / Task 6A.2 — Guan Yu animation quality upgrade |

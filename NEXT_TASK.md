@@ -1,59 +1,76 @@
 # Next Task
 
-## M6A / Task 6A.1 — Visual target, Art Bible, and before/after baseline
+## M6A / Task 6A.2 — Guan Yu animation quality upgrade
 
 ### Why this is next
 
-M6 now provides a complete, accepted playable flow across desktop, landscape
-touch, portrait FIT, production, Failure/retry, and Result/replay. The approved
-post-M6 art upgrade must begin by freezing a measurable visual target before any
-production asset is replaced; otherwise character, enemy, stage, effect, and UI
-work will drift independently and create avoidable rework.
+M6A.1 fixed the visual target and comparison baseline. Guan Yu is the highest
+priority visible gap: idle, walk, and attack currently use different display
+scales; idle has one frame; the six attack poses lack enough transition and
+recovery frames. The Player must establish the accepted identity, proportion,
+palette, pixel density, and animation pipeline before enemies or Stage art are
+matched to it.
 
 ### Completion criteria
 
-- Update `ART_BIBLE.md` with one coherent original Three Kingdoms Japanese
-  realistic pixel-art target: silhouette, anatomy, scale, feet anchor, palette,
-  lighting, pixel density, outline/shading, weapon readability, and UI language.
-- Record current before baselines for desktop default, 844×390 landscape, and
-  390×844 portrait FIT at the same reproducible checkpoints: Title, representative
-  combat, Boss arena, Failure, and Result.
-- Define explicit visual acceptance criteria for Guan Yu, three melee enemies,
-  Boss, the three bamboo sections, combat effects, font, HUD, terminal overlays,
-  joystick, and attack control.
-- Define asset provenance, source/master/export naming, atlas metadata, feet
-  alignment, and debug-sheet requirements without modifying runtime contracts.
-- Produce a prioritized gap list and the approved order for 6A.2–6A.6.
-- Do not generate, edit, or replace production art in this task.
+- Audit every existing Guan Yu source/runtime frame before replacement; record
+  alpha bounds, feet anchor, facing, usable poses, and rejected poses.
+- Produce one consistent original Guan Yu identity for idle, walk, attack1,
+  attack2, attack3, hurt, and dead using genuine consecutive frames.
+- Meet the Art Bible minimum visual requirements: idle 6, walk 8, attack1 5,
+  attack2 6, attack3 8, hurt 4, and dead 6 or more distinct poses.
+- All animations use one display scale and a common feet-world contract; frame
+  metadata owns origin/offset alignment and state changes do not jump more than
+  4 logical pixels without intentional pose motion.
+- Preserve current movement speed, Combo rules, damage, startup/active/recovery
+  total durations, hitbox windows, body geometry, world position, camera, AI,
+  Stage flow, and input behavior. Added frames subdivide existing phases only.
+- Commit source, processed runtime sheets, explicit atlas, metadata, red-box and
+  feet-line debug sheets, provenance record, and a reproducible build tool.
+- Remove animation-specific Player scale values only as required to consume the
+  accepted unified metadata; do not refactor unrelated Player/combat code.
+- Do not modify enemies, Boss, Stage, Effects, UI, Audio, balance, or new moves.
 
 ### Validation
 
-- Every visual rule has an objective comparison method or a named manual review.
-- All three viewport baselines use the same gameplay revision and reproducible
-  checkpoints; filenames and locations are documented.
-- The Art Bible preserves animation timing, hitbox/body geometry, world
-  coordinates, camera, combat, AI, flow, and mobile input contracts.
-- `pnpm test`, `pnpm typecheck`, `pnpm lint`, `pnpm build`, and
-  `pnpm build:github-pages` remain green after documentation-only work.
+- Native-size and 25% silhouette review confirm Guan Yu identity, 230±10px idle
+  height, readable action direction, and the accepted jade/antique-gold palette.
+- 2 FPS frame preview and onion-skin verify no crop, neighbor contamination,
+  duplicate pose, feet drift, weapon/limb teleport, or false transform frame.
+- Automated metadata checks cover frame names/counts, bounds, common scale,
+  feet anchor, phase tags, atlas/image dimensions, and source provenance.
+- Runtime browser acceptance covers idle → walk → attack1–3 → hurt/dead at
+  desktop, 844×390 landscape, and 390×844 portrait FIT with one Canvas and no
+  console error.
+- Existing combat, input, lifecycle, encounter, Boss, Failure, Result, and M6A
+  baseline contracts remain green.
+- Run `pnpm test`, `pnpm typecheck`, `pnpm lint`, `pnpm build`, and
+  `pnpm build:github-pages`.
 
 ### Expected files
 
-- `ART_BIBLE.md`
-- `ASSET_PIPELINE.md`
-- `CHECKLIST.md`
-- `GAME_ROADMAP.md`
-- `SPRINT.md`
-- `NEXT_TASK.md`
-- A documented baseline capture directory only; no production asset or runtime
-  source file.
+- `public/art/guanyu/*-source.png`
+- `public/art/guanyu/*-transparent.png`
+- `public/art/guanyu/*.png`
+- `public/art/guanyu/*.atlas.json`
+- `public/art/guanyu/*.metadata.json`
+- `public/art/guanyu/*-debug.png`
+- One reproducible `tools/build_guanyu_*.py` pipeline
+- Minimal `app/game/player/PlayerActor.ts`, animation metadata/manifest, and
+  `app/game/MainScene.ts` integration changes
+- Focused tests plus `ASSET_PIPELINE.md`, `CHECKLIST.md`, `SPRINT.md`,
+  `GAME_ROADMAP.md`, and `NEXT_TASK.md`
 
 ### Risks
 
-- A subjective style description without measurable references will cause every
-  later sprite task to reopen the target.
-- Captures from different game states or revisions will make before/after
-  comparisons invalid.
-- Starting image generation or atlas edits during 6A.1 would mix planning with
-  6A.2–6A.5 and violate the one-task workflow.
-- Copyright-sensitive imitation must be translated into original visual rules,
-  not copied characters, frames, logos, or stage art.
+- Image generation may drift identity, anatomy, facing, costume, or palette
+  between strips; reject inconsistent sets instead of patching with transforms.
+- Large weapon/arm arcs can contaminate neighboring frames if atlas rectangles
+  are inferred as equal cells.
+- Replacing six coarse attack poses with more frames can accidentally move
+  active timing or Combo windows; phase duration and hitbox contracts must be
+  tested before and after.
+- A unified scale can reveal current source-resolution mismatch; fix through
+  source/export and metadata, not per-animation scale exceptions.
+- Scope can expand into Zhang Fei, Zhao Yun, enemies, Stage, Effects, or UI;
+  those remain explicitly deferred.
