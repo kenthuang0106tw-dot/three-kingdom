@@ -637,6 +637,28 @@ lifecycle state; no actor, sprite, body, manager, or callback crosses the
 boundary. `HudViewModel` clamps deterministic bar values independently of
 Phaser. Boss cleanup publishes `null`, so reset cannot retain a stale Boss bar.
 
+## Pause/Resume Ownership (M6 / Task 6.4)
+
+`PauseController` owns one Phaser keyboard `keydown-P` listener, one fixed touch
+button, and one presentation-only overlay. It converts keyboard or pointer edges
+into a single toggle request; key repeat is ignored. `MainScene` remains the sole
+orchestrator of legal `playing → paused → playing` transitions. React, DOM state,
+actors, and the HUD do not own pause state.
+
+`LifecycleClock` keeps `manual`, `hitStop`, and `visibility` as independent pause
+reasons. Manual pause sets the Scene clock time scale to zero so TimerEvents stop
+without disabling Phaser keyboard input, then pauses Arcade Physics, global
+animations, and tweens while any reason remains. Resume clears only `manual`, so
+an active Hit Stop continues to own the freeze until its Phaser timer completes.
+
+Paused updates stop Player velocity and return before input snapshots, encounter
+progression, AI, combat, or camera follow. Actor states, HP, animation frame,
+hitboxes, encounter/Boss ownership, and camera locks are preserved rather than
+rebuilt. Resume clears transient touch and attack edges, then the next frame reads
+current input normally. Scene shutdown removes listeners and GameObjects, clears
+pause reasons, restores clock time scale, and safely resumes managers that still
+exist during Phaser shutdown ordering.
+
 ## Encounter-clear Camera Handoff Contract (M5R / Task 5R.9)
 
 `CameraFollow.ts` owns a Phaser-free handoff policy in addition to the existing

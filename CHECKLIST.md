@@ -858,3 +858,26 @@
 | Automated checks | Pass | 72/72 tests, typecheck, lint 0 errors (8 existing warnings), both production builds |
 | Scope | Pass | No Pause, Result, Audio, gameplay, combat, content, art, or balance feature added |
 | Next task | Selected | M6 / Task 6.4 — Pause/resume |
+
+## M6 / Task 6.4 Acceptance — 2026-07-18
+
+| Check | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M6 / Task 6.4 — Pause/resume |
+| Flow ownership | Pass | One `GameFlowStateMachine` path performs repeatable `playing → paused → playing`; no React/DOM gameplay state or second Scene |
+| Keyboard | Pass | One Phaser `keydown-P` listener; repeat ignored; repeated pause/resume succeeded; listener removed on shutdown |
+| Touch | Pass | Fixed Phaser pause button and overlay resume share the same toggle request; no duplicate object or listener path |
+| Freeze semantics | Pass | Manual pause freezes Scene TimerEvents, Arcade Physics, animations, tweens, AI, encounter progression, combat, and camera follow |
+| Hit Stop isolation | Pass | `manual`, `hitStop`, and `visibility` are independent reasons; clearing manual cannot prematurely resume active Hit Stop |
+| Attack boundary | Pass | Attack1 remained at the same state/frame/position/hitbox/camera during pause and completed normally after resume |
+| Input recovery | Pass | Transient joystick/attack edges clear on transition; movement and attack both worked immediately after resume |
+| Desktop | Pass | Keyboard and pointer/touch pause/resume; one Canvas; no runtime errors |
+| Landscape touch | Pass | 844×390 viewport, fitted 693×390 Canvas; pause/resume then attack succeeded |
+| Portrait touch | Pass | 390×844 viewport, fitted 325×183 Canvas; pause/resume then movement succeeded |
+| Camera regression | Pass | Both encounters cleared; handoff maximum frame delta 18px; converged to `scrollX=1821` |
+| Boss regression | Pass | Entry active/locked at `scrollX=2560`; clear produced Boss 0, release 1, completion 1, cleared 1 |
+| Failure/restart regression | Pass | 10 failures and 10 Scene restarts restored Title/HP 10, one Canvas, zero errors |
+| Production | Pass | Pause overlay visible; one Canvas; zero development datasets; zero runtime errors |
+| Automated checks | Pass | 73/73 tests, typecheck, lint 0 errors (8 existing warnings), both production builds |
+| Scope | Pass | No Result, replay, audio, combat, content, art, balance, or unrelated refactor added |
+| Next task | Selected | M6 / Task 6.5 — Failure/continue/restart |

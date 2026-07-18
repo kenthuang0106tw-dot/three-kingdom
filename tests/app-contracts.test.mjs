@@ -361,10 +361,14 @@ test("Clock pause reasons remain independent and resume only when all reasons cl
   assert.equal(clock.isPaused(), false);
   clock.setPaused("visibility", true);
   clock.setPaused("hitStop", true);
+  clock.setPaused("manual", true);
   assert.equal(clock.isPaused(), true);
   clock.setPaused("hitStop", false);
   assert.equal(clock.isPaused(), true);
   clock.setPaused("visibility", false);
+  assert.equal(clock.isPaused(), true);
+  assert.equal(clock.has("manual"), true);
+  clock.setPaused("manual", false);
   assert.equal(clock.isPaused(), false);
 });
 
@@ -379,6 +383,36 @@ test("Lifecycle clock owns Phaser blur/focus and hit-stop timing", async () => {
   assert.match(scene, /new LifecycleClock\(this\)/);
   assert.match(scene, /effectDirector\.beginHitStop/);
   assert.doesNotMatch(source, /setTimeout|setInterval/);
+});
+
+test("Pause/resume owns one Phaser input and presentation path without weakening hit-stop", async () => {
+  const [clock, controller, scene, touch] = await Promise.all([
+    readFile(new URL("../app/game/time/LifecycleClock.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/ui/PauseController.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/input/TouchInputController.ts", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(clock, /setManualPaused\(paused: boolean\)/);
+  assert.match(clock, /state\.setPaused\("manual", paused\)/);
+  assert.match(clock, /scene\.time\.timeScale = this\.state\.has\("manual"\) \? 0 : 1/);
+  assert.match(clock, /physics\.world\?\.resume\(\)/);
+  assert.match(clock, /anims\?\.resumeAll\(\)/);
+  assert.match(clock, /tweens\?\.resumeAll\(\)/);
+  assert.match(controller, /keyboard\.on\("keydown-P", this\.onPauseKey\)/);
+  assert.match(controller, /!event\.repeat/);
+  assert.match(controller, /keyboard\?\.off\("keydown-P", this\.onPauseKey\)/);
+  assert.match(controller, /setScrollFactor\(0\)/);
+  assert.match(controller, /destroy\(\): void/);
+  assert.doesNotMatch(controller, /window|document|React|setTimeout|setInterval/);
+  assert.match(scene, /if \(this\.pauseController\.consumeToggleRequest\(\)\) this\.togglePause\(\)/);
+  assert.match(scene, /this\.gameFlow\.transition\("paused"\)/);
+  assert.match(scene, /this\.gameFlow\.transition\("playing"\)/);
+  assert.match(scene, /this\.lifecycleClock\.setManualPaused\(true\)/);
+  assert.match(scene, /this\.lifecycleClock\.setManualPaused\(false\)/);
+  assert.match(scene, /if \(this\.gameFlow\.state === "paused"\)/);
+  assert.match(scene, /this\.pauseController\.destroy\(\)/);
+  assert.match(touch, /clearTransientInput\(\)/);
 });
 
 test("Gameplay event hub publishes frozen snapshots without actor references", () => {

@@ -49,6 +49,10 @@ export class TouchInputController {
     );
   }
 
+  clearTransientInput() {
+    this.releaseAll();
+  }
+
   destroy() {
     this.scene.input.off("pointermove", this.onPointerMove);
     this.scene.input.off("pointerup", this.onPointerUp);

@@ -2,14 +2,14 @@
 
 ## Sprint Goal
 
-M5R.9 encounter-clear camera handoff 已完成。下一步只執行 M6.4 Pause/resume，建立與 Hit Stop 相容的明確暫停生命週期，不同時加入 Result、Audio 或新戰鬥內容。
+M6.4 Pause/resume 已完成。下一步只執行 M6.5 Failure/continue/restart，將既有失敗重啟 contract 收斂為正式產品流程，不同時加入 Result、Audio 或新戰鬥內容。
 
 ## Cadence
 
 - Duration：2 weeks
 - Capacity：1 developer + AI，約 40–55 hours
 - Milestone：M6 — Product Flow and UI
-- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M6 / 6.4 Pause/resume
+- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M6 / 6.5 Failure/continue/restart
 
 ## Task List
 
@@ -24,7 +24,7 @@ M5R.9 encounter-clear camera handoff 已完成。下一步只執行 M6.4 Pause/r
 | 7 | ✅ M5R / Task 5R.7 — Boss defeat and cleared flow | 8–12h | Boss cleanup 後一次進入 cleared | defeat/clear ordering browser acceptance passed |
 | 8 | ✅ M5R / Task 5R.8 — End-to-end Vertical Slice acceptance | 16–24h | 從 Title 真實完成整關與失敗重試 | desktop/mobile full-run acceptance passed |
 | 9 | ✅ M5R / Task 5R.9 — Encounter-clear camera handoff stability | 6–10h | lock release 連續銜接 bounded follow | tests + three-viewport browser acceptance passed |
-| 10 | M6 / Task 6.4 — Pause/resume | 8–12h | 明確 pause/resume flow 與 clock/input ownership | tests + desktop/mobile browser acceptance |
+| 10 | ✅ M6 / Task 6.4 — Pause/resume | 8–12h | 明確 pause/resume flow 與 clock/input ownership | tests + desktop/mobile browser acceptance passed |
 
 ## Recovery Planning Correction — 2026-07-14
 
@@ -575,3 +575,17 @@ The next eligible task is M6 / Task 6.4 — Pause/resume. Do not begin it until 
 - [x] 三種 viewport 均保持 encounter 順序、上下走位、Boss HP 8→0、stage completion 1、cleared entry 1、單一 Canvas與零 console error。
 - [x] `pnpm test` 69/69 通過；typecheck、lint（0 errors、8 existing warnings）與兩種 production build 於 closeout 重跑。
 - [x] Vertical Slice Recovery 完成；下一個唯一 Task 恢復為 M6 / Task 6.3 — Player/Boss HUD。
+
+## M6 / Task 6.4 Closeout — 2026-07-18
+
+- [x] 新增單一 Phaser-owned `PauseController`：鍵盤 `P` 與觸控共用同一 toggle request，忽略 keyboard repeat，並在 Scene shutdown 移除 listener 與五個 GameObjects。
+- [x] `ClockState` 新增獨立 `manual` reason；Scene clock `timeScale=0` 凍結 TimerEvent，同時保留 Phaser input 接收 resume，Arcade Physics、animations、tweens 依所有 pause reasons 統一恢復。
+- [x] 攻擊中暫停保持 Player state、animation frame、position、hitbox 與 camera；恢復後攻擊完成並立即恢復移動／攻擊輸入。
+- [x] Desktop keyboard/touch、844×390 landscape touch、390×844 portrait touch 全部通過，且只有一個 Canvas。
+- [x] Camera handoff regression：兩個 encounter 完成，最大 frame delta 18px，收斂到 `scrollX=1821`。
+- [x] Boss entry/clear regression：Boss active/locked at `scrollX=2560`；清除後 Boss 0、release 1、completion 1、cleared 1。
+- [x] Failure smoke 完成 10 次 failure/restart，回到 Title、HP 10、一個 Canvas、零 runtime errors。
+- [x] `pnpm test` 73/73、`pnpm typecheck`、lint 0 errors（8 個既有 warnings）、`pnpm build`、`pnpm build:github-pages` 全部通過。
+- [x] Production browser 顯示 Pause overlay、一個 Canvas、零 development datasets、零 runtime errors。
+
+The next eligible task is M6 / Task 6.5 — Failure/continue/restart. Do not begin it until the next task-runner cycle.

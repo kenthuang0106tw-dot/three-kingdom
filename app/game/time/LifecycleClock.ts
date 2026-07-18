@@ -3,7 +3,7 @@ import { ClockState } from "./ClockState";
 
 const HIT_STOP_MS = (1000 / 60) * 4;
 
-/** Owns visibility and hit-stop pause reasons without touching gameplay state. */
+/** Owns visibility, hit-stop, and manual pause timing without touching game-flow state. */
 export class LifecycleClock {
   readonly state = new ClockState();
   private hitStopTimer?: Phaser.Time.TimerEvent;
@@ -27,7 +27,15 @@ export class LifecycleClock {
     });
   }
 
+  setManualPaused(paused: boolean) {
+    if (this.state.has("manual") === paused) return;
+    this.state.setPaused("manual", paused);
+    this.scene.time.timeScale = this.state.has("manual") ? 0 : 1;
+    this.applyManagers();
+  }
+
   isPaused() { return this.state.isPaused(); }
+  isManualPaused() { return this.state.has("manual"); }
   isVisibilityPaused() { return this.visibilityPaused; }
 
   destroy() {
@@ -35,6 +43,11 @@ export class LifecycleClock {
     this.scene.game.events.off("focus", this.onFocus);
     this.hitStopTimer?.remove(false);
     this.hitStopTimer = undefined;
+    this.state.setPaused("manual", false);
+    this.state.setPaused("hitStop", false);
+    this.state.setPaused("visibility", false);
+    this.scene.time.timeScale = 1;
+    this.applyManagers();
   }
 
   private setVisibilityPaused(paused: boolean) {
@@ -50,13 +63,13 @@ export class LifecycleClock {
 
   private applyManagers() {
     if (this.state.isPaused()) {
-      this.scene.physics.world.pause();
-      this.scene.anims.pauseAll();
-      this.scene.tweens.pauseAll();
+      this.scene.physics.world?.pause();
+      this.scene.anims?.pauseAll();
+      this.scene.tweens?.pauseAll();
     } else {
-      this.scene.physics.world.resume();
-      this.scene.anims.resumeAll();
-      this.scene.tweens.resumeAll();
+      this.scene.physics.world?.resume();
+      this.scene.anims?.resumeAll();
+      this.scene.tweens?.resumeAll();
     }
   }
 }

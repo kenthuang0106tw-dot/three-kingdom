@@ -1,4 +1,4 @@
-export type ClockPauseReason = "visibility" | "hitStop";
+export type ClockPauseReason = "visibility" | "hitStop" | "manual";
 
 /** Pure pause-reason state used by the Phaser lifecycle adapter and tests. */
 export class ClockState {

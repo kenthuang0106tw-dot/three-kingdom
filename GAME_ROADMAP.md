@@ -280,7 +280,7 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 
 ## Milestone 6 — Product Flow and UI
 
-**Status:** 6.1–6.3 completed；M5R recovery 與 camera handoff 已通過，下一個唯一 Task 是 6.4。
+**Status:** 6.1–6.4 completed；下一個唯一 Task 是 6.5。
 
 **Playable Result:** 玩家可從 Title 開始、查看 HUD、暫停、失敗、重試、擊敗 Boss 並看到 Result。
 
@@ -295,7 +295,7 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 | 6.1 | 定義 game-flow modes/reset ownership（Completed 2026-07-14） | P0 | Medium | M5 | title/playing/paused/failed/cleared transition 可測 | flow controller | 與 Scene state 重複 |
 | 6.2 | Title/start（Completed 2026-07-14） | P0 | Low | 6.1 | keyboard/touch 可開始；無重複 Scene | UI/flow | React/Phaser 混用 |
 | 6.3 | Player/Boss HUD（Completed 2026-07-17） | P0 | Medium | M1 snapshot, M5 | UI 只讀 snapshot；不同 viewport 可讀 | UI layer | 每幀重建物件 |
-| 6.4 | Pause/resume | P0 | Medium | M1 clock, 6.1 | input/time/audio interface 同步 | UI/flow | 與 Hit Stop 衝突 |
+| 6.4 | Pause/resume（Completed 2026-07-18） | P0 | Medium | M1 clock, 6.1 | input/time/audio interface 同步 | UI/flow | 與 Hit Stop 衝突 |
 | 6.5 | Failure/continue/restart | P0 | Medium | M2 reset, 6.1 | 連續失敗重試 10 次無 leak | UI/flow tests | continue 規則膨脹 |
 | 6.6 | Result/replay | P0 | Low | M5 clear | clear 後可 replay；事件只觸發一次 | UI/flow | stale state |
 | 6.7 | UI/mobile acceptance | P0 | High | 6.1–6.6 | desktop/mobile 完整流程、safe area 正常 | checklist/e2e | 手機遮擋戰鬥 |
@@ -418,7 +418,9 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 - M5R / Task 5R.7 (Boss defeat and cleared flow) completed on 2026-07-16.
 - M5R / Task 5R.8 (End-to-end Vertical Slice acceptance) completed on 2026-07-17.
 - M5R / Task 5R.9 (Encounter-clear camera handoff stability) completed on 2026-07-17.
-- Next eligible task: M6 / Task 6.4 (Pause/resume).
+- M6 / Task 6.4 (Pause/resume) completed on 2026-07-18.
+- Evidence: one Phaser-owned keyboard/touch Pause path; independent manual/Hit Stop/visibility clock reasons; desktop, landscape, portrait, camera handoff, Boss entry/clear, ten-cycle failure/restart, and production browser acceptance passed with one Canvas and zero runtime errors.
+- Next eligible task: M6 / Task 6.5 (Failure/continue/restart).
 
 ## 4. Global Acceptance Rules
 
@@ -435,6 +437,6 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 
 ## 5. Required Development Order
 
-`M0 Baseline → M1 Runtime Contracts → M2 Combat Room → M3 Stage Contracts → M4 Enemy Variety → M5 Boss Contracts → M5R Vertical Slice Recovery → M6 Product Flow (resume at 6.4) → M7 Audio → M8 Polish → M9 Release`
+`M0 Baseline → M1 Runtime Contracts → M2 Combat Room → M3 Stage Contracts → M4 Enemy Variety → M5 Boss Contracts → M5R Vertical Slice Recovery → M6 Product Flow (resume at 6.5) → M7 Audio → M8 Polish → M9 Release`
 
 不得跳過 M3 先擴敵人內容；不得跳過 M1/M2 直接加入 Stage 或 Boss。

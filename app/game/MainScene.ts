@@ -23,6 +23,7 @@ import { BOSS_ACTOR_CONFIG, BossActor } from "./boss/BossActor";
 import { GameFlowStateMachine } from "./flow/GameFlowStateMachine";
 import { TitleStartController } from "./flow/TitleStartController";
 import { GameHud } from "./ui/GameHud";
+import { PauseController } from "./ui/PauseController";
 
 type AttackState = "attack1" | "attack2" | "attack3";
 type TitleStartSource = "keyboard" | "pointer" | "smoke";
@@ -80,6 +81,10 @@ class PlayerInputController {
     const right = this.cursors.right.isDown || this.wasd.right.isDown;
     return createActionSnapshot({ up, down, left, right }, Phaser.Input.Keyboard.JustDown(this.attack));
   }
+
+  consumeAttackPress(): void {
+    Phaser.Input.Keyboard.JustDown(this.attack);
+  }
 }
 
 export default class MainScene extends Phaser.Scene {
@@ -105,7 +110,10 @@ export default class MainScene extends Phaser.Scene {
   private titleOverlay?: Phaser.GameObjects.Container;
   private failureOverlay?: Phaser.GameObjects.Container;
   private hud!: GameHud;
+  private pauseController!: PauseController;
   private titleStartCount = 0;
+  private pauseCount = 0;
+  private resumeCount = 0;
   private readonly handleTitleKeyboardStart = () => this.startGame("keyboard");
   private readonly handleTitlePointerStart = () => this.startGame("pointer");
   private readonly handleFailureKeyboardRestart = () => this.restartAfterFailure("keyboard");
@@ -230,6 +238,8 @@ export default class MainScene extends Phaser.Scene {
     this.stageCompleteEventCount = 0;
     this.gameFlow.resetForNewRun();
     this.titleStartCount = 0;
+    this.pauseCount = 0;
+    this.resumeCount = 0;
     if (development) {
       this.game.canvas.dataset.stageCompleteCount = "0";
       delete this.game.canvas.dataset.stageCompleteStageId;
@@ -277,6 +287,7 @@ export default class MainScene extends Phaser.Scene {
     if (this.previewMode) { this.createPreviewMode(); return; }
 
     this.lifecycleClock = new LifecycleClock(this);
+    this.lastLifecyclePaused = false;
     this.effectDirector = new EffectDirector(this, this.lifecycleClock);
     this.createCombatAnimations();
     this.cameras.main.setRoundPixels(true);
@@ -345,8 +356,10 @@ export default class MainScene extends Phaser.Scene {
       this.game.canvas.dataset.stageSectionCount = String(BAMBOO_COMBAT_ROOM.backgroundSections.length);
     }
     this.hud = new GameHud(this, this.gameplayEvents, development);
+    this.pauseController = new PauseController(this);
     this.updateCamera();
     this.createTitleOverlay(keyboard);
+    this.updatePauseDataset();
     this.updateHud();
     if (this.bossClearedSmokeMode) this.startGame("smoke");
     this.prepareFailureSmokeCycle();
@@ -366,6 +379,7 @@ export default class MainScene extends Phaser.Scene {
       this.bossActor?.destroy();
       this.bossActor = undefined;
       this.hud.destroy();
+      this.pauseController.destroy();
       if (development) this.game.canvas.dataset.bossActorCount = "0";
       this.bossArenaDebug?.destroy();
       this.bossArenaDebug = undefined;
@@ -390,7 +404,13 @@ export default class MainScene extends Phaser.Scene {
   update() {
     if (this.enemyPreviewMode) { this.updateEnemyAlignmentPreview(); return; }
     if (this.previewMode) { this.updatePreviewMode(); return; }
+    if (this.pauseController.consumeToggleRequest()) this.togglePause();
     if (this.gameFlow.state === "title") return;
+    if (this.gameFlow.state === "paused") {
+      this.playerBody.setVelocity(0, 0);
+      this.updateDebugText();
+      return;
+    }
     if (this.gameFlow.state === "failed" || this.gameFlow.state === "cleared") {
       this.playerBody.setVelocity(0, 0);
       this.updateDebugText();
@@ -462,6 +482,30 @@ export default class MainScene extends Phaser.Scene {
     this.syncVisualsToBody();
     this.updateCamera();
     this.updateDebugText();
+  }
+
+  private togglePause(): boolean {
+    if (this.gameFlow.state === "playing") {
+      this.playerBody.setVelocity(0, 0);
+      this.currentInput = createActionSnapshot({ up: false, down: false, left: false, right: false });
+      this.inputController.consumeAttackPress();
+      this.touchInputController.clearTransientInput();
+      this.gameFlow.transition("paused");
+      this.lifecycleClock.setManualPaused(true);
+      this.pauseCount += 1;
+    } else if (this.gameFlow.state === "paused") {
+      this.inputController.consumeAttackPress();
+      this.touchInputController.clearTransientInput();
+      this.gameFlow.transition("playing");
+      this.lifecycleClock.setManualPaused(false);
+      this.resumeCount += 1;
+    } else return false;
+
+    this.pauseController.setFlowState(this.gameFlow.state);
+    this.updateTitleDataset();
+    this.updatePauseDataset();
+    this.updateHud();
+    return true;
   }
 
   private updateCamera() {
@@ -783,7 +827,9 @@ export default class MainScene extends Phaser.Scene {
 
   private enterFailedState() {
     if (this.gameFlow.state !== "playing" && this.gameFlow.state !== "paused") return;
+    if (this.gameFlow.state === "paused") this.lifecycleClock.setManualPaused(false);
     this.gameFlow.transition("failed");
+    this.pauseController.setFlowState(this.gameFlow.state);
     this.failureEntryCount += 1;
     this.failureTotalEntryCount += 1;
     this.playerBody.stop();
@@ -792,6 +838,7 @@ export default class MainScene extends Phaser.Scene {
     this.bossActor?.suspendCombat();
     this.createFailureOverlay();
     this.updateTitleDataset();
+    this.updatePauseDataset();
 
     if (process.env.NODE_ENV !== "production") {
       this.game.canvas.dataset.failureEntryCount = String(this.failureEntryCount);
@@ -913,9 +960,12 @@ export default class MainScene extends Phaser.Scene {
     this.input.keyboard?.off("keydown", this.handleTitleKeyboardStart, this);
     this.titleOverlay?.destroy(true);
     this.titleOverlay = undefined;
+    this.pauseController.consumeToggleRequest();
+    this.pauseController.setFlowState(this.gameFlow.state);
     this.inputController.readSnapshot();
     this.currentInput = createActionSnapshot({ up: false, down: false, left: false, right: false });
     this.updateTitleDataset(source);
+    this.updatePauseDataset();
     this.updateHud();
   }
 
@@ -925,6 +975,26 @@ export default class MainScene extends Phaser.Scene {
     this.game.canvas.dataset.titleVisible = String(this.gameFlow.state === "title");
     this.game.canvas.dataset.titleStartCount = String(this.titleStartCount);
     if (source) this.game.canvas.dataset.titleStartSource = source;
+  }
+
+  private updatePauseDataset() {
+    if (process.env.NODE_ENV === "production" || !this.pauseController) return;
+    const dataset = this.game.canvas.dataset;
+    dataset.pauseOverlayVisible = String(this.gameFlow.state === "paused");
+    dataset.pauseManualClock = String(this.lifecycleClock.isManualPaused());
+    dataset.pauseHitStopActive = String(this.effectDirector.isHitStopActive());
+    dataset.pauseCount = String(this.pauseCount);
+    dataset.resumeCount = String(this.resumeCount);
+    dataset.pauseObjectCount = "5";
+    dataset.pausePlayerX = String(Math.round(this.playerBodyZone.x));
+    dataset.pausePlayerY = String(Math.round(this.playerBodyZone.y));
+    dataset.pausePlayerVelocityX = String(Math.round(this.playerBody.velocity.x));
+    dataset.pausePlayerVelocityY = String(Math.round(this.playerBody.velocity.y));
+    dataset.pauseAttackHitboxEnabled = String(this.attackBody.enable);
+    dataset.pauseCameraScrollX = String(Math.round(this.cameras.main.scrollX));
+    dataset.pauseAnimation = this.playerSprite.anims.currentAnim?.key ?? "idle";
+    dataset.pauseAnimationFrame = String(this.playerSprite.anims.currentFrame?.index ?? 0);
+    dataset.pauseSceneTime = String(Math.round(this.time.now));
   }
 
   private updateBossEntrySmoke() {
@@ -1127,6 +1197,7 @@ export default class MainScene extends Phaser.Scene {
   private enterClearedState(development: boolean) {
     if (this.gameFlow.state !== "playing") return false;
     if (!this.gameFlow.transition("cleared")) return false;
+    this.pauseController.setFlowState(this.gameFlow.state);
     this.clearedEntryCount += 1;
     this.playerBody.stop();
     this.disableAttackHitbox();
@@ -1134,6 +1205,7 @@ export default class MainScene extends Phaser.Scene {
     this.bossActor?.suspendCombat();
     this.currentInput = createActionSnapshot({ up: false, down: false, left: false, right: false });
     this.updateTitleDataset();
+    this.updatePauseDataset();
     if (development) {
       const inputBlocked = this.playerBody.velocity.x === 0 && this.playerBody.velocity.y === 0 && !this.attackBody.enable;
       const actorsSuspended = this.enemyManager.isCombatSuspended && this.bossActor === undefined;
@@ -1295,6 +1367,7 @@ export default class MainScene extends Phaser.Scene {
   private updateDebugText() {
     this.updateHud();
     this.updateEncounterDataset();
+    this.updatePauseDataset();
     if (!this.debugText) return;
     const v = this.playerBody.velocity, i = this.currentInput;
     const enemies = this.enemyManager.getAllEnemies();

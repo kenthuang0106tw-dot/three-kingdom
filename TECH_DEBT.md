@@ -341,6 +341,17 @@ their drawing, text, and visibility. Boss actor references remain private to
 `MainScene`; cleanup and restart publish a nullable Boss observation instead.
 Pause, Result, replay, audio, and custom HUD art remain deferred.
 
+### TD-M06 Update — Pause/resume ownership
+
+M6 / Task 6.4 connects the existing `paused` product mode to one Phaser-owned
+keyboard/touch controller. Manual pause is independent from Hit Stop and
+visibility, freezes Scene timers through clock time scale, and pauses Physics,
+animations, and tweens without disabling the keyboard path required to resume.
+Scene shutdown guards manager teardown ordering and removes the pause listener
+and overlay. Desktop, two mobile viewports, production, camera handoff, Boss,
+and ten-cycle failure/restart acceptance passed. Audio pause remains explicitly
+deferred to M7 because no runtime audio system exists yet.
+
 ### TD-H10 — Encounter-clear camera handoff visibly snaps
 
 - **Severity:** High
