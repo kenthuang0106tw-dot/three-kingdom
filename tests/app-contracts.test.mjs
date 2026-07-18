@@ -31,6 +31,7 @@ import { GameFlowStateMachine } from "../app/game/flow/GameFlowStateMachine.ts";
 import { TitleStartController } from "../app/game/flow/TitleStartController.ts";
 import { createHudViewModel } from "../app/game/ui/HudViewModel.ts";
 import { FailureRestartGate } from "../app/game/flow/FailureRestartGate.ts";
+import { ResultReplayGate } from "../app/game/flow/ResultReplayGate.ts";
 
 test("React shell mounts only the Phaser lifecycle component", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
@@ -317,6 +318,21 @@ test("Failure restart gate accepts exactly one explicit request per failed state
   assert.equal(gate.consume(), "pointer");
 });
 
+test("Result replay gate accepts exactly one explicit request per cleared state", () => {
+  const gate = new ResultReplayGate();
+  assert.equal(gate.request("keyboard"), false);
+  gate.open();
+  assert.equal(gate.request("keyboard"), true);
+  assert.equal(gate.request("pointer"), false);
+  assert.equal(gate.consume(), "keyboard");
+  assert.equal(gate.consume(), undefined);
+  assert.equal(gate.request("pointer"), false);
+  gate.close();
+  gate.open();
+  assert.equal(gate.request("pointer"), true);
+  assert.equal(gate.consume(), "pointer");
+});
+
 test("MainScene owns failed combat suspension and explicit Phaser restart", async () => {
   const [scene, manager, boss, failureController] = await Promise.all([
     readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8"),
@@ -554,7 +570,36 @@ test("Boss clear flow releases, publishes, transitions, and suspends exactly onc
   assert.match(scene, /query\.get\("bossClearedSmoke"\) === "1"/);
   assert.match(scene, /if \(this\.bossClearedSmokeMode\) this\.startGame\("smoke"\)/);
   assert.match(scene, /dataset\.bossClearedSmokeComplete/);
-  assert.doesNotMatch(scene, /createResultOverlay|restartAfterCleared|RESULT|VICTORY/);
+  assert.match(scene, /this\.resultController\.show\(\)/);
+});
+
+test("MainScene owns one Phaser Result overlay and explicit new-run replay path", async () => {
+  const [scene, resultController, reactHost] = await Promise.all([
+    readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/ui/ResultController.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/PhaserGame.tsx", import.meta.url), "utf8"),
+  ]);
+  const cleanupStart = scene.indexOf("private handleBossCleaned");
+  const cleanupEnd = scene.indexOf("private updateBossCombatSmoke", cleanupStart);
+  const cleanup = scene.slice(cleanupStart, cleanupEnd);
+  assert.ok(cleanup.indexOf("this.releaseBossArena(development)") < cleanup.indexOf("this.publishStageComplete(development)"));
+  assert.ok(cleanup.indexOf("this.publishStageComplete(development)") < cleanup.indexOf("this.enterClearedState(development)"));
+  assert.match(scene, /this\.resultController\.show\(\)/);
+  assert.match(scene, /this\.resultController\.consumeReplayRequest\(\)/);
+  assert.match(scene, /if \(this\.gameFlow\.state !== "cleared"\) return false/);
+  assert.match(scene, /this\.resultController\.hide\(\)[\s\S]*this\.restartStage\(\)/);
+  assert.match(scene, /this\.resultController\.destroy\(\)/);
+  assert.match(scene, /query\.get\("resultSmoke"\) === "1"/);
+  assert.match(scene, /this\.resultSmokeIteration === 10[\s\S]*this\.resultReplayCount === 10[\s\S]*this\.resultTotalEntryCount === 10/);
+  assert.match(scene, /this\.resultSmokeTimer\?\.remove\(false\)/);
+  assert.match(resultController, /keyboard\.on\("keydown", this\.onResultKey\)/);
+  assert.match(resultController, /keyboard\?\.off\("keydown", this\.onResultKey\)/);
+  assert.match(resultController, /this\.shade\.on\("pointerdown", this\.onResultPointer\)/);
+  assert.match(resultController, /this\.shade\.off\("pointerdown", this\.onResultPointer\)/);
+  assert.match(resultController, /VICTORY/);
+  assert.match(resultController, /PRESS ANY KEY \/ TAP TO REPLAY/);
+  assert.doesNotMatch(resultController, /window|document|React|setTimeout|setInterval/);
+  assert.doesNotMatch(reactHost, /ResultController|ResultReplayGate|useState/);
 });
 
 test("M5 full-stage acceptance preserves ordering, exactly-once completion, and restart ownership", () => {

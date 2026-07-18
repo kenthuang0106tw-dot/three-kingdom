@@ -2,7 +2,7 @@
 
 ## Sprint Goal
 
-M6.5 Failure/continue/restart 已完成。下一步只執行 M6.6 Result/replay，為既有 `cleared` terminal flow 提供正式結果與重玩入口，不同時加入 Audio、計分或新戰鬥內容。
+M6.6 Result/replay 已完成。下一步只執行 M6.7 UI/mobile acceptance，驗收完整產品流程在 desktop、landscape touch 與 portrait touch 的一致性，不同時加入 Audio、美術升級或新戰鬥內容。
 
 Roadmap decision（2026-07-18）：M6.6 與 M6.7 完成後插入 M6A Visual Upgrade，再進入 M7 Audio。M6A 尚未進入本 Sprint，不可提前零散替換素材。
 
@@ -11,7 +11,7 @@ Roadmap decision（2026-07-18）：M6.6 與 M6.7 完成後插入 M6A Visual Upgr
 - Duration：2 weeks
 - Capacity：1 developer + AI，約 40–55 hours
 - Milestone：M6 — Product Flow and UI
-- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M6 / 6.6 Result/replay
+- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M6 / 6.7 UI/mobile acceptance
 
 ## Task List
 
@@ -28,6 +28,7 @@ Roadmap decision（2026-07-18）：M6.6 與 M6.7 完成後插入 M6A Visual Upgr
 | 9 | ✅ M5R / Task 5R.9 — Encounter-clear camera handoff stability | 6–10h | lock release 連續銜接 bounded follow | tests + three-viewport browser acceptance passed |
 | 10 | ✅ M6 / Task 6.4 — Pause/resume | 8–12h | 明確 pause/resume flow 與 clock/input ownership | tests + desktop/mobile browser acceptance passed |
 | 11 | ✅ M6 / Task 6.5 — Failure/continue/restart | 8–12h | 正式 Failure UI、單一路徑 retry 與 deterministic reset | 74 tests + desktop/mobile/10-cycle acceptance passed |
+| 12 | ✅ M6 / Task 6.6 — Result/replay | 6–10h | 正式 Result UI、單一路徑 replay 與 deterministic new run | 76 tests + desktop/mobile/10-cycle acceptance passed |
 
 ## Recovery Planning Correction — 2026-07-14
 
@@ -604,3 +605,15 @@ The next eligible task is M6 / Task 6.5 — Failure/continue/restart. Do not beg
 - [x] `pnpm test` 74/74、`pnpm typecheck`、lint 0 errors（8 個既有 warnings）、兩種 production build 通過。
 
 The next eligible task is M6 / Task 6.6 — Result/replay. Do not begin it until the next task-runner cycle.
+
+## M6 / Task 6.6 Closeout — 2026-07-18
+
+- [x] 新增一次建立、Scene shutdown 銷毀的 Phaser `ResultController`；Result presentation 與 replay input 不進入 React/DOM。
+- [x] `ResultReplayGate` 每次 cleared state 最多接受一次 keyboard 或 pointer request；MainScene 只由 cleared-only `replayAfterClear()` 執行 Scene restart。
+- [x] Result 僅在 Boss cleanup、arena release、exactly-once stage completion 後顯示；Failure 與 Result gate 在不相符 terminal state 保持關閉。
+- [x] Replay 回到 Title、HP 10、encounter 0、Boss locked/inactive、stage completion 0、Result hidden，沒有 stale actor、camera lock 或 Canvas。
+- [x] Desktop keyboard、844×390 landscape pointer、390×844 portrait pointer 全部完成 replay；overlay 保持 camera-fixed 且可讀。
+- [x] Development smoke 完成 10 次 clear/replay：10 次 entry、10 次 replay、單一 Canvas、零 runtime error。
+- [x] `pnpm test` 76/76、typecheck、lint 0 errors（8 existing warnings）、production build 與 GitHub Pages build 通過。
+
+The next eligible task is M6 / Task 6.7 — UI/mobile acceptance. Do not begin it until the next task-runner cycle.

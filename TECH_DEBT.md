@@ -363,6 +363,18 @@ landscape/portrait pointer retry, and production builds passed. Continue lives
 only as a fresh-run retry; lives, checkpoints, scoring, persistence, Result,
 and Audio remain deferred rather than being hidden in this controller.
 
+### TD-M06 Update — Result/replay ownership
+
+M6 / Task 6.6 closes the remaining terminal presentation gap with one
+Phaser-owned `ResultController` and an exactly-once `ResultReplayGate`. Replay
+uses the existing Scene new-run lifecycle instead of duplicating completion or
+reset logic. Ten clear/replay cycles restore Title, HP 10, encounter 0, Boss
+locked, zero completion state, one Canvas, and zero browser errors.
+
+Result remains functional prototype art. Scoring, persistence, post-stage
+progression, custom Result art, Audio, and visual polish remain intentionally
+deferred to their roadmap milestones.
+
 ### TD-H10 — Encounter-clear camera handoff visibly snaps
 
 - **Severity:** High

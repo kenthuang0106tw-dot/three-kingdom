@@ -913,3 +913,22 @@
 | Automated checks | Pass | 74/74 tests, typecheck, lint 0 errors (8 existing warnings), both production builds |
 | Scope | Pass | No Result, replay, Audio, scoring, persistence, combat, content, art or balance changes |
 | Next task | Selected | M6 / Task 6.6 — Result/replay |
+
+## M6 / Task 6.6 Acceptance — 2026-07-18
+
+| Check | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M6 / Task 6.6 — Result/replay |
+| Ordering | Pass | Boss cleanup → arena release → one stage completion → one cleared entry → Result |
+| Ownership | Pass | One persistent Phaser `ResultController`; React/DOM own no Result state or input |
+| Exactly-once request | Pass | Pure gate rejects closed, duplicate, consumed, and cross-source replay requests until reopened |
+| Desktop keyboard | Pass | Cleared overlay accepted Enter and returned to Title through one Scene restart |
+| Landscape touch | Pass | 844×390 viewport, 693×390 Canvas, pointer replay returned to Title |
+| Portrait touch | Pass | 390×844 viewport, 325×183 Canvas, pointer replay returned to Title |
+| Terminal exclusivity | Pass | Failed cannot open Result; cleared cannot consume Failure retry |
+| Deterministic new run | Pass | Title, HP 10, encounter 0, Boss locked/inactive, completion 0, Result hidden |
+| Ten-cycle smoke | Pass | 10 entries, 10 replays, one Canvas, zero runtime errors |
+| Cleanup | Pass | Shutdown removes keyboard/pointer handlers, overlay, smoke timer and owned references |
+| Automated checks | Pass | 76/76 tests, typecheck, lint 0 errors (8 existing warnings), both production builds |
+| Scope | Pass | No Audio, scoring, persistence, content, custom art, balance, M6A or M6.7 work added |
+| Next task | Selected | M6 / Task 6.7 — UI/mobile acceptance |

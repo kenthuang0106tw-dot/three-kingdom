@@ -25,7 +25,7 @@
 | Stage | Playable vertical slice | 3840×720 三畫面世界、兩場 encounter、Boss 進場與 terminal flow 已完成 |
 | Camera | Stable vertical slice | bounded integer follow、encounter/Boss locks 與 encounter-clear 連續 handoff 已接入 |
 | Mobile | Playable prototype | Phaser 360° touch joystick、attack 與 FIT viewport acceptance 已完成 |
-| UI | Product-flow prototype | Phaser Title/start、Player/Boss HUD、Pause、Failure/retry 已完成；缺 Result/replay 與 M6.7 acceptance |
+| UI | Product-flow prototype | Phaser Title/start、Player/Boss HUD、Pause、Failure/retry、Result/replay 已完成；缺 M6.7 acceptance |
 | Visual | Prototype quality | M6A 已排在 M6 後；角色、場景、特效、產品 UI 將統一升級，不改玩法 contract |
 | Audio | Missing | 無 runtime assets；M7 必須等待 M6A visual freeze |
 | Tests | Contract baseline | app shell、lifecycle、route 與 multi-enemy source contracts 已建立 |
@@ -281,7 +281,7 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 
 ## Milestone 6 — Product Flow and UI
 
-**Status:** 6.1–6.5 completed；下一個唯一 Task 是 6.6。
+**Status:** 6.1–6.6 completed；下一個唯一 Task 是 6.7。
 
 **Playable Result:** 玩家可從 Title 開始、查看 HUD、暫停、失敗、重試、擊敗 Boss 並看到 Result。
 
@@ -298,7 +298,7 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 | 6.3 | Player/Boss HUD（Completed 2026-07-17） | P0 | Medium | M1 snapshot, M5 | UI 只讀 snapshot；不同 viewport 可讀 | UI layer | 每幀重建物件 |
 | 6.4 | Pause/resume（Completed 2026-07-18） | P0 | Medium | M1 clock, 6.1 | input/time/audio interface 同步 | UI/flow | 與 Hit Stop 衝突 |
 | 6.5 | Failure/continue/restart（Completed 2026-07-18） | P0 | Medium | M2 reset, 6.1 | 連續失敗重試 10 次無 leak | UI/flow tests | continue 規則膨脹 |
-| 6.6 | Result/replay | P0 | Low | M5 clear | clear 後可 replay；事件只觸發一次 | UI/flow | stale state |
+| 6.6 | Result/replay（Completed 2026-07-18） | P0 | Low | M5 clear | clear 後可 replay；事件只觸發一次 | UI/flow | stale state |
 | 6.7 | UI/mobile acceptance | P0 | High | 6.1–6.6 | desktop/mobile 完整流程、safe area 正常 | checklist/e2e | 手機遮擋戰鬥 |
 
 正式多 Scene 拆分只在這裡依實際 lifecycle 決定；不要在 M1 預建空 Scene。
@@ -446,7 +446,9 @@ M6A 不加入新角色、新敵人、新招式、第二關、Audio、技能、�
 - Evidence: one Phaser-owned keyboard/touch Pause path; independent manual/Hit Stop/visibility clock reasons; desktop, landscape, portrait, camera handoff, Boss entry/clear, ten-cycle failure/restart, and production browser acceptance passed with one Canvas and zero runtime errors.
 - M6 / Task 6.5 (Failure/continue/restart) completed on 2026-07-18.
 - Evidence: one persistent Phaser-owned Failure controller, an exactly-once restart request gate, keyboard and touch retry, fixed camera-space pointer alignment, ten-cycle reset smoke, one Canvas, and zero runtime errors.
-- Next eligible task: M6 / Task 6.6 (Result/replay).
+- M6 / Task 6.6 (Result/replay) completed on 2026-07-18.
+- Evidence: one persistent Phaser-owned Result controller, an exactly-once replay request gate, keyboard and touch replay, desktop/landscape/portrait acceptance, ten-cycle new-run smoke, one Canvas, and zero runtime errors.
+- Next eligible task: M6 / Task 6.7 (UI/mobile acceptance).
 
 ## 4. Global Acceptance Rules
 
@@ -463,6 +465,6 @@ M6A 不加入新角色、新敵人、新招式、第二關、Audio、技能、�
 
 ## 5. Required Development Order
 
-`M0 Baseline → M1 Runtime Contracts → M2 Combat Room → M3 Stage Contracts → M4 Enemy Variety → M5 Boss Contracts → M5R Vertical Slice Recovery → M6 Product Flow (resume at 6.6) → M6A Visual Upgrade → M7 Audio → M8 Polish → M9 Release`
+`M0 Baseline → M1 Runtime Contracts → M2 Combat Room → M3 Stage Contracts → M4 Enemy Variety → M5 Boss Contracts → M5R Vertical Slice Recovery → M6 Product Flow (resume at 6.7) → M6A Visual Upgrade → M7 Audio → M8 Polish → M9 Release`
 
 不得跳過 M3 先擴敵人內容；不得跳過 M1/M2 直接加入 Stage 或 Boss。

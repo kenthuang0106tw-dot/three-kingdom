@@ -1,63 +1,69 @@
 # Next Task
 
-## M6 / Task 6.6 — Result/replay
+## M6 / Task 6.7 — UI/mobile acceptance
 
 ### Why this is next
 
-Failure/retry now has one accepted product path. The remaining terminal mode is
-`cleared`, which already publishes exactly once but has no Result presentation
-or explicit replay action. Formalizing that existing boundary completes the
-smallest playable product-flow step before UI/mobile acceptance. The approved
-M6A Visual Upgrade remains gated behind M6.7 and is not part of this task.
+All M6 product-flow features now exist: Title/start, HUD, Pause/resume,
+Failure/retry, and Result/replay. Before the approved M6A Visual Upgrade can
+begin, the complete flow needs one acceptance pass across the three supported
+viewport contracts. This freezes behavior, safe-area placement, input ownership,
+and functional UI layout so M6A can replace art without reopening gameplay flow.
 
 ### Completion criteria
 
-- Entering `cleared` presents one Phaser-owned Result overlay after the existing
-  Boss cleanup, arena release, and exactly-once stage-complete publication.
-- Keyboard and pointer/touch request replay through one exactly-once method;
-  neither React nor DOM owns gameplay state.
-- Replay performs the documented new-run Scene lifecycle and returns to Title
-  with HP 10, encounter 0, Boss locked/inactive, no actors, locks, stale Pause,
-  Failure, completion, or Result state.
-- `failed` cannot show Result or request replay; `cleared` cannot request Failure
-  retry. Title, playing, paused, failed, and cleared remain mutually consistent.
-- Scene shutdown removes every Result listener, pointer handler, overlay and
-  owned reference.
-- Ten clear/replay cycles retain one Phaser instance and one Canvas without
-  listener, GameObject, timer, actor, completion, or camera-state accumulation.
-- Production keeps Result/replay UI and exposes no development telemetry.
+- One complete desktop keyboard run covers Title → playing → Pause/resume → two
+  encounters → Boss → Result → replay → Title without a soft lock or duplicate
+  Phaser instance/Canvas.
+- One 844×390 landscape touch run covers the same product flow using the 360°
+  joystick, attack, Pause, Failure retry or Result replay, with no clipped or
+  unreachable control.
+- One 390×844 portrait touch run confirms FIT scaling, safe-area behavior,
+  readable functional UI, and reachable terminal actions without changing the
+  1280×720 Phaser world contract.
+- Title, HUD, Pause, Failure, and Result remain Phaser-owned; React remains only
+  the shell and Phaser lifecycle owner.
+- Pause, Failure, and Result overlays are mutually exclusive and camera-fixed.
+- The HUD remains readable and does not intercept movement, attack, pause,
+  retry, or replay input.
+- Repeated start, pause/resume, failure/retry, and clear/replay cycles retain one
+  Phaser instance, one Canvas, and no listener, GameObject, timer, actor, camera
+  lock, completion, or input-state accumulation.
+- Production contains the same functional UI and mobile controls without any
+  development telemetry or physics/debug presentation.
+- Any defect found is fixed only when it blocks this acceptance; no custom art,
+  Audio, scoring, content, combat, balance, or M6A work is added.
 
 ### Validation
 
-- Contract tests for exactly-once Result entry, one replay request, terminal
-  exclusivity, reset state, and shutdown cleanup.
-- Browser acceptance for Boss clear and replay on desktop keyboard, 844×390
-  landscape touch, and 390×844 portrait touch.
-- Development ten-cycle clear/replay smoke with one Canvas and zero errors.
-- Regression smoke for Title/start, Pause, Failure/retry, two encounters, camera
-  handoff, Boss entry/combat, HUD, and completion ordering.
+- Contract tests for React/Phaser ownership, terminal exclusivity, fixed overlay
+  coordinates, listener cleanup, safe-area CSS, and single-instance lifecycle.
+- Full browser acceptance at desktop default viewport, 844×390 landscape, and
+  390×844 portrait using the matching real input surface.
+- Regression smoke for two encounters, camera handoff, Boss entry/combat,
+  stage-completion ordering, Failure reset, Result replay, HUD, and Pause.
+- Ten-cycle lifecycle smoke for restart/replay with one Canvas and zero browser
+  errors.
 - Run `pnpm test`, `pnpm typecheck`, `pnpm lint`, `pnpm build`, and
   `pnpm build:github-pages`.
 
 ### Expected files
 
-- `app/game/MainScene.ts`
-- `app/game/flow/`
-- `app/game/ui/`
 - `tests/app-contracts.test.mjs`
+- `CHECKLIST.md`
 - `GAME_ROADMAP.md`
 - `SPRINT.md`
 - `NEXT_TASK.md`
-- `ARCHITECTURE.md`
-- `TECH_DEBT.md`
-- `CHECKLIST.md`
+- Only the smallest existing `app/game/` or responsive CSS file needed for an
+  acceptance-blocking defect discovered during validation.
 
 ### Risks
 
-- Result replay could duplicate the existing stage-completion callback or skip
-  Title if it invents a second reset path.
-- Failure and Result input listeners can conflict unless each terminal overlay
-  owns a closed request gate outside its matching state.
-- Boss fade/cleanup callbacks must finish before Result becomes interactive.
-- Do not add scoring, persistence, Audio, new content, post-stage progression,
-  custom Result art, M6A visual work, or M6.7 mobile acceptance work.
+- A full manual run is long enough to hide viewport-specific input or lifecycle
+  accumulation unless each checkpoint is recorded explicitly.
+- Touch controls and fixed overlays can be visually present but have misaligned
+  pointer hit areas after camera movement or FIT scaling.
+- Fixing acceptance defects can drift into redesign; preserve current functional
+  presentation and defer all visual replacement to M6A.
+- Do not begin M6A, Audio, scoring, persistence, post-stage progression, new
+  content, custom UI art, or unrelated refactoring in this task.

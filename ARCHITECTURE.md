@@ -675,6 +675,26 @@ shutdown removes both input handlers and destroys the fixed GameObjects. The
 next `create()` rebuilds Title, Player, Stage, encounter, Boss, camera, Pause,
 HUD, and Failure ownership from their documented initial state.
 
+## Result/Replay Ownership (M6 / Task 6.6)
+
+`ResultController` owns one persistent Phaser keyboard listener, one fixed
+pointer surface, and one four-object Result overlay for the Scene lifetime.
+Keyboard and touch edges enter `ResultReplayGate`, which accepts at most one
+source each time the cleared presentation opens. The controller never publishes
+stage completion, changes flow, or restarts the Scene.
+
+`MainScene` enters `cleared` only after Boss cleanup releases the arena and the
+`StageCompletionGate` publishes once. It then suspends combat and opens Result.
+`update()` consumes the accepted request and is the only caller of the
+cleared-only `replayAfterClear()` path. That path closes Result before the
+existing Scene restart rebuilds Title, HP, encounters, Boss eligibility, camera
+locks, Pause, Failure, HUD, and Result from the documented new-run state.
+
+Failure and Result keep independent gates that remain closed outside their own
+terminal mode. Scene shutdown removes both Result input handlers, cancels the
+development smoke timer, and destroys the camera-fixed overlay. Development
+telemetry verifies lifecycle ownership but is not emitted by production builds.
+
 ## Encounter-clear Camera Handoff Contract (M5R / Task 5R.9)
 
 `CameraFollow.ts` owns a Phaser-free handoff policy in addition to the existing

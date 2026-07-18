@@ -25,10 +25,12 @@ import { TitleStartController } from "./flow/TitleStartController";
 import { GameHud } from "./ui/GameHud";
 import { PauseController } from "./ui/PauseController";
 import { FailureController, type FailureRestartSource as ExplicitFailureRestartSource } from "./ui/FailureController";
+import { ResultController, type ResultReplaySource as ExplicitResultReplaySource } from "./ui/ResultController";
 
 type AttackState = "attack1" | "attack2" | "attack3";
 type TitleStartSource = "keyboard" | "pointer" | "smoke";
 type FailureRestartSource = ExplicitFailureRestartSource | "smoke";
+type ResultReplaySource = ExplicitResultReplaySource | "smoke";
 type PreviewFrame = {
   name: string; x: number; y: number; width: number; height: number;
   originY: number; offsetX: number; offsetY: number; classification: string;
@@ -45,6 +47,8 @@ const ENEMY_FEET_Y = 354;
 const HURT_MS = 300;
 const COMBO_WINDOW_MS = 360;
 const FAILURE_SMOKE_RESTART_MS = 500;
+const RESULT_SMOKE_REPLAY_MS = 500;
+const RESULT_SMOKE_BOSS_HIT_MS = 35;
 const ATTACK_STATES: AttackState[] = ["attack1", "attack2", "attack3"];
 const FRAME_ORIGIN_Y: Record<string, number> = {
   "walk-0": 739 / 793, "walk-1": 736 / 793, "walk-2": 746 / 793, "walk-3": 741 / 793,
@@ -113,6 +117,7 @@ export default class MainScene extends Phaser.Scene {
   private hud!: GameHud;
   private pauseController!: PauseController;
   private failureController!: FailureController;
+  private resultController!: ResultController;
   private titleStartCount = 0;
   private pauseCount = 0;
   private resumeCount = 0;
@@ -158,6 +163,12 @@ export default class MainScene extends Phaser.Scene {
   private failureTotalEntryCount = 0;
   private failureEntryCount = 0;
   private clearedEntryCount = 0;
+  private resultSmokeMode = false;
+  private resultSmokeCycleActive = false;
+  private resultSmokeIteration = 0;
+  private resultReplayCount = 0;
+  private resultTotalEntryCount = 0;
+  private resultSmokeTimer?: Phaser.Time.TimerEvent;
   private failureSmokeAllInputBlocked = true;
   private failureSmokeAllActorsSuspended = true;
   private failureSmokeTimer?: Phaser.Time.TimerEvent;
@@ -220,7 +231,11 @@ export default class MainScene extends Phaser.Scene {
     this.resetSmokeMode = development && query.get("resetSmoke") === "1";
     this.bossMovementSmokeMode = development && query.get("bossMovementSmoke") === "1";
     this.bossCombatSmokeMode = development && query.get("bossCombatSmoke") === "1";
-    this.bossClearedSmokeMode = development && query.get("bossClearedSmoke") === "1";
+    this.resultSmokeMode = development && query.get("resultSmoke") === "1";
+    this.resultSmokeCycleActive = this.resultSmokeMode && this.resultSmokeIteration < 10;
+    const bossClearedSmokeRequested = query.get("bossClearedSmoke") === "1";
+    this.bossClearedSmokeMode = development
+      && ((bossClearedSmokeRequested && this.resultTotalEntryCount === 0) || this.resultSmokeCycleActive);
     this.failureSmokeMode = development && query.get("failureSmoke") === "1";
     this.cameraHandoffSmokeMode = development && query.get("cameraHandoffSmoke") === "1";
     this.failureSmokeCycleActive = this.failureSmokeMode && this.failureSmokeIteration < 10;
@@ -261,11 +276,17 @@ export default class MainScene extends Phaser.Scene {
       delete this.game.canvas.dataset.bossCleanupReason;
       delete this.game.canvas.dataset.bossCleanupFlowState;
       delete this.game.canvas.dataset.bossClearedSmokeComplete;
+      delete this.game.canvas.dataset.resultSmokeComplete;
+      delete this.game.canvas.dataset.resultReplaySource;
       delete this.game.canvas.dataset.cameraHandoffSmokeComplete;
       this.game.canvas.dataset.clearedEntryCount = "0";
       this.game.canvas.dataset.failureEntryCount = "0";
       this.game.canvas.dataset.failureTotalEntryCount = String(this.failureTotalEntryCount);
       this.game.canvas.dataset.failureRestartCount = String(this.failureRestartCount);
+      this.game.canvas.dataset.resultOverlayVisible = "false";
+      this.game.canvas.dataset.resultEntryCount = "0";
+      this.game.canvas.dataset.resultTotalEntryCount = String(this.resultTotalEntryCount);
+      this.game.canvas.dataset.resultReplayCount = String(this.resultReplayCount);
     }
     this.playerStateMachine.reset();
     this.playerLifecycle.reset();
@@ -358,13 +379,16 @@ export default class MainScene extends Phaser.Scene {
     this.hud = new GameHud(this, this.gameplayEvents, development);
     this.pauseController = new PauseController(this);
     this.failureController = new FailureController(this);
+    this.resultController = new ResultController(this);
     this.updateFailureDataset();
+    this.updateResultDataset();
     this.updateCamera();
     this.createTitleOverlay(keyboard);
     this.updatePauseDataset();
     this.updateHud();
     if (this.bossClearedSmokeMode) this.startGame("smoke");
     this.prepareFailureSmokeCycle();
+    this.prepareResultSmokeCycle();
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.playerSprite.off(Phaser.Animations.Events.ANIMATION_UPDATE, this.handleAnimationUpdate, this);
@@ -378,11 +402,14 @@ export default class MainScene extends Phaser.Scene {
       this.bossSmokeTimer = undefined;
       this.failureSmokeTimer?.remove(false);
       this.failureSmokeTimer = undefined;
+      this.resultSmokeTimer?.remove(false);
+      this.resultSmokeTimer = undefined;
       this.bossActor?.destroy();
       this.bossActor = undefined;
       this.hud.destroy();
       this.pauseController.destroy();
       this.failureController.destroy();
+      this.resultController.destroy();
       if (development) this.game.canvas.dataset.bossActorCount = "0";
       this.bossArenaDebug?.destroy();
       this.bossArenaDebug = undefined;
@@ -408,6 +435,11 @@ export default class MainScene extends Phaser.Scene {
     const failureRestartSource = this.failureController.consumeRestartRequest();
     if (failureRestartSource) {
       this.restartAfterFailure(failureRestartSource);
+      return;
+    }
+    const resultReplaySource = this.resultController.consumeReplayRequest();
+    if (resultReplaySource) {
+      this.replayAfterClear(resultReplaySource);
       return;
     }
     if (this.gameFlow.state === "title") return;
@@ -883,6 +915,19 @@ export default class MainScene extends Phaser.Scene {
     return true;
   }
 
+  private replayAfterClear(source: ResultReplaySource) {
+    if (this.gameFlow.state !== "cleared") return false;
+    this.resultController.hide();
+    this.resultReplayCount += 1;
+    if (process.env.NODE_ENV !== "production") {
+      this.game.canvas.dataset.resultReplayCount = String(this.resultReplayCount);
+      this.game.canvas.dataset.resultReplaySource = source;
+    }
+    this.updateResultDataset();
+    this.restartStage();
+    return true;
+  }
+
   private prepareFailureSmokeCycle() {
     if (!this.failureSmokeMode) return;
     if (!this.failureSmokeCycleActive) {
@@ -917,6 +962,25 @@ export default class MainScene extends Phaser.Scene {
       this.failureSmokeTimer = undefined;
       if (this.gameFlow.state === "title") this.startGame("smoke");
     });
+  }
+
+  private prepareResultSmokeCycle() {
+    if (!this.resultSmokeMode || this.resultSmokeCycleActive) return;
+    const initialStateRestored = this.gameFlow.state === "title"
+      && this.playerHp === PLAYER_MAX_HP
+      && this.playerBodyZone.x === START_X
+      && this.encounterSequence.nextEncounterIndex === 0
+      && this.bossEntryState === "locked"
+      && this.bossActor === undefined
+      && !isCameraLocked(this.cameraLockState)
+      && this.stageCompleteEventCount === 0
+      && !this.resultController.isVisible;
+    this.game.canvas.dataset.resultSmokeComplete = String(
+      this.resultSmokeIteration === 10
+      && this.resultReplayCount === 10
+      && this.resultTotalEntryCount === 10
+      && initialStateRestored,
+    );
   }
 
   private restartStage() {
@@ -989,6 +1053,14 @@ export default class MainScene extends Phaser.Scene {
     const dataset = this.game.canvas.dataset;
     dataset.failureOverlayVisible = String(this.failureController.isVisible);
     dataset.failureObjectCount = "3";
+  }
+
+  private updateResultDataset() {
+    const development = (import.meta as ImportMeta & { env: { DEV: boolean } }).env.DEV;
+    if (!development || !this.resultController) return;
+    const dataset = this.game.canvas.dataset;
+    dataset.resultOverlayVisible = String(this.resultController.isVisible);
+    dataset.resultObjectCount = "4";
   }
 
   private updateBossEntrySmoke() {
@@ -1193,10 +1265,13 @@ export default class MainScene extends Phaser.Scene {
     if (!this.gameFlow.transition("cleared")) return false;
     this.pauseController.setFlowState(this.gameFlow.state);
     this.clearedEntryCount += 1;
+    this.resultTotalEntryCount += 1;
     this.playerBody.stop();
     this.disableAttackHitbox();
     this.enemyManager.suspendCombat();
     this.bossActor?.suspendCombat();
+    this.resultController.show();
+    this.updateResultDataset();
     this.currentInput = createActionSnapshot({ up: false, down: false, left: false, right: false });
     this.updateTitleDataset();
     this.updatePauseDataset();
@@ -1204,6 +1279,8 @@ export default class MainScene extends Phaser.Scene {
       const inputBlocked = this.playerBody.velocity.x === 0 && this.playerBody.velocity.y === 0 && !this.attackBody.enable;
       const actorsSuspended = this.enemyManager.isCombatSuspended && this.bossActor === undefined;
       this.game.canvas.dataset.clearedEntryCount = String(this.clearedEntryCount);
+      this.game.canvas.dataset.resultEntryCount = String(this.clearedEntryCount);
+      this.game.canvas.dataset.resultTotalEntryCount = String(this.resultTotalEntryCount);
       this.game.canvas.dataset.clearedInputBlocked = String(inputBlocked);
       this.game.canvas.dataset.clearedActorsSuspended = String(actorsSuspended);
       this.game.canvas.dataset.clearedAfterArenaRelease = String(!hasCameraLock(this.cameraLockState, "boss"));
@@ -1219,18 +1296,36 @@ export default class MainScene extends Phaser.Scene {
         );
       }
     }
+    if (this.resultSmokeCycleActive) {
+      this.resultSmokeIteration += 1;
+      this.resultSmokeTimer?.remove(false);
+      this.resultSmokeTimer = this.time.delayedCall(RESULT_SMOKE_REPLAY_MS, () => {
+        this.resultSmokeTimer = undefined;
+        this.replayAfterClear("smoke");
+      });
+    }
     return true;
   }
 
   private scheduleBossSmokeHit() {
-    this.bossSmokeTimer = this.time.delayedCall(700, () => {
-      this.bossSmokeTimer = undefined;
-      const bossActor = this.bossActor;
-      if (!this.scene.isActive() || !bossActor || bossActor.state === "dead" || bossActor.state === "cleaned") return;
-      if (bossActor.isDamageable) bossActor.damage(1);
-      this.updateBossSmokeDataset();
-      if (bossActor.hp > 0) this.scheduleBossSmokeHit();
-    });
+    if (this.resultSmokeCycleActive) {
+      this.scheduleBossSmokeDamage(RESULT_SMOKE_BOSS_HIT_MS);
+      return;
+    }
+    this.bossSmokeTimer = this.time.delayedCall(700, () => this.applyBossSmokeDamage());
+  }
+
+  private scheduleBossSmokeDamage(delay: number) {
+    this.bossSmokeTimer = this.time.delayedCall(delay, () => this.applyBossSmokeDamage());
+  }
+
+  private applyBossSmokeDamage() {
+    this.bossSmokeTimer = undefined;
+    const bossActor = this.bossActor;
+    if (!this.scene.isActive() || !bossActor || bossActor.state === "dead" || bossActor.state === "cleaned") return;
+    if (bossActor.isDamageable) bossActor.damage(1);
+    this.updateBossSmokeDataset();
+    if (bossActor.hp > 0) this.scheduleBossSmokeHit();
   }
 
   private updateBossSmokeDataset() {

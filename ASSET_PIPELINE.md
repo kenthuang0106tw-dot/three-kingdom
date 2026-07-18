@@ -125,7 +125,7 @@ the listener is removed on Scene shutdown.
 
 ### UI / Font / Audio
 
-- UI：React side cabinet／CRT overlay 保留外框；Phaser 已有 Title、Player/Boss HUD、Pause、Failure，Result 排在 M6.6。全部仍是功能性 prototype art。
+- UI：React side cabinet／CRT overlay 保留外框；Phaser 已有 Title、Player/Boss HUD、Pause、Failure、Result。全部仍是功能性 prototype art。
 - Font：使用系統 Consolas/Impact/Arial，沒有正式 pixel font。
 - Audio：沒有 runtime asset。
 - Mobile controls：Phaser 360° joystick、attack、pause 已可用，但沒有正式 UI assets。
@@ -190,7 +190,7 @@ Metadata 最少欄位：
 - **M5:** Boss attack 1–3、idle、walk、hurt、phase、dead 已完成；仍缺 arena-specific assets。
 - **M5R:** 三段連續竹林 Stage layout、Boss walk frames 與可驗證 arena entry presentation。
 - **M5R.1 runtime:** 已用現有 `forest-camp.png` 建立三段明確、無 uncovered area 的暫時 section；三段獨特場景美術仍屬後續 content polish，不阻擋 encounter work。
-- **M6:** 功能性 Title/HUD/Pause/Failure 已完成，Result 排在 6.6；本 Milestone 不製作 custom art。
+- **M6:** 功能性 Title/HUD/Pause/Failure/Result 已完成；本 Milestone 不製作 custom art。
 - **M6A.1:** Visual target、比例、色盤、光源、pixel density、UI language 與 before/after baseline。
 - **M6A.2:** Guan Yu idle/walk/attack1–3/hurt/dead 完整 source、runtime sheet、atlas、metadata 與 debug sheet。
 - **M6A.3:** 三種小兵與 Boss 的角色比例、色盤、面向、feet anchor 與 animation consistency pass。
