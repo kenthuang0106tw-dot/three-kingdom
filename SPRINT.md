@@ -4,6 +4,8 @@
 
 M6.5 Failure/continue/restart 已完成。下一步只執行 M6.6 Result/replay，為既有 `cleared` terminal flow 提供正式結果與重玩入口，不同時加入 Audio、計分或新戰鬥內容。
 
+Roadmap decision（2026-07-18）：M6.6 與 M6.7 完成後插入 M6A Visual Upgrade，再進入 M7 Audio。M6A 尚未進入本 Sprint，不可提前零散替換素材。
+
 ## Cadence
 
 - Duration：2 weeks

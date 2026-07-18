@@ -21,7 +21,7 @@
 | `guanyu-air-hit.png` | 未接入 Phaser | 無正式 atlas | Hurt/death/airborne flow 未完成 |
 | `*-source.png` | 保存 | N/A | 需記錄來源與生成參數 |
 
-現有 Player scale 依 animation 類型仍由 MainScene 設定；M2 必須將 frame metadata 與顯示契約集中，不可再以 scale 修 alignment。
+現有 Player scale 依 animation 類型仍由 MainScene 設定；M6A.2 必須將 frame metadata 與顯示契約集中，不可再以不同 scale 修 alignment。
 
 ### Player — Zhang Fei / Zhao Yun
 
@@ -125,10 +125,10 @@ the listener is removed on Scene shutdown.
 
 ### UI / Font / Audio
 
-- UI：只有 React side cabinet、CRT overlay、Phaser debug text。
+- UI：React side cabinet／CRT overlay 保留外框；Phaser 已有 Title、Player/Boss HUD、Pause、Failure，Result 排在 M6.6。全部仍是功能性 prototype art。
 - Font：使用系統 Consolas/Impact/Arial，沒有正式 pixel font。
 - Audio：沒有 runtime asset。
-- Mobile controls：沒有正式 Phaser UI assets。
+- Mobile controls：Phaser 360° joystick、attack、pause 已可用，但沒有正式 UI assets。
 
 ## 3. Required File Set
 
@@ -190,6 +190,12 @@ Metadata 最少欄位：
 - **M5:** Boss attack 1–3、idle、walk、hurt、phase、dead 已完成；仍缺 arena-specific assets。
 - **M5R:** 三段連續竹林 Stage layout、Boss walk frames 與可驗證 arena entry presentation。
 - **M5R.1 runtime:** 已用現有 `forest-camp.png` 建立三段明確、無 uncovered area 的暫時 section；三段獨特場景美術仍屬後續 content polish，不阻擋 encounter work。
-- **M6:** 最小 Title 使用 Phaser system text，無新增 asset；仍缺 HUD、custom font、title/result art。
+- **M6:** 功能性 Title/HUD/Pause/Failure 已完成，Result 排在 6.6；本 Milestone 不製作 custom art。
+- **M6A.1:** Visual target、比例、色盤、光源、pixel density、UI language 與 before/after baseline。
+- **M6A.2:** Guan Yu idle/walk/attack1–3/hurt/dead 完整 source、runtime sheet、atlas、metadata 與 debug sheet。
+- **M6A.3:** 三種小兵與 Boss 的角色比例、色盤、面向、feet anchor 與 animation consistency pass。
+- **M6A.4:** 三個可辨識竹林 section、前景遮擋、地面層、Boss arena 與無接縫 layer assets。
+- **M6A.5:** 正式 Hit Spark/impact/dust/shadow、Title/HUD/Pause/Failure/Result、custom pixel font 與 mobile control assets。
+- **M6A.6:** 三 viewport before/after captures、完整 asset provenance、atlas/load baseline 與 visual freeze record。
 - **M7:** Combat SFX、BGM。
 - **M8:** Optimized atlases、loading/social/release assets。

@@ -7,7 +7,8 @@
 Failure/retry now has one accepted product path. The remaining terminal mode is
 `cleared`, which already publishes exactly once but has no Result presentation
 or explicit replay action. Formalizing that existing boundary completes the
-smallest playable product-flow step before UI/mobile acceptance and Audio.
+smallest playable product-flow step before UI/mobile acceptance. The approved
+M6A Visual Upgrade remains gated behind M6.7 and is not part of this task.
 
 ### Completion criteria
 
@@ -59,4 +60,4 @@ smallest playable product-flow step before UI/mobile acceptance and Audio.
   owns a closed request gate outside its matching state.
 - Boss fade/cleanup callbacks must finish before Result becomes interactive.
 - Do not add scoring, persistence, Audio, new content, post-stage progression,
-  custom Result art, or M6.7 mobile acceptance work.
+  custom Result art, M6A visual work, or M6.7 mobile acceptance work.

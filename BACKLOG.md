@@ -16,18 +16,15 @@
 | Two encounter gates | M5R.2 | 關卡戰鬥循環 |
 | Playable Boss combat | M5R.3–5R.7 | locomotion、alignment、hitbox、damage、clear/fail |
 | HUD/pause/result | M6.3–6.7 | M5R.8 通過後恢復；Title 已完成 |
+| Visual target and original art upgrade | M6A | 關羽、三小兵、Boss、三畫面竹林、特效與產品 UI；不得改 gameplay contracts |
 | Core combat audio | M7 | 街機手感必要 |
 | Mobile performance / release QA | M8/M9 | 發布 blocker |
 
 ## P1 — Vertical Slice Quality
 
 - 第二與第三種近戰小兵。
-- Guan Yu hurt/dead 正式動畫。
-- Combo transition/recovery 中間幀。
-- Stage foreground、parallax、props、breakable decoration（只在 Stage 核心穩定後）。
 - Boss phase 與 arena lock。
 - Continue flow。
-- 正式 pixel font。
 - 音量設定、flash/shake intensity 設定。
 - Object pooling（需 profiling 證明）。
 - Loading progress 與 asset failure handling。
@@ -69,3 +66,11 @@
 - Backend gameplay dependency。
 - 關卡編輯器。
 - 通用 ECS 或自製 physics engine。
+
+## Promoted to M6A Visual Upgrade
+
+- Guan Yu hurt/dead 與 combo transition/recovery 中間幀。
+- 三種小兵與 Boss 的比例、色盤、腳底與動畫一致性。
+- 三畫面竹林 foreground、parallax、地面、props 與 Boss arena 視覺層。
+- 正式 combat effects、角色陰影、產品 UI、mobile controls 與 pixel font。
+- 本清單已移出一般 P1，必須依 6A.1 → 6A.6 順序執行，不可零散開工。

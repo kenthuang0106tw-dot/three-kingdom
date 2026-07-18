@@ -65,6 +65,21 @@
 - [ ] 切換動畫不改變角色尺寸或 world feet Y。
 - [ ] Listener 不重複註冊且 shutdown 後移除。
 
+## M6A Visual Upgrade
+
+- [ ] 6A.1 已保存 desktop、844×390、390×844 的 before baseline 與 visual target。
+- [ ] 關羽、三種小兵與 Boss 的身高比例、輪廓、色盤、光源與 pixel density 一致。
+- [ ] 每個 actor 的所有站立 frame 使用單一 display scale 與共同 feet anchor。
+- [ ] Idle、walk、attack、hurt、dead 沒有裁切、鄰格污染、跳位或 transform 偽造中間動作。
+- [ ] 三個竹林畫面可一眼區分，且沒有接縫、空白、錯誤前景 depth 或 Boss arena 風格斷裂。
+- [ ] Spark、impact、dust、shadow 不遮蔽 active pose、敵人 telegraph、HP 或 mobile controls。
+- [ ] Title、HUD、Pause、Failure、Result、字體與 mobile controls 使用同一產品 UI language。
+- [ ] 美術替換前後的 hitbox、body、active frame、damage、AI、camera 與 stage flow contract 相同。
+- [ ] Desktop、landscape、portrait after captures 已與 baseline 並排人工驗收。
+- [ ] Source、runtime sheet、atlas、metadata、debug sheet、rebuild tool 與授權／原創紀錄齊全。
+- [ ] 完整關卡維持一個 Canvas、無 runtime error，並記錄 60 FPS、texture memory 與 initial load baseline。
+- [ ] 6A.6 visual freeze 後，後續 M8 只修具體 defect，不重新開啟整套美術方向。
+
 ## Physics
 
 - [ ] Ground body 只覆蓋腳底占位。
