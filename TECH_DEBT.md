@@ -454,6 +454,19 @@ accepted set.
   then converged to the normal target. Boss, failure/retry, HUD, production, and
   72 automated tests remained green.
 
+### TD-M6A.6 Update — Visual baseline frozen; optimization measured
+
+Task 6A.6 closes the open-ended visual-review debt with 15 matching
+before/after comparisons, a reproducible provenance/pipeline audit, and an
+accepted 300-frame runtime baseline. The M6A asset set is frozen; later work may
+only reopen it for a reproducible objective defect.
+
+Two non-blocking measurements remain deferred to M8 performance work: the
+production Phaser chunk is large, and estimated decoded RGBA texture memory is
+136,629,760 bytes. The current browser baseline is one Canvas, zero runtime
+errors, 60.00 FPS average, and 59.92 FPS 1% low, so Task 6A.6 does not perform
+premature bundling or texture-memory optimization.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

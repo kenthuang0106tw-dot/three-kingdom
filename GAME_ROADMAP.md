@@ -26,8 +26,8 @@
 | Camera | Stable vertical slice | bounded integer follow、encounter/Boss locks 與 encounter-clear 連續 handoff 已接入 |
 | Mobile | Playable prototype | Phaser 360° touch joystick、attack 與 FIT viewport acceptance 已完成 |
 | UI | Accepted product-flow prototype | Phaser Title/start、Player/Boss HUD、Pause、Failure/retry、Result/replay 與三 viewport acceptance 已完成 |
-| Visual | M6A effects/UI pass accepted | 6A.1–6A.5 已完成視覺目標、全角色、三畫面 Stage、戰鬥特效與產品 UI；下一步只做 visual acceptance 與 asset freeze |
-| Audio | Missing | 無 runtime assets；M7 必須等待 M6A visual freeze |
+| Visual | M6A completed and frozen | 6A.1–6A.6 已完成視覺目標、全角色、三畫面 Stage、戰鬥特效、產品 UI、三 viewport 驗收與 asset freeze |
+| Audio | Missing | 無 runtime assets；M6A visual freeze 已完成，下一步可開始 M7 |
 | Tests | Contract baseline | app shell、lifecycle、route 與 multi-enemy source contracts 已建立 |
 | Repository | Baseline | baseline、UTF-8、單一 runtime、pnpm、lint/typecheck、tests、production routes 已完成 |
 
@@ -307,7 +307,7 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 
 ## Milestone 6A — Visual Upgrade
 
-**Status:** 6A.1–6A.5 completed；6A.5 completed 2026-07-23。下一個唯一 Task 是 6A.6。
+**Status:** Completed 2026-07-23；6A.1–6A.6 全部完成，accepted asset set 已 frozen。
 
 **Playable Result:** 同一個完整 Vertical Slice 保持既有玩法與數值，但關羽、三種小兵、Boss、三畫面竹林、戰鬥特效與產品 UI 形成一致、可辨識的原創三國日式寫實 Pixel Art 品質。
 
@@ -324,7 +324,7 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 | 6A.3 | Enemy and Boss visual consistency（Completed 2026-07-18） | P0 | High | 6A.1, 6A.2 | 三小兵與 Boss 比例、面向、腳底、輪廓、色盤一致；既有 active frames 與 body contract 不變 | enemy/boss source/sheets/atlas/metadata | 批次重製造成 frame 污染 |
 | 6A.4 | Three-screen bamboo stage upgrade（Completed 2026-07-23） | P0 | High | 6A.1 | 三畫面可一眼區分；背景、前景遮擋、地面與 arena 層次完整；無接縫、空白或 depth 錯誤 | stage layers/section config/metadata | 視覺層影響 camera/碰撞 |
 | 6A.5 | Combat effects and product UI art upgrade（Completed 2026-07-23） | P0 | High | 6A.2–6A.4 | Spark/impact/dust/shadow 與 Title/HUD/Pause/Failure/Result/custom font 同風格；不改傷害與流程 | effects/UI/font assets/manifest | 特效遮擋可讀性、UI scope 膨脹 |
-| 6A.6 | Visual acceptance and asset freeze | P0 | High | 6A.1–6A.5 | desktop、844×390、390×844 全關 before/after 驗收；動畫無跳位；60 FPS/load budget 基線；素材來源完整 | checklist/screenshots/asset docs | 主觀驗收無結束條件 |
+| 6A.6 | Visual acceptance and asset freeze (Completed 2026-07-23) | P0 | High | 6A.1–6A.5 | desktop、844×390、390×844 全關 before/after 驗收；動畫無跳位；60 FPS/load budget 基線；素材來源完整 | checklist/screenshots/asset docs | 主觀驗收無結束條件 |
 
 M6A 不加入新角色、新敵人、新招式、第二關、Audio、技能、掉寶、劇情或平衡改動。任何 frame timing、hitbox、body 或世界座標變動都必須先以既有 contract 證明是必要的 visual alignment 修正。
 
@@ -463,7 +463,9 @@ M6A 不加入新角色、新敵人、新招式、第二關、Audio、技能、�
 - Evidence: three original 1280×720 sections, nine explicit background/ground/foreground runtime layers, fixed 3840×720 gameplay geometry, shared palette and 64px seam normalization, source provenance, overview/seam/depth QA, 80 tests, production runtime, and desktop/844×390/390×844 acceptance.
 - M6A / Task 6A.5 (Combat effects and product UI art upgrade) completed on 2026-07-23.
 - Evidence: 5-frame Hit Spark, 4-frame impact dust, shared ground shadow, product Title/HUD/Pause/Failure/Result/mobile-control art, custom bitmap font, source provenance, reproducible tooling, 81 tests, three viewport production acceptance, and unchanged combat/flow contracts.
-- Next eligible task: M6A / Task 6A.6 (Visual acceptance and asset freeze).
+- M6A / Task 6A.6 (Visual acceptance and asset freeze) completed on 2026-07-23.
+- Evidence: 15 matching before/after comparisons, accepted provenance and pipeline audit, 11,421,285 encoded asset bytes, 24 runtime textures, one Canvas, zero runtime errors, no production debug leakage, and a 300-frame 60.00 FPS / 59.92 FPS 1% low baseline.
+- Next eligible task: M7 / Task 7.1 (Audio manager/mixer).
 
 ## 4. Global Acceptance Rules
 
@@ -480,6 +482,6 @@ M6A 不加入新角色、新敵人、新招式、第二關、Audio、技能、�
 
 ## 5. Required Development Order
 
-`M0 Baseline → M1 Runtime Contracts → M2 Combat Room → M3 Stage Contracts → M4 Enemy Variety → M5 Boss Contracts → M5R Vertical Slice Recovery → M6 Product Flow (complete) → M6A Visual Upgrade → M7 Audio → M8 Polish → M9 Release`
+`M0 Baseline → M1 Runtime Contracts → M2 Combat Room → M3 Stage Contracts → M4 Enemy Variety → M5 Boss Contracts → M5R Vertical Slice Recovery → M6 Product Flow (complete) → M6A Visual Upgrade (complete/frozen) → M7 Audio → M8 Polish → M9 Release`
 
 不得跳過 M3 先擴敵人內容；不得跳過 M1/M2 直接加入 Stage 或 Boss。

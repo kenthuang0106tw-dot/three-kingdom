@@ -1,8 +1,8 @@
-# Current Sprint — Visual Upgrade Foundation
+# Current Sprint — Audio Foundation
 
 ## Sprint Goal
 
-M6A.1–M6A.5 已完成視覺目標、Guan Yu、Enemy/Boss、三畫面竹林 Stage、Combat Effects 與 Product UI。下一步只執行 M6A.6 Visual acceptance and asset freeze，不同時改美術內容、Audio 或 gameplay contracts。
+M6A.1–M6A.6 已完成並凍結視覺基線。下一步只規劃 M7 / Task 7.1 Audio manager/mixer；本次 6A.6 closeout 不實作 Audio。
 
 Roadmap decision（2026-07-18）：6A.3 必須以 6A.2 已接受的 Guan Yu 比例、palette、feet anchor、capture 與 provenance contract 對齊；不可重新解釋 Art Bible 或更改 gameplay timing。
 
@@ -10,8 +10,8 @@ Roadmap decision（2026-07-18）：6A.3 必須以 6A.2 已接受的 Guan Yu 比�
 
 - Duration：2 weeks
 - Capacity：1 developer + AI，約 40–55 hours
-- Milestone：M6A — Visual Upgrade
-- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M6A / 6A.6 Visual acceptance and asset freeze
+- Milestone：M7 — Audio Integration
+- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M7 / 7.1 Audio manager/mixer
 
 ## Task List
 
@@ -35,7 +35,7 @@ Roadmap decision（2026-07-18）：6A.3 必須以 6A.2 已接受的 Guan Yu 比�
 | 16 | ✅ M6A / Task 6A.3 — Enemy and Boss visual consistency | 32–48h | 三小兵與 Boss 對齊主角視覺契約 | 79 tests + metadata/lineup/onion/three-viewport acceptance passed |
 | 17 | ✅ M6A / Task 6A.4 — Three-screen bamboo stage upgrade | 32–48h | 三段可辨識、無接縫的竹林與 Boss arena | 80 tests + layer/section/depth/three-viewport acceptance passed |
 | 18 | ✅ M6A / Task 6A.5 — Combat effects and product UI art upgrade | 32–48h | 同風格 Spark/impact/dust/shadow 與產品 UI/font | 81 tests + desktop/landscape/portrait/build acceptance passed |
-| 19 | M6A / Task 6A.6 — Visual acceptance and asset freeze | 12–20h | 全關 before/after、效能/載入基線、provenance audit 與 freeze | full-run/three-viewport/asset-budget acceptance |
+| 19 | ✅ M6A / Task 6A.6 — Visual acceptance and asset freeze | 12–20h | 全關 before/after、效能/載入基線、provenance audit 與 freeze | 15 comparisons + 60 FPS/runtime/asset audit passed |
 
 ## Recovery Planning Correction — 2026-07-14
 
@@ -697,3 +697,13 @@ The next eligible task is M6A / Task 6A.5 — Combat effects and product UI art 
 - [x] `pnpm test` 81/81, typecheck, lint 0 errors (8 existing warnings), `pnpm build`, and `pnpm build:github-pages` passed.
 
 The next eligible task is M6A / Task 6A.6 — Visual acceptance and asset freeze. Do not begin it until the next task-runner cycle.
+
+## M6A / Task 6A.6 Closeout — 2026-07-23
+
+- [x] Generated and manually reviewed 15 matching desktop, 844×390 landscape, and 390×844 portrait before/after comparisons for Title, Combat, Boss, Failure, and Result.
+- [x] Verified Failure/retry and Result/replay keyboard paths, one Canvas, zero runtime errors, and no production diagnostic leakage.
+- [x] Audited 23 manifest entries, 31 requested asset files, hashes, dimensions, provenance, pipeline ownership, atlas/load budget, and all required QA artifacts.
+- [x] Recorded 11,421,285 encoded bytes, estimated 136,629,760 decoded RGBA bytes, 24 runtime textures, 60.00 FPS average, and 59.92 FPS 1% low over 300 measured frames.
+- [x] Frozen the accepted M6A asset set without changing art, gameplay, balance, animation timing, hitboxes, Camera, Stage flow, or Audio.
+
+The next eligible task is M7 / Task 7.1 — Audio manager/mixer. Do not begin it until the next task-runner cycle.

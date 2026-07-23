@@ -1,0 +1,525 @@
+{
+  "task": "M6A / Task 6A.6 — Visual acceptance and asset freeze",
+  "baselineRevision": "3183f1f",
+  "candidateRuntimeRevision": "381dbf51dbbd491698aeee20b0d83b139022faa4",
+  "captureMatrix": {
+    "viewports": [
+      "desktop",
+      "landscape-844x390",
+      "portrait-390x844"
+    ],
+    "checkpoints": [
+      "title",
+      "combat",
+      "boss",
+      "failure",
+      "result"
+    ],
+    "count": 15,
+    "matchingDimensions": true,
+    "comparisons": [
+      {
+        "file": "desktop-title.png",
+        "size": [
+          1280,
+          720
+        ],
+        "beforeSha256": "022cf4bbe8b840b2f250952f18b146a3579d2ce663e27f5c0b6b0139b2503149",
+        "afterSha256": "190d092a8d1ffe155b49451251694b2e9c7bfd94a253b8896780864c390ea280",
+        "comparison": "comparisons/desktop-title.png"
+      },
+      {
+        "file": "desktop-combat.png",
+        "size": [
+          1280,
+          720
+        ],
+        "beforeSha256": "cac7a2dfa4978c9fcbaf94b99e60c757f5b2fb679467ee8940b1515168aa0dad",
+        "afterSha256": "b428c9f8fdfc7797b9289f17d925b7971963490e5e42ca00768456fd6ae02ef2",
+        "comparison": "comparisons/desktop-combat.png"
+      },
+      {
+        "file": "desktop-boss.png",
+        "size": [
+          1280,
+          720
+        ],
+        "beforeSha256": "70626cc278500f9de2768cb77e071e52ae511daff8e76a787fe9dd8f79d63eca",
+        "afterSha256": "828fda5052e9c5bd985aa206e7bcccc144fdb4acf5e40e642da463f1c56301c5",
+        "comparison": "comparisons/desktop-boss.png"
+      },
+      {
+        "file": "desktop-failure.png",
+        "size": [
+          1280,
+          720
+        ],
+        "beforeSha256": "a8f17fed40c90538d04edf25c2a50da06f5c7bbec2c9be649c25b419ae3abf7a",
+        "afterSha256": "449ec005703656ec26c5972937bfc73b93cf30c94e878a021dc9485e947ad173",
+        "comparison": "comparisons/desktop-failure.png"
+      },
+      {
+        "file": "desktop-result.png",
+        "size": [
+          1280,
+          720
+        ],
+        "beforeSha256": "050b58b4c8974460deb2ce8f8e166ae3d0d2d9f985b2fe6d96500516d464f8ca",
+        "afterSha256": "8d47be5149c52ff1f2523bfc490b25b3948e7a6bb5bbadf8f80b59eaa5915422",
+        "comparison": "comparisons/desktop-result.png"
+      },
+      {
+        "file": "landscape-844x390-title.png",
+        "size": [
+          844,
+          390
+        ],
+        "beforeSha256": "6ee944f1d648ae5627351b4946a615ad401c67b977356059ac64790bf0973b94",
+        "afterSha256": "983bfb52fd89db961b63b16876649a378c0654c53441df1b5f5e8f649d02977d",
+        "comparison": "comparisons/landscape-844x390-title.png"
+      },
+      {
+        "file": "landscape-844x390-combat.png",
+        "size": [
+          844,
+          390
+        ],
+        "beforeSha256": "96c16a92363f444f723a7f8b06e3cf6ade1562440d3b8268c8a8a28052cb4530",
+        "afterSha256": "c671866fbfa420d0ac2d8f6739b457aef867c874a6883555487f10672860eed3",
+        "comparison": "comparisons/landscape-844x390-combat.png"
+      },
+      {
+        "file": "landscape-844x390-boss.png",
+        "size": [
+          844,
+          390
+        ],
+        "beforeSha256": "e1beabdb99c395776eba2cf01b42e5a28d52b21ddb0dfd4deeab3ee01ff79359",
+        "afterSha256": "5393bf10a83ac81e58584a08a117ad525fbc71343c5f45edfab677a6739a2a1a",
+        "comparison": "comparisons/landscape-844x390-boss.png"
+      },
+      {
+        "file": "landscape-844x390-failure.png",
+        "size": [
+          844,
+          390
+        ],
+        "beforeSha256": "9d77b393f06d80b2982dc69b770cf2c689a8edf23c4ed8dba00d2350d9e006ef",
+        "afterSha256": "123d4ce74559cd6547cd8e05089a77ce5e86cb9d8f37224172b306c078b6d865",
+        "comparison": "comparisons/landscape-844x390-failure.png"
+      },
+      {
+        "file": "landscape-844x390-result.png",
+        "size": [
+          844,
+          390
+        ],
+        "beforeSha256": "d5380c2523e72f404df788d6be48dc6930f9d1fb4ddd6f8566dd711acdacc24d",
+        "afterSha256": "db00e544d48cd73da43660b182021e9efef404609b8c193fb2253a81117cf78e",
+        "comparison": "comparisons/landscape-844x390-result.png"
+      },
+      {
+        "file": "portrait-390x844-title.png",
+        "size": [
+          390,
+          844
+        ],
+        "beforeSha256": "dc2757f328d34cefaaa39fb6a2949575fac7acafa581a4db0bbd8b0fcd947eb8",
+        "afterSha256": "82c4277d9866aeae9af6427558e674eecdc6ca7aa44496b0b3dce887862d685d",
+        "comparison": "comparisons/portrait-390x844-title.png"
+      },
+      {
+        "file": "portrait-390x844-combat.png",
+        "size": [
+          390,
+          844
+        ],
+        "beforeSha256": "838585f6597b0a3c6972115039a5cf16c612fc08ec6c82a726d24e2a23c5cdb5",
+        "afterSha256": "09ef34ab3df854a1dafee0173a30c1a49766d67ebff99d6de10e84b7dd2ac714",
+        "comparison": "comparisons/portrait-390x844-combat.png"
+      },
+      {
+        "file": "portrait-390x844-boss.png",
+        "size": [
+          390,
+          844
+        ],
+        "beforeSha256": "0be1526df2bb54e184066158cc06fe9de7b1711f5a2954ad7161ef4e68a6b045",
+        "afterSha256": "0d849fbcd06b7b4b2a4c8590920ff4c95b0c18959c7d34b9ac0994ed1e492c64",
+        "comparison": "comparisons/portrait-390x844-boss.png"
+      },
+      {
+        "file": "portrait-390x844-failure.png",
+        "size": [
+          390,
+          844
+        ],
+        "beforeSha256": "d71d124ca43d6a5ce13073308f434830259a334d764702c2972b6dc9d1819dc3",
+        "afterSha256": "23b3d5a383ec5f5d401070e0d36594cfb08190e2b8e64466f919127fdedbac8a",
+        "comparison": "comparisons/portrait-390x844-failure.png"
+      },
+      {
+        "file": "portrait-390x844-result.png",
+        "size": [
+          390,
+          844
+        ],
+        "beforeSha256": "e80c45cfc816d9b34b19a877ca2763706976ec1c8fd820d514906d83f22b887c",
+        "afterSha256": "5c65e964833b77dd026798da1cfcf36c35f6ef89f65d383c21e825fb70c6d5f1",
+        "comparison": "comparisons/portrait-390x844-result.png"
+      }
+    ]
+  },
+  "runtimeAssets": {
+    "manifestEntryCount": 23,
+    "manifestKeys": [
+      "stage-forest-entry-background",
+      "stage-forest-entry-ground",
+      "stage-forest-entry-foreground",
+      "stage-forest-ambush-background",
+      "stage-forest-ambush-ground",
+      "stage-forest-ambush-foreground",
+      "stage-boss-arena-background",
+      "stage-boss-arena-ground",
+      "stage-boss-arena-foreground",
+      "combat-effects",
+      "ui-hud-frame",
+      "ui-modal-frame",
+      "ui-button-frame",
+      "ui-joystick-base",
+      "ui-joystick-knob",
+      "ui-attack-frame",
+      "dragon-pixel",
+      "guanyu-v2",
+      "enemy-soldier",
+      "enemy-mauler",
+      "enemy-duelist",
+      "boss-warlord-attacks",
+      "boss-warlord-lifecycle"
+    ],
+    "requestFileCount": 31,
+    "textureFileCount": 23,
+    "encodedBytes": 11421285,
+    "decodedRgbaBytes": 136629760,
+    "files": [
+      {
+        "url": "/scene/bamboo-stage/bamboo-forest-entry-background.png",
+        "bytes": 743234,
+        "sha256": "74f88d828e01569c7b558e8734074e62efa2c94c808b7c0c7edc2a02cfdd97f2",
+        "dimensions": [
+          1280,
+          720
+        ]
+      },
+      {
+        "url": "/scene/bamboo-stage/bamboo-forest-entry-ground.png",
+        "bytes": 646554,
+        "sha256": "1bbaa2c266626b4fa87e188acd9d10da0c76db3beb6abbee36ce70fcd00df1dd",
+        "dimensions": [
+          1280,
+          720
+        ]
+      },
+      {
+        "url": "/scene/bamboo-stage/bamboo-forest-entry-foreground.png",
+        "bytes": 63378,
+        "sha256": "e554c958f60bd26aa41203cb8249534761748188aaa4c515cfff21e2de13f236",
+        "dimensions": [
+          1280,
+          720
+        ]
+      },
+      {
+        "url": "/scene/bamboo-stage/bamboo-forest-ambush-background.png",
+        "bytes": 717856,
+        "sha256": "b28e5f97194bc81d2cc121b07500ee5eb914ed10e23f830932cb9861e1cc50c4",
+        "dimensions": [
+          1280,
+          720
+        ]
+      },
+      {
+        "url": "/scene/bamboo-stage/bamboo-forest-ambush-ground.png",
+        "bytes": 678603,
+        "sha256": "8c65eb6dfd27709d151393d19c5177a72d704d74ec6369000239a41e4f3c6eed",
+        "dimensions": [
+          1280,
+          720
+        ]
+      },
+      {
+        "url": "/scene/bamboo-stage/bamboo-forest-ambush-foreground.png",
+        "bytes": 78889,
+        "sha256": "1fd5e06be5c9ea8ddfbda669b79679f543a5ebf9a071c71221af1e8fbdbe4d87",
+        "dimensions": [
+          1280,
+          720
+        ]
+      },
+      {
+        "url": "/scene/bamboo-stage/bamboo-boss-arena-background.png",
+        "bytes": 711773,
+        "sha256": "b6716e8d81e047326b8f88a69bcbcde6477503f9031075499af6dcbfc49ae388",
+        "dimensions": [
+          1280,
+          720
+        ]
+      },
+      {
+        "url": "/scene/bamboo-stage/bamboo-boss-arena-ground.png",
+        "bytes": 667998,
+        "sha256": "11f8f286d1c9c54ed5b6fa3675b87b4a8dc2d0a4bf58187f66ba7a8210975249",
+        "dimensions": [
+          1280,
+          720
+        ]
+      },
+      {
+        "url": "/scene/bamboo-stage/bamboo-boss-arena-foreground.png",
+        "bytes": 68922,
+        "sha256": "f3d31b39f3a40e76e51893d62d061498d4c966b3003a1aec3c1904518f6b025a",
+        "dimensions": [
+          1280,
+          720
+        ]
+      },
+      {
+        "url": "/art/effects/combat-effects.png",
+        "bytes": 70924,
+        "sha256": "333de3a8e15aa630394e33865cb57642a2386dc836deeefcf006b6bf11563406",
+        "dimensions": [
+          512,
+          256
+        ]
+      },
+      {
+        "url": "/art/effects/combat-effects.atlas.json",
+        "bytes": 5394,
+        "sha256": "9c66e2a817e0410966ef17d6aee26175d771b11b421062f65e2df6398b2ea2df"
+      },
+      {
+        "url": "/art/ui/ui-hud-frame.png",
+        "bytes": 37051,
+        "sha256": "bc2e4f75c82fb224f9b8262acb7f5f26e1130f0c4464c59709799dd5624f1769",
+        "dimensions": [
+          512,
+          64
+        ]
+      },
+      {
+        "url": "/art/ui/ui-modal-frame.png",
+        "bytes": 134877,
+        "sha256": "f65d8575ecef2dd71e4ae772ceab808d16daebfce42ac12444c05a66f05deb00",
+        "dimensions": [
+          720,
+          300
+        ]
+      },
+      {
+        "url": "/art/ui/ui-button-frame.png",
+        "bytes": 7143,
+        "sha256": "ee5eeac2359015f815a5c6540f660b30dcaa58fd15475f942d3c5cd58e62bb78",
+        "dimensions": [
+          128,
+          64
+        ]
+      },
+      {
+        "url": "/art/ui/ui-joystick-base.png",
+        "bytes": 36019,
+        "sha256": "d8916b8840fe2edf303a142e6fde298b0129758dd3b6e1161e31edf3ab24d00d",
+        "dimensions": [
+          156,
+          156
+        ]
+      },
+      {
+        "url": "/art/ui/ui-joystick-knob.png",
+        "bytes": 6364,
+        "sha256": "6424f0eddeaf1e128e7b4a57b95ba156401d89f2000db00efc28590325b4ec51",
+        "dimensions": [
+          68,
+          68
+        ]
+      },
+      {
+        "url": "/art/ui/ui-attack-frame.png",
+        "bytes": 15034,
+        "sha256": "548b898a8ab3940d88751a90e5852e6291c700be53b03d1beb5e7141ee96045d",
+        "dimensions": [
+          112,
+          86
+        ]
+      },
+      {
+        "url": "/art/ui/dragon-pixel.png",
+        "bytes": 805,
+        "sha256": "537c18039ed73bd36abc4d61c578b14ead0251f1482748dfd7700974dedfcf20",
+        "dimensions": [
+          288,
+          72
+        ]
+      },
+      {
+        "url": "/art/ui/dragon-pixel.xml",
+        "bytes": 4872,
+        "sha256": "82d81da65b833e503bd1d814c87da65a3c8c00ca7d38f3e10a718e11d8f457bc"
+      },
+      {
+        "url": "/art/guanyu/guanyu-v2.png",
+        "bytes": 2650371,
+        "sha256": "1aa1282ef112175e8ab09f0e7ceb6793b4236eaa775f6cc3d72f52d02786a136",
+        "dimensions": [
+          5120,
+          2688
+        ]
+      },
+      {
+        "url": "/art/guanyu/guanyu-v2.atlas.json",
+        "bytes": 18597,
+        "sha256": "b60d4b67fcd4e315b613fdf8bceb4889302b05b038a094e87d44791dc98788f5"
+      },
+      {
+        "url": "/art/enemy/enemy-soldier.png",
+        "bytes": 505420,
+        "sha256": "1d67713bd4ec612f20ab0c6bf28c37bae122241bcffc681baa46d80cdb0cd175",
+        "dimensions": [
+          1920,
+          1152
+        ]
+      },
+      {
+        "url": "/art/enemy/enemy-soldier.atlas.json",
+        "bytes": 6658,
+        "sha256": "6edf079b3fced00f39317cd706740b6c79cdd302bf5710636ac37b9a48758ff2"
+      },
+      {
+        "url": "/art/enemy/mauler.png",
+        "bytes": 949810,
+        "sha256": "8585b20f6e4e7578691e37176d8f369e5a4ed0a6e039a06d1d33d1373563c168",
+        "dimensions": [
+          1920,
+          1152
+        ]
+      },
+      {
+        "url": "/art/enemy/mauler.atlas.json",
+        "bytes": 6651,
+        "sha256": "d0df5364bc3a15d7aa77f3e6ca28db164b41e63f0cf6d6ec5ff89165f6e7b2e9"
+      },
+      {
+        "url": "/art/enemy/duelist.png",
+        "bytes": 689617,
+        "sha256": "5e4fd8519148aadadbff5111ded7aa5558e1fd8f99d456cf369b68939455350d",
+        "dimensions": [
+          1920,
+          1152
+        ]
+      },
+      {
+        "url": "/art/enemy/duelist.atlas.json",
+        "bytes": 6652,
+        "sha256": "bed642af3050c9bae66155b9dac61bc5a30a2682f48a3f8d2f76c29b1f596feb"
+      },
+      {
+        "url": "/art/boss/warlord-attacks.png",
+        "bytes": 772816,
+        "sha256": "0f4c91dfbd82635127afbe45a05a21dc6722042d976ade0c80fbd335c9a0b787",
+        "dimensions": [
+          1344,
+          1344
+        ]
+      },
+      {
+        "url": "/art/boss/warlord-attacks.atlas.json",
+        "bytes": 4137,
+        "sha256": "2729515523f0abc992398418a43319464bfda7451a1f7b2028ca0128ece10f22"
+      },
+      {
+        "url": "/art/boss/warlord-lifecycle.png",
+        "bytes": 1108243,
+        "sha256": "3b8fbb10f89c8936f4de75e7bb004d6dbcc226a3ed6723f13f829196c97013ee",
+        "dimensions": [
+          1792,
+          1792
+        ]
+      },
+      {
+        "url": "/art/boss/warlord-lifecycle.atlas.json",
+        "bytes": 6623,
+        "sha256": "3a5981408dfb4062ac2f036fac98869234e8ed1cc3032ddd66debb2f7db4bce8"
+      }
+    ]
+  },
+  "provenance": {
+    "metadataFileCount": 7,
+    "allAccepted": true,
+    "files": [
+      {
+        "file": "public/art/guanyu/guanyu-v2.metadata.json",
+        "provenanceAccepted": true
+      },
+      {
+        "file": "public/art/enemy/soldier.metadata.json",
+        "provenanceAccepted": true
+      },
+      {
+        "file": "public/art/enemy/mauler.metadata.json",
+        "provenanceAccepted": true
+      },
+      {
+        "file": "public/art/enemy/duelist.metadata.json",
+        "provenanceAccepted": true
+      },
+      {
+        "file": "public/art/boss/warlord-consistency.metadata.json",
+        "provenanceAccepted": true
+      },
+      {
+        "file": "public/scene/bamboo-stage/bamboo-stage.metadata.json",
+        "provenanceAccepted": true
+      },
+      {
+        "file": "public/art/ui/product-ui.metadata.json",
+        "provenanceAccepted": true
+      }
+    ]
+  },
+  "pipeline": {
+    "requiredFileCount": 21,
+    "missingFiles": []
+  },
+  "runtimeMetrics": {
+    "capturedAt": "2026-07-23",
+    "route": "/?visualFreeze=1&bossCombatSmoke=1",
+    "warmupFrames": 60,
+    "sampleCount": 300,
+    "averageFps": 60.0,
+    "onePercentLowFps": 59.92,
+    "canvasCount": 1,
+    "runtimeTextureCount": 24,
+    "runtimeErrorCount": 0,
+    "productionDebugLeak": false,
+    "failureRetry": {
+      "overlaySeen": true,
+      "restartSource": "keyboard",
+      "restartCount": 1
+    },
+    "resultReplay": {
+      "overlaySeen": true,
+      "replaySource": "keyboard",
+      "replayCount": 1
+    }
+  },
+  "manualReview": {
+    "comparisonCount": 15,
+    "clipping": "pass",
+    "frameContamination": "pass",
+    "stageSeams": "pass",
+    "feetAnchors": "pass",
+    "uiSafeAreas": "pass",
+    "touchTargets": "pass"
+  },
+  "runtimeContractsChanged": false,
+  "visualFreezeStatus": "accepted"
+}

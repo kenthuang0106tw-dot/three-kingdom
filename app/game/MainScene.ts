@@ -169,6 +169,9 @@ export default class MainScene extends Phaser.Scene {
   private defeatedText?: Phaser.GameObjects.Container;
   private readonly transitionLog: string[] = [];
   private diagnosticMode = false;
+  private visualFreezeMode = false;
+  private visualFreezeWarmupFrames = 0;
+  private readonly visualFreezeDeltas: number[] = [];
   private previewMode = false;
   private enemyPreviewMode = false;
   private resetSmokeMode = false;
@@ -264,6 +267,9 @@ export default class MainScene extends Phaser.Scene {
       this.enemyPreviewIndex = frameIndex < 0 ? 0 : frameIndex;
     }
     this.previewMode = development && query.get("previewAttack") === "1";
+    this.visualFreezeMode = development && query.get("visualFreeze") === "1";
+    this.visualFreezeWarmupFrames = 0;
+    this.visualFreezeDeltas.length = 0;
     this.resetSmokeMode = development && query.get("resetSmoke") === "1";
     this.bossMovementSmokeMode = development && query.get("bossMovementSmoke") === "1";
     this.bossCombatSmokeMode = development && query.get("bossCombatSmoke") === "1";
@@ -410,6 +416,12 @@ export default class MainScene extends Phaser.Scene {
       this.game.canvas.dataset.stageWorldWidth = String(BAMBOO_COMBAT_ROOM.worldBounds.width);
       this.game.canvas.dataset.stageSectionCount = String(BAMBOO_COMBAT_ROOM.backgroundSections.length);
       this.game.canvas.dataset.stageLayerCount = String(BAMBOO_COMBAT_ROOM.backgroundSections.flatMap(section => section.layers).length);
+      if (this.visualFreezeMode) {
+        this.game.canvas.dataset.visualFreezeComplete = "false";
+        this.game.canvas.dataset.visualFreezeTextureCount = String(
+          this.textures.getTextureKeys().filter(key => !key.startsWith("__")).length,
+        );
+      }
     }
     this.hud = new GameHud(this, this.gameplayEvents, development);
     this.pauseController = new PauseController(this);
@@ -466,6 +478,7 @@ export default class MainScene extends Phaser.Scene {
   update() {
     if (this.enemyPreviewMode) { this.updateEnemyAlignmentPreview(); return; }
     if (this.previewMode) { this.updatePreviewMode(); return; }
+    this.updateVisualFreezeMetrics();
     if (this.pauseController.consumeToggleRequest()) this.togglePause();
     const failureRestartSource = this.failureController.consumeRestartRequest();
     if (failureRestartSource) {
@@ -554,6 +567,25 @@ export default class MainScene extends Phaser.Scene {
     this.syncVisualsToBody();
     this.updateCamera();
     this.updateDebugText();
+  }
+
+  private updateVisualFreezeMetrics() {
+    if (!this.visualFreezeMode || this.gameFlow.state !== "playing" || this.lifecycleClock.isPaused()) return;
+    if (this.visualFreezeWarmupFrames < 60) {
+      this.visualFreezeWarmupFrames += 1;
+      return;
+    }
+    if (this.visualFreezeDeltas.length >= 300) return;
+    this.visualFreezeDeltas.push(Math.max(this.game.loop.delta, 1));
+    if (this.visualFreezeDeltas.length !== 300) return;
+
+    const totalDelta = this.visualFreezeDeltas.reduce((sum, delta) => sum + delta, 0);
+    const slowestDeltas = [...this.visualFreezeDeltas].sort((left, right) => right - left).slice(0, 3);
+    const slowestAverage = slowestDeltas.reduce((sum, delta) => sum + delta, 0) / slowestDeltas.length;
+    this.game.canvas.dataset.visualFreezeSampleCount = String(this.visualFreezeDeltas.length);
+    this.game.canvas.dataset.visualFreezeAverageFps = (this.visualFreezeDeltas.length * 1000 / totalDelta).toFixed(2);
+    this.game.canvas.dataset.visualFreezeOnePercentLowFps = (1000 / slowestAverage).toFixed(2);
+    this.game.canvas.dataset.visualFreezeComplete = "true";
   }
 
   private togglePause(): boolean {

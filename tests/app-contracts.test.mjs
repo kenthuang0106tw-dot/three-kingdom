@@ -1676,3 +1676,32 @@ test("M6A enemy and Boss art share audited scale, feet, facing, and provenance c
   assert.match(bossActor, /displayScale: 1\.27/);
   assert.ok(lineup.length > 1000 && bossOnion.length > 1000 && bossSilhouette.length > 100);
 });
+
+test("M6A visual freeze has reproducible captures, assets, and runtime metrics", async () => {
+  const [sceneSource, audit, metrics] = await Promise.all([
+    readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8"),
+    readFile(
+      new URL("../docs/visual-baselines/m6a-6a6-after/visual-freeze-audit.json", import.meta.url),
+      "utf8",
+    ).then(JSON.parse),
+    readFile(
+      new URL("../docs/visual-baselines/m6a-6a6-after/runtime-metrics.json", import.meta.url),
+      "utf8",
+    ).then(JSON.parse),
+  ]);
+
+  assert.match(sceneSource, /query\.get\("visualFreeze"\) === "1"/);
+  assert.match(sceneSource, /this\.visualFreezeWarmupFrames < 60/);
+  assert.match(sceneSource, /this\.visualFreezeDeltas\.length >= 300/);
+  assert.equal(audit.visualFreezeStatus, "accepted");
+  assert.equal(audit.captureMatrix.count, 15);
+  assert.equal(audit.captureMatrix.matchingDimensions, true);
+  assert.equal(audit.provenance.allAccepted, true);
+  assert.deepEqual(audit.pipeline.missingFiles, []);
+  assert.equal(audit.manualReview.comparisonCount, 15);
+  assert.equal(metrics.sampleCount, 300);
+  assert.ok(metrics.averageFps >= 59);
+  assert.equal(metrics.canvasCount, 1);
+  assert.equal(metrics.runtimeErrorCount, 0);
+  assert.equal(metrics.productionDebugLeak, false);
+});

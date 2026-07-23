@@ -254,6 +254,12 @@ Metadata 最少欄位：
 - **M6A.3 (Completed):** 69 個 Enemy/Boss frames 的比例、面向、feet、atlas、provenance、onion/silhouette 與三 viewport runtime matrix 已驗收。
 - **M6A.4 (Completed):** 三個可辨識竹林 section、9 張 background/ground/foreground runtime layers、Boss arena、provenance、overview/seam/depth QA 與 reproducible pipeline 已驗收。
 - **M6A.5 (Completed):** 正式 Hit Spark/impact/dust/shadow、Title/HUD/Pause/Failure/Result、custom pixel font、mobile control assets、provenance 與 reproducible pipeline 已驗收。
-- **M6A.6:** 三 viewport before/after captures、完整 asset provenance、atlas/load baseline 與 visual freeze record。
+- **M6A.6 (Completed/Frozen):** 15 組三 viewport before/after、完整 asset provenance/pipeline audit、11,421,285-byte load baseline、24 runtime textures、60.00 FPS average / 59.92 FPS 1% low 與 visual freeze record 已驗收。證據位於 `docs/visual-baselines/m6a-6a6-after/`。
+
+### M6A accepted asset freeze
+
+- `visual-freeze-audit.json` 保存 runtime file hashes、dimensions、manifest ownership、provenance 與 pipeline completeness。
+- `runtime-metrics.json` 保存 300-frame FPS、Canvas、texture count、runtime errors 與 production debug isolation。
+- 後續只可因可重現的 clipping、contamination、missing file、alignment、readability 或 runtime defect 重開素材；Audio 與 gameplay tasks 不得靜默 regenerate 或 rebalance M6A assets。
 - **M7:** Combat SFX、BGM。
 - **M8:** Optimized atlases、loading/social/release assets。

@@ -784,7 +784,21 @@ state or derive gameplay rules from image dimensions.
 `tools/build_effects_ui_art.py` converts preserved imagegen sources into
 runtime PNG/atlas/font assets, records hashes and extraction rectangles, and
 generates visual QA sheets. Runtime coordinates and timing are explicitly
-frozen; M6A.6 may measure and document the accepted set but must not redesign it.
+frozen by M6A.6 and may only be reopened for a reproducible objective defect.
+
+## Visual Freeze Contract (M6A / Task 6A.6)
+
+`tools/audit_visual_freeze.py` owns the reproducible comparison and asset audit.
+It verifies the 15 matching baseline/candidate captures, runtime manifest
+ownership, file hashes and dimensions, provenance metadata, required pipeline
+artifacts, and the accepted runtime metrics record. It does not mutate runtime
+assets.
+
+`MainScene` exposes `?visualFreeze=1` metrics only in development. The diagnostic
+warms up for 60 playing frames, samples 300 deltas, and publishes FPS, texture,
+and completion data through Canvas datasets. It does not create another Canvas,
+change the game clock, or affect production output. Production must expose none
+of these datasets.
 
 ## 10. External and Optional Infrastructure
 

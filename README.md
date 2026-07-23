@@ -36,7 +36,7 @@ React 不管理 gameplay state。所有角色、輸入、動畫、碰撞、AI、
 - pnpm
 - Windows 可使用 repository 根目錄的 `啟動遊戲.cmd`
 
-目前 repository 已完成 M6 Product Flow and UI：可從 Title 完成整個 Vertical Slice，並通過 desktop、landscape touch、portrait FIT 與 production 驗收。第一次接手請先閱讀 [SPRINT.md](SPRINT.md) 與 [NEXT_TASK.md](NEXT_TASK.md)，不要直接新增功能。
+目前 repository 已完成 M6 Product Flow and UI 與 M6A Visual Upgrade/freeze：可從 Title 完成整個 Vertical Slice，並通過 desktop、landscape touch、portrait FIT、production 與 60 FPS 視覺驗收。第一次接手請先閱讀 [SPRINT.md](SPRINT.md) 與 [NEXT_TASK.md](NEXT_TASK.md)，不要直接新增功能。
 
 ## Run
 
@@ -131,8 +131,8 @@ tools/build_enemy_art.py     Enemy sheet/atlas rebuild pipeline
 
 M6 已完成：Title、HUD、Pause、Failure/retry、Result/replay 與 mobile controls 均由 Phaser 擁有，desktop、844×390 橫向觸控、390×844 直向 FIT 及 production 驗收通過。
 
-M6A.1 已鎖定 [ART_BIBLE.md](ART_BIBLE.md) 與 15 張 reproducible before baselines；M6A.2 已接入關羽 43-frame 動畫；M6A.3 已統一 Soldier、Mauler、Duelist 與 Boss 的視覺契約；M6A.4 已接入 Forest Entry、Forest Ambush、Boss Arena 共 9 張分層 Stage assets；M6A.5 已接入正式 Combat Effects、角色地影、產品 UI、mobile controls 與 custom bitmap font。
+M6A.1 已鎖定 [ART_BIBLE.md](ART_BIBLE.md) 與 15 張 reproducible before baselines；M6A.2 已接入關羽 43-frame 動畫；M6A.3 已統一 Soldier、Mauler、Duelist 與 Boss 的視覺契約；M6A.4 已接入 Forest Entry、Forest Ambush、Boss Arena 共 9 張分層 Stage assets；M6A.5 已接入正式 Combat Effects、角色地影、產品 UI、mobile controls 與 custom bitmap font；M6A.6 已完成 15 組 before/after、asset/provenance audit 與 60 FPS freeze。
 
-The next single task is M6A / Task 6A.6: complete visual acceptance and freeze the accepted asset set.
+The next single task is M7 / Task 7.1: establish the Audio manager/mixer contract.
 
-下一個 Task 只建立完整 before/after、全流程三 viewport 驗收、效能／載入基線、provenance audit 與 visual freeze 記錄；不再新增或重做美術內容。
+下一個 Task 只建立可由 gameplay events 驅動、能正確 pause/resume 的 SFX/BGM 分軌管理基礎；不新增音效內容、改戰鬥或重開已凍結美術。

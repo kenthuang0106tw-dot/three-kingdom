@@ -75,10 +75,10 @@
 - [ ] Spark、impact、dust、shadow 不遮蔽 active pose、敵人 telegraph、HP 或 mobile controls。
 - [ ] Title、HUD、Pause、Failure、Result、字體與 mobile controls 使用同一產品 UI language。
 - [ ] 美術替換前後的 hitbox、body、active frame、damage、AI、camera 與 stage flow contract 相同。
-- [ ] Desktop、landscape、portrait after captures 已與 baseline 並排人工驗收。
-- [ ] Source、runtime sheet、atlas、metadata、debug sheet、rebuild tool 與授權／原創紀錄齊全。
-- [ ] 完整關卡維持一個 Canvas、無 runtime error，並記錄 60 FPS、texture memory 與 initial load baseline。
-- [ ] 6A.6 visual freeze 後，後續 M8 只修具體 defect，不重新開啟整套美術方向。
+- [x] Desktop、landscape、portrait after captures 已與 baseline 並排人工驗收。
+- [x] Source、runtime sheet、atlas、metadata、debug sheet、rebuild tool 與授權／原創紀錄齊全。
+- [x] 完整關卡維持一個 Canvas、無 runtime error，並記錄 60 FPS、texture memory 與 initial load baseline。
+- [x] 6A.6 visual freeze 後，後續 M8 只修具體 defect，不重新開啟整套美術方向。
 
 ## Physics
 
@@ -1042,3 +1042,18 @@
 | Quality gates | Pass | typecheck; lint 0 errors/8 existing warnings; production build; GitHub Pages build |
 | Scope | Pass | No actors, Stage, AI, balance, Audio, encounter, camera, damage, timing, or gameplay behavior changed |
 | Next task | Selected | M6A / Task 6A.6 — Visual acceptance and asset freeze |
+
+## M6A / Task 6A.6 Acceptance — 2026-07-23
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Task ID | Pass | M6A / Task 6A.6 — Visual acceptance and asset freeze |
+| Capture matrix | Pass | 15 matching desktop / 844×390 / 390×844 Title, Combat, Boss, Failure, Result before/after pairs |
+| Manual visual review | Pass | No clipping, frame contamination, feet-anchor drift, Stage seams, safe-area or touch-target defect |
+| Flow controls | Pass | Failure/retry and Result/replay accepted by keyboard; deterministic Title/Combat/Boss/Failure/Result checkpoints passed |
+| Asset audit | Pass | 23 manifest entries, 31 request files, 23 PNG requests, complete provenance and zero missing pipeline files |
+| Runtime budget | Pass | 11,421,285 encoded bytes; estimated 136,629,760 decoded RGBA bytes; 24 runtime textures |
+| Performance | Pass | 60 warm-up + 300 sampled frames; 60.00 FPS average; 59.92 FPS 1% low |
+| Runtime isolation | Pass | One Canvas, zero runtime errors, no production visual-freeze dataset leakage |
+| Scope | Pass | No art, animation timing, hitbox, balance, AI, Camera, Stage flow or Audio feature changed |
+| Next task | Selected | M7 / Task 7.1 — Audio manager/mixer |

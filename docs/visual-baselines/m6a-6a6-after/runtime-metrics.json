@@ -1,0 +1,22 @@
+{
+  "capturedAt": "2026-07-23",
+  "route": "/?visualFreeze=1&bossCombatSmoke=1",
+  "warmupFrames": 60,
+  "sampleCount": 300,
+  "averageFps": 60.0,
+  "onePercentLowFps": 59.92,
+  "canvasCount": 1,
+  "runtimeTextureCount": 24,
+  "runtimeErrorCount": 0,
+  "productionDebugLeak": false,
+  "failureRetry": {
+    "overlaySeen": true,
+    "restartSource": "keyboard",
+    "restartCount": 1
+  },
+  "resultReplay": {
+    "overlaySeen": true,
+    "replaySource": "keyboard",
+    "replayCount": 1
+  }
+}
