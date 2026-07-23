@@ -467,6 +467,18 @@ production Phaser chunk is large, and estimated decoded RGBA texture memory is
 errors, 60.00 FPS average, and 59.92 FPS 1% low, so Task 6A.6 does not perform
 premature bundling or texture-memory optimization.
 
+### TD-M7.1 Update — Audio lifecycle boundary established
+
+Task 7.1 resolves the missing Audio ownership and cleanup boundary. One
+Scene-owned `AudioManager` now owns SFX/BGM channel state, gameplay-event
+subscription, manual/visibility pause reasons, user-gesture unlock, and
+idempotent reset/shutdown behavior. Ten Scene resets retain one manager and one
+subscription.
+
+No audio files or event mappings exist yet. Combat/UI SFX remain Task 7.2,
+Stage/Boss music remains 7.3, and physical iOS/Android unlock/background
+recovery remains 7.4 rather than being claimed by the desktop browser smoke.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

@@ -2,7 +2,7 @@
 
 ## Sprint Goal
 
-M6A.1–M6A.6 已完成並凍結視覺基線。下一步只規劃 M7 / Task 7.1 Audio manager/mixer；本次 6A.6 closeout 不實作 Audio。
+M6A.1–M6A.6 已完成並凍結視覺基線；M7 / Task 7.1 Audio manager/mixer 已完成。下一步只規劃 M7 / Task 7.2 Combat/UI SFX。
 
 Roadmap decision（2026-07-18）：6A.3 必須以 6A.2 已接受的 Guan Yu 比例、palette、feet anchor、capture 與 provenance contract 對齊；不可重新解釋 Art Bible 或更改 gameplay timing。
 
@@ -11,7 +11,7 @@ Roadmap decision（2026-07-18）：6A.3 必須以 6A.2 已接受的 Guan Yu 比�
 - Duration：2 weeks
 - Capacity：1 developer + AI，約 40–55 hours
 - Milestone：M7 — Audio Integration
-- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M7 / 7.1 Audio manager/mixer
+- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M7 / 7.2 Combat/UI SFX
 
 ## Task List
 
@@ -36,6 +36,7 @@ Roadmap decision（2026-07-18）：6A.3 必須以 6A.2 已接受的 Guan Yu 比�
 | 17 | ✅ M6A / Task 6A.4 — Three-screen bamboo stage upgrade | 32–48h | 三段可辨識、無接縫的竹林與 Boss arena | 80 tests + layer/section/depth/three-viewport acceptance passed |
 | 18 | ✅ M6A / Task 6A.5 — Combat effects and product UI art upgrade | 32–48h | 同風格 Spark/impact/dust/shadow 與產品 UI/font | 81 tests + desktop/landscape/portrait/build acceptance passed |
 | 19 | ✅ M6A / Task 6A.6 — Visual acceptance and asset freeze | 12–20h | 全關 before/after、效能/載入基線、provenance audit 與 freeze | 15 comparisons + 60 FPS/runtime/asset audit passed |
+| 20 | ✅ M7 / Task 7.1 — Audio manager/mixer | 8–12h | Scene-owned SFX/BGM mixer、unlock、pause/visibility、reset cleanup | 86 tests + browser lifecycle/build acceptance passed |
 
 ## Recovery Planning Correction — 2026-07-14
 
@@ -707,3 +708,14 @@ The next eligible task is M6A / Task 6A.6 — Visual acceptance and asset freeze
 - [x] Frozen the accepted M6A asset set without changing art, gameplay, balance, animation timing, hitboxes, Camera, Stage flow, or Audio.
 
 The next eligible task is M7 / Task 7.1 — Audio manager/mixer. Do not begin it until the next task-runner cycle.
+
+## M7 / Task 7.1 Closeout — 2026-07-24
+
+- [x] Added one Scene-owned Audio manager with independent SFX/BGM volume and mute state.
+- [x] Subscribed once to readonly gameplay events without exposing actor, Scene, sound, or mutable references.
+- [x] Added idempotent start, stop, reset, destroy, manual pause, visibility pause, and user-gesture unlock boundaries.
+- [x] Scene shutdown removes gameplay, blur/focus, and unlock listeners; ten reset cycles retain one manager, one subscription, and one Canvas.
+- [x] Real pointer start changed WebAudio from locked to unlocked; Pause/Resume changed Audio state without affecting gameplay timing.
+- [x] No audio asset, placeholder sound, direct actor playback, combat, balance, art, UI, Camera, or Stage behavior was added or changed.
+
+The next eligible task is M7 / Task 7.2 — Combat/UI SFX. Do not begin it until the next task-runner cycle.

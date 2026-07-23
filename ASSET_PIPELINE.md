@@ -261,5 +261,6 @@ Metadata 最少欄位：
 - `visual-freeze-audit.json` 保存 runtime file hashes、dimensions、manifest ownership、provenance 與 pipeline completeness。
 - `runtime-metrics.json` 保存 300-frame FPS、Canvas、texture count、runtime errors 與 production debug isolation。
 - 後續只可因可重現的 clipping、contamination、missing file、alignment、readability 或 runtime defect 重開素材；Audio 與 gameplay tasks 不得靜默 regenerate 或 rebalance M6A assets。
-- **M7:** Combat SFX、BGM。
+- **M7.1 (Completed):** Audio manager/mixer contract 已接入，但沒有 runtime audio asset。
+- **M7.2–M7.3:** 原創／授權 Combat/UI SFX 與 Stage/Boss BGM，必須保留 source、license/provenance、runtime encoding 與 event mapping。
 - **M8:** Optimized atlases、loading/social/release assets。

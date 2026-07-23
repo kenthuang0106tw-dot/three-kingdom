@@ -129,7 +129,7 @@
 
 - [ ] Attack/Hit/Hurt/Death event 各播放一次。
 - [ ] 多目標命中不造成不可接受的音量疊加。
-- [ ] Pause/resume audio 正確。
+- [x] Pause/resume audio 正確。
 - [ ] BGM transition 不重複或斷裂。
 - [ ] 音量設定可持續於本機。
 
@@ -1057,3 +1057,18 @@
 | Runtime isolation | Pass | One Canvas, zero runtime errors, no production visual-freeze dataset leakage |
 | Scope | Pass | No art, animation timing, hitbox, balance, AI, Camera, Stage flow or Audio feature changed |
 | Next task | Selected | M7 / Task 7.1 — Audio manager/mixer |
+
+## M7 / Task 7.1 Acceptance — 2026-07-24
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Task ID | Pass | M7 / Task 7.1 — Audio manager/mixer |
+| Ownership | Pass | One `MainScene`-owned manager; React, actors, combat and UI do not control sound |
+| Channels | Pass | Independent clamped SFX/BGM volume and mute state |
+| Observation | Pass | Exactly one readonly gameplay-event subscription |
+| Lifecycle | Pass | Idempotent start/stop/reset/destroy; manual and visibility pause reasons do not resume early |
+| Unlock | Pass | Real pointer Title start changed WebAudio locked → unlocked without pretending playback |
+| Reset | Pass | Ten Scene resets retained one manager, one subscription, one Canvas and zero browser errors |
+| Assets | Pass | No audio file or placeholder playback added; production requests no missing audio |
+| Scope | Pass | No gameplay, timing, balance, art, UI, Camera or Stage behavior changed |
+| Next task | Selected | M7 / Task 7.2 — Combat/UI SFX |

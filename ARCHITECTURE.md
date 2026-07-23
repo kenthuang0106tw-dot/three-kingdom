@@ -800,6 +800,24 @@ and completion data through Canvas datasets. It does not create another Canvas,
 change the game clock, or affect production output. Production must expose none
 of these datasets.
 
+## Audio Manager Contract (M7 / Task 7.1)
+
+`AudioManager` is owned exactly once by `MainScene` and is the only future
+runtime playback boundary. It maintains independent SFX and BGM channel volume
+and mute state, subscribes once to immutable `GameplayEventHub` events, and
+never receives actor, physics, UI, Camera, or Stage references.
+
+Manual pause and Phaser game blur/focus are independent pause reasons. The
+backend pauses only on the first active reason and resumes only after every
+reason clears. A real Title keyboard/pointer start requests WebAudio unlock; the
+manager reports locked until the backend confirms unlock and never pretends a
+sound played. Scene shutdown removes gameplay, blur/focus, and unlock listeners,
+stops owned output, and destroys the manager idempotently.
+
+Task 7.1 adds no sound files or event-to-sound mappings. Task 7.2 must register
+combat/UI content through this boundary rather than calling `scene.sound` from
+actors, UI controllers, React, or combat code.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

@@ -28,6 +28,7 @@ import { PauseController } from "./ui/PauseController";
 import { FailureController, type FailureRestartSource as ExplicitFailureRestartSource } from "./ui/FailureController";
 import { ResultController, type ResultReplaySource as ExplicitResultReplaySource } from "./ui/ResultController";
 import { addButtonFrame, addModalFrame, addUiText, UI_COLORS } from "./ui/UiArt";
+import { AudioManager, type AudioSoundBackend } from "./audio/AudioManager";
 
 type AttackState = "attack1" | "attack2" | "attack3";
 type TitleStartSource = "keyboard" | "pointer" | "smoke";
@@ -130,6 +131,7 @@ export default class MainScene extends Phaser.Scene {
   private inputController!: PlayerInputController;
   private touchInputController!: TouchInputController;
   private lifecycleClock!: LifecycleClock;
+  private audioManager!: AudioManager;
   private effectDirector!: EffectDirector;
   private readonly gameplayEvents = new GameplayEventHub();
   private lastLifecyclePaused = false;
@@ -350,6 +352,12 @@ export default class MainScene extends Phaser.Scene {
     if (this.previewMode) { this.createPreviewMode(); return; }
 
     this.lifecycleClock = new LifecycleClock(this);
+    this.audioManager = new AudioManager(
+      this.sound as unknown as AudioSoundBackend,
+      this.game.events,
+      this.gameplayEvents,
+    );
+    this.audioManager.start();
     this.lastLifecyclePaused = false;
     this.effectDirector = new EffectDirector(this, this.lifecycleClock);
     this.createCombatAnimations();
@@ -432,6 +440,7 @@ export default class MainScene extends Phaser.Scene {
     this.updateCamera();
     this.createTitleOverlay(keyboard);
     this.updatePauseDataset();
+    this.updateAudioDataset();
     this.updateHud();
     if (this.bossClearedSmokeMode) this.startGame("smoke");
     this.prepareFailureSmokeCycle();
@@ -443,6 +452,8 @@ export default class MainScene extends Phaser.Scene {
       this.disableAttackHitbox();
       this.touchInputController.destroy();
       this.effectDirector.destroy();
+      this.audioManager.destroy();
+      if (development) this.game.canvas.dataset.audioManagerCount = "0";
       this.lifecycleClock.destroy();
       this.enemyManager.destroy();
       this.bossSmokeTimer?.remove(false);
@@ -596,18 +607,21 @@ export default class MainScene extends Phaser.Scene {
       this.touchInputController.clearTransientInput();
       this.gameFlow.transition("paused");
       this.lifecycleClock.setManualPaused(true);
+      this.audioManager.setManualPaused(true);
       this.pauseCount += 1;
     } else if (this.gameFlow.state === "paused") {
       this.inputController.consumeAttackPress();
       this.touchInputController.clearTransientInput();
       this.gameFlow.transition("playing");
       this.lifecycleClock.setManualPaused(false);
+      this.audioManager.setManualPaused(false);
       this.resumeCount += 1;
     } else return false;
 
     this.pauseController.setFlowState(this.gameFlow.state);
     this.updateTitleDataset();
     this.updatePauseDataset();
+    this.updateAudioDataset();
     this.updateHud();
     return true;
   }
@@ -777,7 +791,6 @@ export default class MainScene extends Phaser.Scene {
 
     this.enemyManager.damage(enemy);
     this.gameplayEvents.publish({ type: "enemy-hit", enemyId: enemy.id, damage: 1, at: this.time.now });
-    this.playHitSound();
     if (triggerGlobalEffects) this.effectDirector.beginHitStop();
   }
 
@@ -804,7 +817,6 @@ export default class MainScene extends Phaser.Scene {
       BAMBOO_BOSS_ARENA.bounds,
     );
     this.effectDirector.knockback(bossActor.bodyZone, targetX, () => bossActor.syncVisuals());
-    this.playHitSound();
     if (triggerGlobalEffects) this.effectDirector.beginHitStop();
   }
 
@@ -837,10 +849,6 @@ export default class MainScene extends Phaser.Scene {
     } else {
       this.time.delayedCall(HURT_MS, () => { if (this.state === "hurt") this.transitionTo("idle"); });
     }
-  }
-
-  private playHitSound() {
-    // Interface reserved for a future hit sound asset.
   }
 
   private updateEncounterProgress() {
@@ -1071,6 +1079,7 @@ export default class MainScene extends Phaser.Scene {
 
   private startGame(source: TitleStartSource) {
     if (!this.titleStartController.requestStart()) return;
+    if (source !== "smoke") this.audioManager.requestUnlock();
     this.titleStartCount += 1;
     this.input.keyboard?.off("keydown", this.handleTitleKeyboardStart, this);
     this.titleOverlay?.destroy(true);
@@ -1081,6 +1090,7 @@ export default class MainScene extends Phaser.Scene {
     this.currentInput = createActionSnapshot({ up: false, down: false, left: false, right: false });
     this.updateTitleDataset(source);
     this.updatePauseDataset();
+    this.updateAudioDataset();
     this.updateHud();
   }
 
@@ -1110,6 +1120,23 @@ export default class MainScene extends Phaser.Scene {
     dataset.pauseAnimation = this.playerSprite.anims.currentAnim?.key ?? "idle";
     dataset.pauseAnimationFrame = String(this.playerSprite.anims.currentFrame?.index ?? 0);
     dataset.pauseSceneTime = String(Math.round(this.time.now));
+  }
+
+  private updateAudioDataset() {
+    if (process.env.NODE_ENV === "production" || !this.audioManager) return;
+    const audio = this.audioManager.getSnapshot();
+    const dataset = this.game.canvas.dataset;
+    dataset.audioManagerCount = audio.status === "running" ? "1" : "0";
+    dataset.audioManagerStatus = audio.status;
+    dataset.audioSubscriptionCount = String(audio.subscriptionCount);
+    dataset.audioUnlocked = String(audio.unlocked);
+    dataset.audioPaused = String(audio.paused);
+    dataset.audioEventCount = String(audio.eventCount);
+    dataset.audioLastEventType = audio.lastEventType ?? "";
+    dataset.audioSfxVolume = String(audio.channels.sfx.volume);
+    dataset.audioSfxMuted = String(audio.channels.sfx.muted);
+    dataset.audioBgmVolume = String(audio.channels.bgm.volume);
+    dataset.audioBgmMuted = String(audio.channels.bgm.muted);
   }
 
   private updateFailureDataset() {
@@ -1625,6 +1652,7 @@ export default class MainScene extends Phaser.Scene {
 
   private updateHud() {
     this.publishGameplaySnapshot();
+    this.updateAudioDataset();
     this.hud.update();
   }
 }
