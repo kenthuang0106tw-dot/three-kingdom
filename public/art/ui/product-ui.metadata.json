@@ -1,0 +1,505 @@
+{
+  "task": "M6A / Task 6A.5 \u2014 Combat effects and product UI art upgrade",
+  "generatedOn": "2026-07-23",
+  "authorTool": "OpenAI built-in image generation with deterministic Pillow post-processing",
+  "processingTool": "tools/build_effects_ui_art.py",
+  "processingVersion": 1,
+  "styleReference": "ART_BIBLE.md sections 8\u20139 and accepted M6A cast/stage assets",
+  "prompts": {
+    "effects": "Five hit sparks, four dust poses, and one compact shadow on flat magenta; original arcade pixel art; no text or characters.",
+    "ui": "Reusable deep-ink, antique-gold, jade-accent arcade UI frames and controls on flat magenta; no text or logos."
+  },
+  "runtimeContractsChanged": false,
+  "effects": {
+    "source": "source/combat-effects-source.png",
+    "sourceSha256": "9f00e92a5e716ab054fcdb67bf2c3684531b316312cb94f669339f15d33c75ee",
+    "promptId": "imagegen-call_tOWDQH9AVmbg8fTVWK4Sgi9o",
+    "runtimeTexture": "combat-effects.png",
+    "runtimeAtlas": "combat-effects.atlas.json",
+    "frames": {
+      "hit-spark-0": {
+        "frame": {
+          "x": 0,
+          "y": 0,
+          "w": 96,
+          "h": 96
+        },
+        "rotated": false,
+        "trimmed": false,
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0,
+          "w": 96,
+          "h": 96
+        },
+        "sourceSize": {
+          "w": 96,
+          "h": 96
+        },
+        "sourceRect": [
+          70,
+          145,
+          260,
+          425
+        ],
+        "alphaBounds": [
+          4,
+          4,
+          92,
+          92
+        ]
+      },
+      "hit-spark-1": {
+        "frame": {
+          "x": 96,
+          "y": 0,
+          "w": 96,
+          "h": 96
+        },
+        "rotated": false,
+        "trimmed": false,
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0,
+          "w": 96,
+          "h": 96
+        },
+        "sourceSize": {
+          "w": 96,
+          "h": 96
+        },
+        "sourceRect": [
+          285,
+          95,
+          565,
+          470
+        ],
+        "alphaBounds": [
+          11,
+          4,
+          85,
+          92
+        ]
+      },
+      "hit-spark-2": {
+        "frame": {
+          "x": 192,
+          "y": 0,
+          "w": 96,
+          "h": 96
+        },
+        "rotated": false,
+        "trimmed": false,
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0,
+          "w": 96,
+          "h": 96
+        },
+        "sourceSize": {
+          "w": 96,
+          "h": 96
+        },
+        "sourceRect": [
+          575,
+          55,
+          930,
+          485
+        ],
+        "alphaBounds": [
+          4,
+          4,
+          91,
+          92
+        ]
+      },
+      "hit-spark-3": {
+        "frame": {
+          "x": 288,
+          "y": 0,
+          "w": 96,
+          "h": 96
+        },
+        "rotated": false,
+        "trimmed": false,
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0,
+          "w": 96,
+          "h": 96
+        },
+        "sourceSize": {
+          "w": 96,
+          "h": 96
+        },
+        "sourceRect": [
+          940,
+          120,
+          1230,
+          455
+        ],
+        "alphaBounds": [
+          7,
+          4,
+          88,
+          92
+        ]
+      },
+      "hit-spark-4": {
+        "frame": {
+          "x": 384,
+          "y": 0,
+          "w": 96,
+          "h": 96
+        },
+        "rotated": false,
+        "trimmed": false,
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0,
+          "w": 96,
+          "h": 96
+        },
+        "sourceSize": {
+          "w": 96,
+          "h": 96
+        },
+        "sourceRect": [
+          1235,
+          165,
+          1465,
+          430
+        ],
+        "alphaBounds": [
+          6,
+          4,
+          89,
+          92
+        ]
+      },
+      "dust-0": {
+        "frame": {
+          "x": 0,
+          "y": 96,
+          "w": 96,
+          "h": 64
+        },
+        "rotated": false,
+        "trimmed": false,
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0,
+          "w": 96,
+          "h": 64
+        },
+        "sourceSize": {
+          "w": 96,
+          "h": 64
+        },
+        "sourceRect": [
+          70,
+          535,
+          310,
+          775
+        ],
+        "alphaBounds": [
+          10,
+          4,
+          85,
+          60
+        ]
+      },
+      "dust-1": {
+        "frame": {
+          "x": 96,
+          "y": 96,
+          "w": 96,
+          "h": 64
+        },
+        "rotated": false,
+        "trimmed": false,
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0,
+          "w": 96,
+          "h": 64
+        },
+        "sourceSize": {
+          "w": 96,
+          "h": 64
+        },
+        "sourceRect": [
+          360,
+          520,
+          660,
+          785
+        ],
+        "alphaBounds": [
+          7,
+          4,
+          89,
+          60
+        ]
+      },
+      "dust-2": {
+        "frame": {
+          "x": 192,
+          "y": 96,
+          "w": 96,
+          "h": 64
+        },
+        "rotated": false,
+        "trimmed": false,
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0,
+          "w": 96,
+          "h": 64
+        },
+        "sourceSize": {
+          "w": 96,
+          "h": 64
+        },
+        "sourceRect": [
+          690,
+          535,
+          1020,
+          790
+        ],
+        "alphaBounds": [
+          4,
+          11,
+          92,
+          53
+        ]
+      },
+      "dust-3": {
+        "frame": {
+          "x": 288,
+          "y": 96,
+          "w": 96,
+          "h": 64
+        },
+        "rotated": false,
+        "trimmed": false,
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0,
+          "w": 96,
+          "h": 64
+        },
+        "sourceSize": {
+          "w": 96,
+          "h": 64
+        },
+        "sourceRect": [
+          1060,
+          555,
+          1430,
+          785
+        ],
+        "alphaBounds": [
+          4,
+          18,
+          91,
+          46
+        ]
+      },
+      "actor-shadow": {
+        "frame": {
+          "x": 384,
+          "y": 160,
+          "w": 128,
+          "h": 48
+        },
+        "rotated": false,
+        "trimmed": false,
+        "spriteSourceSize": {
+          "x": 0,
+          "y": 0,
+          "w": 128,
+          "h": 48
+        },
+        "sourceSize": {
+          "w": 128,
+          "h": 48
+        },
+        "sourceRect": [
+          560,
+          820,
+          980,
+          990
+        ],
+        "alphaBounds": [
+          4,
+          12,
+          124,
+          36
+        ]
+      }
+    },
+    "animation": {
+      "hitSpark": [
+        "hit-spark-0",
+        "hit-spark-1",
+        "hit-spark-2",
+        "hit-spark-3",
+        "hit-spark-4"
+      ],
+      "frameRate": 24,
+      "repeat": 0
+    }
+  },
+  "ui": {
+    "source": "source/product-ui-source.png",
+    "sourceSha256": "bbbccb937e17b686944d42410643876edb146f06997ff548f7cd25300f9c1164",
+    "promptId": "imagegen-call_OK8whpJ7SU0wnnU1yn7ymDuV",
+    "assets": [
+      {
+        "key": "ui-hud-frame",
+        "file": "ui-hud-frame.png",
+        "sourceRect": [
+          30,
+          45,
+          1505,
+          270
+        ],
+        "size": [
+          512,
+          64
+        ],
+        "alphaBounds": [
+          1,
+          1,
+          511,
+          62
+        ]
+      },
+      {
+        "key": "ui-modal-frame",
+        "file": "ui-modal-frame.png",
+        "sourceRect": [
+          45,
+          325,
+          920,
+          940
+        ],
+        "size": [
+          720,
+          300
+        ],
+        "alphaBounds": [
+          145,
+          1,
+          575,
+          299
+        ]
+      },
+      {
+        "key": "ui-button-frame",
+        "file": "ui-button-frame.png",
+        "sourceRect": [
+          975,
+          355,
+          1470,
+          565
+        ],
+        "size": [
+          128,
+          64
+        ],
+        "alphaBounds": [
+          1,
+          12,
+          127,
+          51
+        ]
+      },
+      {
+        "key": "ui-joystick-base",
+        "file": "ui-joystick-base.png",
+        "sourceRect": [
+          905,
+          600,
+          1220,
+          930
+        ],
+        "size": [
+          156,
+          156
+        ],
+        "alphaBounds": [
+          1,
+          1,
+          154,
+          155
+        ]
+      },
+      {
+        "key": "ui-attack-frame",
+        "file": "ui-attack-frame.png",
+        "sourceRect": [
+          1200,
+          600,
+          1505,
+          935
+        ],
+        "size": [
+          112,
+          86
+        ],
+        "alphaBounds": [
+          12,
+          1,
+          99,
+          85
+        ]
+      },
+      {
+        "key": "ui-joystick-knob",
+        "file": "ui-joystick-knob.png",
+        "sourceRect": [
+          1400,
+          90,
+          1515,
+          225
+        ],
+        "size": [
+          68,
+          68
+        ],
+        "alphaBounds": [
+          10,
+          1,
+          57,
+          67
+        ]
+      }
+    ]
+  },
+  "font": {
+    "key": "dragon-pixel",
+    "texture": "dragon-pixel.png",
+    "data": "dragon-pixel.xml",
+    "glyphs": " -./0123456789:ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+    "cell": [
+      18,
+      24
+    ],
+    "pixelScale": 3,
+    "palette": {
+      "ink": "#10140F",
+      "boneWhite": "#D8D3BD"
+    }
+  },
+  "manualReview": {
+    "reviewer": "Codex Technical Lead",
+    "status": "accepted 2026-07-23",
+    "evidence": [
+      "production desktop title, gameplay, and pause/resume",
+      "844x390 landscape FIT",
+      "390x844 portrait FIT",
+      "one Canvas and zero browser errors"
+    ]
+  }
+}

@@ -27,6 +27,7 @@ import { GameHud } from "./ui/GameHud";
 import { PauseController } from "./ui/PauseController";
 import { FailureController, type FailureRestartSource as ExplicitFailureRestartSource } from "./ui/FailureController";
 import { ResultController, type ResultReplaySource as ExplicitResultReplaySource } from "./ui/ResultController";
+import { addButtonFrame, addModalFrame, addUiText, UI_COLORS } from "./ui/UiArt";
 
 type AttackState = "attack1" | "attack2" | "attack3";
 type TitleStartSource = "keyboard" | "pointer" | "smoke";
@@ -165,7 +166,7 @@ export default class MainScene extends Phaser.Scene {
   private totalDamage = 0;
   private playerAttackId = 0;
   private playerHitTargetIds: ReadonlySet<number> = new Set();
-  private defeatedText?: Phaser.GameObjects.Text;
+  private defeatedText?: Phaser.GameObjects.Container;
   private readonly transitionLog: string[] = [];
   private diagnosticMode = false;
   private previewMode = false;
@@ -890,10 +891,10 @@ export default class MainScene extends Phaser.Scene {
     this.updateBossArenaDataset(process.env.NODE_ENV !== "production");
     this.stageExitState = makeExitAvailable(this.stageExitState, BAMBOO_COMBAT_ROOM.exits, "room-exit");
     if (this.defeatedText) return;
-    this.defeatedText = this.add.text(VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2, "All Enemies Defeated", {
-      fontFamily: "Consolas, monospace", fontSize: "36px", color: "#ffffff",
-      backgroundColor: "rgba(0,0,0,.72)", padding: { x: 20, y: 12 },
-    }).setOrigin(0.5).setScrollFactor(0).setDepth(10000);
+    const frame = addButtonFrame(this, VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2, 430, 72);
+    const label = addUiText(this, VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2 - 14, "ALL ENEMIES DEFEATED", 28)
+      .setOrigin(0.5, 0);
+    this.defeatedText = this.add.container(0, 0, [frame, label]).setScrollFactor(0).setDepth(10000);
   }
 
   private enterFailedState() {
@@ -1025,14 +1026,12 @@ export default class MainScene extends Phaser.Scene {
     const shade = this.add.rectangle(VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2, VIEWPORT_WIDTH, VIEWPORT_HEIGHT, 0x07120d, 0.94)
       .setScrollFactor(0)
       .setInteractive();
-    const title = this.add.text(VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2 - 48, "THREE KINGDOMS", {
-      fontFamily: "Georgia, serif", fontSize: "62px", color: "#f6d56b",
-      stroke: "#5b170d", strokeThickness: 7,
-    }).setOrigin(0.5).setScrollFactor(0);
-    const prompt = this.add.text(VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2 + 50, "PRESS ANY KEY / TAP TO START", {
-      fontFamily: "Consolas, monospace", fontSize: "24px", color: "#ffffff",
-    }).setOrigin(0.5).setScrollFactor(0);
-    this.titleOverlay = this.add.container(0, 0, [shade, title, prompt]).setDepth(20000);
+    const modal = addModalFrame(this, VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2, 760, 300);
+    const title = addUiText(this, VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2 - 78, "THREE KINGDOMS", 52, UI_COLORS.antiqueGold)
+      .setOrigin(0.5).setScrollFactor(0);
+    const prompt = addUiText(this, VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2 + 52, "PRESS ANY KEY / TAP TO START", 23)
+      .setOrigin(0.5).setScrollFactor(0);
+    this.titleOverlay = this.add.container(0, 0, [shade, modal, title, prompt]).setDepth(20000);
     shade.once("pointerdown", this.handleTitlePointerStart, this);
     keyboard.once("keydown", this.handleTitleKeyboardStart, this);
     this.updateTitleDataset();
@@ -1069,7 +1068,7 @@ export default class MainScene extends Phaser.Scene {
     dataset.pauseHitStopActive = String(this.effectDirector.isHitStopActive());
     dataset.pauseCount = String(this.pauseCount);
     dataset.resumeCount = String(this.resumeCount);
-    dataset.pauseObjectCount = "5";
+    dataset.pauseObjectCount = "7";
     dataset.pausePlayerX = String(Math.round(this.playerBodyZone.x));
     dataset.pausePlayerY = String(Math.round(this.playerBodyZone.y));
     dataset.pausePlayerVelocityX = String(Math.round(this.playerBody.velocity.x));
@@ -1086,7 +1085,7 @@ export default class MainScene extends Phaser.Scene {
     if (!development || !this.failureController) return;
     const dataset = this.game.canvas.dataset;
     dataset.failureOverlayVisible = String(this.failureController.isVisible);
-    dataset.failureObjectCount = "3";
+    dataset.failureObjectCount = "4";
   }
 
   private updateResultDataset() {
@@ -1094,7 +1093,7 @@ export default class MainScene extends Phaser.Scene {
     if (!development || !this.resultController) return;
     const dataset = this.game.canvas.dataset;
     dataset.resultOverlayVisible = String(this.resultController.isVisible);
-    dataset.resultObjectCount = "4";
+    dataset.resultObjectCount = "5";
   }
 
   private updateBossEntrySmoke() {

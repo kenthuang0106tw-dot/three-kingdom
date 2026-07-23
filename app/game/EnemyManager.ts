@@ -35,6 +35,7 @@ export class EnemyCombatant {
   readonly body: Phaser.Physics.Arcade.Body;
   readonly attackBody: Phaser.Physics.Arcade.Body;
   readonly sprite: Phaser.GameObjects.Sprite;
+  readonly shadow: Phaser.GameObjects.Image;
   state: EnemyState = "idle";
   hp: number;
   facing: 1 | -1 = -1;
@@ -57,6 +58,7 @@ export class EnemyCombatant {
     this.attackBody.setAllowGravity(false).setEnable(false);
     this.attackZone.setActive(false);
 
+    this.shadow = scene.add.image(x, y + 4, "combat-effects", "actor-shadow").setAlpha(0.48).setScale(0.8);
     this.sprite = scene.add.sprite(x, y, config.assetKey, config.animations.idle[0])
       .setOrigin(0.5, config.feetY / config.frameSize)
       .setScale(config.displayScale)
@@ -273,7 +275,7 @@ export class EnemyManager {
       this.setState(enemy, "idle");
     } else if (animation.key === enemyAnimationKey(enemy.config, "dead") && enemy.state === "dead") {
       enemy.sprite.setFrame(enemy.config.animations.dead.at(-1)!);
-      this.scene.tweens.add({ targets: enemy.sprite, alpha: 0, duration: 500, onComplete: () => this.remove(enemy) });
+      this.scene.tweens.add({ targets: [enemy.sprite, enemy.shadow], alpha: 0, duration: 500, onComplete: () => this.remove(enemy) });
     }
   }
 
@@ -306,6 +308,7 @@ export class EnemyManager {
     enemy.sprite.off(Phaser.Animations.Events.ANIMATION_UPDATE, update);
     enemy.sprite.off(Phaser.Animations.Events.ANIMATION_COMPLETE, complete);
     enemy.sprite.destroy();
+    enemy.shadow.destroy();
     enemy.bodyZone.destroy();
     enemy.attackZone.destroy();
   }
@@ -319,6 +322,7 @@ export class EnemyManager {
 
   syncSprite(enemy: EnemyCombatant) {
     const x = Math.round(enemy.bodyZone.x), y = Math.round(enemy.bodyZone.y);
+    enemy.shadow.setPosition(x, y + 4).setDepth(y - 1);
     enemy.sprite.setPosition(x, y).setDepth(y);
     if (enemy.attackBody.enable) this.positionAttackHitbox(enemy);
   }

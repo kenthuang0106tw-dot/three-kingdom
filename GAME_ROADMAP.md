@@ -26,7 +26,7 @@
 | Camera | Stable vertical slice | bounded integer follow、encounter/Boss locks 與 encounter-clear 連續 handoff 已接入 |
 | Mobile | Playable prototype | Phaser 360° touch joystick、attack 與 FIT viewport acceptance 已完成 |
 | UI | Accepted product-flow prototype | Phaser Title/start、Player/Boss HUD、Pause、Failure/retry、Result/replay 與三 viewport acceptance 已完成 |
-| Visual | M6A stage pass accepted | 6A.1 target/baseline、6A.2 Guan Yu、6A.3 Enemy/Boss 與 6A.4 三畫面 Stage 已完成；下一步只升級戰鬥特效與產品 UI |
+| Visual | M6A effects/UI pass accepted | 6A.1–6A.5 已完成視覺目標、全角色、三畫面 Stage、戰鬥特效與產品 UI；下一步只做 visual acceptance 與 asset freeze |
 | Audio | Missing | 無 runtime assets；M7 必須等待 M6A visual freeze |
 | Tests | Contract baseline | app shell、lifecycle、route 與 multi-enemy source contracts 已建立 |
 | Repository | Baseline | baseline、UTF-8、單一 runtime、pnpm、lint/typecheck、tests、production routes 已完成 |
@@ -307,7 +307,7 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 
 ## Milestone 6A — Visual Upgrade
 
-**Status:** 6A.1–6A.4 completed；6A.4 completed 2026-07-23。下一個唯一 Task 是 6A.5。
+**Status:** 6A.1–6A.5 completed；6A.5 completed 2026-07-23。下一個唯一 Task 是 6A.6。
 
 **Playable Result:** 同一個完整 Vertical Slice 保持既有玩法與數值，但關羽、三種小兵、Boss、三畫面竹林、戰鬥特效與產品 UI 形成一致、可辨識的原創三國日式寫實 Pixel Art 品質。
 
@@ -323,7 +323,7 @@ Parallax、foreground props、breakables 暫不在本 Milestone。
 | 6A.2 | Guan Yu animation quality upgrade（Completed 2026-07-18） | P0 | High | 6A.1 | idle/walk/attack1–3/hurt/dead 動作完整；統一 scale/feet anchor；不以 transform 補幀 | player source/sheets/atlas/metadata/debug | 角色 identity 或 hit timing 漂移 |
 | 6A.3 | Enemy and Boss visual consistency（Completed 2026-07-18） | P0 | High | 6A.1, 6A.2 | 三小兵與 Boss 比例、面向、腳底、輪廓、色盤一致；既有 active frames 與 body contract 不變 | enemy/boss source/sheets/atlas/metadata | 批次重製造成 frame 污染 |
 | 6A.4 | Three-screen bamboo stage upgrade（Completed 2026-07-23） | P0 | High | 6A.1 | 三畫面可一眼區分；背景、前景遮擋、地面與 arena 層次完整；無接縫、空白或 depth 錯誤 | stage layers/section config/metadata | 視覺層影響 camera/碰撞 |
-| 6A.5 | Combat effects and product UI art upgrade | P0 | High | 6A.2–6A.4 | Spark/impact/dust/shadow 與 Title/HUD/Pause/Failure/Result/custom font 同風格；不改傷害與流程 | effects/UI/font assets/manifest | 特效遮擋可讀性、UI scope 膨脹 |
+| 6A.5 | Combat effects and product UI art upgrade（Completed 2026-07-23） | P0 | High | 6A.2–6A.4 | Spark/impact/dust/shadow 與 Title/HUD/Pause/Failure/Result/custom font 同風格；不改傷害與流程 | effects/UI/font assets/manifest | 特效遮擋可讀性、UI scope 膨脹 |
 | 6A.6 | Visual acceptance and asset freeze | P0 | High | 6A.1–6A.5 | desktop、844×390、390×844 全關 before/after 驗收；動畫無跳位；60 FPS/load budget 基線；素材來源完整 | checklist/screenshots/asset docs | 主觀驗收無結束條件 |
 
 M6A 不加入新角色、新敵人、新招式、第二關、Audio、技能、掉寶、劇情或平衡改動。任何 frame timing、hitbox、body 或世界座標變動都必須先以既有 contract 證明是必要的 visual alignment 修正。
@@ -461,7 +461,9 @@ M6A 不加入新角色、新敵人、新招式、第二關、Audio、技能、�
 - Evidence: 69 audited cast frames, one scale/feet contract per actor, Art Bible lineup ratios, reproducible atlas/provenance/onion/silhouette QA, 79 tests, both production builds, and three-viewport state-matrix acceptance with one Canvas and zero errors.
 - M6A / Task 6A.4 (Three-screen bamboo stage upgrade) completed on 2026-07-23.
 - Evidence: three original 1280×720 sections, nine explicit background/ground/foreground runtime layers, fixed 3840×720 gameplay geometry, shared palette and 64px seam normalization, source provenance, overview/seam/depth QA, 80 tests, production runtime, and desktop/844×390/390×844 acceptance.
-- Next eligible task: M6A / Task 6A.5 (Combat effects and product UI art upgrade).
+- M6A / Task 6A.5 (Combat effects and product UI art upgrade) completed on 2026-07-23.
+- Evidence: 5-frame Hit Spark, 4-frame impact dust, shared ground shadow, product Title/HUD/Pause/Failure/Result/mobile-control art, custom bitmap font, source provenance, reproducible tooling, 81 tests, three viewport production acceptance, and unchanged combat/flow contracts.
+- Next eligible task: M6A / Task 6A.6 (Visual acceptance and asset freeze).
 
 ## 4. Global Acceptance Rules
 

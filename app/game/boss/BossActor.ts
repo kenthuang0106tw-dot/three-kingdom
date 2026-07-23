@@ -38,6 +38,7 @@ type BossActorCallbacks = Readonly<{ onCleaned?: (reason: BossCleanupReason) => 
 export class BossActor {
   readonly targetId = 10_000;
   readonly sprite: Phaser.GameObjects.Sprite;
+  readonly shadow: Phaser.GameObjects.Image;
   readonly bodyZone: Phaser.GameObjects.Zone;
   readonly body: Phaser.Physics.Arcade.Body;
   readonly attackZone: Phaser.GameObjects.Zone;
@@ -83,6 +84,7 @@ export class BossActor {
     this.attackBody.setAllowGravity(false);
     this.disableAttackHitbox();
 
+    this.shadow = scene.add.image(x, footY + 5, "combat-effects", "actor-shadow").setAlpha(0.58).setScale(1.25);
     this.sprite = scene.add.sprite(x, footY, LIFECYCLE_TEXTURE, "idle-0")
       .setOrigin(0.5, BOSS_ACTOR_CONFIG.feetY / BOSS_ACTOR_CONFIG.frameSize)
       .setScale(BOSS_ACTOR_CONFIG.displayScale)
@@ -156,6 +158,7 @@ export class BossActor {
   syncVisuals(): void {
     const x = Math.round(this.bodyZone.x);
     const y = Math.round(this.bodyZone.y);
+    this.shadow.setPosition(x, y + 5).setDepth(y - 1);
     this.sprite.setPosition(x, y).setDepth(y);
   }
 
@@ -313,7 +316,7 @@ export class BossActor {
   private beginDeathFade(): void {
     if (this.deathTween) return;
     this.deathTween = this.scene.tweens.add({
-      targets: this.sprite,
+      targets: [this.sprite, this.shadow],
       alpha: 0,
       duration: BOSS_ACTOR_CONFIG.deathFadeMs,
       onComplete: () => this.cleanup(),
@@ -334,6 +337,7 @@ export class BossActor {
     this.sprite.off(Phaser.Animations.Events.ANIMATION_COMPLETE, this.handleAnimationComplete, this);
     this.body.enable = false;
     this.sprite.destroy();
+    this.shadow.destroy();
     this.bodyZone.destroy();
     this.attackZone.destroy();
     this.callbacks.onCleaned?.(reason);

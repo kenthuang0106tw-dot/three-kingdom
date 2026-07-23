@@ -27,26 +27,17 @@ export class EffectDirector {
 
   createHitSparkAnimation() {
     if (!this.scene.anims.exists("hit-spark")) {
-      const graphics = new Phaser.GameObjects.Graphics(this.scene);
-      for (let frame = 0; frame < 5; frame += 1) {
-        const key = `hit-spark-${frame}`;
-        if (this.scene.textures.exists(key)) continue;
-        const radius = 4 + frame * 4;
-        graphics.clear();
-        graphics.fillStyle(frame < 2 ? 0xffffff : 0xffd84a, 1);
-        graphics.fillRect(24 - radius, 22, radius * 2, 4);
-        graphics.fillRect(22, 24 - radius, 4, radius * 2);
-        graphics.fillStyle(0xff7b24, Math.max(0.25, 1 - frame * 0.17));
-        graphics.fillRect(24 - radius, 24 - radius, 4, 4);
-        graphics.fillRect(24 + radius - 4, 24 - radius, 4, 4);
-        graphics.fillRect(24 - radius, 24 + radius - 4, 4, 4);
-        graphics.fillRect(24 + radius - 4, 24 + radius - 4, 4, 4);
-        graphics.generateTexture(key, 48, 48);
-      }
-      graphics.destroy();
       this.scene.anims.create({
         key: "hit-spark",
-        frames: [0, 1, 2, 3, 4].map(frame => ({ key: `hit-spark-${frame}` })),
+        frames: [0, 1, 2, 3, 4].map(frame => ({ key: "combat-effects", frame: `hit-spark-${frame}` })),
+        frameRate: EFFECT_PARAMS.hitSparkFrameRate,
+        repeat: 0,
+      });
+    }
+    if (!this.scene.anims.exists("impact-dust")) {
+      this.scene.anims.create({
+        key: "impact-dust",
+        frames: [0, 1, 2, 3].map(frame => ({ key: "combat-effects", frame: `dust-${frame}` })),
         frameRate: EFFECT_PARAMS.hitSparkFrameRate,
         repeat: 0,
       });
@@ -89,8 +80,13 @@ export class EffectDirector {
 
   createHitSpark(x: number, y: number) {
     this.createHitSparkAnimation();
-    const spark = this.scene.add.sprite(x, y, "hit-spark-0").setDepth(2000).play("hit-spark");
+    const spark = this.scene.add.sprite(x, y, "combat-effects", "hit-spark-0").setDepth(2000).play("hit-spark");
+    const dustY = y + 28;
+    const dust = this.scene.add.sprite(x, dustY, "combat-effects", "dust-0")
+      .setDepth(Math.round(dustY) - 1)
+      .play("impact-dust");
     spark.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => spark.destroy());
+    dust.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => dust.destroy());
   }
 
   destroy() {

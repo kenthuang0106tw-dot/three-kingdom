@@ -1,5 +1,6 @@
 import * as Phaser from "phaser";
 import { createActionSnapshot, type ActionSnapshot, type DirectionButtons } from "./ActionSnapshot";
+import { addUiText, UI_COLORS } from "../ui/UiArt";
 
 const JOYSTICK_X = 128;
 const JOYSTICK_Y = 612;
@@ -12,8 +13,8 @@ export class TouchInputController {
   private joystickPointerId: number | null = null;
   private joystickX = 0;
   private joystickY = 0;
-  private joystickKnob!: Phaser.GameObjects.Arc;
-  private attackButton!: Phaser.GameObjects.Rectangle;
+  private joystickKnob!: Phaser.GameObjects.Image;
+  private attackButton!: Phaser.GameObjects.Image;
   private readonly attackPointerIds = new Set<number>();
   private attackPressed = false;
 
@@ -65,20 +66,14 @@ export class TouchInputController {
   }
 
   private createJoystick() {
-    const base = this.scene.add.circle(JOYSTICK_X, JOYSTICK_Y, JOYSTICK_RADIUS, 0x07120d, 0.48)
-      .setStrokeStyle(3, 0xcfe9d4, 0.62)
+    const base = this.scene.add.image(JOYSTICK_X, JOYSTICK_Y, "ui-joystick-base")
       .setScrollFactor(0)
       .setDepth(9500)
       .setInteractive({ useHandCursor: false });
-    const guide = this.scene.add.circle(JOYSTICK_X, JOYSTICK_Y, JOYSTICK_RADIUS * 0.56, 0xffffff, 0)
-      .setStrokeStyle(2, 0xcfe9d4, 0.2)
-      .setScrollFactor(0)
-      .setDepth(9500);
-    this.joystickKnob = this.scene.add.circle(JOYSTICK_X, JOYSTICK_Y, 34, 0xb9d8c0, 0.72)
-      .setStrokeStyle(3, 0xffffff, 0.75)
+    this.joystickKnob = this.scene.add.image(JOYSTICK_X, JOYSTICK_Y, "ui-joystick-knob")
       .setScrollFactor(0)
       .setDepth(9501);
-    this.controls.push(base, guide, this.joystickKnob);
+    this.controls.push(base, this.joystickKnob);
 
     base.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
       if (this.joystickPointerId !== null) return;
@@ -88,22 +83,18 @@ export class TouchInputController {
   }
 
   private createAttackButton() {
-    this.attackButton = this.scene.add.rectangle(1134, 610, 112, 86, 0x07120d, 0.52)
-      .setStrokeStyle(2, 0xcfe9d4, 0.65)
+    this.attackButton = this.scene.add.image(1134, 610, "ui-attack-frame")
       .setScrollFactor(0)
       .setDepth(9500)
       .setInteractive({ useHandCursor: false });
-    const label = this.scene.add.text(1134, 610, "J", {
-      fontFamily: "Arial, sans-serif",
-      fontSize: "32px",
-      color: "#ffffff",
-    }).setOrigin(0.5).setAlpha(0.9).setScrollFactor(0).setDepth(9501);
+    const label = addUiText(this.scene, 1134, 596, "J", 30, UI_COLORS.antiqueGold)
+      .setOrigin(0.5, 0).setAlpha(0.95).setScrollFactor(0).setDepth(9501);
     this.controls.push(this.attackButton, label);
 
     this.attackButton.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
       this.attackPointerIds.add(pointer.id);
       this.attackPressed = true;
-      this.attackButton.setFillStyle(0x7ca887, 0.72);
+      this.attackButton.setTint(0xe0b86b);
     });
   }
 
@@ -135,7 +126,7 @@ export class TouchInputController {
   private release(pointerId: number) {
     if (pointerId === this.joystickPointerId) this.resetJoystick();
     this.attackPointerIds.delete(pointerId);
-    if (this.attackPointerIds.size === 0) this.attackButton.setFillStyle(0x07120d, 0.52);
+    if (this.attackPointerIds.size === 0) this.attackButton.clearTint();
   }
 
   private resetJoystick() {
@@ -149,6 +140,6 @@ export class TouchInputController {
     this.resetJoystick();
     this.attackPointerIds.clear();
     this.attackPressed = false;
-    this.attackButton.setFillStyle(0x07120d, 0.52);
+    this.attackButton.clearTint();
   }
 }

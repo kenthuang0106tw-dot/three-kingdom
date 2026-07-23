@@ -1,5 +1,6 @@
 import * as Phaser from "phaser";
 import type { GameFlowState } from "../flow/GameFlowStateMachine";
+import { addButtonFrame, addModalFrame, addUiText, UI_COLORS } from "./UiArt";
 
 const PAUSE_DEPTH = 23_000;
 
@@ -23,27 +24,21 @@ export class PauseController {
     if (!keyboard) throw new Error("Keyboard input is unavailable");
     keyboard.on("keydown-P", this.onPauseKey);
 
-    this.buttonPanel = scene.add.rectangle(1224, 44, 72, 48, 0x07120d, 0.82)
-      .setStrokeStyle(2, 0xe8d7a0, 0.9)
+    this.buttonPanel = scene.add.rectangle(1224, 44, 72, 48, 0x000000, 0)
       .setInteractive({ useHandCursor: false });
-    const buttonLabel = scene.add.text(1224, 44, "II", {
-      fontFamily: "Consolas, monospace", fontSize: "24px", color: "#fff1bd",
-    }).setOrigin(0.5);
-    this.button = scene.add.container(0, 0, [this.buttonPanel, buttonLabel])
+    const buttonFrame = addButtonFrame(scene, 1224, 44, 72, 48);
+    const buttonLabel = addUiText(scene, 1224, 35, "II", 18, UI_COLORS.antiqueGold).setOrigin(0.5, 0);
+    this.button = scene.add.container(0, 0, [this.buttonPanel, buttonFrame, buttonLabel])
       .setScrollFactor(0)
       .setDepth(PAUSE_DEPTH);
     this.buttonPanel.on("pointerdown", this.onPausePointer);
 
     this.overlayShade = scene.add.rectangle(640, 360, 1280, 720, 0x07120d, 0.78)
       .setInteractive({ useHandCursor: false });
-    const title = scene.add.text(640, 315, "PAUSED", {
-      fontFamily: "Georgia, serif", fontSize: "60px", color: "#fff1bd",
-      stroke: "#35130d", strokeThickness: 7,
-    }).setOrigin(0.5);
-    const prompt = scene.add.text(640, 395, "PRESS P / TAP TO RESUME", {
-      fontFamily: "Consolas, monospace", fontSize: "24px", color: "#ffffff",
-    }).setOrigin(0.5);
-    this.overlay = scene.add.container(0, 0, [this.overlayShade, title, prompt])
+    const modal = addModalFrame(scene, 640, 360);
+    const title = addUiText(scene, 640, 292, "PAUSED", 54, UI_COLORS.antiqueGold).setOrigin(0.5);
+    const prompt = addUiText(scene, 640, 393, "PRESS P / TAP TO RESUME", 23).setOrigin(0.5);
+    this.overlay = scene.add.container(0, 0, [this.overlayShade, modal, title, prompt])
       .setScrollFactor(0)
       .setDepth(PAUSE_DEPTH + 1);
     this.overlayShade.on("pointerdown", this.onResumePointer);

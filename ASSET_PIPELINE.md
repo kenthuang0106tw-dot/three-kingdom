@@ -79,10 +79,13 @@ Mauler 與 Duelist 也使用 5×3、384×384、feet `(192,354)` runtime contract
 
 ### Effects
 
-- Hit Spark：Phaser Graphics runtime 產生 5 frames，24 FPS。
+- Hit Spark：`combat-effects.png` atlas 的 5 個原創 pixel-art frames，24 FPS。
+- Impact dust：同 atlas 的 4 個 frames，24 FPS；與 Hit Spark 同次 accepted hit 建立。
+- Ground shadow：同 atlas 的 `actor-shadow`，由 Player、Enemy 與 Boss 各自同步 feet position。
 - Hit Flash：TintFill。
 - Camera Shake／Hit Stop：程式效果。
-- 尚缺正式 hit spark、slash trail、dust、death impact、environment break effects。
+- Source／metadata／QA：`public/art/effects/source/combat-effects-source.png`、`combat-effects.atlas.json`、`combat-effects-debug.png`；由 `tools/build_effects_ui_art.py` 重建。
+- 尚缺 slash trail、death impact、environment break effects；這些不屬於 6A.5。
 
 ### Boss — Indigo Warlord Attacks (M5 / Task 5.2)
 
@@ -152,15 +155,15 @@ the listener is removed on Scene shutdown.
 | `enemies.png` | 舊 enemy reference，正式 runtime 未使用 |
 | `*-source.png` | Source/reference |
 
-目前 3840×720 world 將同一張 `forest-camp.png` 重複用於三個 section；沒有
-獨立 landmark、parallax layers、foreground mask 或 visual seam metadata。
+目前 3840×720 world 使用 Forest Entry、Forest Ambush、Boss Arena 三個可辨識 section；每段有 background／ground／foreground 三層、獨立 landmark、seam metadata 與 depth QA。`forest-camp.png` 僅保留 legacy/reference。
 
 ### UI / Font / Audio
 
-- UI：React side cabinet／CRT overlay 保留外框；Phaser 已有 Title、Player/Boss HUD、Pause、Failure、Result。全部仍是功能性 prototype art。
-- Font：使用系統 Consolas/Impact/Arial，沒有正式 pixel font。
+- UI：React side cabinet／CRT overlay 保留外框；Phaser Title、Player/Boss HUD、Pause、Failure、Result 使用 `ui-modal-frame`、`ui-hud-frame`、`ui-button-frame` 等原創產品 UI assets。
+- Font：產品文字使用 `dragon-pixel.png`／`dragon-pixel.xml` bitmap font；development debug 仍可使用系統 monospace。
 - Audio：沒有 runtime asset。
-- Mobile controls：Phaser 360° joystick、attack、pause 已可用，但沒有正式 UI assets。
+- Mobile controls：Phaser 360° joystick、attack、pause 使用 `ui-joystick-base`、`ui-joystick-knob`、`ui-attack-frame`；既有 pointer target 與 safe-area contract 不變。
+- UI source／metadata／QA：`public/art/ui/source/product-ui-source.png`、`product-ui.metadata.json`、`product-ui-debug.png`、`product-ui-runtime-preview.png`、`dragon-pixel-preview.png`。
 
 ## 3. Required File Set
 
@@ -250,7 +253,7 @@ Metadata 最少欄位：
 - **M6A.2 (Completed):** Guan Yu 43-frame source/runtime atlas、metadata/provenance、legacy audit、debug/onion/silhouette QA 與 reproducible component-isolation pipeline 已接入。
 - **M6A.3 (Completed):** 69 個 Enemy/Boss frames 的比例、面向、feet、atlas、provenance、onion/silhouette 與三 viewport runtime matrix 已驗收。
 - **M6A.4 (Completed):** 三個可辨識竹林 section、9 張 background/ground/foreground runtime layers、Boss arena、provenance、overview/seam/depth QA 與 reproducible pipeline 已驗收。
-- **M6A.5:** 正式 Hit Spark/impact/dust/shadow、Title/HUD/Pause/Failure/Result、custom pixel font 與 mobile control assets。
+- **M6A.5 (Completed):** 正式 Hit Spark/impact/dust/shadow、Title/HUD/Pause/Failure/Result、custom pixel font、mobile control assets、provenance 與 reproducible pipeline 已驗收。
 - **M6A.6:** 三 viewport before/after captures、完整 asset provenance、atlas/load baseline 與 visual freeze record。
 - **M7:** Combat SFX、BGM。
 - **M8:** Optimized atlases、loading/social/release assets。

@@ -1,56 +1,53 @@
 # Next Task
 
-## M6A / Task 6A.5 — Combat effects and product UI art upgrade
+## M6A / Task 6A.6 — Visual acceptance and asset freeze
 
 ### Why this is next
 
-The cast and all three Stage sections now share the accepted Art Bible. The
-remaining visible prototype mismatch is the procedural combat effects and
-product-flow UI. They must be judged against the final Stage before the visual
-freeze, while gameplay timing, damage, flow, and mobile input remain unchanged.
+The visual target, Guan Yu, Enemy/Boss cast, three-screen Stage, combat effects,
+and product UI are now implemented. Before Audio begins, the project needs one
+objective full-run review and a frozen asset/provenance baseline so later work
+does not reopen the entire art direction or hide performance regressions.
 
 ### Completion criteria
 
-- Replace prototype Hit Spark, impact, dust, and ground-shadow presentation with
-  original pixel-art assets that follow `ART_BIBLE.md`.
-- Upgrade Title, Player/Boss HUD, Pause, Failure, and Result presentation plus
-  the runtime pixel font into one coherent visual language.
-- Preserve every animation timing, active frame, hitbox, damage value, state
-  transition, camera behavior, safe area, pointer target, and world coordinate.
-- Effects must remain readable on all three Stage sections without obscuring
-  actors, telegraphs, HUD, or mobile controls.
-- Commit source/runtime assets, metadata, provenance, comparison QA, and focused
-  reproducible tooling.
-- Do not modify actors, Stage art, AI, balance, Audio, encounter flow, or add
-  content.
+- Capture matching after images for every accepted M6A.1 before baseline at
+  desktop, 844×390 landscape, and 390×844 portrait FIT.
+- Complete one Title-to-Boss-clear run plus Failure/retry and Result/replay
+  checks without changing gameplay or art.
+- Audit all M6A runtime assets for provenance, dimensions, atlas metadata,
+  alpha bounds, feet anchors, visual seams, naming, and manifest ownership.
+- Record initial load size, texture count, Canvas count, runtime errors, and a
+  reproducible 60 FPS/performance baseline.
+- Publish a finite defect list; fix only objective clipping, contamination,
+  missing-file, alignment, readability, or runtime defects discovered by the
+  audit.
+- Mark the accepted M6A asset set frozen. Do not redesign, regenerate, add, or
+  rebalance content.
 
 ### Validation
 
-- Capture matching effect and UI states at desktop, 844×390 landscape, and
-  390×844 portrait FIT.
-- Verify hit effects play once per accepted hit and preserve current Hit Stop,
-  camera shake, flash, knockback, damage, and combo contracts.
-- Verify Title/start, Pause/resume, Failure/retry, Result/replay, Player HUD, and
-  Boss HUD remain operable with keyboard and touch.
-- One Canvas, no console errors, no clipping, and existing gameplay contracts
-  remain green.
+- Compare all matching before/after captures and record pass/fail per checkpoint.
+- Verify animation feet anchors, Stage seams/depth, effect readability, UI safe
+  areas, touch targets, and full-flow controls in all three viewports.
+- Verify one Canvas, zero console errors, no missing asset requests, and no
+  production debug leakage.
 - Run `pnpm test`, `pnpm typecheck`, `pnpm lint`, `pnpm build`, and
   `pnpm build:github-pages`.
 
 ### Expected files
 
-- `public/art/effects/` source/runtime effect assets and metadata
-- Product UI/font assets and manifest entries
-- Minimal Phaser effect/UI rendering integration and focused tests
-- Reproducible effect/UI asset tooling and comparison QA
+- `docs/visual-baselines/m6a-6a6-after/`
+- M6A visual acceptance/freeze record and asset/load budget evidence
+- Focused validation tooling or tests only where reproducibility requires them
 - `ASSET_PIPELINE.md`, `CHECKLIST.md`, `SPRINT.md`, `GAME_ROADMAP.md`,
   `TECH_DEBT.md`, `README.md`, and `NEXT_TASK.md`
 
 ### Risks
 
-- Effect sprites may change perceived hit timing even when gameplay values do
-  not change; compare frame-by-frame against current contracts.
-- UI art can reduce mobile safe-area or pointer usability; retain fixed
-  camera-space ownership and test all three viewports.
-- Scope can expand into redesigning gameplay or Stage art; reject any change
-  not required for Effects/UI visual consistency.
+- Subjective review can expand into another art-production cycle; only objective
+  defects against `ART_BIBLE.md` and existing contracts may be fixed.
+- Full-run capture can vary by timing; use documented deterministic checkpoints
+  without altering production behavior.
+- Asset-size or frame-time findings may tempt premature optimization; record the
+  baseline and only fix a measured acceptance failure.

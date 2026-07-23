@@ -2,7 +2,7 @@
 
 ## Sprint Goal
 
-M6A.1–M6A.4 已完成視覺目標、Guan Yu、Enemy/Boss 與三畫面竹林 Stage。下一步只執行 M6A.5 Combat effects and product UI art upgrade，不同時改角色、Stage、Audio 或 gameplay contracts。
+M6A.1–M6A.5 已完成視覺目標、Guan Yu、Enemy/Boss、三畫面竹林 Stage、Combat Effects 與 Product UI。下一步只執行 M6A.6 Visual acceptance and asset freeze，不同時改美術內容、Audio 或 gameplay contracts。
 
 Roadmap decision（2026-07-18）：6A.3 必須以 6A.2 已接受的 Guan Yu 比例、palette、feet anchor、capture 與 provenance contract 對齊；不可重新解釋 Art Bible 或更改 gameplay timing。
 
@@ -11,7 +11,7 @@ Roadmap decision（2026-07-18）：6A.3 必須以 6A.2 已接受的 Guan Yu 比�
 - Duration：2 weeks
 - Capacity：1 developer + AI，約 40–55 hours
 - Milestone：M6A — Visual Upgrade
-- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M6A / 6A.5 Combat effects and product UI art upgrade
+- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M6A / 6A.6 Visual acceptance and asset freeze
 
 ## Task List
 
@@ -34,7 +34,8 @@ Roadmap decision（2026-07-18）：6A.3 必須以 6A.2 已接受的 Guan Yu 比�
 | 15 | ✅ M6A / Task 6A.2 — Guan Yu animation quality upgrade | 24–40h | 統一 identity/scale/feet anchor 的 43-frame 主角動畫 | 78 tests + metadata/debug/onion/three-viewport/build acceptance passed |
 | 16 | ✅ M6A / Task 6A.3 — Enemy and Boss visual consistency | 32–48h | 三小兵與 Boss 對齊主角視覺契約 | 79 tests + metadata/lineup/onion/three-viewport acceptance passed |
 | 17 | ✅ M6A / Task 6A.4 — Three-screen bamboo stage upgrade | 32–48h | 三段可辨識、無接縫的竹林與 Boss arena | 80 tests + layer/section/depth/three-viewport acceptance passed |
-| 18 | M6A / Task 6A.5 — Combat effects and product UI art upgrade | 32–48h | 同風格 Spark/impact/dust/shadow 與產品 UI/font | readability/state/three-viewport acceptance |
+| 18 | ✅ M6A / Task 6A.5 — Combat effects and product UI art upgrade | 32–48h | 同風格 Spark/impact/dust/shadow 與產品 UI/font | 81 tests + desktop/landscape/portrait/build acceptance passed |
+| 19 | M6A / Task 6A.6 — Visual acceptance and asset freeze | 12–20h | 全關 before/after、效能/載入基線、provenance audit 與 freeze | full-run/three-viewport/asset-budget acceptance |
 
 ## Recovery Planning Correction — 2026-07-14
 
@@ -685,3 +686,14 @@ The next eligible task is M6A / Task 6A.4 — Three-screen bamboo stage upgrade.
 - [x] `pnpm test` 80/80, typecheck, lint 0 errors (8 existing warnings), `pnpm build`, and `pnpm build:github-pages` passed.
 
 The next eligible task is M6A / Task 6A.5 — Combat effects and product UI art upgrade. Do not begin it until the next task-runner cycle.
+
+## M6A / Task 6A.5 Closeout — 2026-07-23
+
+- [x] Replaced procedural hit textures with a 5-frame Hit Spark, 4-frame impact dust, and a shared actor ground shadow while preserving accepted hit timing and coordinates.
+- [x] Added original Title/HUD/Pause/Failure/Result frames, mobile joystick/attack art, and the `dragon-pixel` bitmap font in one deep-ink, antique-gold, jade, and red visual language.
+- [x] Runtime assets are manifest-owned; source images, SHA-256 provenance, atlas/font metadata, debug sheets, and `tools/build_effects_ui_art.py` are committed reproducibly.
+- [x] Existing damage, Combo, Hit Stop, flash, shake, knockback, state transitions, safe areas, pointer targets, world coordinates, Camera, Stage, actors, and Audio scope remain unchanged.
+- [x] Production desktop Title/gameplay/Pause, 844×390 landscape, and 390×844 portrait FIT retained one Canvas and zero browser errors.
+- [x] `pnpm test` 81/81, typecheck, lint 0 errors (8 existing warnings), `pnpm build`, and `pnpm build:github-pages` passed.
+
+The next eligible task is M6A / Task 6A.6 — Visual acceptance and asset freeze. Do not begin it until the next task-runner cycle.

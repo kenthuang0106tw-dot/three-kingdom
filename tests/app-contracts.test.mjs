@@ -201,11 +201,71 @@ test("Runtime asset manifest preserves keys and reports missing required assets"
     "stage-forest-entry-background", "stage-forest-entry-ground", "stage-forest-entry-foreground",
     "stage-forest-ambush-background", "stage-forest-ambush-ground", "stage-forest-ambush-foreground",
     "stage-boss-arena-background", "stage-boss-arena-ground", "stage-boss-arena-foreground",
+    "combat-effects",
+    "ui-hud-frame", "ui-modal-frame", "ui-button-frame",
+    "ui-joystick-base", "ui-joystick-knob", "ui-attack-frame",
+    "dragon-pixel",
     "guanyu-v2", "enemy-soldier", "enemy-mauler", "enemy-duelist", "boss-warlord-attacks", "boss-warlord-lifecycle",
   ]);
   const messages = [];
   createAssetFailureReporter(RUNTIME_ASSET_MANIFEST, message => messages.push(message))("guanyu-v2");
   assert.deepEqual(messages, ["Required runtime asset failed to load: guanyu-v2"]);
+});
+
+test("M6A Effects and product UI art use original runtime assets without changing combat contracts", async () => {
+  const [metadata, effectsAtlas, fontXml, effectSource, hudSource, touchSource, playerSource, enemySource, bossSource, toolSource] = await Promise.all([
+    readFile(new URL("../public/art/ui/product-ui.metadata.json", import.meta.url), "utf8").then(JSON.parse),
+    readFile(new URL("../public/art/effects/combat-effects.atlas.json", import.meta.url), "utf8").then(JSON.parse),
+    readFile(new URL("../public/art/ui/dragon-pixel.xml", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/combat/EffectDirector.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/ui/GameHud.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/input/TouchInputController.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/player/PlayerActor.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/EnemyManager.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/boss/BossActor.ts", import.meta.url), "utf8"),
+    readFile(new URL("../tools/build_effects_ui_art.py", import.meta.url), "utf8"),
+  ]);
+  const effectPng = await readFile(new URL("../public/art/effects/combat-effects.png", import.meta.url));
+  const fontPng = await readFile(new URL("../public/art/ui/dragon-pixel.png", import.meta.url));
+
+  assert.equal(metadata.runtimeContractsChanged, false);
+  assert.equal(metadata.effects.sourceSha256.length, 64);
+  assert.equal(metadata.ui.sourceSha256.length, 64);
+  assert.match(metadata.effects.promptId, /^imagegen-/);
+  assert.match(metadata.ui.promptId, /^imagegen-/);
+  assert.deepEqual(metadata.effects.animation, {
+    hitSpark: ["hit-spark-0", "hit-spark-1", "hit-spark-2", "hit-spark-3", "hit-spark-4"],
+    frameRate: 24,
+    repeat: 0,
+  });
+  assert.deepEqual(Object.keys(effectsAtlas.frames), [
+    "hit-spark-0", "hit-spark-1", "hit-spark-2", "hit-spark-3", "hit-spark-4",
+    "dust-0", "dust-1", "dust-2", "dust-3", "actor-shadow",
+  ]);
+  assert.equal(effectPng.readUInt32BE(16), 512);
+  assert.equal(effectPng.readUInt32BE(20), 256);
+  assert.ok(fontPng.readUInt32BE(16) > 0 && fontPng.readUInt32BE(20) > 0);
+  for (const character of ["A", "Z", "0", "9", "/", "-", ":"]) {
+    assert.match(fontXml, new RegExp(`<char id="${character.charCodeAt(0)}"`));
+  }
+  assert.match(effectSource, /key: "combat-effects", frame: `hit-spark-\$\{frame\}`/);
+  assert.match(effectSource, /key: "impact-dust"/);
+  assert.doesNotMatch(effectSource, /generateTexture|new Phaser\.GameObjects\.Graphics/);
+  assert.match(hudSource, /addHudFrame/);
+  assert.match(hudSource, /addUiText/);
+  assert.match(touchSource, /"ui-joystick-base"/);
+  assert.match(touchSource, /"ui-attack-frame"/);
+  assert.match(playerSource, /"combat-effects", "actor-shadow"/);
+  assert.match(enemySource, /"combat-effects", "actor-shadow"/);
+  assert.match(bossSource, /"combat-effects", "actor-shadow"/);
+  assert.match(toolSource, /GLYPHS =/);
+  assert.match(toolSource, /remove_magenta/);
+
+  for (const asset of metadata.ui.assets) {
+    const png = await readFile(new URL(`../public/art/ui/${asset.file}`, import.meta.url));
+    assert.deepEqual([png.readUInt32BE(16), png.readUInt32BE(20)], asset.size);
+    assert.ok(asset.alphaBounds[2] > asset.alphaBounds[0] && asset.alphaBounds[3] > asset.alphaBounds[1]);
+  }
 });
 
 test("Guan Yu v2 atlas preserves frame counts, feet anchor, scale, and source provenance", async () => {

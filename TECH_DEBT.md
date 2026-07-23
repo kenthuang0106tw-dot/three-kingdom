@@ -425,6 +425,17 @@ encounter, or Boss coordinates. The next ordered visual debt is procedural
 combat Effects and prototype product UI in 6A.5; asset-size/load optimization
 remains intentionally deferred to 6A.6/M8 measurement.
 
+### TD-M6A.5 Update — Procedural effects and prototype product UI
+
+M6A / Task 6A.5 resolves the visible mismatch between the accepted cast/Stage
+and procedural Hit Spark, missing ground contact, system-font overlays, and
+prototype mobile controls. Runtime now uses one explicit combat-effects atlas,
+shared actor shadows, original product UI images, and a custom bitmap font.
+Source hashes, extraction rectangles, atlas/font metadata, debug previews, and
+reproducible tooling are recorded. Slash trails, death/environment effects, and
+Audio remain intentionally deferred; 6A.6 only validates and freezes the
+accepted set.
+
 ### TD-H10 — Encounter-clear camera handoff visibly snaps
 
 - **Severity:** High

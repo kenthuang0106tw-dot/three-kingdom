@@ -2,7 +2,8 @@ import type * as Phaser from "phaser";
 
 export type RuntimeAsset =
   | { readonly kind: "image"; readonly key: string; readonly url: string }
-  | { readonly kind: "atlas"; readonly key: string; readonly textureURL: string; readonly atlasURL: string };
+  | { readonly kind: "atlas"; readonly key: string; readonly textureURL: string; readonly atlasURL: string }
+  | { readonly kind: "bitmapFont"; readonly key: string; readonly textureURL: string; readonly dataURL: string };
 
 export function resolveRuntimeAssetUrl(path: string, baseUrl?: string) {
   const documentBase = baseUrl ?? (typeof document === "undefined" ? undefined : document.baseURI);
@@ -22,6 +23,14 @@ export const RUNTIME_ASSET_MANIFEST: readonly RuntimeAsset[] = [
   { kind: "image", key: "stage-boss-arena-background", url: assetUrl("/scene/bamboo-stage/bamboo-boss-arena-background.png") },
   { kind: "image", key: "stage-boss-arena-ground", url: assetUrl("/scene/bamboo-stage/bamboo-boss-arena-ground.png") },
   { kind: "image", key: "stage-boss-arena-foreground", url: assetUrl("/scene/bamboo-stage/bamboo-boss-arena-foreground.png") },
+  { kind: "atlas", key: "combat-effects", textureURL: assetUrl("/art/effects/combat-effects.png"), atlasURL: assetUrl("/art/effects/combat-effects.atlas.json") },
+  { kind: "image", key: "ui-hud-frame", url: assetUrl("/art/ui/ui-hud-frame.png") },
+  { kind: "image", key: "ui-modal-frame", url: assetUrl("/art/ui/ui-modal-frame.png") },
+  { kind: "image", key: "ui-button-frame", url: assetUrl("/art/ui/ui-button-frame.png") },
+  { kind: "image", key: "ui-joystick-base", url: assetUrl("/art/ui/ui-joystick-base.png") },
+  { kind: "image", key: "ui-joystick-knob", url: assetUrl("/art/ui/ui-joystick-knob.png") },
+  { kind: "image", key: "ui-attack-frame", url: assetUrl("/art/ui/ui-attack-frame.png") },
+  { kind: "bitmapFont", key: "dragon-pixel", textureURL: assetUrl("/art/ui/dragon-pixel.png"), dataURL: assetUrl("/art/ui/dragon-pixel.xml") },
   { kind: "atlas", key: "guanyu-v2", textureURL: assetUrl("/art/guanyu/guanyu-v2.png"), atlasURL: assetUrl("/art/guanyu/guanyu-v2.atlas.json") },
   { kind: "atlas", key: "enemy-soldier", textureURL: assetUrl("/art/enemy/enemy-soldier.png"), atlasURL: assetUrl("/art/enemy/enemy-soldier.atlas.json") },
   { kind: "atlas", key: "enemy-mauler", textureURL: assetUrl("/art/enemy/mauler.png"), atlasURL: assetUrl("/art/enemy/mauler.atlas.json") },
@@ -33,7 +42,8 @@ export const RUNTIME_ASSET_MANIFEST: readonly RuntimeAsset[] = [
 export function queueRuntimeAssets(loader: Phaser.Loader.LoaderPlugin, manifest = RUNTIME_ASSET_MANIFEST) {
   for (const asset of manifest) {
     if (asset.kind === "image") loader.image(asset.key, asset.url);
-    else loader.atlas(asset.key, asset.textureURL, asset.atlasURL);
+    else if (asset.kind === "atlas") loader.atlas(asset.key, asset.textureURL, asset.atlasURL);
+    else loader.bitmapFont(asset.key, asset.textureURL, asset.dataURL);
   }
 }
 

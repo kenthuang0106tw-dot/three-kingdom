@@ -1023,3 +1023,22 @@
 | Quality gates | Pass | typecheck; lint 0 errors/8 existing warnings; production build; GitHub Pages build |
 | Scope | Pass | No actor, animation, combat, AI, balance, Effects, UI, Audio, encounter, or camera behavior changed |
 | Next task | Selected | M6A / Task 6A.5 — Combat effects and product UI art upgrade |
+
+## M6A / Task 6A.5 Acceptance — 2026-07-23
+
+| Check | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M6A / Task 6A.5 — Combat effects and product UI art upgrade |
+| Effects | Pass | 5-frame Hit Spark, 4-frame impact dust, and actor shadow use an explicit atlas; no procedural Graphics texture generation remains |
+| Product UI | Pass | Title, HUD, Pause, Failure, Result, buttons, joystick, knob, and attack control share one original visual language |
+| Font | Pass | `dragon-pixel` bitmap font covers required uppercase, numeric, punctuation, and product-flow strings |
+| Gameplay freeze | Pass | Damage, Combo, Hit Stop, flash, shake, knockback, active frames, body/hitbox, camera, world coordinates, and flow unchanged |
+| Asset pipeline | Pass | Two preserved sources, SHA-256 provenance, extraction metadata, atlas/font metadata, debug previews, and reproducible tool |
+| Desktop runtime | Pass | Production Title, gameplay, and Pause/resume rendered with one Canvas and zero browser errors |
+| Landscape runtime | Pass | 844×390 FIT retained readable HUD, gameplay, joystick, attack, and Pause controls |
+| Portrait runtime | Pass | 390×844 FIT retained centered 16:9 Canvas, safe controls, and no clipping |
+| Flow contracts | Pass | Existing automated contracts cover Title/start, Failure/retry, Result/replay, hit-once behavior, and listener/object cleanup |
+| Automated checks | Pass | 81/81 tests including manifest, atlas order, dimensions, font glyphs, shadows, and no procedural effect textures |
+| Quality gates | Pass | typecheck; lint 0 errors/8 existing warnings; production build; GitHub Pages build |
+| Scope | Pass | No actors, Stage, AI, balance, Audio, encounter, camera, damage, timing, or gameplay behavior changed |
+| Next task | Selected | M6A / Task 6A.6 — Visual acceptance and asset freeze |

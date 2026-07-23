@@ -1,5 +1,6 @@
 import * as Phaser from "phaser";
 import { ResultReplayGate, type ResultReplaySource } from "../flow/ResultReplayGate";
+import { addModalFrame, addUiText, UI_COLORS } from "./UiArt";
 
 export type { ResultReplaySource } from "../flow/ResultReplayGate";
 
@@ -26,17 +27,11 @@ export class ResultController {
     this.shade = scene.add.rectangle(640, 360, 1280, 720, 0x07120d, 0.82)
       .setScrollFactor(0)
       .setInteractive({ useHandCursor: false });
-    const title = scene.add.text(640, 302, "VICTORY", {
-      fontFamily: "Georgia, serif", fontSize: "58px", color: "#f6d56b",
-      stroke: "#5b170d", strokeThickness: 7,
-    }).setOrigin(0.5).setScrollFactor(0);
-    const subtitle = scene.add.text(640, 375, "STAGE CLEARED", {
-      fontFamily: "Consolas, monospace", fontSize: "28px", color: "#ffffff",
-    }).setOrigin(0.5).setScrollFactor(0);
-    const prompt = scene.add.text(640, 430, "PRESS ANY KEY / TAP TO REPLAY", {
-      fontFamily: "Consolas, monospace", fontSize: "22px", color: "#ffffff",
-    }).setOrigin(0.5).setScrollFactor(0);
-    this.overlay = scene.add.container(0, 0, [this.shade, title, subtitle, prompt])
+    const modal = addModalFrame(scene, 640, 360);
+    const title = addUiText(scene, 640, 280, "VICTORY", 52, UI_COLORS.antiqueGold).setOrigin(0.5).setScrollFactor(0);
+    const subtitle = addUiText(scene, 640, 375, "STAGE CLEARED", 28).setOrigin(0.5).setScrollFactor(0);
+    const prompt = addUiText(scene, 640, 435, "PRESS ANY KEY / TAP TO REPLAY", 21).setOrigin(0.5).setScrollFactor(0);
+    this.overlay = scene.add.container(0, 0, [this.shade, modal, title, subtitle, prompt])
       .setScrollFactor(0)
       .setDepth(RESULT_DEPTH)
       .setVisible(false);

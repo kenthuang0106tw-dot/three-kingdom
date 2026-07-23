@@ -28,6 +28,11 @@ test("production server returns HTML, generated assets, atlases and sprites", as
     "/scene/bamboo-stage/bamboo-forest-entry-background.png",
     "/scene/bamboo-stage/bamboo-forest-ambush-ground.png",
     "/scene/bamboo-stage/bamboo-boss-arena-foreground.png",
+    "/art/effects/combat-effects.png",
+    "/art/effects/combat-effects.atlas.json",
+    "/art/ui/ui-modal-frame.png",
+    "/art/ui/dragon-pixel.png",
+    "/art/ui/dragon-pixel.xml",
   ]) {
     assert.equal((await fetch(`${origin}${route}`)).status, 200, route);
   }

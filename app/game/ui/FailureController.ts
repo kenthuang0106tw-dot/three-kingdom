@@ -1,5 +1,6 @@
 import * as Phaser from "phaser";
 import { FailureRestartGate, type FailureRestartSource } from "../flow/FailureRestartGate";
+import { addModalFrame, addUiText, UI_COLORS } from "./UiArt";
 
 export type { FailureRestartSource } from "../flow/FailureRestartGate";
 
@@ -26,14 +27,10 @@ export class FailureController {
     this.shade = scene.add.rectangle(640, 360, 1280, 720, 0x120707, 0.82)
       .setScrollFactor(0)
       .setInteractive({ useHandCursor: false });
-    const title = scene.add.text(640, 328, "DEFEATED", {
-      fontFamily: "Georgia, serif", fontSize: "58px", color: "#f0d5c2",
-      stroke: "#5b170d", strokeThickness: 7,
-    }).setOrigin(0.5).setScrollFactor(0);
-    const prompt = scene.add.text(640, 408, "PRESS ANY KEY / TAP TO RETRY", {
-      fontFamily: "Consolas, monospace", fontSize: "24px", color: "#ffffff",
-    }).setOrigin(0.5).setScrollFactor(0);
-    this.overlay = scene.add.container(0, 0, [this.shade, title, prompt])
+    const modal = addModalFrame(scene, 640, 360);
+    const title = addUiText(scene, 640, 300, "DEFEATED", 52, UI_COLORS.signalRed).setOrigin(0.5).setScrollFactor(0);
+    const prompt = addUiText(scene, 640, 408, "PRESS ANY KEY / TAP TO RETRY", 23).setOrigin(0.5).setScrollFactor(0);
+    this.overlay = scene.add.container(0, 0, [this.shade, modal, title, prompt])
       .setScrollFactor(0)
       .setDepth(FAILURE_DEPTH)
       .setVisible(false);

@@ -766,6 +766,26 @@ and the explicit `gameplayCoordinatesChanged: false` decision. Foreground
 occlusion is decorative and must stay below HUD/mobile controls and outside the
 central combat-readability band.
 
+## Effects and Product UI Visual Contract (M6A / Task 6A.5)
+
+`AssetManifest` is the sole preload boundary for the combat-effects atlas,
+product UI images, and `dragon-pixel` bitmap font. `EffectDirector` owns effect
+presentation and animation creation, but accepted damage, Hit Stop, flash,
+shake, knockback, Combo, and camera contracts remain outside the art pipeline.
+Player, Enemy, and Boss actors own only the lifecycle and feet-position sync of
+their ground-shadow image; shadow pixels never define physics or depth.
+
+`UiArt.ts` is a presentation helper for bitmap text and reusable nine-slice
+frames. Title, HUD, Pause, Failure, Result, and touch controllers retain their
+existing state, input, safe-area, and listener ownership. React still owns only
+the outer cabinet and Phaser mount lifecycle. Product UI must never mutate actor
+state or derive gameplay rules from image dimensions.
+
+`tools/build_effects_ui_art.py` converts preserved imagegen sources into
+runtime PNG/atlas/font assets, records hashes and extraction rectangles, and
+generates visual QA sheets. Runtime coordinates and timing are explicitly
+frozen; M6A.6 may measure and document the accepted set but must not redesign it.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。
