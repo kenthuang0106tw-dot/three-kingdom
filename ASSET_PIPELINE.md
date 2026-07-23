@@ -44,6 +44,22 @@ M6A.2 runtime contract：idle 6、walk 8、attack1 5、attack2 6、attack3 8、h
 
 Vertical Slice 不接入兩名角色，維持 Backlog P2。
 
+### Stage — Three-screen bamboo world
+
+| Section | Runtime Layers | Landmark |
+|---|---|---|
+| Forest Entry | background / ground / foreground | trail marker、stone edging、lantern |
+| Forest Ambush | background / ground / foreground | dense bamboo、fallen trunk、wood barricade |
+| Boss Arena | background / ground / foreground | fortified gate、plain command flags、open arena |
+
+M6A.4 runtime contract：三段各 1280×720，世界仍為 3840×720；每段固定
+background depth `-1000`、ground depth `-900`、foreground depth `640`。
+`public/scene/bamboo-stage/bamboo-stage.metadata.json` 記錄 source hash、prompt
+ID、96-color shared palette、64px seam transition、alpha bounds 與 world
+geometry freeze。`tools/build_bamboo_stage_art.py` 可重建 9 張 runtime layers、
+3840px/25% overview、seam debug 與 depth debug；保留的 source 位於
+`public/scene/source/`。M6A.4 未改碰撞、相機、trigger、spawn、Boss 或玩家座標。
+
 ### Enemy — Blue/White Soldier
 
 | Item | Value |
@@ -233,7 +249,7 @@ Metadata 最少欄位：
 - **M6A.1 (Completed):** Visual target、比例、色盤、光源、pixel density、UI language 與 15 張 before baseline 已保存。
 - **M6A.2 (Completed):** Guan Yu 43-frame source/runtime atlas、metadata/provenance、legacy audit、debug/onion/silhouette QA 與 reproducible component-isolation pipeline 已接入。
 - **M6A.3 (Completed):** 69 個 Enemy/Boss frames 的比例、面向、feet、atlas、provenance、onion/silhouette 與三 viewport runtime matrix 已驗收。
-- **M6A.4:** 三個可辨識竹林 section、前景遮擋、地面層、Boss arena 與無接縫 layer assets。
+- **M6A.4 (Completed):** 三個可辨識竹林 section、9 張 background/ground/foreground runtime layers、Boss arena、provenance、overview/seam/depth QA 與 reproducible pipeline 已驗收。
 - **M6A.5:** 正式 Hit Spark/impact/dust/shadow、Title/HUD/Pause/Failure/Result、custom pixel font 與 mobile control assets。
 - **M6A.6:** 三 viewport before/after captures、完整 asset provenance、atlas/load baseline 與 visual freeze record。
 - **M7:** Combat SFX、BGM。

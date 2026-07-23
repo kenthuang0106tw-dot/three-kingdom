@@ -750,6 +750,22 @@ Mauler 239.8px, and Boss 300.99px against Guan Yu 230.4px. Soldier/Boss source
 art faces left; Mauler/Duelist faces right. `enemySpriteShouldFlip` and the Boss
 source-facing rule remain the only runtime mirroring boundaries.
 
+## Stage Visual Contract (M6A / Task 6A.4)
+
+`StageConfig` remains the gameplay geometry owner and now declares three
+ordered visual layers for each immutable 1280×720 section. Background, ground,
+and foreground use depths `-1000`, `-900`, and `640`; texture keys are unique,
+validated, and loaded only through `AssetManifest`. `MainScene` composes these
+declarations into image objects but does not derive collision, camera locks,
+encounter triggers, spawns, or Boss coordinates from image pixels.
+
+The three sections still form one 3840×720 world. Visual generation and seam
+normalization belong to `tools/build_bamboo_stage_art.py`, not runtime code.
+Metadata records source hashes, prompt IDs, palette, seam width, alpha bounds,
+and the explicit `gameplayCoordinatesChanged: false` decision. Foreground
+occlusion is decorative and must stay below HUD/mobile controls and outside the
+central combat-readability band.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

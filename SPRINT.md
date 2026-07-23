@@ -2,7 +2,7 @@
 
 ## Sprint Goal
 
-M6A.1 已鎖定視覺目標與 before baseline；M6A.2 已完成 Guan Yu；M6A.3 已完成三種小兵與 Boss 的比例、feet、facing 與 QA contract。下一步只執行 M6A.4 Three-screen bamboo stage upgrade，不同時改角色、Effects、UI 或 Audio。
+M6A.1–M6A.4 已完成視覺目標、Guan Yu、Enemy/Boss 與三畫面竹林 Stage。下一步只執行 M6A.5 Combat effects and product UI art upgrade，不同時改角色、Stage、Audio 或 gameplay contracts。
 
 Roadmap decision（2026-07-18）：6A.3 必須以 6A.2 已接受的 Guan Yu 比例、palette、feet anchor、capture 與 provenance contract 對齊；不可重新解釋 Art Bible 或更改 gameplay timing。
 
@@ -11,7 +11,7 @@ Roadmap decision（2026-07-18）：6A.3 必須以 6A.2 已接受的 Guan Yu 比�
 - Duration：2 weeks
 - Capacity：1 developer + AI，約 40–55 hours
 - Milestone：M6A — Visual Upgrade
-- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M6A / 6A.4 Three-screen bamboo stage upgrade
+- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M6A / 6A.5 Combat effects and product UI art upgrade
 
 ## Task List
 
@@ -33,7 +33,8 @@ Roadmap decision（2026-07-18）：6A.3 必須以 6A.2 已接受的 Guan Yu 比�
 | 14 | ✅ M6A / Task 6A.1 — Visual target、Art Bible 與 before/after baseline | 10–16h | 可執行的美術規格與 15 張 before captures | document/visual acceptance passed；production art unchanged |
 | 15 | ✅ M6A / Task 6A.2 — Guan Yu animation quality upgrade | 24–40h | 統一 identity/scale/feet anchor 的 43-frame 主角動畫 | 78 tests + metadata/debug/onion/three-viewport/build acceptance passed |
 | 16 | ✅ M6A / Task 6A.3 — Enemy and Boss visual consistency | 32–48h | 三小兵與 Boss 對齊主角視覺契約 | 79 tests + metadata/lineup/onion/three-viewport acceptance passed |
-| 17 | M6A / Task 6A.4 — Three-screen bamboo stage upgrade | 32–48h | 三段可辨識、無接縫的竹林與 Boss arena | layer/section/depth/three-viewport acceptance |
+| 17 | ✅ M6A / Task 6A.4 — Three-screen bamboo stage upgrade | 32–48h | 三段可辨識、無接縫的竹林與 Boss arena | 80 tests + layer/section/depth/three-viewport acceptance passed |
+| 18 | M6A / Task 6A.5 — Combat effects and product UI art upgrade | 32–48h | 同風格 Spark/impact/dust/shadow 與產品 UI/font | readability/state/three-viewport acceptance |
 
 ## Recovery Planning Correction — 2026-07-14
 
@@ -673,3 +674,14 @@ The next eligible task is M6A / Task 6A.3 — Enemy and Boss visual consistency.
 - [x] `pnpm test` 79/79, typecheck, lint 0 errors (8 existing warnings), `pnpm build`, and `pnpm build:github-pages` passed.
 
 The next eligible task is M6A / Task 6A.4 — Three-screen bamboo stage upgrade. Do not begin it until the next task-runner cycle.
+
+## M6A / Task 6A.4 Closeout — 2026-07-23
+
+- [x] Replaced the repeated prototype background with Forest Entry, Forest Ambush, and Boss Arena sections.
+- [x] Added nine explicit 1280×720 runtime layers: background `-1000`, ground `-900`, and foreground `640` for each section.
+- [x] Preserved the 3840×720 world, walk bounds, spawns, encounter triggers, camera locks, Boss coordinates, physics, combat, UI, and Audio scope.
+- [x] Added source provenance, prompt IDs, shared 96-color palette processing, 64px seam normalization, metadata, 3840px/25% overview, seam QA, depth QA, and reproducible tooling.
+- [x] Production runtime, desktop, 844×390 landscape, and 390×844 portrait retained aspect ratio and readable combat ground.
+- [x] `pnpm test` 80/80, typecheck, lint 0 errors (8 existing warnings), `pnpm build`, and `pnpm build:github-pages` passed.
+
+The next eligible task is M6A / Task 6A.5 — Combat effects and product UI art upgrade. Do not begin it until the next task-runner cycle.

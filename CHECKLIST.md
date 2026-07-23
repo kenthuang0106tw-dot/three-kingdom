@@ -1005,3 +1005,21 @@
 | Automated checks | Pass | 79/79 tests, typecheck, lint 0 errors (8 existing warnings), both production builds |
 | Scope | Pass | No Guan Yu, Stage, Effects, UI, Audio, content, balance, AI, or camera changes |
 | Next task | Selected | M6A / Task 6A.4 — Three-screen bamboo stage upgrade |
+
+## M6A / Task 6A.4 Acceptance — 2026-07-23
+
+| Check | Result | Evidence |
+|---|---|---|
+| Task ID | Pass | M6A / Task 6A.4 — Three-screen bamboo stage upgrade |
+| Section identity | Pass | Forest Entry, Forest Ambush, and Boss Arena have distinct landmarks and silhouettes |
+| Runtime layers | Pass | Nine 1280×720 PNGs; each section declares background `-1000`, ground `-900`, foreground `640` |
+| World freeze | Pass | 3840×720 world, walk bounds, spawn, encounter, camera-lock, Boss, physics, and combat coordinates unchanged |
+| Seam/readability QA | Pass | 3840px overview, 25% overview, 64px seam debug, depth debug, shared 96-color palette, clear central feet plane |
+| Provenance | Pass | Three preserved 1672×941 sources, source SHA-256, imagegen prompt IDs, prompt summary, processing tool, reviewer acceptance |
+| Desktop runtime | Pass | Production 1280×720 presentation rendered the layered Forest Entry with one undistorted Canvas |
+| Landscape runtime | Pass | 844×390 FIT retained readable ground, controls, frame, and one Canvas |
+| Portrait runtime | Pass | 390×844 FIT retained centered 16:9 Canvas, readable ground, controls, and frame |
+| Automated checks | Pass | 80/80 tests; metadata, dimensions, layer kinds/depths, manifest, geometry freeze, and tooling asserted |
+| Quality gates | Pass | typecheck; lint 0 errors/8 existing warnings; production build; GitHub Pages build |
+| Scope | Pass | No actor, animation, combat, AI, balance, Effects, UI, Audio, encounter, or camera behavior changed |
+| Next task | Selected | M6A / Task 6A.5 — Combat effects and product UI art upgrade |

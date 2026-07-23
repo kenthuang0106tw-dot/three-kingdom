@@ -360,15 +360,13 @@ export default class MainScene extends Phaser.Scene {
       BAMBOO_COMBAT_ROOM.walkBounds.height,
     );
     for (const section of BAMBOO_COMBAT_ROOM.backgroundSections) {
-      const background = this.add.image(
-        section.bounds.x + section.bounds.width / 2,
-        section.bounds.y + section.bounds.height / 2,
-        section.textureKey,
-      );
-      background.setScale(Math.max(
-        section.bounds.width / background.width,
-        section.bounds.height / background.height,
-      )).setDepth(0);
+      for (const layer of section.layers) {
+        this.add.image(
+          section.bounds.x + section.bounds.width / 2,
+          section.bounds.y + section.bounds.height / 2,
+          layer.textureKey,
+        ).setDisplaySize(section.bounds.width, section.bounds.height).setDepth(layer.depth);
+      }
     }
 
     this.playerActor = new PlayerActor(this, START_X, START_FOOT_Y);
@@ -410,6 +408,7 @@ export default class MainScene extends Phaser.Scene {
       this.debugText = this.add.text(12, 90, "", { fontFamily: "Consolas, monospace", fontSize: "15px", color: "#fff", backgroundColor: "rgba(0,0,0,.78)", padding: { x: 8, y: 7 } }).setScrollFactor(0).setDepth(22000);
       this.game.canvas.dataset.stageWorldWidth = String(BAMBOO_COMBAT_ROOM.worldBounds.width);
       this.game.canvas.dataset.stageSectionCount = String(BAMBOO_COMBAT_ROOM.backgroundSections.length);
+      this.game.canvas.dataset.stageLayerCount = String(BAMBOO_COMBAT_ROOM.backgroundSections.flatMap(section => section.layers).length);
     }
     this.hud = new GameHud(this, this.gameplayEvents, development);
     this.pauseController = new PauseController(this);

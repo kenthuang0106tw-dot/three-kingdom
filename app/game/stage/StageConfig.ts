@@ -31,8 +31,14 @@ export type StageExit = {
 
 export type StageBackgroundSection = {
   readonly id: string;
-  readonly textureKey: string;
   readonly bounds: StageRect;
+  readonly layers: readonly StageVisualLayer[];
+};
+
+export type StageVisualLayer = {
+  readonly kind: "background" | "ground" | "foreground";
+  readonly textureKey: string;
+  readonly depth: number;
 };
 
 export type StageConfig = {
@@ -90,10 +96,11 @@ export function validateStageConfig(config: StageConfig): StageConfig {
   ) throw new Error("Walk bounds must be inside world bounds");
 
   const backgroundIds = new Set<string>();
+  const layerTextureKeys = new Set<string>();
   const backgroundSections = [...config.backgroundSections].sort((left, right) => left.bounds.x - right.bounds.x);
   let expectedSectionX = config.worldBounds.x;
   for (const section of backgroundSections) {
-    if (!section.id || !section.textureKey || backgroundIds.has(section.id)) throw new Error(`Invalid background section: ${section.id}`);
+    if (!section.id || backgroundIds.has(section.id)) throw new Error(`Invalid background section: ${section.id}`);
     backgroundIds.add(section.id);
     assertRect(`background ${section.id}`, section.bounds);
     if (
@@ -101,6 +108,19 @@ export function validateStageConfig(config: StageConfig): StageConfig {
       section.bounds.y !== config.worldBounds.y ||
       section.bounds.height !== config.worldBounds.height
     ) throw new Error("Background sections must cover world bounds without gaps");
+    if (section.layers.length !== 3) throw new Error(`Stage section must define three visual layers: ${section.id}`);
+    const kinds = new Set(section.layers.map(layer => layer.kind));
+    if (kinds.size !== 3 || !["background", "ground", "foreground"].every(kind => kinds.has(kind as StageVisualLayer["kind"]))) {
+      throw new Error(`Stage section has invalid visual layer kinds: ${section.id}`);
+    }
+    const depths = section.layers.map(layer => layer.depth);
+    if (!depths.every(isFiniteNumber) || !(depths[0] < depths[1] && depths[1] < depths[2])) {
+      throw new Error(`Stage section visual depths must be ordered: ${section.id}`);
+    }
+    for (const layer of section.layers) {
+      if (!layer.textureKey || layerTextureKeys.has(layer.textureKey)) throw new Error(`Duplicate stage texture key: ${layer.textureKey}`);
+      layerTextureKeys.add(layer.textureKey);
+    }
     expectedSectionX += section.bounds.width;
   }
   if (expectedSectionX !== config.worldBounds.x + config.worldBounds.width) {
@@ -143,9 +163,33 @@ export const BAMBOO_COMBAT_ROOM: StageConfig = validateStageConfig({
   worldBounds: { x: 0, y: 0, width: 3840, height: 720 },
   walkBounds: { x: 70, y: 390, width: 3700, height: 245 },
   backgroundSections: [
-    { id: "bamboo-section-1", textureKey: "forest", bounds: { x: 0, y: 0, width: 1280, height: 720 } },
-    { id: "bamboo-section-2", textureKey: "forest", bounds: { x: 1280, y: 0, width: 1280, height: 720 } },
-    { id: "bamboo-section-3", textureKey: "forest", bounds: { x: 2560, y: 0, width: 1280, height: 720 } },
+    {
+      id: "forest-entry",
+      bounds: { x: 0, y: 0, width: 1280, height: 720 },
+      layers: [
+        { kind: "background", textureKey: "stage-forest-entry-background", depth: -1000 },
+        { kind: "ground", textureKey: "stage-forest-entry-ground", depth: -900 },
+        { kind: "foreground", textureKey: "stage-forest-entry-foreground", depth: 640 },
+      ],
+    },
+    {
+      id: "forest-ambush",
+      bounds: { x: 1280, y: 0, width: 1280, height: 720 },
+      layers: [
+        { kind: "background", textureKey: "stage-forest-ambush-background", depth: -1000 },
+        { kind: "ground", textureKey: "stage-forest-ambush-ground", depth: -900 },
+        { kind: "foreground", textureKey: "stage-forest-ambush-foreground", depth: 640 },
+      ],
+    },
+    {
+      id: "boss-arena",
+      bounds: { x: 2560, y: 0, width: 1280, height: 720 },
+      layers: [
+        { kind: "background", textureKey: "stage-boss-arena-background", depth: -1000 },
+        { kind: "ground", textureKey: "stage-boss-arena-ground", depth: -900 },
+        { kind: "foreground", textureKey: "stage-boss-arena-foreground", depth: 640 },
+      ],
+    },
   ],
   playerSpawn: { id: "player-start", x: 180, y: 602 },
   spawnPoints: [

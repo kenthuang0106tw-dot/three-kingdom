@@ -198,7 +198,10 @@ test("Runtime asset manifest preserves keys and reports missing required assets"
   assert.match(source, /load\.on\("loaderror"/);
   assert.match(source, /load\.off\("loaderror"/);
   assert.deepEqual(RUNTIME_ASSET_MANIFEST.map(asset => asset.key), [
-    "forest", "guanyu-v2", "enemy-soldier", "enemy-mauler", "enemy-duelist", "boss-warlord-attacks", "boss-warlord-lifecycle",
+    "stage-forest-entry-background", "stage-forest-entry-ground", "stage-forest-entry-foreground",
+    "stage-forest-ambush-background", "stage-forest-ambush-ground", "stage-forest-ambush-foreground",
+    "stage-boss-arena-background", "stage-boss-arena-ground", "stage-boss-arena-foreground",
+    "guanyu-v2", "enemy-soldier", "enemy-mauler", "enemy-duelist", "boss-warlord-attacks", "boss-warlord-lifecycle",
   ]);
   const messages = [];
   createAssetFailureReporter(RUNTIME_ASSET_MANIFEST, message => messages.push(message))("guanyu-v2");
@@ -235,10 +238,10 @@ test("Guan Yu v2 atlas preserves frame counts, feet anchor, scale, and source pr
 });
 
 test("Runtime asset URLs support the GitHub Pages repository base path", () => {
-  assert.equal(resolveRuntimeAssetUrl("/scene/forest-camp.png"), "/scene/forest-camp.png");
+  assert.equal(resolveRuntimeAssetUrl("/scene/bamboo-stage/bamboo-forest-entry-background.png"), "/scene/bamboo-stage/bamboo-forest-entry-background.png");
   assert.equal(
-    resolveRuntimeAssetUrl("/scene/forest-camp.png", "https://example.github.io/three-kingdom/"),
-    "/three-kingdom/scene/forest-camp.png",
+    resolveRuntimeAssetUrl("/scene/bamboo-stage/bamboo-forest-entry-background.png", "https://example.github.io/three-kingdom/"),
+    "/three-kingdom/scene/bamboo-stage/bamboo-forest-entry-background.png",
   );
 });
 
@@ -789,8 +792,70 @@ test("StageConfig remains Phaser-free and validates the bamboo combat room", asy
   }), /Background sections must cover world bounds without gaps/);
   assert.throws(() => validateStageConfig({
     ...BAMBOO_COMBAT_ROOM,
+    backgroundSections: BAMBOO_COMBAT_ROOM.backgroundSections.map((section, index) => index === 0
+      ? { ...section, layers: section.layers.slice(1) }
+      : section),
+  }), /three visual layers/);
+  assert.throws(() => validateStageConfig({
+    ...BAMBOO_COMBAT_ROOM,
     encounters: [...BAMBOO_COMBAT_ROOM.encounters].reverse(),
   }), /Encounter triggers must be ordered inside walk bounds/);
+});
+
+test("M6A bamboo stage art defines three distinct layered sections without changing gameplay coordinates", async () => {
+  const [metadata, sceneSource, toolSource] = await Promise.all([
+    readFile(new URL("../public/scene/bamboo-stage/bamboo-stage.metadata.json", import.meta.url), "utf8").then(JSON.parse),
+    readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8"),
+    readFile(new URL("../tools/build_bamboo_stage_art.py", import.meta.url), "utf8"),
+  ]);
+  const sections = BAMBOO_COMBAT_ROOM.backgroundSections;
+  const expectedKinds = ["background", "ground", "foreground"];
+  const expectedDepths = [-1000, -900, 640];
+
+  assert.deepEqual(sections.map(section => section.id), ["forest-entry", "forest-ambush", "boss-arena"]);
+  assert.ok(sections.every(section => section.layers.map(layer => layer.kind).join(",") === expectedKinds.join(",")));
+  assert.ok(sections.every(section => JSON.stringify(section.layers.map(layer => layer.depth)) === JSON.stringify(expectedDepths)));
+  assert.equal(new Set(sections.flatMap(section => section.layers.map(layer => layer.textureKey))).size, 9);
+  assert.deepEqual(metadata.runtime, {
+    worldWidth: 3840,
+    worldHeight: 720,
+    sectionWidth: 1280,
+    sectionHeight: 720,
+    groundY: 390,
+    sharedPaletteColors: 96,
+    seamTransitionWidth: 64,
+    depths: { background: -1000, ground: -900, foreground: 640 },
+    gameplayCoordinatesChanged: false,
+  });
+  assert.deepEqual(metadata.sections.map(section => section.id), sections.map(section => section.id));
+  assert.equal(new Set(metadata.sections.map(section => section.landmark)).size, 3);
+  assert.ok(metadata.sections.every(section => section.sourceSha256.length === 64 && section.promptId.startsWith("imagegen-exec-")));
+  assert.match(sceneSource, /for \(const layer of section\.layers\)/);
+  assert.match(sceneSource, /setDisplaySize\(section\.bounds\.width, section\.bounds\.height\)\.setDepth\(layer\.depth\)/);
+  assert.match(toolSource, /normalize_seam/);
+  assert.match(toolSource, /build_shared_palette/);
+
+  for (const section of metadata.sections) {
+    for (const layer of section.layers) {
+      const png = await readFile(new URL(`../public/scene/bamboo-stage/${layer.file}`, import.meta.url));
+      assert.equal(png.readUInt32BE(16), 1280);
+      assert.equal(png.readUInt32BE(20), 720);
+      assert.equal(layer.textureKey, sections.find(item => item.id === section.id).layers.find(item => item.kind === layer.kind).textureKey);
+    }
+  }
+  const overview = await readFile(new URL("../public/scene/bamboo-stage/bamboo-stage-overview.png", import.meta.url));
+  const overview25 = await readFile(new URL("../public/scene/bamboo-stage/bamboo-stage-overview-25.png", import.meta.url));
+  assert.equal(overview.readUInt32BE(16), 3840);
+  assert.equal(overview.readUInt32BE(20), 720);
+  assert.equal(overview25.readUInt32BE(16), 960);
+  assert.equal(overview25.readUInt32BE(20), 180);
+
+  assert.deepEqual(BAMBOO_COMBAT_ROOM.worldBounds, { x: 0, y: 0, width: 3840, height: 720 });
+  assert.deepEqual(BAMBOO_COMBAT_ROOM.walkBounds, { x: 70, y: 390, width: 3700, height: 245 });
+  assert.deepEqual(BAMBOO_COMBAT_ROOM.encounters.map(encounter => encounter.trigger.x), [900, 2000]);
+  assert.deepEqual(BAMBOO_COMBAT_ROOM.spawnPoints.map(point => [point.x, point.y]), [[1300, 560], [2320, 455], [2420, 625]]);
+  assert.deepEqual(BAMBOO_BOSS_ARENA.entryTrigger, { x: 2630, y: 390, width: 120, height: 245 });
+  assert.deepEqual(BAMBOO_BOSS_ARENA.spawn, { x: 3420, y: 560 });
 });
 
 test("Stage bounds clamp movement and knockback deterministically", async () => {

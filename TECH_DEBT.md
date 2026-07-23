@@ -414,8 +414,16 @@ while each actor uses exactly one Art-Bible-derived display scale. Boss attack
 and lifecycle sets share scale `1.27` and `(224,420)` feet. Source-facing,
 active frame index, timing, body, hitbox, AI, balance, and camera remain frozen.
 The reproducible pipeline now emits processed sources, atlas metadata,
-provenance, red-box/feet-line, onion, silhouette, and shared lineup QA. The next
-ordered visual debt is the repeated three-section Stage art in 6A.4.
+provenance, red-box/feet-line, onion, silhouette, and shared lineup QA.
+
+M6A / Task 6A.4 resolves the repeated three-section prototype Stage art. Forest
+Entry, Forest Ambush, and Boss Arena now use nine explicit layers with frozen
+world geometry, shared palette processing, normalized seams, source provenance,
+and reproducible overview/seam/depth QA. Runtime review accepted desktop,
+844×390 landscape, and 390×844 portrait without changing collision, camera,
+encounter, or Boss coordinates. The next ordered visual debt is procedural
+combat Effects and prototype product UI in 6A.5; asset-size/load optimization
+remains intentionally deferred to 6A.6/M8 measurement.
 
 ### TD-H10 — Encounter-clear camera handoff visibly snaps
 

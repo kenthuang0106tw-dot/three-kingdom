@@ -131,8 +131,8 @@ tools/build_enemy_art.py     Enemy sheet/atlas rebuild pipeline
 
 M6 已完成：Title、HUD、Pause、Failure/retry、Result/replay 與 mobile controls 均由 Phaser 擁有，desktop、844×390 橫向觸控、390×844 直向 FIT 及 production 驗收通過。
 
-M6A.1 已鎖定 [ART_BIBLE.md](ART_BIBLE.md) 與 15 張 reproducible before baselines；M6A.2 已接入關羽 43-frame 動畫；M6A.3 已統一 Soldier、Mauler、Duelist 與 Boss 的顯示比例、feet anchor、facing、atlas metadata 與 QA pipeline。
+M6A.1 已鎖定 [ART_BIBLE.md](ART_BIBLE.md) 與 15 張 reproducible before baselines；M6A.2 已接入關羽 43-frame 動畫；M6A.3 已統一 Soldier、Mauler、Duelist 與 Boss 的視覺契約；M6A.4 已接入 Forest Entry、Forest Ambush、Boss Arena 共 9 張分層 Stage assets 與 seam/depth QA pipeline。
 
-The next single task is M6A / Task 6A.4: replace the repeated prototype background with three readable, seamless bamboo-stage sections and a coherent Boss arena.
+The next single task is M6A / Task 6A.5: upgrade combat effects and product UI art against the accepted cast and three-screen Stage.
 
-下一個 Task 只處理三畫面竹林 Stage 的背景／前景層、landmark、地面與 Boss arena；角色、Effects、UI、Audio、碰撞與關卡流程不變。
+下一個 Task 只處理 Hit Spark／impact／dust／shadow 與 Title／HUD／Pause／Failure／Result／pixel font 美術；角色、Stage、Audio、傷害、流程與座標不變。

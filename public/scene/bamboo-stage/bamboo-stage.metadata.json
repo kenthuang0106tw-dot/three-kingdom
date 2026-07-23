@@ -1,0 +1,218 @@
+{
+  "task": "M6A / Task 6A.4 — Three-screen bamboo stage upgrade",
+  "generatedOn": "2026-07-22",
+  "authorTool": "OpenAI built-in image generation with deterministic Pillow post-processing",
+  "styleReference": "public/scene/forest-camp.png and ART_BIBLE.md section 7",
+  "processingTool": "tools/build_bamboo_stage_art.py",
+  "processingVersion": 1,
+  "runtime": {
+    "worldWidth": 3840,
+    "worldHeight": 720,
+    "sectionWidth": 1280,
+    "sectionHeight": 720,
+    "groundY": 390,
+    "sharedPaletteColors": 96,
+    "seamTransitionWidth": 64,
+    "depths": {
+      "background": -1000,
+      "ground": -900,
+      "foreground": 640
+    },
+    "gameplayCoordinatesChanged": false
+  },
+  "prompts": {
+    "shared": "Original non-infringing 1990s Japanese arcade pixel-art bamboo stage; fixed 2.5D side-view camera; clear lower combat plane; warm upper-left light and cool green shadows; no characters, UI, text, logos or watermark.",
+    "forest-entry": "Sparse bamboo road entrance with trail marker, stone edging and lantern.",
+    "forest-ambush": "Dense bamboo ambush with fallen trunk and restrained wooden barricade.",
+    "boss-arena": "Open military camp arena with fortified gate and plain command flags."
+  },
+  "manualReview": {
+    "reviewer": "Codex Technical Lead",
+    "status": "accepted: production runtime, desktop, 844x390 landscape, and 390x844 portrait"
+  },
+  "sections": [
+    {
+      "id": "forest-entry",
+      "worldBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 1280,
+        "height": 720
+      },
+      "landmark": "sparse bamboo road entrance, trail marker, stone edging and lantern",
+      "source": "../source/bamboo-forest-entry-source.png",
+      "sourceSize": [
+        1672,
+        941
+      ],
+      "sourceSha256": "693e4f343b88c9942e16b151d5b2d0fa960120727bcf6374370647e350bda5e8",
+      "promptId": "imagegen-exec-923afaa5-6211-4169-acbd-1a68934f3928",
+      "layers": [
+        {
+          "kind": "background",
+          "textureKey": "stage-forest-entry-background",
+          "file": "bamboo-forest-entry-background.png",
+          "depth": -1000,
+          "width": 1280,
+          "height": 720,
+          "alphaBounds": [
+            0,
+            0,
+            1280,
+            390
+          ]
+        },
+        {
+          "kind": "ground",
+          "textureKey": "stage-forest-entry-ground",
+          "file": "bamboo-forest-entry-ground.png",
+          "depth": -900,
+          "width": 1280,
+          "height": 720,
+          "alphaBounds": [
+            0,
+            390,
+            1280,
+            720
+          ]
+        },
+        {
+          "kind": "foreground",
+          "textureKey": "stage-forest-entry-foreground",
+          "file": "bamboo-forest-entry-foreground.png",
+          "depth": 640,
+          "width": 1280,
+          "height": 720,
+          "alphaBounds": [
+            0,
+            563,
+            1280,
+            720
+          ]
+        }
+      ]
+    },
+    {
+      "id": "forest-ambush",
+      "worldBounds": {
+        "x": 1280,
+        "y": 0,
+        "width": 1280,
+        "height": 720
+      },
+      "landmark": "dense bamboo, fallen trunk and restrained anti-cavalry barricade",
+      "source": "../source/bamboo-forest-ambush-source.png",
+      "sourceSize": [
+        1672,
+        941
+      ],
+      "sourceSha256": "a1c4c207f6b04c41249a5200aa5a004a8253fadbaf084ffd8463a687e069ba37",
+      "promptId": "imagegen-exec-1fd30c49-1d27-4404-8982-d541bb603d6c",
+      "layers": [
+        {
+          "kind": "background",
+          "textureKey": "stage-forest-ambush-background",
+          "file": "bamboo-forest-ambush-background.png",
+          "depth": -1000,
+          "width": 1280,
+          "height": 720,
+          "alphaBounds": [
+            0,
+            0,
+            1280,
+            390
+          ]
+        },
+        {
+          "kind": "ground",
+          "textureKey": "stage-forest-ambush-ground",
+          "file": "bamboo-forest-ambush-ground.png",
+          "depth": -900,
+          "width": 1280,
+          "height": 720,
+          "alphaBounds": [
+            0,
+            390,
+            1280,
+            720
+          ]
+        },
+        {
+          "kind": "foreground",
+          "textureKey": "stage-forest-ambush-foreground",
+          "file": "bamboo-forest-ambush-foreground.png",
+          "depth": 640,
+          "width": 1280,
+          "height": 720,
+          "alphaBounds": [
+            0,
+            560,
+            1280,
+            720
+          ]
+        }
+      ]
+    },
+    {
+      "id": "boss-arena",
+      "worldBounds": {
+        "x": 2560,
+        "y": 0,
+        "width": 1280,
+        "height": 720
+      },
+      "landmark": "fortified camp gate, plain command flags and open ceremonial ground",
+      "source": "../source/bamboo-boss-arena-source.png",
+      "sourceSize": [
+        1672,
+        941
+      ],
+      "sourceSha256": "076da8bf797cbd9cbaf015d503070566dc6ac396f8c542c252520f9caa6de2eb",
+      "promptId": "imagegen-exec-7d094f57-ce61-42f3-a978-d2f1c450d20a",
+      "layers": [
+        {
+          "kind": "background",
+          "textureKey": "stage-boss-arena-background",
+          "file": "bamboo-boss-arena-background.png",
+          "depth": -1000,
+          "width": 1280,
+          "height": 720,
+          "alphaBounds": [
+            0,
+            0,
+            1280,
+            390
+          ]
+        },
+        {
+          "kind": "ground",
+          "textureKey": "stage-boss-arena-ground",
+          "file": "bamboo-boss-arena-ground.png",
+          "depth": -900,
+          "width": 1280,
+          "height": 720,
+          "alphaBounds": [
+            0,
+            390,
+            1280,
+            720
+          ]
+        },
+        {
+          "kind": "foreground",
+          "textureKey": "stage-boss-arena-foreground",
+          "file": "bamboo-boss-arena-foreground.png",
+          "depth": 640,
+          "width": 1280,
+          "height": 720,
+          "alphaBounds": [
+            0,
+            560,
+            1280,
+            720
+          ]
+        }
+      ]
+    }
+  ]
+}

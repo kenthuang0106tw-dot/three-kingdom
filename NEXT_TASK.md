@@ -1,54 +1,56 @@
 # Next Task
 
-## M6A / Task 6A.4 — Three-screen bamboo stage upgrade
+## M6A / Task 6A.5 — Combat effects and product UI art upgrade
 
 ### Why this is next
 
-The Player, three enemy archetypes, and Boss now share the accepted visual
-contract. The largest remaining mismatch is the 3840×720 world repeating the
-same prototype `forest-camp.png` three times. Stage art must become readable
-before Effects or product UI can be judged against the final combat backdrop.
+The cast and all three Stage sections now share the accepted Art Bible. The
+remaining visible prototype mismatch is the procedural combat effects and
+product-flow UI. They must be judged against the final Stage before the visual
+freeze, while gameplay timing, damage, flow, and mobile input remain unchanged.
 
 ### Completion criteria
 
-- Preserve the existing 3840×720 world, two encounter triggers, Boss entry,
-  walk bounds, camera locks, handoff policy, physics, and all world coordinates.
-- Create three visually distinct but seamless sections: Forest Entry, Forest
-  Ambush, and Boss Arena, following `ART_BIBLE.md` landmarks and value bands.
-- Separate background, ground, and foreground-occlusion layers with explicit
-  depth metadata; no layer may hide active poses, telegraphs, HUD, or controls.
-- Keep the ground feet plane readable across every seam and viewport.
-- Commit source, processed runtime assets, metadata, provenance, seam/depth QA,
-  three-section overview, and reproducible tooling.
-- Do not modify actors, animation, combat, AI, balance, Effects, UI, Audio, or
-  add encounters/content.
+- Replace prototype Hit Spark, impact, dust, and ground-shadow presentation with
+  original pixel-art assets that follow `ART_BIBLE.md`.
+- Upgrade Title, Player/Boss HUD, Pause, Failure, and Result presentation plus
+  the runtime pixel font into one coherent visual language.
+- Preserve every animation timing, active frame, hitbox, damage value, state
+  transition, camera behavior, safe area, pointer target, and world coordinate.
+- Effects must remain readable on all three Stage sections without obscuring
+  actors, telegraphs, HUD, or mobile controls.
+- Commit source/runtime assets, metadata, provenance, comparison QA, and focused
+  reproducible tooling.
+- Do not modify actors, Stage art, AI, balance, Audio, encounter flow, or add
+  content.
 
 ### Validation
 
-- Native-size and 25% review distinguishes all three sections immediately.
-- A 3840px overview and seam crops show no gap, repeat, stretch, or color break.
-- Runtime traversal verifies background/foreground depth, camera handoff, both
-  encounters, Boss arena, Failure, and Result at desktop, 844×390 landscape,
-  and 390×844 portrait FIT.
-- One Canvas, no console errors, and existing gameplay contracts remain green.
+- Capture matching effect and UI states at desktop, 844×390 landscape, and
+  390×844 portrait FIT.
+- Verify hit effects play once per accepted hit and preserve current Hit Stop,
+  camera shake, flash, knockback, damage, and combo contracts.
+- Verify Title/start, Pause/resume, Failure/retry, Result/replay, Player HUD, and
+  Boss HUD remain operable with keyboard and touch.
+- One Canvas, no console errors, no clipping, and existing gameplay contracts
+  remain green.
 - Run `pnpm test`, `pnpm typecheck`, `pnpm lint`, `pnpm build`, and
   `pnpm build:github-pages`.
 
 ### Expected files
 
-- `public/scene/` source/runtime section and layer assets
-- Stage asset metadata, provenance, overview/seam/depth QA
-- Focused reproducible Stage art build tooling
-- Minimal Stage rendering/manifest integration and focused tests
+- `public/art/effects/` source/runtime effect assets and metadata
+- Product UI/font assets and manifest entries
+- Minimal Phaser effect/UI rendering integration and focused tests
+- Reproducible effect/UI asset tooling and comparison QA
 - `ASSET_PIPELINE.md`, `CHECKLIST.md`, `SPRINT.md`, `GAME_ROADMAP.md`,
   `TECH_DEBT.md`, `README.md`, and `NEXT_TASK.md`
 
 ### Risks
 
-- New layers can accidentally alter collision or camera ownership; geometry and
-  Stage flow are frozen.
-- Foreground art can obscure combat or mobile controls; depth and occlusion need
-  explicit runtime review.
-- Three independently generated sections may drift in horizon, light, palette,
-  or seam continuity; reject inconsistent art rather than hiding seams with
-  camera or gameplay changes.
+- Effect sprites may change perceived hit timing even when gameplay values do
+  not change; compare frame-by-frame against current contracts.
+- UI art can reduce mobile safe-area or pointer usability; retain fixed
+  camera-space ownership and test all three viewports.
+- Scope can expand into redesigning gameplay or Stage art; reject any change
+  not required for Effects/UI visual consistency.
