@@ -68,7 +68,10 @@ test("Performance asset report separates requested runtime files from deployment
   assert.equal(report.byExtension[".png"].files, 23);
   assert.equal(report.byExtension[".wav"].files, 12);
   assert.equal(report.decodedRgbaBytes, 136_629_760);
+  assert.equal(report.productionPublicFiles, 46);
+  assert.ok(report.productionPublicBytes > report.encodedBytes);
   assert.ok(report.encodedBytes < 15 * 1024 * 1024);
   assert.ok(report.githubPagesBytes === null || report.githubPagesBytes > report.encodedBytes);
+  assert.ok(report.githubPagesBytes === null || report.githubPagesBytes < 30 * 1024 * 1024);
   assert.ok(report.githubPagesJavaScriptBytes === null || report.githubPagesJavaScriptBytes < 2 * 1024 * 1024);
 });

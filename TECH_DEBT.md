@@ -585,17 +585,15 @@ future accessibility controls stay in M8.6 rather than reopening M7.
 
 - **Resolved:** 2026-07-17，M5R / Task 5R.8。
 - **Evidence:** M5R.1–5R.7 completed the 3840×720 three-screen world, two ordered encounters, gated moving/damaging Boss, deterministic failed/retry, and exactly-once cleared flow. M5R.8 then completed real-input runs from Title through both encounters and Boss on desktop, 844×390 landscape touch, and 390×844 portrait FIT; a separate real failure/retry restored the documented initial state. All runs retained one Canvas and zero runtime errors.
-## TD-M8.1 Update — Production packaging exceeds delivery budget
+## TD-M8.1 Resolved — Production packaging boundary
 
-Task 8.1 measured the full Vertical Slice at six checkpoints across desktop and
-two fitted-mobile profiles. Frame-time, stability, heap, runtime texture,
-requested-asset, decoded-RGBA, and raw-JavaScript budgets pass. No sustained
-GameObject, listener, actor, Audio owner, Canvas, or texture growth was found.
-This evidence does not justify object pooling.
+M8 / Task 8.4 reduced the GitHub Pages artifact from 125,451,173 to
+18,172,139 bytes by excluding 99 copied non-runtime public files. Both
+production outputs retain exactly 46 required public files with source-identical
+SHA-256 values. Repository source and QA assets remain available to the
+reproducible art pipeline.
 
-The GitHub Pages artifact is 125,451,173 bytes against a 30 MiB budget because
-the current `public/` copy includes non-runtime source/debug/QA material. This
-is a High delivery defect assigned to M8 / Task 8.4. Packaging must be corrected
-without deleting repository sources or changing frozen runtime art. Decoded
-RGBA is 136,629,760 bytes, close to but below its 140 MiB limit; atlas work stays
-conditional on later evidence.
+Decoded RGBA remains 136,629,760 bytes and passes the 140 MiB budget, so no
+atlas rebuild was performed. Task 8.1 also found no growth that justifies
+conditional pooling; those changes remain deferred unless new measurements
+fail.

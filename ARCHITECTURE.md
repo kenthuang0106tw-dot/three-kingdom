@@ -913,3 +913,16 @@ M8 / Task 8.1 adds a development-only, read-only measurement boundary:
 Profiling may observe Scene, texture, Audio, and gameplay-subscription counts,
 but it must not own gameplay state or optimize it. A failed budget selects a
 separate roadmap task.
+
+## Production Public Asset Packaging Contract
+
+`tools/package-production-assets.mjs` derives the 43 Phaser request files from
+the runtime manifest and adds the three unique React/GitHub Pages side-art
+files. After either production build, it removes only copied `public/` files
+outside that inventory from `dist/client` or `dist-github`.
+
+The helper refuses unsupported output paths and verifies SHA-256 equality for
+all 46 preserved files. Source, metadata, debug, onion-skin, silhouette, and QA
+assets remain repository-owned under `public/`; packaging never regenerates or
+deletes them. Build-generated HTML, JavaScript, CSS, fonts, and server output
+are outside this pruning boundary.

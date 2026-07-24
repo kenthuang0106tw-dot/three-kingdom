@@ -1,9 +1,17 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { RUNTIME_ASSET_MANIFEST } from "../app/game/assets/AssetManifest.ts";
+import { extname } from "node:path";
+import { collectProductionPublicAssetPaths } from "../tools/package-production-assets.mjs";
 import { createProductionServer } from "../tools/serve-production.mjs";
 
-test("production server returns HTML, generated assets, atlases and sprites", async context => {
+const CONTENT_TYPES = {
+  ".json": "application/json",
+  ".png": "image/png",
+  ".wav": "audio/wav",
+  ".xml": "application/xml",
+};
+
+test("production server returns only generated routes and runtime public assets", async context => {
   const server = await createProductionServer();
   await new Promise(resolve => server.listen(0, "127.0.0.1", resolve));
   context.after(() => new Promise((resolve, reject) => server.close(error => error ? reject(error) : resolve())));
@@ -21,28 +29,18 @@ test("production server returns HTML, generated assets, atlases and sprites", as
     assert.equal((await fetch(`${origin}${route}`)).status, 200, route);
   }
 
-  for (const route of [
-    "/art/guanyu/guanyu-attack.atlas.json",
-    "/art/guanyu/guanyu-combo.png",
-    "/art/enemy/enemy-soldier.atlas.json",
-    "/art/enemy/enemy-soldier.png",
-    "/scene/bamboo-stage/bamboo-forest-entry-background.png",
-    "/scene/bamboo-stage/bamboo-forest-ambush-ground.png",
-    "/scene/bamboo-stage/bamboo-boss-arena-foreground.png",
-    "/art/effects/combat-effects.png",
-    "/art/effects/combat-effects.atlas.json",
-    "/art/ui/ui-modal-frame.png",
-    "/art/ui/dragon-pixel.png",
-    "/art/ui/dragon-pixel.xml",
-  ]) {
-    assert.equal((await fetch(`${origin}${route}`)).status, 200, route);
+  for (const path of await collectProductionPublicAssetPaths()) {
+    const route = `/${path}`;
+    const response = await fetch(`${origin}${route}`);
+    assert.equal(response.status, 200, route);
+    assert.match(response.headers.get("content-type") ?? "", new RegExp(`^${CONTENT_TYPES[extname(path)]}`), route);
   }
 
-  for (const asset of RUNTIME_ASSET_MANIFEST.filter(asset => asset.kind === "audio")) {
-    for (const route of asset.urls) {
-      const response = await fetch(`${origin}${route}`);
-      assert.equal(response.status, 200, route);
-      assert.equal(response.headers.get("content-type"), "audio/wav", route);
-    }
+  for (const route of [
+    "/art/guanyu/guanyu-v2-debug.png",
+    "/scene/bamboo-stage/bamboo-stage-overview.png",
+    "/scene/source/bamboo-forest-entry-source.png",
+  ]) {
+    assert.equal((await fetch(`${origin}${route}`)).status, 404, route);
   }
 });

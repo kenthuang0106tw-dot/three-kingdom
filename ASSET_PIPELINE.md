@@ -267,3 +267,23 @@ Metadata 最少欄位：
 - **M7.4 (Completed):** 手機首次手勢解鎖、visibility/background recovery 與 physical-device lifecycle 已驗收；沒有新增或重製 Audio asset。
 - **M7.5:** 三平台完整關卡 Audio cue/mix acceptance；只有客觀驗收缺陷才可調整既有 catalog 參數。
 - **M8:** Optimized atlases、loading/social/release assets。
+
+## 7. Production Packaging (M8 / Task 8.4)
+
+Source、processed、metadata、debug、onion、silhouette 與 overview files remain
+under `public/` so every accepted asset can still be audited and rebuilt. They
+are not all runtime delivery assets.
+
+`tools/package-production-assets.mjs` defines the production boundary:
+
+- 43 request files are derived from `AssetManifest.ts`.
+- Three unique cabinet side-art files are added explicitly.
+- `pnpm build` and `pnpm build:github-pages` prune only copied public files
+  outside this 46-file inventory from their output directories.
+- Every preserved output file must match the source SHA-256.
+- The tool accepts only `dist/client` and `dist-github`; it cannot target
+  `public/`.
+
+The accepted GitHub Pages artifact is 18,172,139 bytes. Runtime request bytes
+and decoded RGBA remain unchanged, so no atlas, image, audio, metadata, or
+visual-freeze file was regenerated.

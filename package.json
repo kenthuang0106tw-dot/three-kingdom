@@ -8,8 +8,8 @@
   },
   "scripts": {
     "dev": "vinext dev",
-    "build": "vinext build",
-    "build:github-pages": "vite build --config vite.github.config.ts",
+    "build": "vinext build && node tools/package-production-assets.mjs dist/client",
+    "build:github-pages": "vite build --config vite.github.config.ts && node tools/package-production-assets.mjs dist-github",
     "start": "node tools/serve-production.mjs",
     "test": "node --experimental-strip-types --test --test-isolation=none tests/*.test.mjs",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern dist-github --ignore-pattern .next",

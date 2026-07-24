@@ -135,6 +135,6 @@ M6A.1 已鎖定 [ART_BIBLE.md](ART_BIBLE.md) 與 15 張 reproducible before base
 
 M7 / Tasks 7.1–7.5 已完成：單一 Phaser Audio manager、十個原創 Combat/UI SFX、兩首原創 Stage/Boss 循環 BGM、mobile lifecycle、完整 cue matrix、peak headroom 與三平台實機 mix acceptance 均已通過。
 
-M8 / Task 8.1 is complete: 36 reproducible checkpoint runs established the frame-time, heap, texture, runtime-load, decoded-memory, JavaScript, and deployment budgets. Runtime budgets passed; the GitHub Pages artifact failed at 119.64 MiB because source/debug/QA files are copied into production.
+M8 / Tasks 8.1 and 8.4 are complete: the reproducible performance baseline is accepted, and production packaging now ships exactly 46 required public files. The GitHub Pages artifact is 17.33 MiB, down from 119.64 MiB, with frozen runtime hashes unchanged.
 
-The next single task is M8 / Task 8.4: reduce the production artifact to runtime-required assets first. It must not change gameplay, frozen art, animation, audio, or introduce pooling; atlas work remains conditional because decoded texture memory currently passes.
+The next single task is M8 / Task 8.2: an evidence-based game-feel timing pass over the existing Vertical Slice. It must not add attacks, enemies, art, audio, systems, or reopen the frozen asset set.

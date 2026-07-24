@@ -1157,3 +1157,21 @@
 | Automated gates | Pass | 107/107 tests, typecheck, lint 0 errors (8 existing warnings), both builds |
 | Scope | Pass | Measurement only; no optimization, gameplay, art, animation, Audio, Camera, or Stage behavior changed |
 | Next task | Selected | M8 / Task 8.4 — Production asset packaging and memory optimization |
+
+## M8 / Task 8.4 Acceptance — 2026-07-24
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Task ID | Pass | M8 / Task 8.4 — Production Asset Packaging and Memory Optimization |
+| Inventory | Pass | 43 manifest requests + 3 unique shell images = 46 production public files |
+| Source preservation | Pass | 99 source/debug/QA files remain in `public/` and are excluded only from both build outputs |
+| Byte preservation | Pass | All 46 packaged files match source SHA-256 in `dist/client` and `dist-github` |
+| Delivery budget | Pass | GitHub Pages artifact 18,172,139 bytes ≤ 30 MiB; runtime requests 12,891,503 bytes ≤ 15 MiB |
+| Memory/art freeze | Pass | Decoded RGBA remains 136,629,760 bytes; no atlas, image, audio, metadata, animation, or gameplay change |
+| Route coverage | Pass | Every required JSON/PNG/XML/WAV route returns 200 with correct content type; QA routes return 404 |
+| Viewport matrix | Pass | Desktop, 844×390, 390×844 × Title/Combat/Handoff/Boss/Failure/Result; one Canvas, 24 textures, one manager/subscription |
+| Reset ownership | Pass | Ten reset, ten Failure/retry, and ten Result/replay cycles retain one Canvas and no stale actors |
+| Production browser | Pass | Vinext and GitHub Pages previews start successfully; all side-art instances load |
+| Automated gates | Pass | 110/110 tests, typecheck, lint 0 errors (8 existing warnings), both builds |
+| Scope | Pass | Packaging and route MIME only; no gameplay, art, Audio, animation, balance, Camera, or Stage change |
+| Next task | Selected | M8 / Task 8.2 — Game-feel timing pass |

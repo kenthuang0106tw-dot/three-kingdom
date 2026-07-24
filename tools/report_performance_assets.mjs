@@ -1,6 +1,7 @@
 import { readdir, readFile, stat } from "node:fs/promises";
 import { extname, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
+import { collectProductionPublicAssetPaths } from "./package-production-assets.mjs";
 
 const MANIFEST_URL_PATTERN = /assetUrl\("([^"]+)"\)/g;
 const MANIFEST_ENTRY_PATTERN = /\{ kind:/g;
@@ -43,6 +44,10 @@ export async function collectPerformanceAssetReport(root = process.cwd()) {
   const buildDirectory = resolve(root, "dist-github");
   let githubPagesBytes = null;
   let githubPagesJavaScriptBytes = null;
+  const productionPublicPaths = await collectProductionPublicAssetPaths(root);
+  const productionPublicBytes = (await Promise.all(productionPublicPaths.map(async url => (
+    await stat(resolve(root, "public", url))
+  ).size))).reduce((sum, bytes) => sum + bytes, 0);
   try {
     const files = await directoryFiles(buildDirectory);
     const sizes = await Promise.all(files.map(async path => ({ path, bytes: (await stat(path)).size })));
@@ -59,6 +64,8 @@ export async function collectPerformanceAssetReport(root = process.cwd()) {
     requestFiles: uniqueUrls.length,
     encodedBytes,
     decodedRgbaBytes,
+    productionPublicFiles: productionPublicPaths.length,
+    productionPublicBytes,
     githubPagesBytes,
     githubPagesJavaScriptBytes,
     byExtension: Object.freeze(Object.fromEntries(

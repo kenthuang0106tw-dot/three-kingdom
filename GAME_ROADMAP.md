@@ -367,8 +367,8 @@ M6A 不加入新角色、新敵人、新招式、第二關、Audio、技能、�
 | 8.1 | 設定並量測 performance budget (Completed 2026-07-24) | P0 | Medium | M7 | FPS、memory、load size 有基準 | profiling docs/tests | 無目標裝置 |
 | 8.2 | Game-feel timing pass | P0 | High | Complete gameplay | 參數變更有 before/after evidence | configs | 無止境微調 |
 | 8.3 | Release visual defect pass | P1 | Medium | M6A accepted | 只修 clipping、seam、readability 與平台差異；不新增整套 art scope | existing assets/checklist | 重開已 freeze 的美術方向 |
-| 8.4 | Production asset packaging and memory optimization | P0 | High | 8.1 | production 只包含 runtime 必要資源且符合 delivery budget；decoded memory 未超標時不重製 atlas | build/assets/tests | 漏包間接引用素材 |
-| 8.5 | Conditional pooling | P2 | Medium | 8.1 | 只有 profiling 證明 GC spike 才實作 | effects/pools | YAGNI |
+| 8.4 | Production asset packaging and memory optimization (Completed 2026-07-24) | P0 | High | 8.1 | production 只包含 runtime 必要資源且符合 delivery budget；decoded memory 未超標時不重製 atlas | build/assets/tests | 漏包間接引用素材 |
+| 8.5 | Conditional pooling (Not required by 8.1 evidence) | P2 | Medium | 8.1 | 只有 profiling 證明 GC spike 才實作 | effects/pools | YAGNI |
 | 8.6 | Flash/shake/accessibility settings | P1 | Medium | M6 UI | 可降低強度；預設手感不變 | settings/UI | 設定 scope 膨脹 |
 | 8.7 | Full QA matrix | P0 | High | 8.1–8.6 | CHECKLIST 全部有 evidence，無 Critical/High defect | tests/docs | 測試時間不足 |
 
@@ -480,7 +480,10 @@ M6A 不加入新角色、新敵人、新招式、第二關、Audio、技能、�
 - M8 / Task 8.1 (Performance budget and baseline) completed on 2026-07-24.
 - Evidence: 36 reproducible checkpoint runs across desktop, 844×390 landscape fit, and 390×844 portrait fit; 10 reset, failure/retry, and Result/replay cycles; one production Canvas with no profiling leakage; 107 tests and both builds.
 - Runtime frame, stability, heap, texture, requested-asset, decoded-texture, and raw-JavaScript budgets passed. The GitHub Pages artifact measured 125,451,173 bytes against a 30 MiB budget because non-runtime source/debug/QA files are copied from `public/`.
-- Next eligible task: M8 / Task 8.4 (Production asset packaging and memory optimization). Packaging is first; atlas or runtime-art changes require new evidence.
+- M8 / Task 8.4 (Production asset packaging and memory optimization) completed on 2026-07-24.
+- Evidence: one 46-file production public inventory, 99 copied source/QA files excluded from both outputs, exact SHA-256 preservation, 18,172,139-byte GitHub Pages artifact, 110 tests, both builds, three-viewport/six-checkpoint browser matrix, and three ten-cycle reset paths.
+- M8 / Task 8.5 remains not required because Task 8.1 found no sustained GameObject, listener, texture, Canvas, Audio-owner, or heap growth attributable to effects.
+- Next eligible task: M8 / Task 8.2 (Game-feel timing pass).
 
 ## 4. Global Acceptance Rules
 

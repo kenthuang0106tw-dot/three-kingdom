@@ -143,8 +143,8 @@ defect rather than evidence that gameplay loads 119.64 MiB.
 
 ## Task decision
 
-Task 8.1 establishes the baseline and does not fix the failing artifact budget.
-The measured failure makes M8 / Task 8.4 the next eligible task. It must first
-exclude non-runtime QA/source files from production output without deleting
-their repository sources or changing frozen runtime art. Atlas or decoded-memory
-changes require separate evidence after packaging is corrected.
+Task 8.1 established the baseline without optimizing it. M8 / Task 8.4 has now
+resolved the artifact failure through the output-only packaging contract in
+[`m8-production-packaging.md`](m8-production-packaging.md). The GitHub Pages
+artifact is 18,172,139 bytes; runtime art, decoded memory, and source files are
+unchanged. Atlas or decoded-memory changes still require separate evidence.
