@@ -48,6 +48,8 @@ export const RUNTIME_ASSET_MANIFEST: readonly RuntimeAsset[] = [
   { kind: "audio", key: "sfx-ui-failure", urls: [assetUrl("/audio/sfx/ui-failure.wav")] },
   { kind: "audio", key: "sfx-ui-result", urls: [assetUrl("/audio/sfx/ui-result.wav")] },
   { kind: "audio", key: "sfx-ui-confirm", urls: [assetUrl("/audio/sfx/ui-confirm.wav")] },
+  { kind: "audio", key: "bgm-stage", urls: [assetUrl("/audio/music/stage-bamboo.wav")] },
+  { kind: "audio", key: "bgm-boss", urls: [assetUrl("/audio/music/boss-warlord.wav")] },
 ];
 
 export function queueRuntimeAssets(loader: Phaser.Loader.LoaderPlugin, manifest = RUNTIME_ASSET_MANIFEST) {

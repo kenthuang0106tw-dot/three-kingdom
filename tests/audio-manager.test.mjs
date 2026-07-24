@@ -11,6 +11,7 @@ class TestSoundBackend {
   stopCount = 0;
   unlockCount = 0;
   plays = [];
+  tracks = [];
   unlockedListeners = new Set();
 
   pauseAll() { this.pauseCount += 1; }
@@ -20,6 +21,11 @@ class TestSoundBackend {
     this.plays.push({ key, config });
     return true;
   }
+  add(key, config) {
+    const track = new TestTrack(key, config);
+    this.tracks.push(track);
+    return track;
+  }
   unlock() {
     this.unlockCount += 1;
     this.locked = false;
@@ -27,6 +33,32 @@ class TestSoundBackend {
   }
   on(_event, listener) { this.unlockedListeners.add(listener); }
   off(_event, listener) { this.unlockedListeners.delete(listener); }
+}
+
+class TestTrack {
+  playCount = 0;
+  stopCount = 0;
+  destroyCount = 0;
+  volumes = [];
+
+  constructor(key, config) {
+    this.key = key;
+    this.config = config;
+  }
+
+  play() {
+    this.playCount += 1;
+    return true;
+  }
+  stop() {
+    this.stopCount += 1;
+    return true;
+  }
+  destroy() { this.destroyCount += 1; }
+  setVolume(volume) {
+    this.volumes.push(volume);
+    return this;
+  }
 }
 
 class TestLifecycleSource {
@@ -46,7 +78,7 @@ const makeManager = () => {
   const sound = new TestSoundBackend();
   const lifecycle = new TestLifecycleSource();
   const events = new GameplayEventHub();
-  const manager = new AudioManager(sound, lifecycle, events);
+  const manager = new AudioManager(sound, lifecycle, events, (key, config) => sound.add(key, config));
   return { manager, sound, lifecycle, events };
 };
 
@@ -165,6 +197,64 @@ test("Audio manager queues locked cues and allows only the pause cue during manu
   assert.equal(manager.getSnapshot().suppressedCount, 1);
 });
 
+test("Audio manager owns one looping BGM and transitions Stage to Boss exactly once", () => {
+  const { manager, sound, events } = makeManager();
+  sound.locked = false;
+  manager.start();
+  manager.requestUnlock();
+
+  events.publish({ type: "title-started", source: "pointer", at: 1 });
+  events.publish({ type: "title-started", source: "pointer", at: 2 });
+  assert.equal(sound.tracks.length, 1);
+  assert.deepEqual(sound.tracks[0].config, { loop: true, volume: 0.3 });
+  assert.equal(sound.tracks[0].playCount, 1);
+  assert.equal(manager.getSnapshot().currentBgm, "stage");
+  assert.equal(manager.getSnapshot().pendingBgm, null);
+  assert.equal(manager.getSnapshot().bgmStartCount, 1);
+
+  manager.setChannelVolume("bgm", 0.5);
+  manager.setChannelMuted("bgm", true);
+  manager.setChannelMuted("bgm", false);
+  assert.deepEqual(sound.tracks[0].volumes, [0.15, 0, 0.15]);
+
+  events.publish({ type: "boss-activated", bossId: "warlord", at: 3 });
+  events.publish({ type: "boss-activated", bossId: "warlord", at: 4 });
+  assert.equal(sound.tracks.length, 2);
+  assert.equal(sound.tracks[0].stopCount, 1);
+  assert.equal(sound.tracks[0].destroyCount, 1);
+  assert.deepEqual(sound.tracks[1].config, { loop: true, volume: 0.17 });
+  assert.equal(manager.getSnapshot().currentBgm, "boss");
+  assert.equal(manager.getSnapshot().bgmTransitionCount, 1);
+
+  events.publish({ type: "stage-completed", stageId: "bamboo", at: 5 });
+  assert.equal(sound.tracks[1].stopCount, 1);
+  assert.equal(manager.getSnapshot().currentBgm, null);
+  assert.equal(manager.getSnapshot().pendingBgm, null);
+  assert.equal(manager.getSnapshot().bgmStopCount, 2);
+});
+
+test("Audio manager keeps the latest locked BGM intent and resumes it once", () => {
+  const { manager, sound, events } = makeManager();
+  manager.start();
+  events.publish({ type: "title-started", source: "keyboard", at: 1 });
+  events.publish({ type: "boss-activated", bossId: "warlord", at: 2 });
+  events.publish({ type: "title-started", source: "keyboard", at: 3 });
+  assert.equal(sound.tracks.length, 0);
+  assert.equal(manager.getSnapshot().pendingBgm, "boss");
+
+  manager.requestUnlock();
+  assert.equal(sound.tracks.length, 1);
+  assert.equal(sound.tracks[0].key, "bgm-boss");
+  assert.equal(manager.getSnapshot().bgmStartCount, 1);
+
+  events.publish({ type: "player-state-changed", previous: "hurt", next: "dead", at: 4 });
+  assert.equal(sound.tracks[0].stopCount, 1);
+  assert.equal(manager.getSnapshot().currentBgm, null);
+  manager.reset();
+  assert.equal(manager.getSnapshot().bgmStartCount, 0);
+  assert.equal(manager.getSnapshot().bgmStopCount, 0);
+});
+
 test("MainScene owns one Audio manager and removes the old direct hit-sound seam", async () => {
   const source = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
   assert.match(source, /private audioManager!: AudioManager/);
@@ -174,5 +264,6 @@ test("MainScene owns one Audio manager and removes the old direct hit-sound seam
   assert.match(source, /this\.audioManager\.setManualPaused\(true\)/);
   assert.match(source, /this\.audioManager\.setManualPaused\(false\)/);
   assert.match(source, /this\.audioManager\.destroy\(\)/);
+  assert.match(source, /type: "boss-activated"/);
   assert.doesNotMatch(source, /playHitSound/);
 });

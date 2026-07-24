@@ -1089,3 +1089,22 @@
 | Automated gates | Pass | 92/92 tests, typecheck, lint 0 errors, both builds |
 | Scope | Pass | No BGM, combat balance, animation, art, Camera or Stage timing change |
 | Next task | Selected | M7 / Task 7.3 — Stage/Boss music |
+
+## M7 / Task 7.3 Acceptance — 2026-07-24
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Task ID | Pass | M7 / Task 7.3 — Stage/Boss music |
+| Original assets | Pass | Deterministic project-owned Stage 17.143s and Boss 13.333s PCM WAV loops; no third-party samples |
+| Provenance | Pass | Generator, duration, loop points, tempo, bars, encoding, SHA-256, source, processing, author and license committed |
+| Ownership | Pass | Manifest loads both tracks; one `AudioManager`-owned Phaser sound instance; no actor/UI/React playback |
+| Stage start | Pass | Real Title pointer start unlocked WebAudio and started Stage BGM once |
+| Boss transition | Pass | Stage→Boss runtime flow produced start 2, transition 1, stop 1 with no duplicate track |
+| Pause/channel | Pass | Pause/Resume retained the same track and start count; live BGM volume/mute does not restart |
+| Terminal flow | Pass | Failure and Result each stopped the owned track once; retry/replay rebuild through a new Scene owner |
+| Locked/reset | Pass | Latest locked intent wins; ten Scene resets retained one manager, one subscription, one Canvas and no track |
+| Routes | Pass | Both development/production routes return 200 `audio/wav`; both build outputs contain both WAV files |
+| Browser | Pass | Fresh development and production flows had one Canvas and zero browser errors |
+| Automated gates | Pass | 97/97 tests, typecheck, lint 0 errors (8 existing warnings), both builds |
+| Scope | Pass | No gameplay, balance, art, Combat/UI SFX, Camera or Stage timing change |
+| Next task | Selected | M7 / Task 7.4 — Mobile unlock/recovery |

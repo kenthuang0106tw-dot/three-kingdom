@@ -28,7 +28,7 @@ import { PauseController } from "./ui/PauseController";
 import { FailureController, type FailureRestartSource as ExplicitFailureRestartSource } from "./ui/FailureController";
 import { ResultController, type ResultReplaySource as ExplicitResultReplaySource } from "./ui/ResultController";
 import { addButtonFrame, addModalFrame, addUiText, UI_COLORS } from "./ui/UiArt";
-import { AudioManager, type AudioSoundBackend } from "./audio/AudioManager";
+import { AudioManager, type AudioSoundBackend, type AudioTrackBackend } from "./audio/AudioManager";
 
 type AttackState = "attack1" | "attack2" | "attack3";
 type TitleStartSource = "keyboard" | "pointer" | "smoke";
@@ -357,6 +357,7 @@ export default class MainScene extends Phaser.Scene {
       this.sound as unknown as AudioSoundBackend,
       this.game.events,
       this.gameplayEvents,
+      (key, config) => this.sound.add(key, config) as unknown as AudioTrackBackend,
     );
     this.audioManager.start();
     const pendingRestartAudioAction = this.pendingRestartAudioAction;
@@ -1158,6 +1159,11 @@ export default class MainScene extends Phaser.Scene {
     dataset.audioSfxMuted = String(audio.channels.sfx.muted);
     dataset.audioBgmVolume = String(audio.channels.bgm.volume);
     dataset.audioBgmMuted = String(audio.channels.bgm.muted);
+    dataset.audioCurrentBgm = audio.currentBgm ?? "";
+    dataset.audioPendingBgm = audio.pendingBgm ?? "";
+    dataset.audioBgmStartCount = String(audio.bgmStartCount);
+    dataset.audioBgmTransitionCount = String(audio.bgmTransitionCount);
+    dataset.audioBgmStopCount = String(audio.bgmStopCount);
   }
 
   private updateFailureDataset() {
@@ -1330,6 +1336,7 @@ export default class MainScene extends Phaser.Scene {
     this.cameraLockState = lockCamera(this.cameraLockState, "boss");
     this.cameras.main.setScroll(BAMBOO_BOSS_ARENA.cameraScroll.x, BAMBOO_BOSS_ARENA.cameraScroll.y);
     this.cameraHandoff = { active: false, x: BAMBOO_BOSS_ARENA.cameraScroll.x, y: BAMBOO_BOSS_ARENA.cameraScroll.y };
+    this.gameplayEvents.publish({ type: "boss-activated", bossId: "warlord", at: this.time.now });
     if (development) {
       const { x, y, width, height } = BAMBOO_BOSS_ARENA.bounds;
       this.bossArenaDebug = this.add.graphics().lineStyle(2, 0x38d9ff, 0.9)

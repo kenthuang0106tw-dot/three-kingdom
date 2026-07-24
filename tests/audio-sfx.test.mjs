@@ -37,7 +37,7 @@ test("Combat and UI events map to immutable SFX commands", () => {
 });
 
 test("Runtime manifest owns every Combat/UI WAV file", () => {
-  const audio = RUNTIME_ASSET_MANIFEST.filter(asset => asset.kind === "audio");
+  const audio = RUNTIME_ASSET_MANIFEST.filter(asset => asset.kind === "audio" && asset.key.startsWith("sfx-"));
   assert.deepEqual(audio.map(asset => asset.key), expectedIds.map(id => `sfx-${id}`));
   assert.ok(audio.every(asset => asset.urls.length === 1 && asset.urls[0].endsWith(".wav")));
 });

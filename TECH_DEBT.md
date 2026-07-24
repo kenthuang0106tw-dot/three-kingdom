@@ -491,6 +491,20 @@ Stage/Boss BGM remains Task 7.3. Physical iOS/Android autoplay, background
 recovery, and device mix acceptance remain Tasks 7.4–7.5; desktop browser
 evidence does not claim those platform gates.
 
+### TD-M7.3 Update — Stage/Boss music integrated
+
+Task 7.3 resolves the missing Stage and Boss music with two deterministic
+project-owned PCM WAV loops, reproducible composition/synthesis, full-file loop
+points, SHA-256 provenance, manifest loading, and a pure semantic BGM mapping.
+One `AudioManager`-owned track transitions Stage→Boss exactly once and stops on
+Failure or Result; duplicate events, Scene reset, retry, and replay cannot layer
+tracks.
+
+The current browser acceptance covers desktop development and production plus
+responsive game flow, but it does not claim physical iOS Safari or Android
+Chrome autoplay/background recovery. Those platform lifecycle gates remain
+Task 7.4, and full-device loudness/mix acceptance remains Task 7.5.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

@@ -837,6 +837,29 @@ pending semantic action, then publish after the replacement Audio manager has
 subscribed. The field is cleared on consumption and is never stored in React,
 DOM, an actor, or a global variable. Task 7.2 adds no BGM or gameplay timing.
 
+## Stage/Boss BGM Contract (M7 / Task 7.3)
+
+`BgmCatalog` maps four semantic boundaries: real Title start requests Stage
+music, Boss arena activation requests Boss music, and Player death or Stage
+completion requests silence. `AudioManager` is the sole track owner and receives
+a narrow Scene-provided factory for one Phaser `BaseSound`; no actor, UI
+controller, React component, or update loop calls `sound.add`, `play`, or
+`stop`.
+
+The manager stores one desired track while WebAudio is locked and starts only
+the latest valid intent after unlock. An active track is idempotent by track ID;
+Stage→Boss stops and destroys the old instance before creating one looping Boss
+instance. A Boss request cannot regress to Stage within the same Scene.
+Pause/visibility use the existing global pause reasons, while BGM channel
+volume/mute updates the owned track without restarting it. Failure, Result,
+reset, shutdown, retry, and replay clear or destroy track ownership exactly
+once.
+
+Both compositions are deterministic project-owned PCM WAV loops loaded through
+the runtime asset manifest. Metadata records source, license, duration, tempo,
+bars, encoding, SHA-256, and full-file loop points. M7.3 changes no gameplay
+timing, Stage progression, Combat/UI SFX, or frozen visual assets.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

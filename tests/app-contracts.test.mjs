@@ -208,6 +208,7 @@ test("Runtime asset manifest preserves keys and reports missing required assets"
     "guanyu-v2", "enemy-soldier", "enemy-mauler", "enemy-duelist", "boss-warlord-attacks", "boss-warlord-lifecycle",
     "sfx-player-attack", "sfx-hit-confirmed", "sfx-player-hurt", "sfx-enemy-death",
     "sfx-ui-start", "sfx-ui-pause", "sfx-ui-resume", "sfx-ui-failure", "sfx-ui-result", "sfx-ui-confirm",
+    "bgm-stage", "bgm-boss",
   ]);
   const messages = [];
   createAssetFailureReporter(RUNTIME_ASSET_MANIFEST, message => messages.push(message))("guanyu-v2");

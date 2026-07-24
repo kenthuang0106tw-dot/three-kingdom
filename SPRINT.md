@@ -2,7 +2,7 @@
 
 ## Sprint Goal
 
-M6A.1–M6A.6 已完成並凍結視覺基線；M7 / Tasks 7.1–7.2 已完成 Audio manager 與 Combat/UI SFX。下一步只規劃 M7 / Task 7.3 Stage/Boss music。
+M6A.1–M6A.6 已完成並凍結視覺基線；M7 / Tasks 7.1–7.3 已完成 Audio manager、Combat/UI SFX 與 Stage/Boss BGM。下一步只規劃 M7 / Task 7.4 Mobile unlock/recovery。
 
 Roadmap decision（2026-07-18）：6A.3 必須以 6A.2 已接受的 Guan Yu 比例、palette、feet anchor、capture 與 provenance contract 對齊；不可重新解釋 Art Bible 或更改 gameplay timing。
 
@@ -11,7 +11,7 @@ Roadmap decision（2026-07-18）：6A.3 必須以 6A.2 已接受的 Guan Yu 比�
 - Duration：2 weeks
 - Capacity：1 developer + AI，約 40–55 hours
 - Milestone：M7 — Audio Integration
-- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M7 / 7.3 Stage/Boss music
+- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M7 / 7.4 Mobile unlock/recovery
 
 ## Task List
 
@@ -38,6 +38,7 @@ Roadmap decision（2026-07-18）：6A.3 必須以 6A.2 已接受的 Guan Yu 比�
 | 19 | ✅ M6A / Task 6A.6 — Visual acceptance and asset freeze | 12–20h | 全關 before/after、效能/載入基線、provenance audit 與 freeze | 15 comparisons + 60 FPS/runtime/asset audit passed |
 | 20 | ✅ M7 / Task 7.1 — Audio manager/mixer | 8–12h | Scene-owned SFX/BGM mixer、unlock、pause/visibility、reset cleanup | 86 tests + browser lifecycle/build acceptance passed |
 | 21 | ✅ M7 / Task 7.2 — Combat/UI SFX | 10–16h | 十個原創戰鬥／產品流程 SFX、event mapping 與 multi-hit coalescing | 92 tests + complete audio/browser/build acceptance passed |
+| 22 | ✅ M7 / Task 7.3 — Stage/Boss music | 12–18h | 兩首原創循環 BGM、Stage→Boss exactly-once transition、terminal stop | 97 tests + development/production audio acceptance passed |
 
 ## Recovery Planning Correction — 2026-07-14
 
@@ -733,3 +734,15 @@ The next eligible task is M7 / Task 7.2 — Combat/UI SFX. Do not begin it until
 - [x] `pnpm test` passed 92/92; typecheck, lint 0 errors (8 existing warnings), `pnpm build`, and `pnpm build:github-pages` passed.
 
 The next eligible task is M7 / Task 7.3 — Stage/Boss music. Do not begin it until the next task-runner cycle.
+
+## M7 / Task 7.3 Closeout — 2026-07-24
+
+- [x] Added deterministic original Stage and Boss compositions as mono 16-bit PCM WAV loops; no third-party samples or recordings.
+- [x] Added a reproducible Node generator and metadata for duration, loop points, tempo, bars, encoding, SHA-256, source, processing, author, and license.
+- [x] `BgmCatalog` maps only semantic Title start, Boss activation, Player death, and Stage completion events; actors, UI, React, and combat do not receive track keys.
+- [x] `AudioManager` owns one looping track, ignores duplicate Stage/Boss requests, transitions Stage→Boss once, updates live BGM volume/mute, and stops once on Failure/Result.
+- [x] Locked output keeps only the latest valid BGM intent; the same Scene cannot regress from Boss music to Stage music.
+- [x] Browser acceptance covered Stage start, Pause/Resume, actual Stage→Boss transition, Failure, Result, ten Scene resets, fresh development, and production with one Canvas and zero errors.
+- [x] Both music routes return 200 `audio/wav`; `pnpm test` passed 97/97, typecheck, lint 0 errors (8 existing warnings), and both builds passed.
+
+The next eligible task is M7 / Task 7.4 — Mobile unlock/recovery. Do not begin it until the next task-runner cycle.

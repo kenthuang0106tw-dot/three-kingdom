@@ -1,0 +1,41 @@
+{
+  "set": "stage-boss-music",
+  "version": 1,
+  "generatedAt": "2026-07-24",
+  "author": "OpenAI Codex for the Three Kingdoms project",
+  "license": "Original project-owned procedural composition and synthesis; no third-party samples or recordings.",
+  "source": "tools/build_stage_boss_music.mjs",
+  "processing": "Deterministic oscillator/noise synthesis, mono 16-bit PCM WAV at 22050 Hz; full-file zero-crossing-safe loops.",
+  "assets": [
+    {
+      "id": "stage",
+      "filename": "stage-bamboo.wav",
+      "description": "Measured pentatonic bamboo-stage march with restrained arcade percussion.",
+      "durationMs": 17143,
+      "loopStartMs": 0,
+      "loopEndMs": 17143,
+      "tempoBpm": 112,
+      "bars": 8,
+      "sampleRate": 22050,
+      "channels": 1,
+      "bitDepth": 16,
+      "encoding": "PCM WAV",
+      "sha256": "0d096d9c5d2ee2419ab7090079f9e192b4fbbe6d4b198d6158c036fb525ecc1b"
+    },
+    {
+      "id": "boss",
+      "filename": "boss-warlord.wav",
+      "description": "Urgent war-drum boss ostinato with a darker minor pentatonic lead.",
+      "durationMs": 13333,
+      "loopStartMs": 0,
+      "loopEndMs": 13333,
+      "tempoBpm": 144,
+      "bars": 8,
+      "sampleRate": 22050,
+      "channels": 1,
+      "bitDepth": 16,
+      "encoding": "PCM WAV",
+      "sha256": "23630fb4b5dac06aa46b602e03a6cde3d5e843000fbeb4d8a2410f1d06b00ba6"
+    }
+  ]
+}
