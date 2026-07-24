@@ -876,6 +876,20 @@ listener together with existing gameplay, focus, and unlock listeners. No DOM
 listener, timer workaround, React state, new audio content, or gameplay timing
 was added.
 
+## Audio Acceptance Contract (M7 / Task 7.5)
+
+`SfxCatalog` and `BgmCatalog` remain the only per-cue mix boundaries. Measured
+WAV peaks and a conservative simultaneous final-hit calculation set the
+accepted gains for confirmed hit (`0.60`), Enemy death (`0.50`), Stage BGM
+(`0.30`), and Boss BGM (`0.30`). The Stage and Boss worst-case sums retain
+headroom below unity without adding a master limiter or changing channel
+ownership.
+
+The accepted cue matrix covers success, Failure/retry, Pause/Resume,
+Stage→Boss, terminal stop, and replay. Same-frame multi-target hit coalescing
+continues to happen in the single Scene-owned `AudioManager`; catalog tuning
+does not bypass semantic events or create actor-owned playback.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

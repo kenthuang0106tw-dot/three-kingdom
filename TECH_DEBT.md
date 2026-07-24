@@ -519,6 +519,21 @@ accepted physical iOS Safari and Android Chrome behavior; device, OS, and
 browser versions were not supplied and are recorded as unavailable. Overall
 loudness, balance, and full-run duplicate/missing-cue review remain Task 7.5.
 
+### TD-M7.5 Update — Audio mix and full-run acceptance closed
+
+Task 7.5 closes the remaining Audio acceptance debt. A complete success and
+Failure/retry cue matrix is locked by tests, and measured WAV peaks exposed a
+worst-case simultaneous final-hit sum above unity. Existing catalog gains only
+were reduced to retain deterministic Stage and Boss peak headroom without
+changing master playback, assets, channel ownership, lifecycle, or gameplay.
+
+Development and production browser smoke retained one Canvas, one manager, one
+subscription, one BGM owner, and stable ten-cycle retry/replay behavior. The
+user explicitly accepted the deployed mix on physical iOS Safari and Android
+Chrome. Device, OS, and browser versions were not supplied and remain
+unavailable. No Critical or High Audio debt remains for the Vertical Slice;
+future accessibility controls stay in M8.6 rather than reopening M7.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

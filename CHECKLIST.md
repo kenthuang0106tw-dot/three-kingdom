@@ -1125,3 +1125,19 @@
 | Automated gates | Pass | 101/101 tests, typecheck, lint 0 errors (8 existing warnings), both builds |
 | Scope | Pass | No new audio content, settings UI, gameplay, balance, art, Camera or Stage timing |
 | Next task | Selected | M7 / Task 7.5 — Audio acceptance |
+
+## M7 / Task 7.5 Acceptance — 2026-07-24
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Task ID | Pass | M7 / Task 7.5 — Audio acceptance |
+| Cue matrix | Pass | Success and Failure/retry flows cover Title, attack, hit, hurt, death, Pause/Resume, retry/replay, Stage/Boss BGM and terminal stop |
+| Multi-target | Pass | Same-frame Enemy hits remain one audible impact while distinct attacks and deaths remain individually mapped |
+| Peak headroom | Pass | Catalog-only tuning reduced conservative Stage/Boss final-hit sums to approximately `0.991` / `0.980` |
+| Ownership | Pass | One Canvas, one Audio manager, one gameplay subscription and one owned BGM persist through lifecycle smoke |
+| Reset | Pass | Ten failure/retry and ten Result/replay cycles completed without stale or layered ownership |
+| Browser | Pass | Development Stage→Boss and terminal flow plus local production Title/start passed |
+| Physical mobile | Pass (user reported) | Deployed revision `d7b477b` accepted on iOS Safari and Android Chrome; device/OS/browser versions were not supplied |
+| Automated gates | Pass | 103/103 tests, typecheck, lint 0 errors (8 existing warnings), both builds |
+| Scope | Pass | Only evidence-backed catalog gains, tests, and documentation changed; no gameplay, art, assets, settings, or architecture expansion |
+| Next task | Selected | M8 / Task 8.1 — 設定並量測 performance budget |

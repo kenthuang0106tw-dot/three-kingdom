@@ -1,8 +1,8 @@
-# Current Sprint — Audio Foundation
+# Current Sprint — Performance Baseline
 
 ## Sprint Goal
 
-M6A.1–M6A.6 已完成並凍結視覺基線；M7 / Tasks 7.1–7.4 已完成 Audio manager、Combat/UI SFX、Stage/Boss BGM 與 mobile unlock/recovery。下一步只規劃 M7 / Task 7.5 Audio acceptance。
+M7 / Tasks 7.1–7.5 已完成並通過三平台 Audio acceptance。下一步只規劃 M8 / Task 8.1，先建立可重現的 performance budget 與完整 Vertical Slice 基線，不先做任何優化。
 
 Roadmap decision（2026-07-18）：6A.3 必須以 6A.2 已接受的 Guan Yu 比例、palette、feet anchor、capture 與 provenance contract 對齊；不可重新解釋 Art Bible 或更改 gameplay timing。
 
@@ -10,8 +10,8 @@ Roadmap decision（2026-07-18）：6A.3 必須以 6A.2 已接受的 Guan Yu 比�
 
 - Duration：2 weeks
 - Capacity：1 developer + AI，約 40–55 hours
-- Milestone：M7 — Audio Integration
-- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M7 / 7.5 Audio acceptance
+- Milestone：M8 — Content Polish and Performance
+- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M8 / 8.1 performance budget
 
 ## Task List
 
@@ -40,6 +40,7 @@ Roadmap decision（2026-07-18）：6A.3 必須以 6A.2 已接受的 Guan Yu 比�
 | 21 | ✅ M7 / Task 7.2 — Combat/UI SFX | 10–16h | 十個原創戰鬥／產品流程 SFX、event mapping 與 multi-hit coalescing | 92 tests + complete audio/browser/build acceptance passed |
 | 22 | ✅ M7 / Task 7.3 — Stage/Boss music | 12–18h | 兩首原創循環 BGM、Stage→Boss exactly-once transition、terminal stop | 97 tests + development/production audio acceptance passed |
 | 23 | ✅ M7 / Task 7.4 — Mobile unlock/recovery | 8–12h | AudioContext recovery、stale-SFX rejection、mobile lifecycle | 101 tests + browser/reset + user-confirmed physical mobile acceptance passed |
+| 24 | ✅ M7 / Task 7.5 — Audio acceptance | 8–12h | 完整 cue matrix、peak headroom 與三平台 mix acceptance | 103 tests + browser/reset + user-confirmed physical mobile mix acceptance passed |
 
 ## Recovery Planning Correction — 2026-07-14
 
@@ -760,3 +761,15 @@ The next eligible task is M7 / Task 7.4 — Mobile unlock/recovery. Do not begin
 - [x] `pnpm test` passed 101/101; typecheck, lint 0 errors (8 existing warnings), `pnpm build`, and `pnpm build:github-pages` passed.
 
 The next eligible task is M7 / Task 7.5 — Audio acceptance. Do not begin it until the next task-runner cycle.
+
+## M7 / Task 7.5 Closeout — 2026-07-24
+
+- [x] Recorded complete success and Failure/retry cue matrices covering Title, combat, Pause/Resume, Stage/Boss BGM, terminal stop, retry, and replay.
+- [x] Measured source WAV peaks and corrected the objective final-hit clipping risk only through existing catalog gains: hit `0.60`, Enemy death `0.50`, Stage BGM `0.30`, Boss BGM `0.30`.
+- [x] Conservative simultaneous peak sums are approximately `0.991` for Stage and `0.980` for Boss; no master gain, audio asset, playback architecture, gameplay, or art changed.
+- [x] Development smoke retained one Canvas, one Audio manager, one gameplay subscription, one Stage→Boss transition, and completed ten failure/retry plus ten Result/replay cycles.
+- [x] Local production start and deployed GitHub Pages revision `d7b477b` passed; the user explicitly accepted physical iOS Safari and Android Chrome mix behavior.
+- [x] Device, OS, and browser versions were not supplied and remain recorded as unavailable rather than inferred.
+- [x] `pnpm test` passed 103/103; typecheck, lint 0 errors (8 existing warnings), `pnpm build`, and `pnpm build:github-pages` passed.
+
+The next eligible task is M8 / Task 8.1 — 設定並量測 performance budget. Do not begin it until the next task-runner cycle.

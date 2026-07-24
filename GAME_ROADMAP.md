@@ -27,7 +27,7 @@
 | Mobile | Playable prototype | Phaser 360° touch joystick、attack 與 FIT viewport acceptance 已完成 |
 | UI | Accepted product-flow prototype | Phaser Title/start、Player/Boss HUD、Pause、Failure/retry、Result/replay 與三 viewport acceptance 已完成 |
 | Visual | M6A completed and frozen | 6A.1–6A.6 已完成視覺目標、全角色、三畫面 Stage、戰鬥特效、產品 UI、三 viewport 驗收與 asset freeze |
-| Audio | Mobile lifecycle complete | 7.1–7.4 已完成 manager、Combat/UI SFX、Stage/Boss BGM、首次手勢解鎖及背景恢復；下一步進行整體 Audio acceptance |
+| Audio | Accepted vertical slice | 7.1–7.5 已完成 manager、Combat/UI SFX、Stage/Boss BGM、mobile lifecycle 與三平台完整 mix acceptance |
 | Tests | Contract baseline | app shell、lifecycle、route 與 multi-enemy source contracts 已建立 |
 | Repository | Baseline | baseline、UTF-8、單一 runtime、pnpm、lint/typecheck、tests、production routes 已完成 |
 
@@ -332,7 +332,7 @@ M6A 不加入新角色、新敵人、新招式、第二關、Audio、技能、�
 
 ## Milestone 7 — Audio Integration
 
-**Status:** Tasks 7.1–7.4 completed 2026-07-24；下一個唯一 Task 是 7.5。
+**Status:** Completed 2026-07-24；Tasks 7.1–7.5 全部通過。
 
 **Playable Result:** 完整關卡具有原創／授權的攻擊、命中、受傷、死亡、UI、Stage 與 Boss 聲音。
 
@@ -348,7 +348,7 @@ M6A 不加入新角色、新敵人、新招式、第二關、Audio、技能、�
 | 7.2 | Combat/UI SFX (Completed 2026-07-24) | P0 | Medium | 7.1 | 每事件一次；多目標音量不爆 | audio assets/mapping | 疊音過強 |
 | 7.3 | Stage/Boss music (Completed 2026-07-24) | P0 | Medium | 7.1 | 場景切換不重播／斷裂 | music assets | 檔案體積 |
 | 7.4 | Mobile unlock/recovery (Completed 2026-07-24) | P0 | Medium | 7.1 | 首次手勢解鎖，背景恢復正常 | audio/lifecycle | iOS Safari 差異 |
-| 7.5 | Audio acceptance | P0 | Medium | 7.1–7.4 | 三平台完整關卡無重複/漏播 | checklist | 主觀 mix 調整 |
+| 7.5 | Audio acceptance (Completed 2026-07-24) | P0 | Medium | 7.1–7.4 | 三平台完整關卡無重複/漏播 | checklist | 主觀 mix 調整 |
 
 ---
 
@@ -474,7 +474,10 @@ M6A 不加入新角色、新敵人、新招式、第二關、Audio、技能、�
 - M7 / Task 7.3 (Stage/Boss music) completed on 2026-07-24.
 - M7 / Task 7.4 (Mobile unlock/recovery) completed on 2026-07-24.
 - Evidence: AudioContext running/suspended/interrupted observation, coalesced resume, stale-SFX rejection, independent manual/visibility pause ownership, one-track recovery, 101 tests, both builds, browser lifecycle/reset smoke, and user-confirmed physical iOS Safari/Android Chrome acceptance (device and browser versions not supplied).
-- Next eligible task: M7 / Task 7.5 (Audio acceptance).
+- M7 / Task 7.5 (Audio acceptance) completed on 2026-07-24.
+- Evidence: complete success/failure cue matrix, deterministic final-hit peak headroom, catalog-only mix tuning, 103 tests, both builds, development/production browser smoke, ten retry/replay cycles, and user-confirmed physical iOS Safari/Android Chrome mix acceptance (device and browser versions not supplied).
+- Milestone 7 is complete.
+- Next eligible task: M8 / Task 8.1 (設定並量測 performance budget).
 
 ## 4. Global Acceptance Rules
 

@@ -1,6 +1,6 @@
 # M7 Audio Acceptance
 
-Status: physical-device mix verification pending
+Status: accepted 2026-07-24
 
 ## Cue matrix
 
@@ -61,10 +61,10 @@ ownership, detune, audio asset, or playback architecture changed.
 - Local production output opened at the Title screen and started the playable
   Stage after one explicit pointer gesture.
 
-## Remaining acceptance
+## Physical-device acceptance
 
-This document accompanies the deployment candidate. Physical iOS Safari and
-Android Chrome must still confirm that confirmed hits, Enemy death, Stage BGM,
-and Boss BGM remain individually readable at the new catalog gains. Device, OS,
-and browser versions must be recorded when available; they must not be
-inferred.
+The candidate at revision `d7b477b` was deployed through GitHub Pages. The user
+explicitly accepted the tuned mix on physical iOS Safari and Android Chrome.
+Confirmed hits, Enemy death, Stage BGM, and Boss BGM remained readable at the
+candidate gains. Device, OS, and browser versions were not supplied and are
+recorded as unavailable rather than inferred.
