@@ -21,7 +21,7 @@ export function mapGameplayEventToBgm(event: GameplayEvent): BgmCommand | undefi
     case "title-started":
       return play("stage", 0.3);
     case "boss-activated":
-      return play("boss", 0.34);
+      return play("boss", 0.3);
     case "player-state-changed":
       return event.next === "dead" ? STOP : undefined;
     case "stage-completed":

@@ -260,7 +260,7 @@ test("Audio manager owns one looping BGM and transitions Stage to Boss exactly o
   assert.equal(sound.tracks.length, 2);
   assert.equal(sound.tracks[0].stopCount, 1);
   assert.equal(sound.tracks[0].destroyCount, 1);
-  assert.deepEqual(sound.tracks[1].config, { loop: true, volume: 0.17 });
+  assert.deepEqual(sound.tracks[1].config, { loop: true, volume: 0.15 });
   assert.equal(manager.getSnapshot().currentBgm, "boss");
   assert.equal(manager.getSnapshot().bgmTransitionCount, 1);
 

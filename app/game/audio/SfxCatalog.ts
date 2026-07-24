@@ -31,11 +31,11 @@ export function mapGameplayEventToSfx(event: GameplayEvent): SfxCommand | undefi
     case "player-attack-started":
       return command("player-attack", 0.48, (event.step - 1) * 80);
     case "enemy-hit":
-      return command("hit-confirmed", 0.72);
+      return command("hit-confirmed", 0.6);
     case "player-hit":
       return command("player-hurt", 0.62);
     case "enemy-defeated":
-      return command("enemy-death", 0.68);
+      return command("enemy-death", 0.5);
     case "title-started":
       return command("ui-start", 0.52);
     case "ui-action":

@@ -12,7 +12,7 @@ test("Stage and Boss events map to immutable BGM commands", () => {
   const cleared = mapGameplayEventToBgm({ type: "stage-completed", stageId: "bamboo", at: 4 });
 
   assert.deepEqual(stage, { action: "play", track: "stage", key: "bgm-stage", volume: 0.3 });
-  assert.deepEqual(boss, { action: "play", track: "boss", key: "bgm-boss", volume: 0.34 });
+  assert.deepEqual(boss, { action: "play", track: "boss", key: "bgm-boss", volume: 0.3 });
   assert.deepEqual(failed, { action: "stop" });
   assert.deepEqual(cleared, { action: "stop" });
   assert.ok([stage, boss, failed, cleared].every(command => Object.isFrozen(command)));
