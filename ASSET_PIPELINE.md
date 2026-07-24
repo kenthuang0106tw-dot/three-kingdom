@@ -264,5 +264,6 @@ Metadata 最少欄位：
 - **M7.1 (Completed):** Audio manager/mixer contract 已接入。
 - **M7.2 (Completed):** 十個原創 Combat/UI PCM WAV、可重現 generator、SHA-256 provenance、manifest ownership 與 immutable event mapping 已驗收。
 - **M7.3 (Completed):** 原創 Stage/Boss PCM WAV loops、可重現 generator、full-file loop points、SHA-256 provenance、manifest ownership 與 exactly-once transition/terminal mapping 已驗收。
-- **M7.4:** 手機首次手勢解鎖、visibility/background recovery 與 physical-device lifecycle 驗收。
+- **M7.4 (Completed):** 手機首次手勢解鎖、visibility/background recovery 與 physical-device lifecycle 已驗收；沒有新增或重製 Audio asset。
+- **M7.5:** 三平台完整關卡 Audio cue/mix acceptance；只有客觀驗收缺陷才可調整既有 catalog 參數。
 - **M8:** Optimized atlases、loading/social/release assets。

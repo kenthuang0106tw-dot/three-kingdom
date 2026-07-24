@@ -2,7 +2,7 @@
 
 ## Sprint Goal
 
-M6A.1–M6A.6 已完成並凍結視覺基線；M7 / Tasks 7.1–7.3 已完成 Audio manager、Combat/UI SFX 與 Stage/Boss BGM。下一步只規劃 M7 / Task 7.4 Mobile unlock/recovery。
+M6A.1–M6A.6 已完成並凍結視覺基線；M7 / Tasks 7.1–7.4 已完成 Audio manager、Combat/UI SFX、Stage/Boss BGM 與 mobile unlock/recovery。下一步只規劃 M7 / Task 7.5 Audio acceptance。
 
 Roadmap decision（2026-07-18）：6A.3 必須以 6A.2 已接受的 Guan Yu 比例、palette、feet anchor、capture 與 provenance contract 對齊；不可重新解釋 Art Bible 或更改 gameplay timing。
 
@@ -11,7 +11,7 @@ Roadmap decision（2026-07-18）：6A.3 必須以 6A.2 已接受的 Guan Yu 比�
 - Duration：2 weeks
 - Capacity：1 developer + AI，約 40–55 hours
 - Milestone：M7 — Audio Integration
-- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M7 / 7.4 Mobile unlock/recovery
+- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M7 / 7.5 Audio acceptance
 
 ## Task List
 
@@ -39,6 +39,7 @@ Roadmap decision（2026-07-18）：6A.3 必須以 6A.2 已接受的 Guan Yu 比�
 | 20 | ✅ M7 / Task 7.1 — Audio manager/mixer | 8–12h | Scene-owned SFX/BGM mixer、unlock、pause/visibility、reset cleanup | 86 tests + browser lifecycle/build acceptance passed |
 | 21 | ✅ M7 / Task 7.2 — Combat/UI SFX | 10–16h | 十個原創戰鬥／產品流程 SFX、event mapping 與 multi-hit coalescing | 92 tests + complete audio/browser/build acceptance passed |
 | 22 | ✅ M7 / Task 7.3 — Stage/Boss music | 12–18h | 兩首原創循環 BGM、Stage→Boss exactly-once transition、terminal stop | 97 tests + development/production audio acceptance passed |
+| 23 | ✅ M7 / Task 7.4 — Mobile unlock/recovery | 8–12h | AudioContext recovery、stale-SFX rejection、mobile lifecycle | 101 tests + browser/reset + user-confirmed physical mobile acceptance passed |
 
 ## Recovery Planning Correction — 2026-07-14
 
@@ -746,3 +747,16 @@ The next eligible task is M7 / Task 7.3 — Stage/Boss music. Do not begin it un
 - [x] Both music routes return 200 `audio/wav`; `pnpm test` passed 97/97, typecheck, lint 0 errors (8 existing warnings), and both builds passed.
 
 The next eligible task is M7 / Task 7.4 — Mobile unlock/recovery. Do not begin it until the next task-runner cycle.
+
+## M7 / Task 7.4 Closeout — 2026-07-24
+
+- [x] `AudioManager` observes the owned WebAudio context in addition to Phaser's initial lock state, including `running`, `suspended`, `interrupted`, and `closed`.
+- [x] The first explicit Title gesture coalesces unlock/recovery races and starts exactly one Stage track plus one Title cue.
+- [x] Visibility recovery resumes the current Stage/Boss intent without creating a second track; unavailable gameplay SFX are suppressed and queued product cues are discarded on backgrounding.
+- [x] Manual Pause and visibility remain independent; returning from background cannot resume output while manual Pause is still active.
+- [x] Context listeners, gameplay subscription, BGM ownership, pending cues, and recovery state are cleaned through the existing Scene shutdown/reset path.
+- [x] Development browser verified first tap, Pause/background/resume, one manager/subscription/Canvas, zero runtime errors, and ten Scene resets.
+- [x] Physical iOS Safari and Android Chrome acceptance was explicitly reported as passed by the user; device, OS, and browser versions were not supplied and are recorded as unavailable rather than inferred.
+- [x] `pnpm test` passed 101/101; typecheck, lint 0 errors (8 existing warnings), `pnpm build`, and `pnpm build:github-pages` passed.
+
+The next eligible task is M7 / Task 7.5 — Audio acceptance. Do not begin it until the next task-runner cycle.

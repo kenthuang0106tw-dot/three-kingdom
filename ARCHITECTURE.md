@@ -860,6 +860,22 @@ the runtime asset manifest. Metadata records source, license, duration, tempo,
 bars, encoding, SHA-256, and full-file loop points. M7.3 changes no gameplay
 timing, Stage progression, Combat/UI SFX, or frozen visual assets.
 
+## Mobile Audio Recovery Contract (M7 / Task 7.4)
+
+`MainScene` passes the Phaser WebAudio context through a narrow
+`AudioContextBackend`; `AudioManager` remains the only owner of recovery,
+playback, and lifecycle listeners. Output is ready only when Phaser is unlocked
+and the context is `running`. Repeated unlock/focus requests coalesce behind one
+pending resume, and recovery reuses the current BGM instance rather than
+restarting or layering it.
+
+Manual and visibility pause reasons remain independent. Backgrounding drops
+queued SFX so stale combat or UI cues cannot replay on return; the latest BGM
+intent remains authoritative. Scene shutdown removes the context `statechange`
+listener together with existing gameplay, focus, and unlock listeners. No DOM
+listener, timer workaround, React state, new audio content, or gameplay timing
+was added.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

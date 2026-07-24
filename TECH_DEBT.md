@@ -505,6 +505,20 @@ responsive game flow, but it does not claim physical iOS Safari or Android
 Chrome autoplay/background recovery. Those platform lifecycle gates remain
 Task 7.4, and full-device loudness/mix acceptance remains Task 7.5.
 
+### TD-M7.4 Update — Mobile unlock and recovery hardened
+
+Task 7.4 resolves the missing post-unlock AudioContext lifecycle boundary.
+`AudioManager` now observes context state, coalesces recovery requests, preserves
+one current BGM, rejects stale SFX after backgrounding, and keeps manual and
+visibility pause ownership independent. Context listeners are removed with the
+existing Scene lifecycle.
+
+Automated unlock, interruption, pause ordering, stale-cue, reset, and cleanup
+coverage passed together with browser lifecycle smoke. The user explicitly
+accepted physical iOS Safari and Android Chrome behavior; device, OS, and
+browser versions were not supplied and are recorded as unavailable. Overall
+loudness, balance, and full-run duplicate/missing-cue review remain Task 7.5.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

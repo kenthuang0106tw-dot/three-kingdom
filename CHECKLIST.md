@@ -1108,3 +1108,20 @@
 | Automated gates | Pass | 97/97 tests, typecheck, lint 0 errors (8 existing warnings), both builds |
 | Scope | Pass | No gameplay, balance, art, Combat/UI SFX, Camera or Stage timing change |
 | Next task | Selected | M7 / Task 7.4 — Mobile unlock/recovery |
+
+## M7 / Task 7.4 Acceptance — 2026-07-24
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Task ID | Pass | M7 / Task 7.4 — Mobile unlock/recovery |
+| First gesture | Pass | One Title gesture produced one Stage track and one Title cue after unlock/recovery coalescing |
+| Context recovery | Pass | Suspended/interrupted context recovery preserved the latest Stage/Boss intent without layering |
+| Stale SFX | Pass | Gameplay cues are suppressed while unavailable; backgrounding clears queued product cues |
+| Pause ownership | Pass | Manual and visibility reasons remain independent; background return does not clear manual Pause |
+| Lifecycle | Pass | Context, unlock, focus and gameplay listeners clean up through one Scene-owned manager |
+| Reset | Pass | Ten Scene resets retained one Canvas, one manager and one subscription |
+| Browser | Pass | First tap and Pause/background/resume smoke retained one BGM start and zero runtime errors |
+| Physical mobile | Pass (user reported) | iOS Safari and Android Chrome accepted; device/OS/browser versions were not supplied |
+| Automated gates | Pass | 101/101 tests, typecheck, lint 0 errors (8 existing warnings), both builds |
+| Scope | Pass | No new audio content, settings UI, gameplay, balance, art, Camera or Stage timing |
+| Next task | Selected | M7 / Task 7.5 — Audio acceptance |
