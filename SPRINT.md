@@ -2,7 +2,7 @@
 
 ## Sprint Goal
 
-M6A.1–M6A.6 已完成並凍結視覺基線；M7 / Task 7.1 Audio manager/mixer 已完成。下一步只規劃 M7 / Task 7.2 Combat/UI SFX。
+M6A.1–M6A.6 已完成並凍結視覺基線；M7 / Tasks 7.1–7.2 已完成 Audio manager 與 Combat/UI SFX。下一步只規劃 M7 / Task 7.3 Stage/Boss music。
 
 Roadmap decision（2026-07-18）：6A.3 必須以 6A.2 已接受的 Guan Yu 比例、palette、feet anchor、capture 與 provenance contract 對齊；不可重新解釋 Art Bible 或更改 gameplay timing。
 
@@ -11,7 +11,7 @@ Roadmap decision（2026-07-18）：6A.3 必須以 6A.2 已接受的 Guan Yu 比�
 - Duration：2 weeks
 - Capacity：1 developer + AI，約 40–55 hours
 - Milestone：M7 — Audio Integration
-- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M7 / 7.2 Combat/UI SFX
+- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M7 / 7.3 Stage/Boss music
 
 ## Task List
 
@@ -37,6 +37,7 @@ Roadmap decision（2026-07-18）：6A.3 必須以 6A.2 已接受的 Guan Yu 比�
 | 18 | ✅ M6A / Task 6A.5 — Combat effects and product UI art upgrade | 32–48h | 同風格 Spark/impact/dust/shadow 與產品 UI/font | 81 tests + desktop/landscape/portrait/build acceptance passed |
 | 19 | ✅ M6A / Task 6A.6 — Visual acceptance and asset freeze | 12–20h | 全關 before/after、效能/載入基線、provenance audit 與 freeze | 15 comparisons + 60 FPS/runtime/asset audit passed |
 | 20 | ✅ M7 / Task 7.1 — Audio manager/mixer | 8–12h | Scene-owned SFX/BGM mixer、unlock、pause/visibility、reset cleanup | 86 tests + browser lifecycle/build acceptance passed |
+| 21 | ✅ M7 / Task 7.2 — Combat/UI SFX | 10–16h | 十個原創戰鬥／產品流程 SFX、event mapping 與 multi-hit coalescing | 92 tests + complete audio/browser/build acceptance passed |
 
 ## Recovery Planning Correction — 2026-07-14
 
@@ -719,3 +720,16 @@ The next eligible task is M7 / Task 7.1 — Audio manager/mixer. Do not begin it
 - [x] No audio asset, placeholder sound, direct actor playback, combat, balance, art, UI, Camera, or Stage behavior was added or changed.
 
 The next eligible task is M7 / Task 7.2 — Combat/UI SFX. Do not begin it until the next task-runner cycle.
+
+## M7 / Task 7.2 Closeout — 2026-07-24
+
+- [x] Added ten deterministic original mono 16-bit PCM WAV cues for attack, confirmed hit, Player hurt, Enemy death, Title, Pause, Resume, Failure, Result, and retry/replay confirmation.
+- [x] Added a reproducible Node generator plus per-file duration, encoding, SHA-256, project-owned license, processing, and source metadata; no third-party sample is present.
+- [x] Every cue is loaded through the runtime asset manifest and played only by `AudioManager` from immutable gameplay/product-flow events.
+- [x] Same-frame multi-target `enemy-hit` events coalesce to one impact cue while each distinct attack, hurt, death, and product-flow event remains one-shot.
+- [x] Locked cues queue without reporting playback; SFX volume/mute, manual/visibility pause, Scene shutdown, and ten reset cycles retain one manager, one subscription, and one Canvas.
+- [x] Browser acceptance covered Title/start, touch attack, real Enemy hits/death, Boss-to-Player hurt, Pause/Resume, Failure/retry, Result/replay, and production with zero runtime errors.
+- [x] Both production outputs contain ten WAV files; every production route returns 200 with `audio/wav`.
+- [x] `pnpm test` passed 92/92; typecheck, lint 0 errors (8 existing warnings), `pnpm build`, and `pnpm build:github-pages` passed.
+
+The next eligible task is M7 / Task 7.3 — Stage/Boss music. Do not begin it until the next task-runner cycle.

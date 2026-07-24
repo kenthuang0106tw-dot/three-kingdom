@@ -10,11 +10,16 @@ class TestSoundBackend {
   resumeCount = 0;
   stopCount = 0;
   unlockCount = 0;
+  plays = [];
   unlockedListeners = new Set();
 
   pauseAll() { this.pauseCount += 1; }
   resumeAll() { this.resumeCount += 1; }
   stopAll() { this.stopCount += 1; }
+  play(key, config) {
+    this.plays.push({ key, config });
+    return true;
+  }
   unlock() {
     this.unlockCount += 1;
     this.locked = false;
@@ -115,6 +120,49 @@ test("Audio manager unlock and reset do not pretend locked output is playable", 
     sfx: { volume: 1, muted: false },
     bgm: { volume: 1, muted: false },
   });
+});
+
+test("Audio manager maps events once, coalesces same-frame hits, and respects SFX state", () => {
+  const { manager, sound, events } = makeManager();
+  sound.locked = false;
+  manager.start();
+  manager.requestUnlock();
+
+  events.publish({ type: "enemy-hit", enemyId: 1, damage: 1, at: 20 });
+  events.publish({ type: "enemy-hit", enemyId: 2, damage: 1, at: 20 });
+  assert.equal(sound.plays.length, 1);
+  assert.equal(sound.plays[0].key, "sfx-hit-confirmed");
+  assert.equal(manager.getSnapshot().suppressedCount, 1);
+
+  manager.setChannelVolume("sfx", 0.5);
+  events.publish({ type: "player-attack-started", step: 2, at: 21 });
+  assert.deepEqual(sound.plays[1], {
+    key: "sfx-player-attack",
+    config: { volume: 0.24, detune: 80 },
+  });
+
+  manager.setChannelMuted("sfx", true);
+  events.publish({ type: "player-hit", enemyId: 3, at: 22 });
+  assert.equal(sound.plays.length, 2);
+  assert.equal(manager.getSnapshot().suppressedCount, 2);
+});
+
+test("Audio manager queues locked cues and allows only the pause cue during manual pause", () => {
+  const { manager, sound, events } = makeManager();
+  manager.start();
+  events.publish({ type: "title-started", source: "pointer", at: 1 });
+  assert.equal(sound.plays.length, 0);
+  assert.equal(manager.getSnapshot().pendingCueCount, 1);
+
+  manager.requestUnlock();
+  assert.equal(sound.plays[0].key, "sfx-ui-start");
+  assert.equal(manager.getSnapshot().pendingCueCount, 0);
+
+  manager.setManualPaused(true);
+  events.publish({ type: "ui-action", action: "pause", at: 2 });
+  events.publish({ type: "player-attack-started", step: 1, at: 2 });
+  assert.equal(sound.plays.at(-1).key, "sfx-ui-pause");
+  assert.equal(manager.getSnapshot().suppressedCount, 1);
 });
 
 test("MainScene owns one Audio manager and removes the old direct hit-sound seam", async () => {

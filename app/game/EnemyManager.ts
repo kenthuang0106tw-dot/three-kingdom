@@ -6,6 +6,10 @@ import { DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemyA
 import { selectFairAttackCandidate } from "./enemy/AttackSlotPolicy";
 
 export type EnemyState = "idle" | "walk" | "attack" | "hurt" | "dead";
+export type EnemyDamageResult = Readonly<{
+  applied: boolean;
+  becameDead: boolean;
+}>;
 
 const ENEMY_CONFIGS: Record<"soldier" | "mauler" | "duelist", EnemyConfig> = {
   soldier: SOLDIER_ENEMY_CONFIG,
@@ -231,12 +235,15 @@ export class EnemyManager {
     this.directorReadyAt = this.clock.now() + this.random.between(enemy.config.timing.directorDelayMin, enemy.config.timing.directorDelayMax);
   }
 
-  damage(enemy: EnemyCombatant) {
-    if (enemy.state === "dead" || enemy.state === "hurt") return;
+  damage(enemy: EnemyCombatant): EnemyDamageResult {
+    if (enemy.state === "dead" || enemy.state === "hurt") {
+      return { applied: false, becameDead: false };
+    }
     enemy.hp = Math.max(0, enemy.hp - 1);
     this.releaseAttackSlot(enemy);
     if (enemy.hp === 0) this.setState(enemy, "dead");
     else this.setState(enemy, "hurt");
+    return { applied: true, becameDead: enemy.hp === 0 };
   }
 
   private setState(enemy: EnemyCombatant, next: EnemyState) {

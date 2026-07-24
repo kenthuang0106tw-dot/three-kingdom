@@ -27,7 +27,7 @@
 | Mobile | Playable prototype | Phaser 360° touch joystick、attack 與 FIT viewport acceptance 已完成 |
 | UI | Accepted product-flow prototype | Phaser Title/start、Player/Boss HUD、Pause、Failure/retry、Result/replay 與三 viewport acceptance 已完成 |
 | Visual | M6A completed and frozen | 6A.1–6A.6 已完成視覺目標、全角色、三畫面 Stage、戰鬥特效、產品 UI、三 viewport 驗收與 asset freeze |
-| Audio | Foundation complete | 7.1 Audio manager/mixer、SFX/BGM 分軌、pause/visibility、unlock 與 restart cleanup 已完成；尚無 runtime audio assets |
+| Audio | Combat/UI SFX complete | 7.1 manager/mixer 與 7.2 十個原創 Combat/UI SFX、事件映射、多目標去重及產品流程音效已完成；尚無 BGM |
 | Tests | Contract baseline | app shell、lifecycle、route 與 multi-enemy source contracts 已建立 |
 | Repository | Baseline | baseline、UTF-8、單一 runtime、pnpm、lint/typecheck、tests、production routes 已完成 |
 
@@ -332,7 +332,7 @@ M6A 不加入新角色、新敵人、新招式、第二關、Audio、技能、�
 
 ## Milestone 7 — Audio Integration
 
-**Status:** Task 7.1 completed 2026-07-24；下一個唯一 Task 是 7.2。
+**Status:** Tasks 7.1–7.2 completed 2026-07-24；下一個唯一 Task 是 7.3。
 
 **Playable Result:** 完整關卡具有原創／授權的攻擊、命中、受傷、死亡、UI、Stage 與 Boss 聲音。
 
@@ -345,7 +345,7 @@ M6A 不加入新角色、新敵人、新招式、第二關、Audio、技能、�
 | ID | Description | Priority | Difficulty | Dependencies | Acceptance Criteria | Expected Files | Risk |
 |---|---|---:|---:|---|---|---|---|
 | 7.1 | Audio manager/mixer (Completed 2026-07-24) | P0 | Medium | M1 events/clock | SFX/BGM 分軌；pause/resume 正確 | audio module | autoplay policy |
-| 7.2 | Combat/UI SFX | P0 | Medium | 7.1 | 每事件一次；多目標音量不爆 | audio assets/mapping | 疊音過強 |
+| 7.2 | Combat/UI SFX (Completed 2026-07-24) | P0 | Medium | 7.1 | 每事件一次；多目標音量不爆 | audio assets/mapping | 疊音過強 |
 | 7.3 | Stage/Boss music | P0 | Medium | 7.1 | 場景切換不重播／斷裂 | music assets | 檔案體積 |
 | 7.4 | Mobile unlock/recovery | P0 | Medium | 7.1 | 首次手勢解鎖，背景恢復正常 | audio/lifecycle | iOS Safari 差異 |
 | 7.5 | Audio acceptance | P0 | Medium | 7.1–7.4 | 三平台完整關卡無重複/漏播 | checklist | 主觀 mix 調整 |
@@ -469,7 +469,9 @@ M6A 不加入新角色、新敵人、新招式、第二關、Audio、技能、�
 - Evidence: 15 matching before/after comparisons, accepted provenance and pipeline audit, 11,421,285 encoded asset bytes, 24 runtime textures, one Canvas, zero runtime errors, no production debug leakage, and a 300-frame 60.00 FPS / 59.92 FPS 1% low baseline.
 - M7 / Task 7.1 (Audio manager/mixer) completed on 2026-07-24.
 - Evidence: one Scene-owned manager, separate SFX/BGM channel state, gameplay-event subscription, idempotent pause/resume/reset/destroy, user-gesture unlock, visibility handling, ten-reset cleanup, and no audio assets or gameplay changes.
-- Next eligible task: M7 / Task 7.2 (Combat/UI SFX).
+- M7 / Task 7.2 (Combat/UI SFX) completed on 2026-07-24.
+- Evidence: ten deterministic original PCM WAV cues, reproducible generator and SHA-256 provenance, manifest-only loading, immutable event mapping, same-frame multi-target hit coalescing, locked-output queueing, complete Title/combat/terminal browser smoke, 92 tests, and both production builds.
+- Next eligible task: M7 / Task 7.3 (Stage/Boss music).
 
 ## 4. Global Acceptance Rules
 

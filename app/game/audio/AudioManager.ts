@@ -1,4 +1,5 @@
 import type { GameplayEvent, GameplayEventHub } from "../events/GameplayEvents";
+import { mapGameplayEventToSfx, type SfxCommand, type SfxCueId } from "./SfxCatalog.ts";
 
 export type AudioChannel = "sfx" | "bgm";
 export type AudioPauseReason = "manual" | "visibility";
@@ -16,6 +17,10 @@ export type AudioManagerSnapshot = Readonly<{
   subscriptionCount: number;
   eventCount: number;
   lastEventType: GameplayEvent["type"] | null;
+  playCount: number;
+  suppressedCount: number;
+  lastCue: SfxCueId | null;
+  pendingCueCount: number;
   channels: Readonly<Record<AudioChannel, AudioChannelSnapshot>>;
 }>;
 
@@ -24,6 +29,7 @@ export interface AudioSoundBackend {
   pauseAll(): void;
   resumeAll(): void;
   stopAll(): void;
+  play(key: string, config?: { volume?: number; detune?: number }): boolean;
   unlock?(): void;
   on?(event: "unlocked", listener: () => void): unknown;
   off?(event: "unlocked", listener: () => void): unknown;
@@ -39,7 +45,7 @@ const defaultChannels = (): Record<AudioChannel, { volume: number; muted: boolea
   bgm: { volume: 1, muted: false },
 });
 
-/** Scene-owned Audio state and lifecycle boundary. Sound content is added by later M7 tasks. */
+/** Scene-owned Audio state, event mapping, playback, and lifecycle boundary. */
 export class AudioManager {
   private readonly sound: AudioSoundBackend;
   private readonly lifecycle: AudioLifecycleSource;
@@ -52,13 +58,33 @@ export class AudioManager {
   private unlocked: boolean;
   private eventCount = 0;
   private lastEventType: GameplayEvent["type"] | null = null;
+  private playCount = 0;
+  private suppressedCount = 0;
+  private lastCue: SfxCueId | null = null;
+  private readonly lastCueAt = new Map<SfxCueId, number>();
+  private readonly pendingCues = new Map<SfxCueId, SfxCommand>();
 
   private readonly onBlur = () => this.setPauseReason("visibility", true);
   private readonly onFocus = () => this.setPauseReason("visibility", false);
-  private readonly onUnlocked = () => { this.unlocked = true; };
+  private readonly onUnlocked = () => {
+    this.unlocked = true;
+    this.flushPendingCues();
+  };
   private readonly onGameplayEvent = (event: GameplayEvent) => {
     this.eventCount += 1;
     this.lastEventType = event.type;
+    const cue = mapGameplayEventToSfx(event);
+    if (!cue) return;
+    if (this.lastCueAt.get(cue.cue) === event.at) {
+      this.suppressedCount += 1;
+      return;
+    }
+    this.lastCueAt.set(cue.cue, event.at);
+    if (!this.unlocked) {
+      this.pendingCues.set(cue.cue, cue);
+      return;
+    }
+    this.playCue(cue);
   };
 
   constructor(
@@ -85,11 +111,14 @@ export class AudioManager {
   requestUnlock(): boolean {
     if (this.status === "destroyed") return false;
     if (this.unlocked || this.sound.locked !== true) {
+      const wasUnlocked = this.unlocked;
       this.unlocked = true;
+      if (!wasUnlocked) this.flushPendingCues();
       return true;
     }
     this.sound.unlock?.();
     this.unlocked = this.sound.locked !== true;
+    if (this.unlocked) this.flushPendingCues();
     return this.unlocked;
   }
 
@@ -116,6 +145,11 @@ export class AudioManager {
     this.outputPaused = false;
     this.eventCount = 0;
     this.lastEventType = null;
+    this.playCount = 0;
+    this.suppressedCount = 0;
+    this.lastCue = null;
+    this.lastCueAt.clear();
+    this.pendingCues.clear();
   }
 
   stop(): boolean {
@@ -144,6 +178,10 @@ export class AudioManager {
       subscriptionCount: this.unsubscribeGameplay ? 1 : 0,
       eventCount: this.eventCount,
       lastEventType: this.lastEventType,
+      playCount: this.playCount,
+      suppressedCount: this.suppressedCount,
+      lastCue: this.lastCue,
+      pendingCueCount: this.pendingCues.size,
       channels: Object.freeze({
         sfx: Object.freeze({ ...this.channels.sfx }),
         bgm: Object.freeze({ ...this.channels.bgm }),
@@ -162,11 +200,41 @@ export class AudioManager {
     else this.sound.resumeAll();
   }
 
+  private playCue(command: SfxCommand): boolean {
+    const channel = this.channels.sfx;
+    const pauseAllowed = command.cue === "ui-pause"
+      && this.pauseReasons.has("manual")
+      && !this.pauseReasons.has("visibility");
+    if (this.status !== "running" || !this.unlocked || (this.outputPaused && !pauseAllowed)
+      || channel.muted || channel.volume === 0) {
+      this.suppressedCount += 1;
+      return false;
+    }
+    const played = this.sound.play(command.key, {
+      volume: command.volume * channel.volume,
+      ...(command.detune === undefined ? {} : { detune: command.detune }),
+    });
+    if (!played) {
+      this.suppressedCount += 1;
+      return false;
+    }
+    this.playCount += 1;
+    this.lastCue = command.cue;
+    return true;
+  }
+
+  private flushPendingCues(): void {
+    const pending = [...this.pendingCues.values()];
+    this.pendingCues.clear();
+    for (const cue of pending) this.playCue(cue);
+  }
+
   private detach(): void {
     this.unsubscribeGameplay?.();
     this.unsubscribeGameplay = undefined;
     this.lifecycle.off("blur", this.onBlur);
     this.lifecycle.off("focus", this.onFocus);
     this.sound.off?.("unlocked", this.onUnlocked);
+    this.pendingCues.clear();
   }
 }

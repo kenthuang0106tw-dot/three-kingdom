@@ -135,6 +135,7 @@ export default class MainScene extends Phaser.Scene {
   private effectDirector!: EffectDirector;
   private readonly gameplayEvents = new GameplayEventHub();
   private lastLifecyclePaused = false;
+  private pendingRestartAudioAction?: "retry" | "replay";
   private enemyManager!: EnemyManager;
   private bossActor?: BossActor;
   private readonly playerStateMachine = new PlayerStateMachine();
@@ -358,6 +359,11 @@ export default class MainScene extends Phaser.Scene {
       this.gameplayEvents,
     );
     this.audioManager.start();
+    const pendingRestartAudioAction = this.pendingRestartAudioAction;
+    this.pendingRestartAudioAction = undefined;
+    if (pendingRestartAudioAction) {
+      this.gameplayEvents.publish({ type: "ui-action", action: pendingRestartAudioAction, at: this.time.now });
+    }
     this.lastLifecyclePaused = false;
     this.effectDirector = new EffectDirector(this, this.lifecycleClock);
     this.createCombatAnimations();
@@ -608,6 +614,7 @@ export default class MainScene extends Phaser.Scene {
       this.gameFlow.transition("paused");
       this.lifecycleClock.setManualPaused(true);
       this.audioManager.setManualPaused(true);
+      this.gameplayEvents.publish({ type: "ui-action", action: "pause", at: this.time.now });
       this.pauseCount += 1;
     } else if (this.gameFlow.state === "paused") {
       this.inputController.consumeAttackPress();
@@ -615,6 +622,7 @@ export default class MainScene extends Phaser.Scene {
       this.gameFlow.transition("playing");
       this.lifecycleClock.setManualPaused(false);
       this.audioManager.setManualPaused(false);
+      this.gameplayEvents.publish({ type: "ui-action", action: "resume", at: this.time.now });
       this.resumeCount += 1;
     } else return false;
 
@@ -789,8 +797,11 @@ export default class MainScene extends Phaser.Scene {
     const targetX = clampStageX(enemy.bodyZone.x + this.facing * EFFECT_PARAMS.knockbackDistance, BAMBOO_COMBAT_ROOM.walkBounds);
     this.effectDirector.knockback(enemy.bodyZone, targetX, () => this.enemyManager.syncPhysicsFromZone(enemy));
 
-    this.enemyManager.damage(enemy);
+    const damage = this.enemyManager.damage(enemy);
     this.gameplayEvents.publish({ type: "enemy-hit", enemyId: enemy.id, damage: 1, at: this.time.now });
+    if (damage.becameDead) {
+      this.gameplayEvents.publish({ type: "enemy-defeated", enemyId: enemy.id, at: this.time.now });
+    }
     if (triggerGlobalEffects) this.effectDirector.beginHitStop();
   }
 
@@ -817,6 +828,7 @@ export default class MainScene extends Phaser.Scene {
       BAMBOO_BOSS_ARENA.bounds,
     );
     this.effectDirector.knockback(bossActor.bodyZone, targetX, () => bossActor.syncVisuals());
+    this.gameplayEvents.publish({ type: "enemy-hit", enemyId: bossActor.targetId, damage: 1, at: this.time.now });
     if (triggerGlobalEffects) this.effectDirector.beginHitStop();
   }
 
@@ -986,6 +998,7 @@ export default class MainScene extends Phaser.Scene {
       this.game.canvas.dataset.failureRestartSource = source;
     }
     this.updateFailureDataset();
+    if (source !== "smoke") this.pendingRestartAudioAction = "retry";
     this.restartStage();
     return true;
   }
@@ -999,6 +1012,7 @@ export default class MainScene extends Phaser.Scene {
       this.game.canvas.dataset.resultReplaySource = source;
     }
     this.updateResultDataset();
+    if (source !== "smoke") this.pendingRestartAudioAction = "replay";
     this.restartStage();
     return true;
   }
@@ -1080,6 +1094,9 @@ export default class MainScene extends Phaser.Scene {
   private startGame(source: TitleStartSource) {
     if (!this.titleStartController.requestStart()) return;
     if (source !== "smoke") this.audioManager.requestUnlock();
+    if (source !== "smoke") {
+      this.gameplayEvents.publish({ type: "title-started", source, at: this.time.now });
+    }
     this.titleStartCount += 1;
     this.input.keyboard?.off("keydown", this.handleTitleKeyboardStart, this);
     this.titleOverlay?.destroy(true);
@@ -1133,6 +1150,10 @@ export default class MainScene extends Phaser.Scene {
     dataset.audioPaused = String(audio.paused);
     dataset.audioEventCount = String(audio.eventCount);
     dataset.audioLastEventType = audio.lastEventType ?? "";
+    dataset.audioPlayCount = String(audio.playCount);
+    dataset.audioSuppressedCount = String(audio.suppressedCount);
+    dataset.audioLastCue = audio.lastCue ?? "";
+    dataset.audioPendingCueCount = String(audio.pendingCueCount);
     dataset.audioSfxVolume = String(audio.channels.sfx.volume);
     dataset.audioSfxMuted = String(audio.channels.sfx.muted);
     dataset.audioBgmVolume = String(audio.channels.bgm.volume);

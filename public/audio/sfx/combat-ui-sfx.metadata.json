@@ -1,0 +1,121 @@
+{
+  "set": "combat-ui-sfx",
+  "version": 1,
+  "generatedAt": "2026-07-24",
+  "author": "OpenAI Codex for the Three Kingdoms project",
+  "license": "Original project-owned procedural audio; no third-party samples or recordings.",
+  "source": "tools/build_combat_ui_sfx.mjs",
+  "processing": "Deterministic oscillator/noise synthesis, mono 16-bit PCM WAV at 22050 Hz.",
+  "assets": [
+    {
+      "id": "player-attack",
+      "filename": "player-attack.wav",
+      "description": "Short blade whoosh with a descending body tone.",
+      "durationMs": 190,
+      "sampleRate": 22050,
+      "channels": 1,
+      "bitDepth": 16,
+      "encoding": "PCM WAV",
+      "sha256": "c2ed9a44c3eb4029444f11d91ef110d0ce1ca382f156638c3ef7149591ede931"
+    },
+    {
+      "id": "hit-confirmed",
+      "filename": "hit-confirmed.wav",
+      "description": "Dry impact crack layered over a low arcade thump.",
+      "durationMs": 150,
+      "sampleRate": 22050,
+      "channels": 1,
+      "bitDepth": 16,
+      "encoding": "PCM WAV",
+      "sha256": "adf6ffa05f8db038201fedf904f0d6cdefda323ec4252192aae4b4b80afb552c"
+    },
+    {
+      "id": "player-hurt",
+      "filename": "player-hurt.wav",
+      "description": "Descending rough two-tone player hurt cue.",
+      "durationMs": 240,
+      "sampleRate": 22050,
+      "channels": 1,
+      "bitDepth": 16,
+      "encoding": "PCM WAV",
+      "sha256": "b530ab8aeeaff984d3ecf0810ca5c3f1e5d86be4827f36cfe36bdfe9ed66f9a3"
+    },
+    {
+      "id": "enemy-death",
+      "filename": "enemy-death.wav",
+      "description": "Low descending enemy defeat burst.",
+      "durationMs": 420,
+      "sampleRate": 22050,
+      "channels": 1,
+      "bitDepth": 16,
+      "encoding": "PCM WAV",
+      "sha256": "793f38f34e7300ac5633f6ee7402f6892336e47e0d6d6d019c855d4caaadc347"
+    },
+    {
+      "id": "ui-start",
+      "filename": "ui-start.wav",
+      "description": "Two-note upward title confirmation chime.",
+      "durationMs": 250,
+      "sampleRate": 22050,
+      "channels": 1,
+      "bitDepth": 16,
+      "encoding": "PCM WAV",
+      "sha256": "db5f47628190ced8cf9ef1a7bb7609b33e81dfe7a46bca46bf4ca08d5343bacb"
+    },
+    {
+      "id": "ui-pause",
+      "filename": "ui-pause.wav",
+      "description": "Compact descending pause signal.",
+      "durationMs": 160,
+      "sampleRate": 22050,
+      "channels": 1,
+      "bitDepth": 16,
+      "encoding": "PCM WAV",
+      "sha256": "b10b99317189d026355410a68b64b408363381db52f21bddddbd2cd3aa11c68d"
+    },
+    {
+      "id": "ui-resume",
+      "filename": "ui-resume.wav",
+      "description": "Compact ascending resume signal.",
+      "durationMs": 160,
+      "sampleRate": 22050,
+      "channels": 1,
+      "bitDepth": 16,
+      "encoding": "PCM WAV",
+      "sha256": "64fc5ff34b9f750ed8bc2f4f180490c1b9a1fa3f3190bed1f8f7501955bb2b98"
+    },
+    {
+      "id": "ui-failure",
+      "filename": "ui-failure.wav",
+      "description": "Three descending minor arcade failure tones.",
+      "durationMs": 550,
+      "sampleRate": 22050,
+      "channels": 1,
+      "bitDepth": 16,
+      "encoding": "PCM WAV",
+      "sha256": "66588718664c9236b1f21ee7ec5c63f98eabec761d553f40be7e56f70e179056"
+    },
+    {
+      "id": "ui-result",
+      "filename": "ui-result.wav",
+      "description": "Four-note ascending victory arpeggio.",
+      "durationMs": 620,
+      "sampleRate": 22050,
+      "channels": 1,
+      "bitDepth": 16,
+      "encoding": "PCM WAV",
+      "sha256": "4393589b417cb88fcb777c96e6ded0dbb0aa46074725ddd1e338ba21c964ad16"
+    },
+    {
+      "id": "ui-confirm",
+      "filename": "ui-confirm.wav",
+      "description": "Short retry and replay confirmation click.",
+      "durationMs": 110,
+      "sampleRate": 22050,
+      "channels": 1,
+      "bitDepth": 16,
+      "encoding": "PCM WAV",
+      "sha256": "64166ac5b306bc20d0506f8b0ba8b687e8b7e8f99d257a2494455cbb3cab9624"
+    }
+  ]
+}

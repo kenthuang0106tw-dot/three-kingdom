@@ -3,7 +3,8 @@ import type * as Phaser from "phaser";
 export type RuntimeAsset =
   | { readonly kind: "image"; readonly key: string; readonly url: string }
   | { readonly kind: "atlas"; readonly key: string; readonly textureURL: string; readonly atlasURL: string }
-  | { readonly kind: "bitmapFont"; readonly key: string; readonly textureURL: string; readonly dataURL: string };
+  | { readonly kind: "bitmapFont"; readonly key: string; readonly textureURL: string; readonly dataURL: string }
+  | { readonly kind: "audio"; readonly key: string; readonly urls: string[] };
 
 export function resolveRuntimeAssetUrl(path: string, baseUrl?: string) {
   const documentBase = baseUrl ?? (typeof document === "undefined" ? undefined : document.baseURI);
@@ -37,13 +38,24 @@ export const RUNTIME_ASSET_MANIFEST: readonly RuntimeAsset[] = [
   { kind: "atlas", key: "enemy-duelist", textureURL: assetUrl("/art/enemy/duelist.png"), atlasURL: assetUrl("/art/enemy/duelist.atlas.json") },
   { kind: "atlas", key: "boss-warlord-attacks", textureURL: assetUrl("/art/boss/warlord-attacks.png"), atlasURL: assetUrl("/art/boss/warlord-attacks.atlas.json") },
   { kind: "atlas", key: "boss-warlord-lifecycle", textureURL: assetUrl("/art/boss/warlord-lifecycle.png"), atlasURL: assetUrl("/art/boss/warlord-lifecycle.atlas.json") },
+  { kind: "audio", key: "sfx-player-attack", urls: [assetUrl("/audio/sfx/player-attack.wav")] },
+  { kind: "audio", key: "sfx-hit-confirmed", urls: [assetUrl("/audio/sfx/hit-confirmed.wav")] },
+  { kind: "audio", key: "sfx-player-hurt", urls: [assetUrl("/audio/sfx/player-hurt.wav")] },
+  { kind: "audio", key: "sfx-enemy-death", urls: [assetUrl("/audio/sfx/enemy-death.wav")] },
+  { kind: "audio", key: "sfx-ui-start", urls: [assetUrl("/audio/sfx/ui-start.wav")] },
+  { kind: "audio", key: "sfx-ui-pause", urls: [assetUrl("/audio/sfx/ui-pause.wav")] },
+  { kind: "audio", key: "sfx-ui-resume", urls: [assetUrl("/audio/sfx/ui-resume.wav")] },
+  { kind: "audio", key: "sfx-ui-failure", urls: [assetUrl("/audio/sfx/ui-failure.wav")] },
+  { kind: "audio", key: "sfx-ui-result", urls: [assetUrl("/audio/sfx/ui-result.wav")] },
+  { kind: "audio", key: "sfx-ui-confirm", urls: [assetUrl("/audio/sfx/ui-confirm.wav")] },
 ];
 
 export function queueRuntimeAssets(loader: Phaser.Loader.LoaderPlugin, manifest = RUNTIME_ASSET_MANIFEST) {
   for (const asset of manifest) {
     if (asset.kind === "image") loader.image(asset.key, asset.url);
     else if (asset.kind === "atlas") loader.atlas(asset.key, asset.textureURL, asset.atlasURL);
-    else loader.bitmapFont(asset.key, asset.textureURL, asset.dataURL);
+    else if (asset.kind === "bitmapFont") loader.bitmapFont(asset.key, asset.textureURL, asset.dataURL);
+    else loader.audio(asset.key, asset.urls);
   }
 }
 

@@ -133,8 +133,8 @@ M6 已完成：Title、HUD、Pause、Failure/retry、Result/replay 與 mobile co
 
 M6A.1 已鎖定 [ART_BIBLE.md](ART_BIBLE.md) 與 15 張 reproducible before baselines；M6A.2 已接入關羽 43-frame 動畫；M6A.3 已統一 Soldier、Mauler、Duelist 與 Boss 的視覺契約；M6A.4 已接入 Forest Entry、Forest Ambush、Boss Arena 共 9 張分層 Stage assets；M6A.5 已接入正式 Combat Effects、角色地影、產品 UI、mobile controls 與 custom bitmap font；M6A.6 已完成 15 組 before/after、asset/provenance audit 與 60 FPS freeze。
 
-M7 / Task 7.1 已建立單一 Phaser Audio manager、SFX/BGM 分軌、pause/visibility、unlock 與 Scene restart cleanup；目前尚未加入音效檔。
+M7 / Tasks 7.1–7.2 已建立單一 Phaser Audio manager，並接入十個原創 Combat/UI SFX、immutable event mapping、multi-target hit coalescing、pause/visibility、unlock 與 Scene restart cleanup。
 
-The next single task is M7 / Task 7.2: add Combat/UI SFX through the accepted Audio manager.
+The next single task is M7 / Task 7.3: add original Stage/Boss music through the accepted Audio manager.
 
-下一個 Task 只加入原創／授權的 Combat/UI SFX 與事件映射，並驗證每事件一次與多目標音量上限；不加入 BGM、改戰鬥或重開已凍結美術。
+下一個 Task 只加入原創／授權的 Stage/Boss BGM 與無重播、無斷裂的 transition mapping；不修改 Combat/UI SFX、戰鬥或已凍結美術。

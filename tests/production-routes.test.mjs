@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { RUNTIME_ASSET_MANIFEST } from "../app/game/assets/AssetManifest.ts";
 import { createProductionServer } from "../tools/serve-production.mjs";
 
 test("production server returns HTML, generated assets, atlases and sprites", async context => {
@@ -35,5 +36,13 @@ test("production server returns HTML, generated assets, atlases and sprites", as
     "/art/ui/dragon-pixel.xml",
   ]) {
     assert.equal((await fetch(`${origin}${route}`)).status, 200, route);
+  }
+
+  for (const asset of RUNTIME_ASSET_MANIFEST.filter(asset => asset.kind === "audio")) {
+    for (const route of asset.urls) {
+      const response = await fetch(`${origin}${route}`);
+      assert.equal(response.status, 200, route);
+      assert.equal(response.headers.get("content-type"), "audio/wav", route);
+    }
   }
 });

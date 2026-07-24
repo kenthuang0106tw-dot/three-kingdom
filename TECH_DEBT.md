@@ -479,6 +479,18 @@ No audio files or event mappings exist yet. Combat/UI SFX remain Task 7.2,
 Stage/Boss music remains 7.3, and physical iOS/Android unlock/background
 recovery remains 7.4 rather than being claimed by the desktop browser smoke.
 
+### TD-M7.2 Update — Combat/UI SFX integrated
+
+Task 7.2 resolves the missing combat and product-flow sound content with ten
+deterministic project-owned WAV cues, reproducible synthesis, SHA-256
+provenance, manifest loading, and one immutable event mapping. Same-frame
+multi-target hit events coalesce before playback, and locked output queues
+without falsely increasing the play count.
+
+Stage/Boss BGM remains Task 7.3. Physical iOS/Android autoplay, background
+recovery, and device mix acceptance remain Tasks 7.4–7.5; desktop browser
+evidence does not claim those platform gates.
+
 ## Resolved
 
 ### TD-C02 — Test suite validated deleted starter content

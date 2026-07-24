@@ -818,6 +818,25 @@ Task 7.1 adds no sound files or event-to-sound mappings. Task 7.2 must register
 combat/UI content through this boundary rather than calling `scene.sound` from
 actors, UI controllers, React, or combat code.
 
+## Combat/UI SFX Contract (M7 / Task 7.2)
+
+`SfxCatalog` is the pure event-to-command mapping for ten original Combat/UI
+cues. `GameplayEventHub` publishes only primitive semantic events; `AudioManager`
+is the sole Phaser sound caller. Actors, combat resolution, UI controllers, and
+React never receive the sound backend or asset keys.
+
+The runtime manifest owns every WAV route. `AudioManager` applies SFX channel
+volume/mute, queues locked cues until WebAudio confirms unlock, and reports a
+play only when Phaser accepts it. Commands with the same cue and `event.at`
+timestamp coalesce, so one attack can damage multiple targets without stacking
+the impact sound. Pause is emitted after manual output suspension and is the
+only cue allowed during manual pause; visibility pause still suppresses it.
+
+Retry and replay requests survive the Phaser Scene restart as one Scene-owned
+pending semantic action, then publish after the replacement Audio manager has
+subscribed. The field is cleared on consumption and is never stored in React,
+DOM, an actor, or a global variable. Task 7.2 adds no BGM or gameplay timing.
+
 ## 10. External and Optional Infrastructure
 
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。

@@ -127,8 +127,8 @@
 
 ## Audio
 
-- [ ] Attack/Hit/Hurt/Death event 各播放一次。
-- [ ] 多目標命中不造成不可接受的音量疊加。
+- [x] Attack/Hit/Hurt/Death event 各播放一次。
+- [x] 多目標命中不造成不可接受的音量疊加。
 - [x] Pause/resume audio 正確。
 - [ ] BGM transition 不重複或斷裂。
 - [ ] 音量設定可持續於本機。
@@ -1072,3 +1072,20 @@
 | Assets | Pass | No audio file or placeholder playback added; production requests no missing audio |
 | Scope | Pass | No gameplay, timing, balance, art, UI, Camera or Stage behavior changed |
 | Next task | Selected | M7 / Task 7.2 — Combat/UI SFX |
+
+## M7 / Task 7.2 Acceptance — 2026-07-24
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Task ID | Pass | M7 / Task 7.2 — Combat/UI SFX |
+| Original assets | Pass | Ten deterministic project-owned PCM WAV cues; no third-party sample |
+| Provenance | Pass | Generator, duration, encoding, SHA-256, license and processing metadata committed |
+| Ownership | Pass | Runtime manifest loads every cue; only `AudioManager` calls Phaser sound |
+| Event coverage | Pass | Title, attack, hit, hurt, death, Pause/Resume, Failure, Result, retry and replay mapped |
+| One-shot/coalescing | Pass | Same cue + same event timestamp plays once; multi-target impacts do not stack |
+| Lock/channel/lifecycle | Pass | Locked queue, SFX volume/mute, pause/visibility and reset cleanup covered |
+| Browser | Pass | Real flow cues, one Canvas/manager/subscription and zero runtime errors |
+| Routes | Pass | Ten WAV files in both builds; production returns 200 and `audio/wav` |
+| Automated gates | Pass | 92/92 tests, typecheck, lint 0 errors, both builds |
+| Scope | Pass | No BGM, combat balance, animation, art, Camera or Stage timing change |
+| Next task | Selected | M7 / Task 7.3 — Stage/Boss music |
