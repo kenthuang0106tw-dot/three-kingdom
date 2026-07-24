@@ -1,8 +1,8 @@
-# Current Sprint — Performance Baseline
+# Current Sprint — Production Asset Packaging
 
 ## Sprint Goal
 
-M7 / Tasks 7.1–7.5 已完成並通過三平台 Audio acceptance。下一步只規劃 M8 / Task 8.1，先建立可重現的 performance budget 與完整 Vertical Slice 基線，不先做任何優化。
+M8 / Task 8.1 已完成可重現的 performance budget 與完整 Vertical Slice 基線。下一步只規劃 M8 / Task 8.4，修正 production 將 source/debug/QA 素材一併打包的客觀 delivery defect；不修改玩法、美術或音訊。
 
 Roadmap decision（2026-07-18）：6A.3 必須以 6A.2 已接受的 Guan Yu 比例、palette、feet anchor、capture 與 provenance contract 對齊；不可重新解釋 Art Bible 或更改 gameplay timing。
 
@@ -11,7 +11,7 @@ Roadmap decision（2026-07-18）：6A.3 必須以 6A.2 已接受的 Guan Yu 比�
 - Duration：2 weeks
 - Capacity：1 developer + AI，約 40–55 hours
 - Milestone：M8 — Content Polish and Performance
-- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M8 / 8.1 performance budget
+- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M8 / 8.4 production asset packaging
 
 ## Task List
 
@@ -41,6 +41,7 @@ Roadmap decision（2026-07-18）：6A.3 必須以 6A.2 已接受的 Guan Yu 比�
 | 22 | ✅ M7 / Task 7.3 — Stage/Boss music | 12–18h | 兩首原創循環 BGM、Stage→Boss exactly-once transition、terminal stop | 97 tests + development/production audio acceptance passed |
 | 23 | ✅ M7 / Task 7.4 — Mobile unlock/recovery | 8–12h | AudioContext recovery、stale-SFX rejection、mobile lifecycle | 101 tests + browser/reset + user-confirmed physical mobile acceptance passed |
 | 24 | ✅ M7 / Task 7.5 — Audio acceptance | 8–12h | 完整 cue matrix、peak headroom 與三平台 mix acceptance | 103 tests + browser/reset + user-confirmed physical mobile mix acceptance passed |
+| 25 | ✅ M8 / Task 8.1 — Performance Budget and Baseline | 8–12h | 36 checkpoint measurements、delivery/memory budget、reset evidence | 107 tests + desktop/fitted-mobile + production isolation passed |
 
 ## Recovery Planning Correction — 2026-07-14
 
@@ -772,4 +773,14 @@ The next eligible task is M7 / Task 7.5 — Audio acceptance. Do not begin it un
 - [x] Device, OS, and browser versions were not supplied and remain recorded as unavailable rather than inferred.
 - [x] `pnpm test` passed 103/103; typecheck, lint 0 errors (8 existing warnings), `pnpm build`, and `pnpm build:github-pages` passed.
 
-The next eligible task is M8 / Task 8.1 — 設定並量測 performance budget. Do not begin it until the next task-runner cycle.
+## M8 / Task 8.1 Closeout — 2026-07-24
+
+- [x] Defined desktop, 844×390 landscape-fit, and 390×844 portrait-fit budgets.
+- [x] Measured Title, Combat, Handoff, Boss, Failure, and Result twice per profile after 60 warm-up and 300 sampled frames (36 runs total).
+- [x] Frame-rate, 1% low, worst-frame, two-run stability, heap, texture, requested-runtime asset, decoded-texture, and raw-JavaScript budgets passed.
+- [x] Ten reset, ten failure/retry, and ten Result/replay cycles retained one Canvas, one Audio manager, one gameplay subscription, and stable actors/textures.
+- [x] Local production retained one Canvas and ignored all performance profiling query flags.
+- [x] GitHub Pages artifact measured 125,451,173 bytes against a 30 MiB budget; runtime-requested assets remained 12,891,503 bytes, proving a packaging defect rather than a runtime-load regression.
+- [x] `pnpm test` passed 107/107; typecheck, lint 0 errors (8 existing warnings), `pnpm build`, and `pnpm build:github-pages` passed.
+
+The next eligible task is M8 / Task 8.4 — Production asset packaging and memory optimization. Do not begin it until the next task-runner cycle.

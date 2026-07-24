@@ -895,3 +895,21 @@ does not bypass semantic events or create actor-owned playback.
 Cloudflare Worker、D1、Drizzle、ChatGPT auth 與 examples 是 starter infrastructure，目前不在 gameplay data flow。除非 Sprint 明確需要存檔、排行榜或身份功能，禁止讓 gameplay 依賴這些服務。
 
 TypeScript 以兩個明確 project boundary 驗證：`tsconfig.json` 覆蓋正式 `app/**` gameplay/browser source，`tsconfig.worker.json` 只覆蓋 Cloudflare Worker。未啟用的 examples、DB 與 build tooling 不得污染正式 app typecheck。
+
+# Performance Profiling Contract
+
+M8 / Task 8.1 adds a development-only, read-only measurement boundary:
+
+- `PerformanceSampler` owns a one-shot 60-frame warm-up and 300-frame sample.
+- `MainScene` decides when Title, Combat, Handoff, Boss, Failure, or Result is
+  ready and publishes final metrics only through Canvas datasets.
+- `PhaserGame` may reproduce the accepted fitted viewport sizes only when both
+  development mode and the explicit performance query are active.
+- `tools/report_performance_assets.mjs` reads the runtime manifest and existing
+  build outputs. It never edits assets or production configuration.
+- Production does not expose datasets, viewport overrides, overlays, or an
+  alternate gameplay path.
+
+Profiling may observe Scene, texture, Audio, and gameplay-subscription counts,
+but it must not own gameplay state or optimize it. A failed budget selects a
+separate roadmap task.

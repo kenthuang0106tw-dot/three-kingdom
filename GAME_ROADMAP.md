@@ -364,10 +364,10 @@ M6A 不加入新角色、新敵人、新招式、第二關、Audio、技能、�
 
 | ID | Description | Priority | Difficulty | Dependencies | Acceptance Criteria | Expected Files | Risk |
 |---|---|---:|---:|---|---|---|---|
-| 8.1 | 設定並量測 performance budget | P0 | Medium | M7 | FPS、memory、load size 有基準 | profiling docs/tests | 無目標裝置 |
+| 8.1 | 設定並量測 performance budget (Completed 2026-07-24) | P0 | Medium | M7 | FPS、memory、load size 有基準 | profiling docs/tests | 無目標裝置 |
 | 8.2 | Game-feel timing pass | P0 | High | Complete gameplay | 參數變更有 before/after evidence | configs | 無止境微調 |
 | 8.3 | Release visual defect pass | P1 | Medium | M6A accepted | 只修 clipping、seam、readability 與平台差異；不新增整套 art scope | existing assets/checklist | 重開已 freeze 的美術方向 |
-| 8.4 | Asset atlas/memory optimization | P0 | High | 8.1 | 符合手機 memory/load budget | assets/pipeline | 畫質下降 |
+| 8.4 | Production asset packaging and memory optimization | P0 | High | 8.1 | production 只包含 runtime 必要資源且符合 delivery budget；decoded memory 未超標時不重製 atlas | build/assets/tests | 漏包間接引用素材 |
 | 8.5 | Conditional pooling | P2 | Medium | 8.1 | 只有 profiling 證明 GC spike 才實作 | effects/pools | YAGNI |
 | 8.6 | Flash/shake/accessibility settings | P1 | Medium | M6 UI | 可降低強度；預設手感不變 | settings/UI | 設定 scope 膨脹 |
 | 8.7 | Full QA matrix | P0 | High | 8.1–8.6 | CHECKLIST 全部有 evidence，無 Critical/High defect | tests/docs | 測試時間不足 |
@@ -477,7 +477,10 @@ M6A 不加入新角色、新敵人、新招式、第二關、Audio、技能、�
 - M7 / Task 7.5 (Audio acceptance) completed on 2026-07-24.
 - Evidence: complete success/failure cue matrix, deterministic final-hit peak headroom, catalog-only mix tuning, 103 tests, both builds, development/production browser smoke, ten retry/replay cycles, and user-confirmed physical iOS Safari/Android Chrome mix acceptance (device and browser versions not supplied).
 - Milestone 7 is complete.
-- Next eligible task: M8 / Task 8.1 (設定並量測 performance budget).
+- M8 / Task 8.1 (Performance budget and baseline) completed on 2026-07-24.
+- Evidence: 36 reproducible checkpoint runs across desktop, 844×390 landscape fit, and 390×844 portrait fit; 10 reset, failure/retry, and Result/replay cycles; one production Canvas with no profiling leakage; 107 tests and both builds.
+- Runtime frame, stability, heap, texture, requested-asset, decoded-texture, and raw-JavaScript budgets passed. The GitHub Pages artifact measured 125,451,173 bytes against a 30 MiB budget because non-runtime source/debug/QA files are copied from `public/`.
+- Next eligible task: M8 / Task 8.4 (Production asset packaging and memory optimization). Packaging is first; atlas or runtime-art changes require new evidence.
 
 ## 4. Global Acceptance Rules
 

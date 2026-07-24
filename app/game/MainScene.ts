@@ -29,6 +29,7 @@ import { FailureController, type FailureRestartSource as ExplicitFailureRestartS
 import { ResultController, type ResultReplaySource as ExplicitResultReplaySource } from "./ui/ResultController";
 import { addButtonFrame, addModalFrame, addUiText, UI_COLORS } from "./ui/UiArt";
 import { AudioManager, type AudioContextBackend, type AudioSoundBackend, type AudioTrackBackend } from "./audio/AudioManager";
+import { PERFORMANCE_SAMPLE_CONFIG, PerformanceSampler } from "./debug/PerformanceSampler";
 
 type AttackState = "attack1" | "attack2" | "attack3";
 type TitleStartSource = "keyboard" | "pointer" | "smoke";
@@ -175,6 +176,11 @@ export default class MainScene extends Phaser.Scene {
   private visualFreezeMode = false;
   private visualFreezeWarmupFrames = 0;
   private readonly visualFreezeDeltas: number[] = [];
+  private performanceProfileMode = false;
+  private performanceCheckpoint = "unspecified";
+  private performanceViewport = "desktop";
+  private performanceProfileStarted = false;
+  private performanceSampler?: PerformanceSampler;
   private previewMode = false;
   private enemyPreviewMode = false;
   private resetSmokeMode = false;
@@ -273,6 +279,11 @@ export default class MainScene extends Phaser.Scene {
     this.visualFreezeMode = development && query.get("visualFreeze") === "1";
     this.visualFreezeWarmupFrames = 0;
     this.visualFreezeDeltas.length = 0;
+    this.performanceProfileMode = development && query.get("performanceProfile") === "1";
+    this.performanceCheckpoint = query.get("performanceCheckpoint") ?? "unspecified";
+    this.performanceViewport = query.get("performanceViewport") ?? "desktop";
+    this.performanceProfileStarted = false;
+    this.performanceSampler = this.performanceProfileMode ? new PerformanceSampler() : undefined;
     this.resetSmokeMode = development && query.get("resetSmoke") === "1";
     this.bossMovementSmokeMode = development && query.get("bossMovementSmoke") === "1";
     this.bossCombatSmokeMode = development && query.get("bossCombatSmoke") === "1";
@@ -441,6 +452,13 @@ export default class MainScene extends Phaser.Scene {
           this.textures.getTextureKeys().filter(key => !key.startsWith("__")).length,
         );
       }
+      if (this.performanceProfileMode) {
+        this.game.canvas.dataset.performanceProfileComplete = "false";
+        this.game.canvas.dataset.performanceProfileCheckpoint = this.performanceCheckpoint;
+        this.game.canvas.dataset.performanceProfileViewport = this.performanceViewport;
+        this.game.canvas.dataset.performanceProfileWarmupFrames = String(PERFORMANCE_SAMPLE_CONFIG.warmupFrames);
+        this.game.canvas.dataset.performanceProfileTargetSamples = String(PERFORMANCE_SAMPLE_CONFIG.sampleFrames);
+      }
     }
     this.hud = new GameHud(this, this.gameplayEvents, development);
     this.pauseController = new PauseController(this);
@@ -498,6 +516,7 @@ export default class MainScene extends Phaser.Scene {
   }
 
   update() {
+    this.updatePerformanceProfileMetrics();
     if (this.enemyPreviewMode) { this.updateEnemyAlignmentPreview(); return; }
     if (this.previewMode) { this.updatePreviewMode(); return; }
     this.updateVisualFreezeMetrics();
@@ -608,6 +627,57 @@ export default class MainScene extends Phaser.Scene {
     this.game.canvas.dataset.visualFreezeAverageFps = (this.visualFreezeDeltas.length * 1000 / totalDelta).toFixed(2);
     this.game.canvas.dataset.visualFreezeOnePercentLowFps = (1000 / slowestAverage).toFixed(2);
     this.game.canvas.dataset.visualFreezeComplete = "true";
+  }
+
+  private updatePerformanceProfileMetrics() {
+    if (!this.performanceProfileMode) return;
+    if (!this.performanceProfileStarted) {
+      this.performanceProfileStarted = this.isPerformanceCheckpointReady();
+      if (!this.performanceProfileStarted) return;
+      this.game.canvas.dataset.performanceProfileStarted = "true";
+    }
+    const sample = this.performanceSampler?.record(this.game.loop.delta);
+    if (!sample) return;
+
+    const memory = (window.performance as Performance & {
+      readonly memory?: Readonly<{
+        usedJSHeapSize: number;
+        totalJSHeapSize: number;
+        jsHeapSizeLimit: number;
+      }>;
+    }).memory;
+    const dataset = this.game.canvas.dataset;
+    dataset.performanceProfileSampleCount = String(sample.sampleCount);
+    dataset.performanceProfileAverageFps = sample.averageFps.toFixed(2);
+    dataset.performanceProfileOnePercentLowFps = sample.onePercentLowFps.toFixed(2);
+    dataset.performanceProfileWorstFrameTimeMs = sample.worstFrameTimeMs.toFixed(2);
+    dataset.performanceProfileTextureCount = String(
+      this.textures.getTextureKeys().filter(key => !key.startsWith("__")).length,
+    );
+    dataset.performanceProfileGameObjectCount = String(this.children.list.length);
+    dataset.performanceProfileHeapUsedBytes = memory ? String(memory.usedJSHeapSize) : "unavailable";
+    dataset.performanceProfileHeapTotalBytes = memory ? String(memory.totalJSHeapSize) : "unavailable";
+    dataset.performanceProfileHeapLimitBytes = memory ? String(memory.jsHeapSizeLimit) : "unavailable";
+    dataset.performanceProfileComplete = "true";
+  }
+
+  private isPerformanceCheckpointReady() {
+    switch (this.performanceCheckpoint) {
+      case "title":
+        return this.gameFlow.state === "title";
+      case "combat":
+        return this.gameFlow.state === "playing" && this.enemyManager.getLivingEnemies().length > 0;
+      case "handoff":
+        return this.gameFlow.state === "playing" && this.cameraHandoff.active;
+      case "boss":
+        return this.gameFlow.state === "playing" && this.bossActor !== undefined;
+      case "failure":
+        return this.gameFlow.state === "failed";
+      case "result":
+        return this.gameFlow.state === "cleared";
+      default:
+        return true;
+    }
   }
 
   private togglePause(): boolean {
@@ -984,7 +1054,8 @@ export default class MainScene extends Phaser.Scene {
       }
     }
 
-    if (this.failureSmokeCycleActive) {
+    if (this.failureSmokeCycleActive
+      && !(this.performanceProfileMode && this.performanceCheckpoint === "failure")) {
       this.failureSmokeIteration += 1;
       this.failureSmokeTimer?.remove(false);
       this.failureSmokeTimer = this.time.delayedCall(FAILURE_SMOKE_RESTART_MS, () => {

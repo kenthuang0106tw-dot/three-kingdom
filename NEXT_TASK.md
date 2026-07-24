@@ -1,57 +1,62 @@
 # Next Task
 
-## M8 / Task 8.1 — Performance Budget and Baseline
+## M8 / Task 8.4 — Production Asset Packaging and Memory Optimization
 
 ### Why this is next
 
-The playable Vertical Slice, frozen visual set, and accepted Audio milestone are
-complete. Before timing polish, atlas optimization, pooling, or release QA, the
-project needs one reproducible performance baseline so later work responds to
-measured bottlenecks instead of assumptions.
+Task 8.1 found one objective budget failure: the GitHub Pages artifact is
+125,451,173 bytes (119.64 MiB) against a 30 MiB budget, while the assets the
+game actually requests are only 12,891,503 bytes (12.29 MiB). Vite currently
+copies source, debug, onion-skin, silhouette, overview, and other QA files from
+`public/` into production. Correcting that packaging boundary is the smallest
+evidence-backed performance task and avoids speculative pooling or frozen-art
+changes.
 
 ### Completion criteria
 
-- Define explicit desktop, 844×390 landscape, and 390×844 portrait budgets for
-  average FPS, 1% low FPS, worst frame time, encoded load size, decoded texture
-  estimate, runtime texture count, and memory when the browser exposes it.
-- Measure Title, normal combat, encounter handoff, Boss combat, Failure/retry,
-  and Result/replay checkpoints from the production-equivalent Vertical Slice.
-- Use a fixed warm-up, sample count, viewport, route, revision, and checkpoint
-  procedure so another developer can reproduce every measurement.
-- Reuse the accepted M6A profiling seam where possible. Any new instrumentation
-  must be development-only, readonly, lifecycle-clean, and absent from
-  production presentation.
-- Record unsupported browser metrics as unavailable rather than estimating or
-  substituting a different metric.
-- Produce a baseline report identifying any budget failure and its measured
-  source, but do not implement optimization, pooling, atlas changes, gameplay
-  tuning, content, art, UI, or Audio changes in this task.
-
-### Validation
-
-- Capture at least 60 warm-up frames followed by 300 measured frames at each
-  required gameplay checkpoint and viewport.
-- Verify measurements are stable across two runs within a documented tolerance.
-- Verify one Canvas and no listener, timer, texture, actor, or Audio ownership
-  growth across ten retry/replay Scene resets.
-- Run development and local production browser smoke; production must not expose
-  profiling overlays or development datasets.
+- Inventory every production runtime asset reference, including manifest
+  entries, atlas image requests, React shell side art, fonts, effects, and audio.
+- Preserve all source/debug/QA files in the repository while excluding files
+  that no production route can request from `dist` and `dist-github`.
+- Keep all frozen runtime asset bytes and visual hashes unchanged.
+- Reduce the GitHub Pages artifact to at most 30 MiB.
+- Keep requested runtime asset bytes at or below the accepted 15 MiB budget.
+- Keep estimated decoded RGBA textures at or below 140 MiB; because the current
+  value already passes, do not rebuild atlases or alter runtime art in this task.
+- Verify every required production asset route returns 200 with the correct
+  content type and no missing requests.
+- Verify Title, Combat, Handoff, Boss, Failure, and Result on desktop,
+  844×390 landscape fit, and 390×844 portrait fit without a visual or gameplay
+  regression.
+- Preserve one Canvas, one Audio manager, one gameplay subscription, and stable
+  reset ownership.
 - Run `pnpm test`, `pnpm typecheck`, `pnpm lint`, `pnpm build`, and
   `pnpm build:github-pages`.
 
+### Acceptance method
+
+- Run `node tools/report_performance_assets.mjs` after both production builds
+  and record the artifact/runtime/decoded/JavaScript totals.
+- Compare the frozen runtime asset hash inventory before and after packaging.
+- Run route coverage tests against both local production outputs.
+- Run local production browser smoke at the six accepted checkpoints and three
+  viewport profiles; confirm zero console/runtime errors.
+- Re-run the ten-cycle reset, Failure/retry, and Result/replay ownership smokes.
+
 ### Expected files
 
-- `docs/performance/m8-performance-baseline.md`
-- Focused profiling utility or development-only Scene seam only if existing
-  M6A instrumentation cannot produce the required evidence
-- Focused tests for metric calculation and production stripping
-- `CHECKLIST.md`, `SPRINT.md`, `GAME_ROADMAP.md`, `TECH_DEBT.md`, `README.md`,
-  and `NEXT_TASK.md`
+- Production/GitHub Pages build configuration or a focused packaging utility
+- Focused packaging, route, and frozen-hash tests
+- `docs/performance/m8-performance-baseline.md` or a Task 8.4 result addendum
+- `ASSET_PIPELINE.md`, `CHECKLIST.md`, `SPRINT.md`, `GAME_ROADMAP.md`,
+  `TECH_DEBT.md`, `README.md`, and `NEXT_TASK.md`
 
 ### Risks
 
-- Device-specific memory APIs may be unavailable or non-comparable.
-- Debug overlays and browser automation can distort frame-time measurements.
-- A single idle checkpoint can hide combat, transition, or cleanup spikes.
-- Premature optimization would mix Task 8.1 measurement with later Tasks 8.4
-  or 8.5 and invalidate the baseline.
+- React shell side art and atlas images are indirect references outside the
+  manifest and can be omitted by an incomplete inventory.
+- Filtering `public/` too broadly can cause production-only 404s.
+- Moving or regenerating frozen assets would create unnecessary visual risk;
+  this task must change packaging, not source art.
+- The decoded texture budget is close to its limit, but optimizing it now would
+  mix a passing metric into the confirmed packaging failure.

@@ -1141,3 +1141,19 @@
 | Automated gates | Pass | 103/103 tests, typecheck, lint 0 errors (8 existing warnings), both builds |
 | Scope | Pass | Only evidence-backed catalog gains, tests, and documentation changed; no gameplay, art, assets, settings, or architecture expansion |
 | Next task | Selected | M8 / Task 8.1 — 設定並量測 performance budget |
+
+## M8 / Task 8.1 Acceptance — 2026-07-24
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Task ID | Pass | M8 / Task 8.1 — Performance Budget and Baseline |
+| Measurement matrix | Pass | Six checkpoints × three profiles × two runs; each used 60 warm-up and 300 sampled frames |
+| Runtime performance | Pass | Average FPS, 1% low, worst frame, run variance, heap, texture, decoded-memory, and raw-JavaScript budgets passed |
+| Ownership | Pass | Stable GameObject counts; one Canvas, Audio manager, and gameplay subscription |
+| Reset | Pass | Ten reset, ten Failure/retry, and ten Result/replay cycles without growth or stale actors |
+| Runtime delivery | Pass | 43 requested files; 12,891,503 encoded bytes; 136,629,760 estimated decoded RGBA bytes |
+| Deployment artifact | Fail recorded | 125,451,173 bytes exceeds 30 MiB because non-runtime `public/` files are copied; assigned to Task 8.4 |
+| Production isolation | Pass | One 1066.67×600 Canvas; performance query exposed no datasets or viewport override |
+| Automated gates | Pass | 107/107 tests, typecheck, lint 0 errors (8 existing warnings), both builds |
+| Scope | Pass | Measurement only; no optimization, gameplay, art, animation, Audio, Camera, or Stage behavior changed |
+| Next task | Selected | M8 / Task 8.4 — Production asset packaging and memory optimization |

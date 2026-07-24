@@ -9,12 +9,32 @@ declare global {
   }
 }
 
+const PERFORMANCE_VIEWPORTS = {
+  landscape: { width: "832px", height: "390px" },
+  portrait: { width: "390px", height: "182.8125px" },
+} as const;
+
 export default function PhaserGame() {
   const hostRef = useRef<HTMLDivElement>(null);
   const gameRef = useRef<import("phaser").Game | null>(null);
 
   useEffect(() => {
     let cancelled = false;
+    const host = hostRef.current;
+    const shell = process.env.NODE_ENV !== "production"
+      ? host?.closest<HTMLElement>(".arcade-shell")
+      : null;
+    const requestedViewport = new URLSearchParams(window.location.search).get("performanceViewport");
+    const performanceViewport = requestedViewport === "landscape" || requestedViewport === "portrait"
+      ? PERFORMANCE_VIEWPORTS[requestedViewport]
+      : undefined;
+    const previousShellStyle = shell ? shell.getAttribute("style") : null;
+    if (shell && performanceViewport) {
+      shell.style.width = performanceViewport.width;
+      shell.style.height = performanceViewport.height;
+      shell.style.maxWidth = "none";
+      shell.style.maxHeight = "none";
+    }
 
     const boot = async () => {
       const [Phaser, { default: MainScene }] = await Promise.all([
@@ -80,6 +100,10 @@ export default function PhaserGame() {
       const game = gameRef.current;
       if (game) releasePhaserGame(window, game);
       gameRef.current = null;
+      if (shell && performanceViewport) {
+        if (previousShellStyle === null) shell.removeAttribute("style");
+        else shell.setAttribute("style", previousShellStyle);
+      }
     };
   }, []);
 
