@@ -28,7 +28,7 @@ import { PauseController } from "./ui/PauseController";
 import { FailureController, type FailureRestartSource as ExplicitFailureRestartSource } from "./ui/FailureController";
 import { ResultController, type ResultReplaySource as ExplicitResultReplaySource } from "./ui/ResultController";
 import { addButtonFrame, addModalFrame, addUiText, UI_COLORS } from "./ui/UiArt";
-import { AudioManager, type AudioSoundBackend, type AudioTrackBackend } from "./audio/AudioManager";
+import { AudioManager, type AudioContextBackend, type AudioSoundBackend, type AudioTrackBackend } from "./audio/AudioManager";
 
 type AttackState = "attack1" | "attack2" | "attack3";
 type TitleStartSource = "keyboard" | "pointer" | "smoke";
@@ -353,11 +353,15 @@ export default class MainScene extends Phaser.Scene {
     if (this.previewMode) { this.createPreviewMode(); return; }
 
     this.lifecycleClock = new LifecycleClock(this);
+    const audioContext = "context" in this.sound
+      ? (this.sound.context as unknown as AudioContextBackend)
+      : undefined;
     this.audioManager = new AudioManager(
       this.sound as unknown as AudioSoundBackend,
       this.game.events,
       this.gameplayEvents,
       (key, config) => this.sound.add(key, config) as unknown as AudioTrackBackend,
+      audioContext,
     );
     this.audioManager.start();
     const pendingRestartAudioAction = this.pendingRestartAudioAction;
@@ -1164,6 +1168,10 @@ export default class MainScene extends Phaser.Scene {
     dataset.audioBgmStartCount = String(audio.bgmStartCount);
     dataset.audioBgmTransitionCount = String(audio.bgmTransitionCount);
     dataset.audioBgmStopCount = String(audio.bgmStopCount);
+    dataset.audioContextState = audio.contextState;
+    dataset.audioRecoveryPending = String(audio.recoveryPending);
+    dataset.audioRecoveryCount = String(audio.recoveryCount);
+    dataset.audioStaleCueDropCount = String(audio.staleCueDropCount);
   }
 
   private updateFailureDataset() {

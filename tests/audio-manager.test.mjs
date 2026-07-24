@@ -74,12 +74,50 @@ class TestLifecycleSource {
   }
 }
 
+class TestAudioContext {
+  state = "suspended";
+  resumeCount = 0;
+  listeners = new Set();
+  pendingResume;
+
+  addEventListener(_event, listener) { this.listeners.add(listener); }
+  removeEventListener(_event, listener) { this.listeners.delete(listener); }
+  resume() {
+    this.resumeCount += 1;
+    this.pendingResume ??= Promise.withResolvers();
+    return this.pendingResume.promise;
+  }
+  setState(state) {
+    this.state = state;
+    for (const listener of this.listeners) listener();
+    if (state === "running" && this.pendingResume) {
+      this.pendingResume.resolve();
+      this.pendingResume = undefined;
+    }
+  }
+}
+
 const makeManager = () => {
   const sound = new TestSoundBackend();
   const lifecycle = new TestLifecycleSource();
   const events = new GameplayEventHub();
   const manager = new AudioManager(sound, lifecycle, events, (key, config) => sound.add(key, config));
   return { manager, sound, lifecycle, events };
+};
+
+const makeRecoveryManager = () => {
+  const sound = new TestSoundBackend();
+  const lifecycle = new TestLifecycleSource();
+  const events = new GameplayEventHub();
+  const context = new TestAudioContext();
+  const manager = new AudioManager(
+    sound,
+    lifecycle,
+    events,
+    (key, config) => sound.add(key, config),
+    context,
+  );
+  return { manager, sound, lifecycle, events, context };
 };
 
 test("Audio manager owns separate clamped SFX and BGM channel state", () => {
@@ -253,6 +291,91 @@ test("Audio manager keeps the latest locked BGM intent and resumes it once", () 
   manager.reset();
   assert.equal(manager.getSnapshot().bgmStartCount, 0);
   assert.equal(manager.getSnapshot().bgmStopCount, 0);
+});
+
+test("First Title gesture coalesces unlock races and starts one Stage track plus one cue", async () => {
+  const { manager, sound, events, context } = makeRecoveryManager();
+  manager.start();
+
+  assert.equal(manager.requestUnlock(), false);
+  assert.equal(manager.requestUnlock(), false);
+  assert.equal(sound.unlockCount, 1);
+  assert.equal(context.resumeCount, 1);
+  events.publish({ type: "title-started", source: "pointer", at: 1 });
+  assert.equal(manager.getSnapshot().pendingCueCount, 1);
+  assert.equal(sound.tracks.length, 0);
+
+  context.setState("running");
+  await Promise.resolve();
+  assert.equal(sound.tracks.length, 1);
+  assert.equal(sound.tracks[0].key, "bgm-stage");
+  assert.equal(sound.tracks[0].playCount, 1);
+  assert.deepEqual(sound.plays.map(play => play.key), ["sfx-ui-start"]);
+  assert.equal(manager.getSnapshot().pendingCueCount, 0);
+  assert.equal(manager.getSnapshot().recoveryPending, false);
+});
+
+test("Suspended context resumes the latest BGM without layering or stale SFX", async () => {
+  const { manager, sound, lifecycle, events, context } = makeRecoveryManager();
+  sound.locked = false;
+  context.setState("running");
+  manager.start();
+  events.publish({ type: "title-started", source: "pointer", at: 1 });
+  events.publish({ type: "boss-activated", bossId: "warlord", at: 2 });
+  assert.equal(sound.tracks.length, 2);
+
+  context.setState("interrupted");
+  events.publish({ type: "player-hit", enemyId: 1, at: 3 });
+  assert.equal(sound.plays.length, 1);
+  assert.equal(manager.getSnapshot().suppressedCount, 1);
+  lifecycle.emit("blur");
+  lifecycle.emit("focus");
+  lifecycle.emit("focus");
+  assert.equal(context.resumeCount, 1);
+
+  context.setState("running");
+  await Promise.resolve();
+  assert.equal(sound.tracks.length, 2);
+  assert.equal(manager.getSnapshot().currentBgm, "boss");
+  assert.equal(manager.getSnapshot().bgmStartCount, 2);
+  assert.equal(sound.plays.length, 1);
+});
+
+test("Visibility and manual pause remain independent during context recovery", async () => {
+  const { manager, sound, lifecycle, context } = makeRecoveryManager();
+  sound.locked = false;
+  context.setState("running");
+  manager.start();
+  manager.setManualPaused(true);
+  lifecycle.emit("blur");
+  context.setState("suspended");
+  lifecycle.emit("focus");
+  assert.equal(sound.resumeCount, 0);
+  assert.equal(context.resumeCount, 0);
+  assert.equal(manager.getSnapshot().paused, true);
+
+  manager.setManualPaused(false);
+  assert.equal(sound.resumeCount, 1);
+  assert.equal(context.resumeCount, 1);
+  context.setState("running");
+  await Promise.resolve();
+  assert.equal(manager.getSnapshot().paused, false);
+  assert.equal(manager.getSnapshot().unlocked, true);
+});
+
+test("Visibility suspension drops queued SFX and cleanup removes context ownership", () => {
+  const { manager, lifecycle, events, context } = makeRecoveryManager();
+  manager.start();
+  events.publish({ type: "title-started", source: "pointer", at: 1 });
+  assert.equal(manager.getSnapshot().pendingCueCount, 1);
+  lifecycle.emit("blur");
+  assert.equal(manager.getSnapshot().pendingCueCount, 0);
+  assert.equal(manager.getSnapshot().staleCueDropCount, 1);
+  assert.equal(context.listeners.size, 1);
+
+  assert.equal(manager.destroy(), true);
+  assert.equal(context.listeners.size, 0);
+  assert.equal(lifecycle.listeners.blur.size, 0);
 });
 
 test("MainScene owns one Audio manager and removes the old direct hit-sound seam", async () => {

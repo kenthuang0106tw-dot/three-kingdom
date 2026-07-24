@@ -5,6 +5,7 @@ import { mapGameplayEventToSfx, type SfxCommand, type SfxCueId } from "./SfxCata
 export type AudioChannel = "sfx" | "bgm";
 export type AudioPauseReason = "manual" | "visibility";
 export type AudioManagerStatus = "stopped" | "running" | "destroyed";
+export type AudioContextStatus = "unavailable" | "running" | "suspended" | "interrupted" | "closed";
 
 export type AudioChannelSnapshot = Readonly<{
   volume: number;
@@ -27,6 +28,10 @@ export type AudioManagerSnapshot = Readonly<{
   bgmStartCount: number;
   bgmTransitionCount: number;
   bgmStopCount: number;
+  contextState: AudioContextStatus;
+  recoveryPending: boolean;
+  recoveryCount: number;
+  staleCueDropCount: number;
   channels: Readonly<Record<AudioChannel, AudioChannelSnapshot>>;
 }>;
 
@@ -44,6 +49,13 @@ export interface AudioSoundBackend {
 export interface AudioLifecycleSource {
   on(event: "blur" | "focus", listener: () => void): unknown;
   off(event: "blur" | "focus", listener: () => void): unknown;
+}
+
+export interface AudioContextBackend {
+  readonly state: string;
+  resume(): Promise<void>;
+  addEventListener(event: "statechange", listener: () => void): void;
+  removeEventListener(event: "statechange", listener: () => void): void;
 }
 
 export interface AudioTrackBackend {
@@ -82,20 +94,29 @@ export class AudioManager {
   private readonly lastCueAt = new Map<SfxCueId, number>();
   private readonly pendingCues = new Map<SfxCueId, SfxCommand>();
   private readonly createTrack?: AudioTrackFactory;
+  private readonly context?: AudioContextBackend;
   private desiredBgm?: Extract<BgmCommand, { action: "play" }>;
   private activeBgm?: AudioTrackBackend;
   private activeBgmId: BgmTrackId | null = null;
   private bgmStartCount = 0;
   private bgmTransitionCount = 0;
   private bgmStopCount = 0;
+  private recoveryPending = false;
+  private recoveryCount = 0;
+  private staleCueDropCount = 0;
 
-  private readonly onBlur = () => this.setPauseReason("visibility", true);
-  private readonly onFocus = () => this.setPauseReason("visibility", false);
-  private readonly onUnlocked = () => {
-    this.unlocked = true;
-    this.startDesiredBgm();
-    this.flushPendingCues();
+  private readonly onBlur = () => {
+    this.dropPendingCues();
+    this.setPauseReason("visibility", true);
   };
+  private readonly onFocus = () => {
+    this.setPauseReason("visibility", false);
+    if (!this.outputPaused) this.requestContextRecovery();
+  };
+  private readonly onUnlocked = () => {
+    this.syncOutputReadiness();
+  };
+  private readonly onContextStateChange = () => this.syncOutputReadiness();
   private readonly onGameplayEvent = (event: GameplayEvent) => {
     this.eventCount += 1;
     this.lastEventType = event.type;
@@ -108,8 +129,9 @@ export class AudioManager {
       return;
     }
     this.lastCueAt.set(cue.cue, event.at);
-    if (!this.unlocked) {
-      this.pendingCues.set(cue.cue, cue);
+    if (!this.isOutputReady()) {
+      if (this.canQueueUnavailableCue(event)) this.pendingCues.set(cue.cue, cue);
+      else this.suppressedCount += 1;
       return;
     }
     this.playCue(cue);
@@ -120,12 +142,14 @@ export class AudioManager {
     lifecycle: AudioLifecycleSource,
     gameplayEvents: GameplayEventHub,
     createTrack?: AudioTrackFactory,
+    context?: AudioContextBackend,
   ) {
     this.sound = sound;
     this.lifecycle = lifecycle;
     this.gameplayEvents = gameplayEvents;
     this.createTrack = createTrack;
-    this.unlocked = sound.locked !== true;
+    this.context = context;
+    this.unlocked = this.calculateOutputReadiness();
   }
 
   start(): boolean {
@@ -135,26 +159,16 @@ export class AudioManager {
     this.lifecycle.on("blur", this.onBlur);
     this.lifecycle.on("focus", this.onFocus);
     this.sound.on?.("unlocked", this.onUnlocked);
+    this.context?.addEventListener("statechange", this.onContextStateChange);
+    this.syncOutputReadiness();
     return true;
   }
 
   requestUnlock(): boolean {
     if (this.status === "destroyed") return false;
-    if (this.unlocked || this.sound.locked !== true) {
-      const wasUnlocked = this.unlocked;
-      this.unlocked = true;
-      if (!wasUnlocked) {
-        this.startDesiredBgm();
-        this.flushPendingCues();
-      }
-      return true;
-    }
-    this.sound.unlock?.();
-    this.unlocked = this.sound.locked !== true;
-    if (this.unlocked) {
-      this.startDesiredBgm();
-      this.flushPendingCues();
-    }
+    if (this.sound.locked === true) this.sound.unlock?.();
+    this.requestContextRecovery();
+    this.syncOutputReadiness();
     return this.unlocked;
   }
 
@@ -193,6 +207,8 @@ export class AudioManager {
     this.bgmStartCount = 0;
     this.bgmTransitionCount = 0;
     this.bgmStopCount = 0;
+    this.recoveryCount = 0;
+    this.staleCueDropCount = 0;
   }
 
   stop(): boolean {
@@ -234,6 +250,10 @@ export class AudioManager {
       bgmStartCount: this.bgmStartCount,
       bgmTransitionCount: this.bgmTransitionCount,
       bgmStopCount: this.bgmStopCount,
+      contextState: this.contextState(),
+      recoveryPending: this.recoveryPending,
+      recoveryCount: this.recoveryCount,
+      staleCueDropCount: this.staleCueDropCount,
       channels: Object.freeze({
         sfx: Object.freeze({ ...this.channels.sfx }),
         bgm: Object.freeze({ ...this.channels.bgm }),
@@ -251,7 +271,8 @@ export class AudioManager {
     if (shouldPause) this.sound.pauseAll();
     else {
       this.sound.resumeAll();
-      this.startDesiredBgm();
+      this.requestContextRecovery();
+      if (this.isOutputReady()) this.startDesiredBgm();
     }
   }
 
@@ -270,7 +291,7 @@ export class AudioManager {
   private startDesiredBgm(): boolean {
     const command = this.desiredBgm;
     if (!command || this.activeBgmId === command.track) return false;
-    if (this.status !== "running" || !this.unlocked || this.outputPaused || !this.createTrack) return false;
+    if (this.status !== "running" || !this.isOutputReady() || this.outputPaused || !this.createTrack) return false;
 
     const replacingTrack = this.activeBgm !== undefined;
     if (replacingTrack) this.stopActiveBgm();
@@ -316,7 +337,7 @@ export class AudioManager {
     const pauseAllowed = command.cue === "ui-pause"
       && this.pauseReasons.has("manual")
       && !this.pauseReasons.has("visibility");
-    if (this.status !== "running" || !this.unlocked || (this.outputPaused && !pauseAllowed)
+    if (this.status !== "running" || !this.isOutputReady() || (this.outputPaused && !pauseAllowed)
       || channel.muted || channel.volume === 0) {
       this.suppressedCount += 1;
       return false;
@@ -340,12 +361,70 @@ export class AudioManager {
     for (const cue of pending) this.playCue(cue);
   }
 
+  private canQueueUnavailableCue(event: GameplayEvent): boolean {
+    return event.type === "title-started"
+      || (event.type === "ui-action" && (event.action === "retry" || event.action === "replay"));
+  }
+
+  private dropPendingCues(): void {
+    this.staleCueDropCount += this.pendingCues.size;
+    this.pendingCues.clear();
+  }
+
+  private contextState(): AudioContextStatus {
+    if (!this.context) return "unavailable";
+    const state = this.context.state;
+    if (state === "running" || state === "suspended" || state === "interrupted" || state === "closed") return state;
+    return "suspended";
+  }
+
+  private calculateOutputReadiness(): boolean {
+    const contextReady = !this.context || this.context.state === "running";
+    return this.sound.locked !== true && contextReady;
+  }
+
+  private isOutputReady(): boolean {
+    return this.unlocked && this.calculateOutputReadiness();
+  }
+
+  private syncOutputReadiness(): void {
+    if (this.status === "destroyed") return;
+    if (this.context?.state === "running") this.recoveryPending = false;
+    const wasUnlocked = this.unlocked;
+    this.unlocked = this.calculateOutputReadiness();
+    if (!this.unlocked || this.outputPaused) return;
+    if (!wasUnlocked) this.recoveryCount += 1;
+    this.startDesiredBgm();
+    this.flushPendingCues();
+  }
+
+  private requestContextRecovery(): boolean {
+    const context = this.context;
+    if (!context || context.state === "running" || context.state === "closed" || this.recoveryPending) return false;
+    if (this.pauseReasons.has("manual")) return false;
+    this.recoveryPending = true;
+    try {
+      void context.resume()
+        .then(() => this.syncOutputReadiness())
+        .catch(() => undefined)
+        .finally(() => {
+          this.recoveryPending = false;
+          this.syncOutputReadiness();
+        });
+    } catch {
+      this.recoveryPending = false;
+      return false;
+    }
+    return true;
+  }
+
   private detach(): void {
     this.unsubscribeGameplay?.();
     this.unsubscribeGameplay = undefined;
     this.lifecycle.off("blur", this.onBlur);
     this.lifecycle.off("focus", this.onFocus);
     this.sound.off?.("unlocked", this.onUnlocked);
+    this.context?.removeEventListener("statechange", this.onContextStateChange);
     this.pendingCues.clear();
     this.desiredBgm = undefined;
   }
