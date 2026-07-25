@@ -4,8 +4,10 @@ import { addUiText, UI_COLORS } from "../ui/UiArt";
 
 const JOYSTICK_X = 128;
 const JOYSTICK_Y = 612;
-const JOYSTICK_RADIUS = 78;
+const JOYSTICK_RADIUS = 98;
 const JOYSTICK_DEAD_ZONE = 18;
+const JOYSTICK_SCALE = 1.25;
+const ATTACK_BUTTON_SCALE = 1.35;
 
 /** Converts a 360-degree analog joystick and attack button into the shared input snapshot. */
 export class TouchInputController {
@@ -67,10 +69,12 @@ export class TouchInputController {
 
   private createJoystick() {
     const base = this.scene.add.image(JOYSTICK_X, JOYSTICK_Y, "ui-joystick-base")
+      .setScale(JOYSTICK_SCALE)
       .setScrollFactor(0)
       .setDepth(9500)
       .setInteractive({ useHandCursor: false });
     this.joystickKnob = this.scene.add.image(JOYSTICK_X, JOYSTICK_Y, "ui-joystick-knob")
+      .setScale(JOYSTICK_SCALE)
       .setScrollFactor(0)
       .setDepth(9501);
     this.controls.push(base, this.joystickKnob);
@@ -84,10 +88,11 @@ export class TouchInputController {
 
   private createAttackButton() {
     this.attackButton = this.scene.add.image(1134, 610, "ui-attack-frame")
+      .setScale(ATTACK_BUTTON_SCALE)
       .setScrollFactor(0)
       .setDepth(9500)
       .setInteractive({ useHandCursor: false });
-    const label = addUiText(this.scene, 1134, 596, "J", 30, UI_COLORS.antiqueGold)
+    const label = addUiText(this.scene, 1134, 588, "J", 36, UI_COLORS.antiqueGold)
       .setOrigin(0.5, 0).setAlpha(0.95).setScrollFactor(0).setDepth(9501);
     this.controls.push(this.attackButton, label);
 

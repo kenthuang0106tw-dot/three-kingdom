@@ -155,6 +155,9 @@ test("Touch input shares the action snapshot and releases pointer state", async 
   assert.match(source, /360-degree analog joystick/);
   assert.match(source, /pointermove/);
   assert.match(source, /pointercancel/);
+  assert.match(source, /const JOYSTICK_RADIUS = 98/);
+  assert.match(source, /const JOYSTICK_SCALE = 1\.25/);
+  assert.match(source, /const ATTACK_BUTTON_SCALE = 1\.35/);
   assert.match(source, /pointerupoutside/);
   assert.match(source, /JOYSTICK_DEAD_ZONE/);
   assert.match(source, /resetJoystick/);
