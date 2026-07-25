@@ -10,6 +10,8 @@ Status: implementation verification complete; strategy comparison pending review
 | Attack direction | implicit current facing | locked at attack entry |
 | Attack Y line | implicit overlap | snapshots player Y at attack entry; ±48px is hittable |
 | Simultaneous attackers | one Attack Slot | unchanged: one Attack Slot |
+| Mauler re-entry cadence | 650–900ms director / 1150–1450ms recovery | 500–700ms director / 950–1150ms recovery |
+| Duelist re-entry cadence | 400–600ms director / 700–900ms recovery | 400–500ms director / 700–800ms recovery |
 
 No HP, damage, Player Combo, hitbox dimensions, Boss, stage, art, or new system changed.
 

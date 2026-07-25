@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createAttackCommitment, isWithinAttackLine } from "../app/game/enemy/AttackCommitment.ts";
-import { MAULER_ENEMY_CONFIG } from "../app/game/enemy/EnemyConfig.ts";
+import { DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG } from "../app/game/enemy/EnemyConfig.ts";
 
 test("Mauler attack commitment locks the startup facing and Y attack line", () => {
   const commitment = createAttackCommitment(-1, 560);
@@ -20,4 +20,11 @@ test("Mauler has readable startup and recovery without changing damage or HP", (
   assert.equal(MAULER_ENEMY_CONFIG.animationRates.attack, 5);
   assert.equal(MAULER_ENEMY_CONFIG.attackActiveFrame, 2);
   assert.equal(MAULER_ENEMY_CONFIG.maxHp, 5);
+});
+
+test("Mixed encounter increases pressure through cadence only", () => {
+  assert.deepEqual(MAULER_ENEMY_CONFIG.timing, { hurtMs: 300, directorDelayMin: 500, directorDelayMax: 700, recoveryMin: 950, recoveryMax: 1150 });
+  assert.deepEqual(DUELIST_ENEMY_CONFIG.timing, { hurtMs: 300, directorDelayMin: 400, directorDelayMax: 500, recoveryMin: 700, recoveryMax: 800 });
+  assert.equal(MAULER_ENEMY_CONFIG.maxHp, 5);
+  assert.equal(DUELIST_ENEMY_CONFIG.maxHp, 3);
 });
