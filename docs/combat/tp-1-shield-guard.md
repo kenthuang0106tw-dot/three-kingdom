@@ -36,6 +36,10 @@ Attack Slot. Therefore frontal repetition keeps the shield up instead of
 forcing an immediate counterattack; once pressure stops, normal attack-slot
 cadence may resume.
 
+While stationary, the Shield Guard uses an immovable ground-occupancy body:
+player contact cannot push him. Only his own walk movement and combat
+knockback may change his world position.
+
 ## Test evidence
 
 Automated checks passed on 2026-07-25:

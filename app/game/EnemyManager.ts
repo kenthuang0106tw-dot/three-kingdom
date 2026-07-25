@@ -328,7 +328,8 @@ export class EnemyManager {
     this.clearStateTimer(enemy);
     enemy.state = next;
     enemy.body.setVelocity(0, 0);
-    enemy.body.setImmovable(next === "hurt");
+    // Only AI walk may yield to collision resolution. Standing actors are ground occupancy.
+    enemy.body.setImmovable(next !== "walk");
     enemy.attackCommitment = next === "attack" ? createAttackCommitment(enemy.facing, this.playerBodyZone.y) : null;
     this.disableAttackHitbox(enemy);
     if (next === "idle") enemy.sprite.play(enemyAnimationKey(enemy.config, "idle"), true);
