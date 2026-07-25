@@ -17,6 +17,7 @@ guard direction; no production sprite, atlas, or new material was created.
 | --- | --- |
 | Guard sector | 110 degrees total, forward-only |
 | Guard direction lock | 800 ms |
+| Initial guard distance | 230 px / Y difference <= 100 px |
 | Damage while front-blocked | 0 |
 | Combo hit confirmation while blocked | none |
 | Attack direction/Y line | captured at attack startup |

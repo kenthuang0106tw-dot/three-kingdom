@@ -5,7 +5,7 @@ import { beginEncounter, createEncounterFlow, isEncounterCleared, recordEnemyRem
 import { DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SHIELD_GUARD_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemyAnimationKey, enemyAttackSpriteShouldFlip, enemySpriteShouldFlip, type EnemyConfig } from "./enemy/EnemyConfig";
 import { selectFairAttackCandidate } from "./enemy/AttackSlotPolicy";
 import { createAttackCommitment, isWithinAttackLine, type AttackCommitment } from "./enemy/AttackCommitment";
-import { SHIELD_GUARD_TIMING, type ShieldGuardState, isAttackBlockedByGuard } from "./enemy/ShieldGuard";
+import { SHIELD_GUARD_PARAMS, SHIELD_GUARD_TIMING, type ShieldGuardState, isAttackBlockedByGuard } from "./enemy/ShieldGuard";
 
 export type EnemyState = "idle" | "walk" | "attack" | "hurt" | "dead" | "guard" | "recovery";
 export type EnemyDamageResult = Readonly<{
@@ -190,7 +190,8 @@ export class EnemyManager {
 
   private updateShieldGuard(enemy: EnemyCombatant) {
     if (enemy.state === "guard") {
-      if (enemy.hasAttackSlot && this.clock.now() >= enemy.guardUntil) this.setState(enemy, "attack");
+      if (enemy.hasAttackSlot && this.clock.now() >= enemy.guardUntil && this.isInAttackRange(enemy)) this.setState(enemy, "attack");
+      else if (enemy.hasAttackSlot && this.clock.now() >= enemy.guardUntil) this.setState(enemy, "idle");
       else if (this.clock.now() >= enemy.guardUntil && !this.isPlayerInsideGuardCone(enemy)) this.setState(enemy, "idle");
       return true;
     }
@@ -202,7 +203,7 @@ export class EnemyManager {
       this.updateAttackApproach(enemy);
       return true;
     }
-    if (Math.abs(dx) <= 155 && Math.abs(dy) <= 90) {
+    if (Math.abs(dx) <= SHIELD_GUARD_PARAMS.guardEnterDistance && Math.abs(dy) <= SHIELD_GUARD_PARAMS.guardEnterYRange) {
       this.setFacing(enemy, dx >= 0 ? 1 : -1);
       this.setState(enemy, "guard");
       return true;
@@ -215,7 +216,7 @@ export class EnemyManager {
     const dx = this.playerBodyZone.x - enemy.bodyZone.x;
     const dy = this.playerBodyZone.y - enemy.bodyZone.y;
     this.setFacing(enemy, dx >= 0 ? 1 : -1);
-    if (Math.abs(dx) <= enemy.config.combat.attackXRange && Math.abs(dy) < enemy.config.combat.attackYRange && this.clock.now() >= enemy.cooldownUntil) {
+    if (this.isInAttackRange(enemy) && this.clock.now() >= enemy.cooldownUntil) {
       this.setState(enemy, "attack");
       return;
     }
@@ -226,6 +227,11 @@ export class EnemyManager {
     }
     const attackX = this.playerBodyZone.x - enemy.facing * enemy.config.combat.attackXRange * 0.82;
     this.moveToward(enemy, attackX, this.playerBodyZone.y);
+  }
+
+  private isInAttackRange(enemy: EnemyCombatant) {
+    return Math.abs(this.playerBodyZone.x - enemy.bodyZone.x) <= enemy.config.combat.attackXRange &&
+      Math.abs(this.playerBodyZone.y - enemy.bodyZone.y) < enemy.config.combat.attackYRange;
   }
 
   private updateFormationMovement(enemy: EnemyCombatant) {

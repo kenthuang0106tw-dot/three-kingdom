@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { readFile } from "node:fs/promises";
 import { SHIELD_GUARD_ENEMY_CONFIG } from "../app/game/enemy/EnemyConfig.ts";
-import { SHIELD_GUARD_TIMING, isAttackBlockedByGuard } from "../app/game/enemy/ShieldGuard.ts";
+import { SHIELD_GUARD_PARAMS, SHIELD_GUARD_TIMING, isAttackBlockedByGuard } from "../app/game/enemy/ShieldGuard.ts";
 
 test("Shield Guard blocks only its locked forward cone", () => {
   assert.equal(isAttackBlockedByGuard(1, 500, 560, 600, 560), true);
@@ -17,6 +17,7 @@ test("Shield Guard uses the normal Soldier health and an explicit guard/recovery
   assert.equal(SHIELD_GUARD_ENEMY_CONFIG.assetKey, "enemy-soldier");
   assert.equal(SHIELD_GUARD_ENEMY_CONFIG.combat.attackYRange, 28);
   assert.equal(SHIELD_GUARD_TIMING.guardLockMs, 800);
+  assert.deepEqual(SHIELD_GUARD_PARAMS, { guardEnterDistance: 230, guardEnterYRange: 100 });
   assert.deepEqual(
     [SHIELD_GUARD_TIMING.recoveryMinMs, SHIELD_GUARD_TIMING.recoveryMaxMs],
     [800, 1200],
@@ -26,12 +27,14 @@ test("Shield Guard uses the normal Soldier health and an explicit guard/recovery
 test("Shield Guard keeps guard direction locked, disables guard while attacking, and releases the attack slot", async () => {
   const source = await readFile(new URL("../app/game/EnemyManager.ts", import.meta.url), "utf8");
   assert.match(source, /enemy\.guardUntil = this\.clock\.now\(\) \+ SHIELD_GUARD_TIMING\.guardLockMs/);
-  assert.match(source, /if \(enemy\.hasAttackSlot && this\.clock\.now\(\) >= enemy\.guardUntil\) this\.setState\(enemy, "attack"\)/);
+  assert.match(source, /enemy\.hasAttackSlot && this\.clock\.now\(\) >= enemy\.guardUntil && this\.isInAttackRange\(enemy\)/);
+  assert.match(source, /else if \(enemy\.hasAttackSlot && this\.clock\.now\(\) >= enemy\.guardUntil\) this\.setState\(enemy, "idle"\)/);
   assert.match(source, /this\.clock\.now\(\) >= enemy\.guardUntil && !this\.isPlayerInsideGuardCone\(enemy\)/);
   assert.match(source, /guard: new Set\(\["idle", "attack", "hurt", "dead"\]\)/);
   assert.match(source, /if \(enemy\.isShieldGuard\) this\.setState\(enemy, "recovery"\)/);
   assert.match(source, /this\.releaseAttackSlot\(enemy\);/);
   assert.match(source, /createAttackCommitment\(enemy\.facing, this\.playerBodyZone\.y\)/);
+  assert.match(source, /Math\.abs\(this\.playerBodyZone\.y - enemy\.bodyZone\.y\) < enemy\.config\.combat\.attackYRange/);
 });
 
 test("Shield Guard block excludes damage and combo confirmation once per attack target", async () => {

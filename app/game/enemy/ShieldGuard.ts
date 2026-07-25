@@ -7,6 +7,11 @@ export const SHIELD_GUARD_TIMING = {
   frontHalfAngleDegrees: 55,
 } as const;
 
+export const SHIELD_GUARD_PARAMS = {
+  guardEnterDistance: 230,
+  guardEnterYRange: 100,
+} as const;
+
 /** Returns true only when an attacker is inside the locked forward guard cone. */
 export function isAttackBlockedByGuard(
   guardFacing: 1 | -1,
