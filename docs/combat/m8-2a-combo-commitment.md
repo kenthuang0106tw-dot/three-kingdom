@@ -1,6 +1,6 @@
 # M8 / Task 8.2A — Combo Commitment Prototype
 
-Status: implementation verified; manual combat-sample acceptance pending.
+Status: accepted by reviewer on 2026-07-25.
 
 ## Fixed scope
 
@@ -54,10 +54,8 @@ No synthetic counts are recorded as human playtest data.
 
 ## Technical-lead decision
 
-**Adjust / provisional.** The implementation is safe to hand to a reviewer:
-attack3 now has a visible 275 ms additional commitment and materially distinct
-damage, knockback, and hit-stop values, while the existing Combo and lifecycle
-contracts remain green. It is not yet accepted as final balance because the
-required 30 human tactical samples have not been observed. Do not treat the
-temporary values as frozen or start a different balance task before the ledger
-is completed.
+**Accepted.** Reviewer acceptance confirms that the 650 ms attack3, including
+its 400 ms recovery, has sufficient commitment while remaining useful. The
+existing Combo and lifecycle contracts remain green. Detailed per-scenario
+counts were not supplied, so this records acceptance rather than inventing a
+playtest ledger.

@@ -482,8 +482,8 @@ M6A 不加入新角色、新敵人、新招式、第二關、Audio、技能、�
 - Runtime frame, stability, heap, texture, requested-asset, decoded-texture, and raw-JavaScript budgets passed. The GitHub Pages artifact measured 125,451,173 bytes against a 30 MiB budget because non-runtime source/debug/QA files are copied from `public/`.
 - M8 / Task 8.4 (Production asset packaging and memory optimization) completed on 2026-07-24.
 - Evidence: one 46-file production public inventory, 99 copied source/QA files excluded from both outputs, exact SHA-256 preservation, 18,172,139-byte GitHub Pages artifact, 110 tests, both builds, three-viewport/six-checkpoint browser matrix, and three ten-cycle reset paths.
-- M8 / Task 8.2A is an active provisional balance experiment: complete its human Combo-commitment decision ledger before starting any broader timing pass. M8 / Task 8.5 remains not required because Task 8.1 found no sustained GameObject, listener, texture, Canvas, Audio-owner, or heap growth attributable to effects.
-- Next eligible task: M8 / Task 8.2A human Combo-commitment decision ledger; defer the broader timing pass until it is concluded.
+- M8 / Task 8.2A Combo Commitment Prototype was accepted by the reviewer on 2026-07-25. M8 / Task 8.5 remains not required because Task 8.1 found no sustained GameObject, listener, texture, Canvas, Audio-owner, or heap growth attributable to effects.
+- Next eligible task: M8 / Task 8.2B Mixed Encounter Decision Prototype.
 
 ## 4. Global Acceptance Rules
 

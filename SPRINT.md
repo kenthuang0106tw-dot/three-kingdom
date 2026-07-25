@@ -796,17 +796,17 @@ The next eligible task is M7 / Task 7.5 — Audio acceptance. Do not begin it un
 - [x] Vinext production and GitHub Pages preview loaded the packaged build and side art successfully.
 - [x] `pnpm test` passed 110/110; typecheck, lint 0 errors (8 existing warnings), and both builds passed.
 
-The next eligible task is M8 / Task 8.2A — human Combo-commitment decision ledger. Do not begin a further balance task until its three required ten-sample reviewer logs are complete.
+The next eligible task is M8 / Task 8.2B — Mixed Encounter Decision Prototype.
 
 ## M8 / Task 8.2A — Combo Commitment Prototype — 2026-07-25
 
-Status: implementation verification complete; balance acceptance pending human playtest.
+Status: accepted by reviewer on 2026-07-25.
 
 - [x] Kept attack1 and attack2 at 375 ms, 1 damage, 26 px knockback, and 4-frame hit stop.
 - [x] Made attack3 a 650 ms finisher: 2 damage, 60 px knockback, 6-frame hit stop, and 400 ms recovery after reviewer feedback found the 250 ms recovery insufficiently distinct.
 - [x] Added focused Combo-commitment contracts and retained hit-confirm, one-input-per-step, hit-once, pause/hit-stop, and Scene-reset coverage.
 - [x] Direct deterministic suite passed 113/113; typecheck and production builds passed; ESLint has 0 errors and the existing 8 warnings.
 - [x] Desktop, 844x390, and 390x844 production smoke passed with one Canvas and no captured browser errors.
-- [ ] Record 10 human-controlled decisions each against a Soldier, Mauler + Duelist, and close-range Boss before accepting or retuning the experimental values.
+- [x] Reviewer accepted the 650 ms finisher and 400 ms Recovery as having sufficient commitment.
 
 See `docs/combat/m8-2a-combo-commitment.md` for the parameter table and evidence boundary.
