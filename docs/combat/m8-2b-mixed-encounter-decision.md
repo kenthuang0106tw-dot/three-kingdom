@@ -8,7 +8,7 @@ Status: implementation verification complete; strategy comparison pending review
 | --- | --- | --- |
 | Mauler attack cadence | 125ms startup / 125ms active / 125ms recovery | 200ms startup / 200ms active / 200ms recovery |
 | Attack direction | implicit current facing | locked at attack entry |
-| Attack Y line | implicit overlap | locked at attack entry; ±48px is hittable |
+| Attack Y line | implicit overlap | snapshots player Y at attack entry; ±48px is hittable |
 | Simultaneous attackers | one Attack Slot | unchanged: one Attack Slot |
 
 No HP, damage, Player Combo, hitbox dimensions, Boss, stage, art, or new system changed.

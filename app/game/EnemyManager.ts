@@ -257,7 +257,7 @@ export class EnemyManager {
     enemy.state = next;
     enemy.body.setVelocity(0, 0);
     enemy.body.setImmovable(next === "hurt");
-    enemy.attackCommitment = next === "attack" ? createAttackCommitment(enemy.facing, enemy.bodyZone.y) : null;
+    enemy.attackCommitment = next === "attack" ? createAttackCommitment(enemy.facing, this.playerBodyZone.y) : null;
     this.disableAttackHitbox(enemy);
     if (next === "idle") enemy.sprite.play(enemyAnimationKey(enemy.config, "idle"), true);
     else if (next === "walk") enemy.sprite.play(enemyAnimationKey(enemy.config, "walk"), true);
