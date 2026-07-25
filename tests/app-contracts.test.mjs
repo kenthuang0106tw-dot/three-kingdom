@@ -830,7 +830,7 @@ test("Combat room acceptance covers formation, attack director, alignment, and s
   assert.equal(SOLDIER_ENEMY_CONFIG.combat.minSpacing, 72);
   assert.match(manager, /if \(this\.currentAttacker \|\| this\.clock\.now\(\) < this\.directorReadyAt\) return/);
   assert.match(manager, /this\.currentAttacker = enemy/);
-  assert.match(manager, /Math\.abs\(dy\) < enemy\.config\.combat\.attackYRange/);
+  assert.match(manager, /Math\.abs\(this\.playerBodyZone\.y - enemy\.bodyZone\.y\) < enemy\.config\.combat\.attackYRange/);
   assert.match(manager, /getLivingEnemies\(\)/);
   assert.match(manager, /onAllDefeated\(\)/);
   assert.doesNotMatch(scene, /spawnAll\(BAMBOO_COMBAT_ROOM\.spawnPoints\)/);
@@ -1020,7 +1020,7 @@ test("Recovery traversal starts unlocked while preserving explicit diagnostic lo
   const source = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
   assert.match(source, /if \(this\.bossSmokeMode \|\| this\.bossCombatSmokeMode \|\| this\.failureSmokeCycleActive\) \{/);
   assert.match(source, /this\.cameraLockState = lockCamera\(this\.cameraLockState, "encounter"\)/);
-  assert.match(source, /if \(!this\.shieldGuardTestMode && !this\.bossSmokeMode && !this\.bossCombatSmokeMode && !this\.failureSmokeCycleActive\) \{\s+this\.updateEncounterSmoke\(\)/);
+  assert.match(source, /if \(!this\.shieldGuardTestMode && !this\.crossbowTestMode && !this\.bossSmokeMode && !this\.bossCombatSmokeMode && !this\.failureSmokeCycleActive\) \{\s+this\.updateEncounterSmoke\(\)/);
   assert.match(source, /unlockCamera\(this\.cameraLockState, "encounter"\)/);
   assert.match(source, /if \(!isCameraLocked\(this\.cameraLockState\)\)/);
   assert.match(source, /dataset\.cameraScrollX/);
@@ -1206,7 +1206,7 @@ test("Mixed encounter composition assigns three archetypes with one attack direc
   assert.match(manager, /ENEMY_CONFIGS\[spawn\.enemyType \?\? "soldier"\]/);
   assert.match(manager, /if \(this\.currentAttacker \|\| this\.clock\.now\(\) < this\.directorReadyAt\) return/);
   assert.match(manager, /Math\.max\(enemy\.config\.combat\.minSpacing, other\.config\.combat\.minSpacing\)/);
-  assert.match(scene, /for \(const config of \[SOLDIER_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, DUELIST_ENEMY_CONFIG, SHIELD_GUARD_ENEMY_CONFIG\]\)/);
+  assert.match(scene, /for \(const config of \[SOLDIER_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, DUELIST_ENEMY_CONFIG, SHIELD_GUARD_ENEMY_CONFIG, CROSSBOW_ENEMY_CONFIG\]\)/);
   assert.match(stage, /enemyType: "mauler"/);
   assert.match(stage, /enemyType: "duelist"/);
 });
@@ -1247,7 +1247,7 @@ test("Enemy source facing, active frames, and attack-slot reachability match the
     /source facing/,
   );
   assert.match(manager, /const ATTACK_APPROACH_TIMEOUT_MS = 1500/);
-  assert.match(manager, /enemy\.body\.setImmovable\(next === "hurt"\)/);
+  assert.match(manager, /enemy\.body\.setImmovable\(next !== "walk"\)/);
   assert.match(manager, /enemy\.attackApproachEndsAt = this\.clock\.now\(\) \+ ATTACK_APPROACH_TIMEOUT_MS/);
   assert.match(manager, /this\.clock\.now\(\) >= enemy\.attackApproachEndsAt[\s\S]*this\.releaseAttackSlot\(enemy\)/);
 });

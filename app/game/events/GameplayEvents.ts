@@ -39,6 +39,7 @@ export type GameplayEvent = Readonly<
   | { type: "player-hit"; enemyId: number; at: number }
   | { type: "enemy-hit"; enemyId: number; damage: number; at: number }
   | { type: "enemy-blocked"; enemyId: number; at: number }
+  | { type: "crossbow-locked"; enemyId: number; at: number }
   | { type: "enemy-defeated"; enemyId: number; at: number }
   | { type: "title-started"; source: "keyboard" | "pointer"; at: number }
   | { type: "boss-activated"; bossId: string; at: number }

@@ -19,7 +19,7 @@ import { advanceCameraHandoff, beginCameraHandoff, calculateCameraScroll, type C
 import { createCameraLockState, hasCameraLock, isCameraLocked, lockCamera, unlockCamera, type CameraLockState } from "./camera/CameraLock";
 import { createStageExitState, makeExitAvailable, resetStageExit, type StageExitState } from "./stage/StageExit";
 import { clearActiveEncounter, createBossEntryState, createEncounterSequence, isEncounterSequenceCleared, makeBossEntryEligible, triggerBossEntry, triggerNextEncounter, type BossEntryState, type EncounterSequenceState } from "./stage/EncounterFlow";
-import { DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SHIELD_GUARD_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemyAnimationKey } from "./enemy/EnemyConfig";
+import { CROSSBOW_ENEMY_CONFIG, DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SHIELD_GUARD_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemyAnimationKey } from "./enemy/EnemyConfig";
 import { BOSS_ACTOR_CONFIG, BossActor } from "./boss/BossActor";
 import { GameFlowStateMachine } from "./flow/GameFlowStateMachine";
 import { TitleStartController } from "./flow/TitleStartController";
@@ -184,6 +184,7 @@ export default class MainScene extends Phaser.Scene {
   private performanceSampler?: PerformanceSampler;
   private previewMode = false;
   private shieldGuardTestMode?: "A" | "B";
+  private crossbowTestMode?: "A" | "B";
   private enemyPreviewMode = false;
   private resetSmokeMode = false;
   private encounterSmokeMode = false;
@@ -280,6 +281,8 @@ export default class MainScene extends Phaser.Scene {
     this.previewMode = development && query.get("previewAttack") === "1";
     const shieldGuardTest = query.get("shieldGuardTest")?.toUpperCase();
     this.shieldGuardTestMode = development && (shieldGuardTest === "A" || shieldGuardTest === "B") ? shieldGuardTest : undefined;
+    const crossbowTest = query.get("crossbowTest")?.toUpperCase();
+    this.crossbowTestMode = development && (crossbowTest === "A" || crossbowTest === "B") ? crossbowTest : undefined;
     this.visualFreezeMode = development && query.get("visualFreeze") === "1";
     this.visualFreezeWarmupFrames = 0;
     this.visualFreezeDeltas.length = 0;
@@ -429,6 +432,8 @@ export default class MainScene extends Phaser.Scene {
 
     this.enemyManager = new EnemyManager(this, this.playerBodyZone, {
       onPlayerHit: enemy => this.applyHitToPlayer(enemy.id, enemy.facing, enemy.config.id),
+      onEnemyHitByProjectile: (target, shooter) => this.applyCrossbowHitToEnemy(target, shooter),
+      onCrossbowLocked: enemy => this.gameplayEvents.publish({ type: "crossbow-locked", enemyId: enemy.id, at: this.time.now }),
       onAllDefeated: () => this.handleEncounterCleared(),
     }, development, { clock: new PhaserGameplayClock(this), random: new SeededRandom(0x3a6f2d1) });
     this.updateEncounterDataset();
@@ -550,7 +555,7 @@ export default class MainScene extends Phaser.Scene {
     if (this.lifecycleClock.isPaused()) { this.updateDebugText(); return; }
     this.playerBody.setVelocity(0, 0);
     this.currentInput = this.touchInputController.readSnapshot(this.inputController.readSnapshot());
-    if (!this.shieldGuardTestMode && !this.bossSmokeMode && !this.bossCombatSmokeMode && !this.failureSmokeCycleActive) {
+    if (!this.shieldGuardTestMode && !this.crossbowTestMode && !this.bossSmokeMode && !this.bossCombatSmokeMode && !this.failureSmokeCycleActive) {
       this.updateEncounterSmoke();
       this.updateEncounterProgress();
       this.constrainPlayerToEncounterCamera();
@@ -760,7 +765,7 @@ export default class MainScene extends Phaser.Scene {
         repeat: 0,
       });
     }
-    for (const config of [SOLDIER_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, DUELIST_ENEMY_CONFIG, SHIELD_GUARD_ENEMY_CONFIG]) {
+    for (const config of [SOLDIER_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, DUELIST_ENEMY_CONFIG, SHIELD_GUARD_ENEMY_CONFIG, CROSSBOW_ENEMY_CONFIG]) {
       this.anims.create({ key: enemyAnimationKey(config, "idle"), frames: config.animations.idle.map(frame => ({ key: config.assetKey, frame })), frameRate: config.animationRates.idle, repeat: -1 });
       this.anims.create({ key: enemyAnimationKey(config, "walk"), frames: config.animations.walk.map(frame => ({ key: config.assetKey, frame })), frameRate: config.animationRates.walk, repeat: -1 });
       this.anims.create({ key: enemyAnimationKey(config, "attack"), frames: config.animations.attack.map(frame => ({ key: config.assetKey, frame })), frameRate: config.animationRates.attack, repeat: 0 });
@@ -919,6 +924,17 @@ export default class MainScene extends Phaser.Scene {
     const hitY = Math.round((this.attackBody.y + enemy.body.y) / 2);
     this.effectDirector.createHitSpark(hitX, hitY);
     this.gameplayEvents.publish({ type: "enemy-blocked", enemyId: enemy.id, at: this.time.now });
+  }
+
+  private applyCrossbowHitToEnemy(enemy: EnemyCombatant, shooter: EnemyCombatant) {
+    const damage = this.enemyManager.damage(enemy, 1);
+    if (!damage.applied) return;
+    this.effectDirector.flash(enemy.sprite);
+    this.effectDirector.createHitSpark(Math.round(enemy.bodyZone.x), Math.round(enemy.bodyZone.y - 42));
+    const targetX = clampStageX(enemy.bodyZone.x + shooter.facing * 16, BAMBOO_COMBAT_ROOM.walkBounds);
+    this.effectDirector.knockback(enemy.bodyZone, targetX, () => this.enemyManager.syncPhysicsFromZone(enemy));
+    this.gameplayEvents.publish({ type: "enemy-hit", enemyId: enemy.id, damage: 1, at: this.time.now });
+    if (damage.becameDead) this.gameplayEvents.publish({ type: "enemy-defeated", enemyId: enemy.id, at: this.time.now });
   }
 
   private applyHitToBoss(triggerGlobalEffects: boolean) {
@@ -1224,6 +1240,7 @@ export default class MainScene extends Phaser.Scene {
     this.inputController.readSnapshot();
     this.currentInput = createActionSnapshot({ up: false, down: false, left: false, right: false });
     if (this.shieldGuardTestMode) this.spawnShieldGuardPrototype(this.shieldGuardTestMode);
+    else if (this.crossbowTestMode) this.spawnCrossbowPrototype(this.crossbowTestMode);
     this.updateTitleDataset(source);
     this.updatePauseDataset();
     this.updateAudioDataset();
@@ -1239,6 +1256,17 @@ export default class MainScene extends Phaser.Scene {
       ];
     this.enemyManager.spawnPrototype(spawns);
     if (process.env.NODE_ENV !== "production") this.game.canvas.dataset.shieldGuardTestMode = mode;
+  }
+
+  private spawnCrossbowPrototype(mode: "A" | "B") {
+    const spawns = mode === "A"
+      ? [{ id: "crossbow-test", x: 650, y: 560, enemyType: "crossbow" as const }]
+      : [
+        { id: "soldier-test", x: 500, y: 560, enemyType: "soldier" as const },
+        { id: "crossbow-test", x: 760, y: 500, enemyType: "crossbow" as const },
+      ];
+    this.enemyManager.spawnPrototype(spawns);
+    if (process.env.NODE_ENV !== "production") this.game.canvas.dataset.crossbowTestMode = mode;
   }
 
   private updateTitleDataset(source?: TitleStartSource) {

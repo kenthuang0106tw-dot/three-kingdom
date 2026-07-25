@@ -59,6 +59,6 @@ test("Shield Guard development tests are isolated from formal stage encounters",
   const source = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
   assert.match(source, /query\.get\("shieldGuardTest"\)/);
   assert.match(source, /this\.enemyManager\.spawnPrototype\(spawns\)/);
-  assert.match(source, /if \(!this\.shieldGuardTestMode && !this\.bossSmokeMode/);
+  assert.match(source, /if \(!this\.shieldGuardTestMode && !this\.crossbowTestMode && !this\.bossSmokeMode/);
   assert.match(source, /enemyType: "shield-guard" as const/);
 });

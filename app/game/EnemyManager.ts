@@ -2,22 +2,25 @@ import * as Phaser from "phaser";
 import { PhaserGameplayClock, SeededRandom, type GameplayClock, type RandomSource } from "./time/GameplayTime";
 import { BAMBOO_COMBAT_ROOM, clampStageX, clampStageY, type StageSpawnPoint } from "./stage/StageConfig";
 import { beginEncounter, createEncounterFlow, isEncounterCleared, recordEnemyRemoved, type EncounterFlowState } from "./stage/EncounterFlow";
-import { DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SHIELD_GUARD_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemyAnimationKey, enemyAttackSpriteShouldFlip, enemySpriteShouldFlip, type EnemyConfig } from "./enemy/EnemyConfig";
+import { CROSSBOW_ENEMY_CONFIG, DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SHIELD_GUARD_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemyAnimationKey, enemyAttackSpriteShouldFlip, enemySpriteShouldFlip, type EnemyConfig } from "./enemy/EnemyConfig";
 import { selectFairAttackCandidate } from "./enemy/AttackSlotPolicy";
 import { createAttackCommitment, isWithinAttackLine, type AttackCommitment } from "./enemy/AttackCommitment";
 import { SHIELD_GUARD_PARAMS, SHIELD_GUARD_TIMING, type ShieldGuardState, isAttackBlockedByGuard } from "./enemy/ShieldGuard";
+import { CROSSBOW_TIMING, isCrossbowReadyToFire, isCrossbowTracking, nextAimLineY } from "./enemy/CrossbowLine";
+import { CrossbowProjectile } from "./enemy/CrossbowProjectile";
 
-export type EnemyState = "idle" | "walk" | "attack" | "hurt" | "dead" | "guard" | "recovery";
+export type EnemyState = "idle" | "walk" | "attack" | "hurt" | "dead" | "guard" | "recovery" | "position" | "aim" | "locked" | "fire" | "reload";
 export type EnemyDamageResult = Readonly<{
   applied: boolean;
   becameDead: boolean;
 }>;
 
-const ENEMY_CONFIGS: Record<"soldier" | "mauler" | "duelist" | "shield-guard", EnemyConfig> = {
+const ENEMY_CONFIGS: Record<"soldier" | "mauler" | "duelist" | "shield-guard" | "crossbow", EnemyConfig> = {
   soldier: SOLDIER_ENEMY_CONFIG,
   mauler: MAULER_ENEMY_CONFIG,
   duelist: DUELIST_ENEMY_CONFIG,
   "shield-guard": SHIELD_GUARD_ENEMY_CONFIG,
+  crossbow: CROSSBOW_ENEMY_CONFIG,
 };
 
 const ATTACK_APPROACH_TIMEOUT_MS = 1500;
@@ -29,12 +32,17 @@ const FORMATION_SLOTS = [
 ] as const;
 
 const TRANSITIONS: Record<EnemyState, ReadonlySet<EnemyState>> = {
-  idle: new Set(["walk", "attack", "guard", "hurt", "dead"]),
-  walk: new Set(["idle", "attack", "guard", "hurt", "dead"]),
+  idle: new Set(["walk", "attack", "guard", "hurt", "dead", "position", "aim"]),
+  walk: new Set(["idle", "attack", "guard", "hurt", "dead", "position"]),
   attack: new Set(["idle", "recovery", "hurt", "dead"]),
   guard: new Set(["idle", "attack", "recovery", "hurt", "dead"]),
   recovery: new Set(["guard", "hurt", "dead"]),
-  hurt: new Set(["idle", "guard", "dead"]),
+  hurt: new Set(["idle", "guard", "dead", "reload"]),
+  position: new Set(["walk", "aim", "hurt", "dead"]),
+  aim: new Set(["locked", "reload", "hurt", "dead"]),
+  locked: new Set(["fire", "reload", "hurt", "dead"]),
+  fire: new Set(["reload", "hurt", "dead"]),
+  reload: new Set(["position", "hurt", "dead"]),
   dead: new Set(),
 };
 
@@ -58,6 +66,11 @@ export class EnemyCombatant {
   guardCounterReady = false;
   guardReacquireFacing?: 1 | -1;
   guardMarker?: Phaser.GameObjects.Graphics;
+  aimLine?: Phaser.GameObjects.Graphics;
+  aimStartedAt = 0;
+  aimLineY = 0;
+  lockedLineY = 0;
+  projectile?: CrossbowProjectile;
 
   constructor(readonly id: number, readonly assignedSlot: number, readonly config: EnemyConfig, scene: Phaser.Scene, x: number, y: number) {
     this.hp = config.maxHp;
@@ -83,13 +96,16 @@ export class EnemyCombatant {
 
   get slotName() { return FORMATION_SLOTS[this.assignedSlot].name; }
   get isShieldGuard() { return this.config.id === "shield-guard"; }
+  get isCrossbow() { return this.config.id === "crossbow"; }
   get shieldState(): ShieldGuardState | undefined {
-    return this.isShieldGuard ? (this.state === "idle" || this.state === "walk" ? "approach" : this.state) : undefined;
+    return this.isShieldGuard ? (this.state === "idle" || this.state === "walk" ? "approach" : this.state as ShieldGuardState) : undefined;
   }
 }
 
 type ManagerCallbacks = {
   onPlayerHit: (enemy: EnemyCombatant) => void;
+  onEnemyHitByProjectile: (target: EnemyCombatant, shooter: EnemyCombatant) => void;
+  onCrossbowLocked?: (enemy: EnemyCombatant) => void;
   onAllDefeated: () => void;
 };
 
@@ -173,6 +189,7 @@ export class EnemyManager {
       enemy.body.setVelocity(0, 0);
       this.syncSprite(enemy);
       if (enemy.state === "dead" || enemy.state === "hurt") continue;
+      if (enemy.isCrossbow && this.updateCrossbow(enemy)) continue;
       if (enemy.isShieldGuard && this.updateShieldGuard(enemy)) continue;
       if (enemy.state === "attack") {
         this.positionAttackHitbox(enemy);
@@ -187,7 +204,66 @@ export class EnemyManager {
       if (enemy.hasAttackSlot) this.updateAttackApproach(enemy);
       else this.updateFormationMovement(enemy);
     }
+    this.updateProjectiles(alive);
     this.assignAttackSlot(alive);
+  }
+
+  private updateCrossbow(enemy: EnemyCombatant) {
+    if (enemy.state === "position") {
+      if (enemy.hasAttackSlot) {
+        this.setFacing(enemy, this.playerBodyZone.x >= enemy.bodyZone.x ? 1 : -1);
+        this.setState(enemy, "aim");
+      }
+      else this.positionCrossbow(enemy);
+      return true;
+    }
+    if (enemy.state === "aim") {
+      const elapsed = this.clock.now() - enemy.aimStartedAt;
+      if (isCrossbowTracking(elapsed)) enemy.aimLineY = nextAimLineY(enemy.aimLineY, this.playerBodyZone.y, elapsed);
+      this.drawAimLine(enemy, false);
+      if (elapsed >= CROSSBOW_TIMING.trackingMs) this.setState(enemy, "locked");
+      return true;
+    }
+    if (enemy.state === "locked") {
+      this.drawAimLine(enemy, true);
+      if (isCrossbowReadyToFire(this.clock.now() - enemy.aimStartedAt)) this.setState(enemy, "fire");
+      return true;
+    }
+    if (enemy.state === "fire" || enemy.state === "reload") return true;
+    if (enemy.hasAttackSlot) this.setState(enemy, "aim"); else this.setState(enemy, "position");
+    return true;
+  }
+
+  private positionCrossbow(enemy: EnemyCombatant) {
+    const targetX = this.playerBodyZone.x - (enemy.bodyZone.x < this.playerBodyZone.x ? 260 : -260);
+    const dx = targetX - enemy.bodyZone.x, dy = this.playerBodyZone.y - enemy.bodyZone.y;
+    if (Math.hypot(dx, dy) < 12) {
+      enemy.sprite.play(enemyAnimationKey(enemy.config, "idle"));
+      return;
+    }
+    this.setFacing(enemy, dx >= 0 ? 1 : -1);
+    enemy.body.setImmovable(false);
+    enemy.sprite.play(enemyAnimationKey(enemy.config, "walk"));
+    const velocity = new Phaser.Math.Vector2(dx, dy * enemy.config.movement.verticalScale).normalize().scale(enemy.config.movement.walkSpeed);
+    enemy.body.setVelocity(velocity.x, velocity.y);
+  }
+
+  private updateProjectiles(alive: readonly EnemyCombatant[]) {
+    for (const shooter of alive) {
+      const projectile = shooter.projectile;
+      if (!projectile) continue;
+      projectile.update(this.scene.game.loop.delta);
+      const candidates = [
+        { zone: this.playerBodyZone, target: "player" as const, distance: Math.abs(this.playerBodyZone.x - projectile.zone.x) },
+        ...alive.filter(enemy => enemy !== shooter).map(enemy => ({ zone: enemy.bodyZone, target: enemy, distance: Math.abs(enemy.bodyZone.x - projectile.zone.x) })),
+      ].filter(candidate => this.scene.physics.overlap(projectile.zone, candidate.zone)).sort((a, b) => a.distance - b.distance);
+      const hit = candidates[0];
+      if (hit) {
+        if (hit.target === "player") this.callbacks.onPlayerHit(shooter);
+        else this.callbacks.onEnemyHitByProjectile(hit.target, shooter);
+        this.destroyProjectile(shooter);
+      } else if (projectile.expired) this.destroyProjectile(shooter);
+    }
   }
 
   private updateShieldGuard(enemy: EnemyCombatant) {
@@ -220,7 +296,6 @@ export class EnemyManager {
 
   private updateAttackApproach(enemy: EnemyCombatant) {
     const dx = this.playerBodyZone.x - enemy.bodyZone.x;
-    const dy = this.playerBodyZone.y - enemy.bodyZone.y;
     this.setFacing(enemy, dx >= 0 ? 1 : -1);
     if (this.isInAttackRange(enemy) && this.clock.now() >= enemy.cooldownUntil) {
       this.setState(enemy, "attack");
@@ -275,7 +350,7 @@ export class EnemyManager {
 
   private assignAttackSlot(alive: EnemyCombatant[]) {
     if (this.currentAttacker || this.clock.now() < this.directorReadyAt) return;
-    const candidates = alive.filter(enemy => enemy.state !== "hurt" && enemy.state !== "dead" && this.clock.now() >= enemy.cooldownUntil &&
+    const candidates = alive.filter(enemy => enemy.state !== "hurt" && enemy.state !== "dead" && enemy.state !== "reload" && this.clock.now() >= enemy.cooldownUntil &&
       Math.abs(enemy.bodyZone.x - this.playerBodyZone.x) < 220 && Math.abs(enemy.bodyZone.y - this.playerBodyZone.y) < 140);
     if (!candidates.length) return;
     const enemy = selectFairAttackCandidate(candidates, this.lastAttackerId);
@@ -341,7 +416,7 @@ export class EnemyManager {
     enemy.body.setImmovable(next !== "walk");
     enemy.attackCommitment = next === "attack" ? createAttackCommitment(enemy.facing, this.playerBodyZone.y) : null;
     this.disableAttackHitbox(enemy);
-    if (next === "idle") enemy.sprite.play(enemyAnimationKey(enemy.config, "idle"), true);
+    if (next === "idle" || next === "position") enemy.sprite.play(enemyAnimationKey(enemy.config, "idle"), true);
     else if (next === "walk") enemy.sprite.play(enemyAnimationKey(enemy.config, "walk"), true);
     else if (next === "guard") {
       enemy.guardUntil = this.clock.now() + SHIELD_GUARD_TIMING.guardLockMs;
@@ -362,18 +437,41 @@ export class EnemyManager {
       });
       this.stateTimers.set(enemy, timer);
     }
-    else if (next === "attack") {
+    else if (next === "aim") {
+      enemy.aimStartedAt = this.clock.now();
+      enemy.aimLineY = this.playerBodyZone.y;
+      enemy.sprite.play(enemyAnimationKey(enemy.config, "idle"), true);
+    } else if (next === "locked") {
+      enemy.lockedLineY = enemy.aimLineY;
+      this.callbacks.onCrossbowLocked?.(enemy);
+    } else if (next === "fire") {
+      enemy.aimLine?.clear();
+      enemy.projectile = new CrossbowProjectile(this.scene, enemy.id, enemy.bodyZone.x + enemy.facing * 42, enemy.lockedLineY, enemy.facing);
+      enemy.sprite.setFlipX(enemyAttackSpriteShouldFlip(enemy.config, enemy.facing)).play(enemyAnimationKey(enemy.config, "attack"), true);
+      this.releaseAttackSlot(enemy);
+      this.setState(enemy, "reload");
+    } else if (next === "reload") {
+      enemy.aimLine?.clear();
+      this.releaseAttackSlot(enemy);
+      enemy.sprite.play(enemyAnimationKey(enemy.config, "idle"), true);
+      const timer = this.scene.time.delayedCall(CROSSBOW_TIMING.reloadMs, () => {
+        this.stateTimers.delete(enemy);
+        if (enemy.sprite.active && enemy.state === "reload") this.setState(enemy, "position");
+      });
+      this.stateTimers.set(enemy, timer);
+    } else if (next === "attack") {
       enemy.attackHitPlayer = false;
       enemy.guardReacquireFacing = undefined;
       enemy.guardCounterReady = false;
       enemy.sprite.setFlipX(enemyAttackSpriteShouldFlip(enemy.config, enemy.facing)).play(enemyAnimationKey(enemy.config, "attack"), true);
     } else if (next === "hurt") {
+      enemy.aimLine?.clear();
       enemy.sprite.play(enemyAnimationKey(enemy.config, "hurt"), true);
       const timer = this.scene.time.delayedCall(enemy.config.timing.hurtMs, () => {
         this.stateTimers.delete(enemy);
         if (enemy.sprite.active && enemy.state === "hurt") {
           enemy.cooldownUntil = this.clock.now() + this.random.between(enemy.config.timing.recoveryMin, enemy.config.timing.recoveryMax);
-          this.setState(enemy, enemy.isShieldGuard ? "guard" : "idle");
+          this.setState(enemy, enemy.isCrossbow ? "reload" : enemy.isShieldGuard ? "guard" : "idle");
         }
       });
       this.stateTimers.set(enemy, timer);
@@ -429,6 +527,8 @@ export class EnemyManager {
     enemy.sprite.destroy();
     enemy.shadow.destroy();
     enemy.guardMarker?.destroy();
+    enemy.aimLine?.destroy();
+    this.destroyProjectile(enemy);
     enemy.bodyZone.destroy();
     enemy.attackZone.destroy();
   }
@@ -495,6 +595,18 @@ export class EnemyManager {
     marker.lineStyle(3, 0xd9f3ff, 0.95).strokeTriangle(x, y, x - enemy.facing * 32, y + 28, x - enemy.facing * 32, y - 28);
   }
 
+  private drawAimLine(enemy: EnemyCombatant, locked: boolean) {
+    const line = enemy.aimLine ??= this.scene.add.graphics().setDepth(8998);
+    const y = Math.round(locked ? enemy.lockedLineY : enemy.aimLineY);
+    line.clear().lineStyle(locked ? 4 : 2, locked ? 0xff5a4f : 0xffd15c, locked ? 0.9 : 0.62)
+      .lineBetween(enemy.bodyZone.x, y, this.playerBodyZone.x + enemy.facing * CROSSBOW_TIMING.projectileRange, y);
+  }
+
+  private destroyProjectile(enemy: EnemyCombatant) {
+    enemy.projectile?.destroy();
+    enemy.projectile = undefined;
+  }
+
   getLivingEnemies() { return this.enemies.filter(enemy => enemy.state !== "dead"); }
   getAllEnemies() { return [...this.enemies]; }
   get currentAttackerId() { return this.currentAttacker?.id ?? null; }
@@ -509,6 +621,8 @@ export class EnemyManager {
     for (const enemy of this.enemies) {
       enemy.body.stop();
       this.disableAttackHitbox(enemy);
+      enemy.aimLine?.clear();
+      this.destroyProjectile(enemy);
       enemy.sprite.anims.pause();
     }
     this.slotGraphics?.clear();

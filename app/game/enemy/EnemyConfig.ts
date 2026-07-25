@@ -101,6 +101,13 @@ export const SHIELD_GUARD_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
   combat: { ...SOLDIER_ENEMY_CONFIG.combat, attackYRange: 28 },
 });
 
+/** Development-only TP-2 substitute: Soldier art with Crossbow line-control behavior. */
+export const CROSSBOW_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
+  ...SOLDIER_ENEMY_CONFIG,
+  id: "crossbow",
+  movement: { ...SOLDIER_ENEMY_CONFIG.movement, walkSpeed: 56 },
+});
+
 export const MAULER_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
   id: "mauler",
   assetKey: "enemy-mauler",

@@ -829,4 +829,14 @@ Status: implementation verification complete; manual strategy comparison pending
 - [x] Added forward-cone guard, 800 ms facing lock, attack line lock, 800–1200 ms recovery, block feedback, and per-attack block de-duplication.
 - [x] Preserved Soldier HP and the existing single Attack Slot; block produces neither damage nor Combo hit confirmation.
 - [x] 122 automated tests, typecheck, lint (0 errors; four existing image warnings), Vinext build, GitHub Pages build, and desktop browser smoke passed.
-- [ ] Record the required five frontal and five deliberate strategy runs before accepting TP-1 or planning TP-2.
+- [x] Reviewer accepted the prototype after live Guard, flanking, re-guard, counter, and collision verification on 2026-07-26.
+
+## TP-2 — Crossbow Line-Control Prototype — 2026-07-26
+
+Status: implementation verification pending manual strategy comparison.
+
+- [x] Added development-only Test A (`?crossbowTest=A`) and Test B (`?crossbowTest=B`) without changing formal Stage encounters.
+- [x] Added 550 ms Aim tracking, 350 ms locked line, one straight temporary arrow at 900 ms, and 3000 ms Reload.
+- [x] Arrow stops on the first Player or Enemy body; Player uses existing Hurt and Enemy friendly-fire uses 1 damage / Hurt / Flash / Spark / 16 px knockback.
+- [x] Crossbow shares the existing single Attack Slot and releases it immediately after Fire or when its Aim is interrupted.
+- [ ] Record five line-ignoring and five intentional-play strategy runs before accepting TP-2 or planning a combined prototype.
