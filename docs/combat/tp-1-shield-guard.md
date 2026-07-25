@@ -20,6 +20,7 @@ guard direction; no production sprite, atlas, or new material was created.
 | Damage while front-blocked | 0 |
 | Combo hit confirmation while blocked | none |
 | Attack direction/Y line | captured at attack startup |
+| Shield Guard Y-line tolerance | 28 px |
 | Guard during attack/recovery | disabled |
 | Miss recovery | 800–1200 ms |
 | HP | Soldier baseline: 12 |

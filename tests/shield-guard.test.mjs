@@ -15,6 +15,7 @@ test("Shield Guard blocks only its locked forward cone", () => {
 test("Shield Guard uses the normal Soldier health and an explicit guard/recovery timing contract", () => {
   assert.equal(SHIELD_GUARD_ENEMY_CONFIG.maxHp, 12);
   assert.equal(SHIELD_GUARD_ENEMY_CONFIG.assetKey, "enemy-soldier");
+  assert.equal(SHIELD_GUARD_ENEMY_CONFIG.combat.attackYRange, 28);
   assert.equal(SHIELD_GUARD_TIMING.guardLockMs, 800);
   assert.deepEqual(
     [SHIELD_GUARD_TIMING.recoveryMinMs, SHIELD_GUARD_TIMING.recoveryMaxMs],
@@ -26,6 +27,8 @@ test("Shield Guard keeps guard direction locked, disables guard while attacking,
   const source = await readFile(new URL("../app/game/EnemyManager.ts", import.meta.url), "utf8");
   assert.match(source, /enemy\.guardUntil = this\.clock\.now\(\) \+ SHIELD_GUARD_TIMING\.guardLockMs/);
   assert.match(source, /if \(enemy\.hasAttackSlot && this\.clock\.now\(\) >= enemy\.guardUntil\) this\.setState\(enemy, "attack"\)/);
+  assert.match(source, /this\.clock\.now\(\) >= enemy\.guardUntil && !this\.isPlayerInsideGuardCone\(enemy\)/);
+  assert.match(source, /guard: new Set\(\["idle", "attack", "hurt", "dead"\]\)/);
   assert.match(source, /if \(enemy\.isShieldGuard\) this\.setState\(enemy, "recovery"\)/);
   assert.match(source, /this\.releaseAttackSlot\(enemy\);/);
   assert.match(source, /createAttackCommitment\(enemy\.facing, this\.playerBodyZone\.y\)/);

@@ -32,7 +32,7 @@ const TRANSITIONS: Record<EnemyState, ReadonlySet<EnemyState>> = {
   idle: new Set(["walk", "attack", "guard", "hurt", "dead"]),
   walk: new Set(["idle", "attack", "guard", "hurt", "dead"]),
   attack: new Set(["idle", "recovery", "hurt", "dead"]),
-  guard: new Set(["attack", "hurt", "dead"]),
+  guard: new Set(["idle", "attack", "hurt", "dead"]),
   recovery: new Set(["guard", "hurt", "dead"]),
   hurt: new Set(["idle", "guard", "dead"]),
   dead: new Set(),
@@ -191,6 +191,7 @@ export class EnemyManager {
   private updateShieldGuard(enemy: EnemyCombatant) {
     if (enemy.state === "guard") {
       if (enemy.hasAttackSlot && this.clock.now() >= enemy.guardUntil) this.setState(enemy, "attack");
+      else if (this.clock.now() >= enemy.guardUntil && !this.isPlayerInsideGuardCone(enemy)) this.setState(enemy, "idle");
       return true;
     }
     if (enemy.state === "recovery") return true;
@@ -296,6 +297,16 @@ export class EnemyManager {
   isGuardBlocking(enemy: EnemyCombatant, attackerX: number, attackerY: number) {
     return enemy.isShieldGuard && enemy.state === "guard" && isAttackBlockedByGuard(
       enemy.facing, enemy.bodyZone.x, enemy.bodyZone.y - 34, attackerX, attackerY,
+    );
+  }
+
+  private isPlayerInsideGuardCone(enemy: EnemyCombatant) {
+    return isAttackBlockedByGuard(
+      enemy.facing,
+      enemy.bodyZone.x,
+      enemy.bodyZone.y - 34,
+      this.playerBodyZone.x,
+      this.playerBodyZone.y,
     );
   }
 

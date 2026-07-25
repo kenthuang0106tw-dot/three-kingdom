@@ -98,6 +98,7 @@ export const SOLDIER_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
 export const SHIELD_GUARD_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
   ...SOLDIER_ENEMY_CONFIG,
   id: "shield-guard",
+  combat: { ...SOLDIER_ENEMY_CONFIG.combat, attackYRange: 28 },
 });
 
 export const MAULER_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
