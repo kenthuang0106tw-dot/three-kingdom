@@ -514,7 +514,7 @@ test("PlayerAttackController defines independent three-stage timing metadata", a
     );
     assert.ok(Math.abs(phaseDuration(attack.startupFrames) - 125) < 0.001);
     assert.ok(Math.abs(phaseDuration(attack.activeFrames) - 125) < 0.001);
-    assert.ok(Math.abs(phaseDuration(attack.recoveryFrames) - (attack.step === 3 ? 250 : 125)) < 0.001);
+    assert.ok(Math.abs(phaseDuration(attack.recoveryFrames) - (attack.step === 3 ? 400 : 125)) < 0.001);
   }
 });
 

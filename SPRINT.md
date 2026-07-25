@@ -803,7 +803,7 @@ The next eligible task is M8 / Task 8.2A — human Combo-commitment decision led
 Status: implementation verification complete; balance acceptance pending human playtest.
 
 - [x] Kept attack1 and attack2 at 375 ms, 1 damage, 26 px knockback, and 4-frame hit stop.
-- [x] Made attack3 a 500 ms finisher: 2 damage, 60 px knockback, 6-frame hit stop, and 250 ms recovery.
+- [x] Made attack3 a 650 ms finisher: 2 damage, 60 px knockback, 6-frame hit stop, and 400 ms recovery after reviewer feedback found the 250 ms recovery insufficiently distinct.
 - [x] Added focused Combo-commitment contracts and retained hit-confirm, one-input-per-step, hit-once, pause/hit-stop, and Scene-reset coverage.
 - [x] Direct deterministic suite passed 113/113; typecheck and production builds passed; ESLint has 0 errors and the existing 8 warnings.
 - [x] Desktop, 844x390, and 390x844 production smoke passed with one Canvas and no captured browser errors.

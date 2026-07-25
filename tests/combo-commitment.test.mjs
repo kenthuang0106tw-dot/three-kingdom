@@ -26,8 +26,8 @@ test("Attack 3 has a committed recovery and independent impact", () => {
     knockbackDistance: 60,
     hitStopMs: (1000 / 60) * 6,
   });
-  assert.equal(attackDurationMs(attack), 500);
-  assert.equal(recoveryMs, 250);
+  assert.equal(attackDurationMs(attack), 650);
+  assert.equal(recoveryMs, 400);
 });
 
 test("Combo commitment keeps the existing hit-confirm, one-step, hit-once, and reset contracts", async () => {

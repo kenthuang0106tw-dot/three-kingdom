@@ -15,16 +15,17 @@ Stage, Camera, or UI value changed.
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | attack1 | 375 ms | 375 ms | 1 | 26 px | 66.67 ms (4 frames) | 125 ms |
 | attack2 | 375 ms | 375 ms | 1 | 26 px | 66.67 ms (4 frames) | 125 ms |
-| attack3 | 375 ms | 500 ms | 1 -> 2 | 26 -> 60 px | 66.67 -> 100 ms (6 frames) | 125 -> 250 ms |
+| attack3 | 375 ms | 650 ms | 1 -> 2 | 26 -> 60 px | 66.67 -> 100 ms (6 frames) | 125 -> 400 ms |
 
-Attack 3 keeps its 125 ms startup and 125 ms active phase. The additional
-125 ms is appended to its existing recovery frame; neither its atlas frame
+A reviewer found the previous 250 ms recovery too close to the first two
+attacks. Attack 3 keeps its 125 ms startup and 125 ms active phase. The
+additional 275 ms is appended to its existing recovery frame; neither its atlas frame
 sequence nor hitbox timing changes.
 
 ## Mechanical verification
 
 - `tests/combo-commitment.test.mjs` verifies attack1/2 baseline impact and
-  duration, the attack3 500 ms / 250 ms recovery contract, independent impact
+  duration, the attack3 650 ms / 400 ms recovery contract, independent impact
   values, hit-confirm gating, one-step Combo advancement, hit-once resolution,
   and Scene-create Combo reset.
 - Full deterministic suite: 113/113 passed.
@@ -54,7 +55,7 @@ No synthetic counts are recorded as human playtest data.
 ## Technical-lead decision
 
 **Adjust / provisional.** The implementation is safe to hand to a reviewer:
-attack3 now has a visible 125 ms additional commitment and materially distinct
+attack3 now has a visible 275 ms additional commitment and materially distinct
 damage, knockback, and hit-stop values, while the existing Combo and lifecycle
 contracts remain green. It is not yet accepted as final balance because the
 required 30 human tactical samples have not been observed. Do not treat the

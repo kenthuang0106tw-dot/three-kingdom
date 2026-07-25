@@ -45,7 +45,7 @@ export const PLAYER_ATTACKS: Readonly<Record<AttackStep, AttackMetadata>> = {
   },
   3: {
     step: 3, animationKey: "guanyu-attack3", frames: GUANYU_ANIMATION_FRAMES.attack3,
-    frameRate: 24, extraFrameDurationsMs: [0, 0, 0, 0, 0, 0, 0, (1000 / 24) + 125],
+    frameRate: 24, extraFrameDurationsMs: [0, 0, 0, 0, 0, 0, 0, (1000 / 24) + 275],
     startupFrames: [1, 2, 3], activeFrames: [4, 5, 6], recoveryFrames: [7, 8],
     impact: COMMITMENT_IMPACT,
   },
