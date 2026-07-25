@@ -47,6 +47,7 @@ test("Production builds compile Phaser development presentation out", async () =
   assert.match(viteConfig, /"process\.env\.NODE_ENV": JSON\.stringify\(mode === "production" \? "production" : "development"\)/);
   assert.match(githubConfig, /"process\.env\.NODE_ENV": JSON\.stringify\("production"\)/);
   assert.match(host, /debug: process\.env\.NODE_ENV !== "production"/);
+  assert.match(host, /activePointers: 2/);
   assert.match(scene, /process\.env\.NODE_ENV/);
 });
 

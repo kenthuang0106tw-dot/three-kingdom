@@ -66,6 +66,7 @@ export default function PhaserGame() {
           },
         },
         input: {
+          activePointers: 2,
           keyboard: {
             target: host,
             capture: [
