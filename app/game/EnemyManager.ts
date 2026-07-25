@@ -32,7 +32,7 @@ const TRANSITIONS: Record<EnemyState, ReadonlySet<EnemyState>> = {
   idle: new Set(["walk", "attack", "guard", "hurt", "dead"]),
   walk: new Set(["idle", "attack", "guard", "hurt", "dead"]),
   attack: new Set(["idle", "recovery", "hurt", "dead"]),
-  guard: new Set(["idle", "attack", "hurt", "dead"]),
+  guard: new Set(["idle", "attack", "recovery", "hurt", "dead"]),
   recovery: new Set(["guard", "hurt", "dead"]),
   hurt: new Set(["idle", "guard", "dead"]),
   dead: new Set(),
@@ -192,7 +192,10 @@ export class EnemyManager {
     if (enemy.state === "guard") {
       if (enemy.hasAttackSlot && this.clock.now() >= enemy.guardUntil && this.isInAttackRange(enemy)) this.setState(enemy, "attack");
       else if (enemy.hasAttackSlot && this.clock.now() >= enemy.guardUntil) this.setState(enemy, "idle");
-      else if (this.clock.now() >= enemy.guardUntil && !this.isPlayerInsideGuardCone(enemy)) this.setState(enemy, "idle");
+      else if (this.clock.now() >= enemy.guardUntil && !this.isPlayerInsideGuardCone(enemy)) {
+        this.releaseAttackSlot(enemy);
+        this.setState(enemy, "recovery");
+      }
       return true;
     }
     if (enemy.state === "recovery") return true;
