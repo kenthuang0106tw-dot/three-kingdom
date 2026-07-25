@@ -16,15 +16,15 @@ test("EnemyManager snapshots the player Y when attack startup begins", async () 
   assert.match(source, /createAttackCommitment\(enemy\.facing, this\.playerBodyZone\.y\)/);
 });
 
-test("Mauler has readable startup and recovery without changing damage or HP", () => {
+test("Mauler has readable startup and recovery with the approved triple HP", () => {
   assert.equal(MAULER_ENEMY_CONFIG.animationRates.attack, 5);
   assert.equal(MAULER_ENEMY_CONFIG.attackActiveFrame, 2);
-  assert.equal(MAULER_ENEMY_CONFIG.maxHp, 5);
+  assert.equal(MAULER_ENEMY_CONFIG.maxHp, 15);
 });
 
 test("Mixed encounter increases pressure through cadence only", () => {
   assert.deepEqual(MAULER_ENEMY_CONFIG.timing, { hurtMs: 300, directorDelayMin: 500, directorDelayMax: 700, recoveryMin: 950, recoveryMax: 1150 });
   assert.deepEqual(DUELIST_ENEMY_CONFIG.timing, { hurtMs: 300, directorDelayMin: 400, directorDelayMax: 500, recoveryMin: 700, recoveryMax: 800 });
-  assert.equal(MAULER_ENEMY_CONFIG.maxHp, 5);
-  assert.equal(DUELIST_ENEMY_CONFIG.maxHp, 3);
+  assert.equal(MAULER_ENEMY_CONFIG.maxHp, 15);
+  assert.equal(DUELIST_ENEMY_CONFIG.maxHp, 9);
 });

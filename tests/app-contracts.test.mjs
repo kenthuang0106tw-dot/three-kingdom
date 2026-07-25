@@ -1164,7 +1164,7 @@ test("Soldier EnemyConfig validates stable tuning and preserves current values",
   const source = await readFile(new URL("../app/game/enemy/EnemyConfig.ts", import.meta.url), "utf8");
   assert.equal(SOLDIER_ENEMY_CONFIG.id, "soldier");
   assert.equal(SOLDIER_ENEMY_CONFIG.assetKey, "enemy-soldier");
-  assert.equal(SOLDIER_ENEMY_CONFIG.maxHp, 4);
+  assert.equal(SOLDIER_ENEMY_CONFIG.maxHp, 12);
   assert.equal(SOLDIER_ENEMY_CONFIG.movement.walkSpeed, 70);
   assert.equal(SOLDIER_ENEMY_CONFIG.movement.detectionDistance, 500);
   assert.deepEqual(SOLDIER_ENEMY_CONFIG.combat, { attackXRange: 110, attackYRange: 45, minSpacing: 72 });
@@ -1210,8 +1210,8 @@ test("Mixed encounter tuning stays readable, dodgeable, and within the duration 
   const referenceSuccessfulHitIntervalMs = 3000;
   const estimatedDurationMs = configs.reduce((total, config) => total + config.maxHp, 0) * referenceSuccessfulHitIntervalMs;
 
-  assert.equal(estimatedDurationMs, 36000);
-  assert.ok(estimatedDurationMs >= 30000 && estimatedDurationMs <= 90000);
+  assert.equal(estimatedDurationMs, 108000);
+  assert.ok(estimatedDurationMs >= 90000 && estimatedDurationMs <= 120000);
   assert.ok(configs.every(config => config.combat.attackYRange <= 48));
   assert.ok(configs.every(config => config.combat.minSpacing >= 68));
   assert.ok(configs.every(config => config.timing.directorDelayMin >= 400));

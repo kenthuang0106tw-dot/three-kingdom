@@ -13,7 +13,9 @@ Status: implementation verification complete; strategy comparison pending review
 | Mauler re-entry cadence | 650–900ms director / 1150–1450ms recovery | 500–700ms director / 950–1150ms recovery |
 | Duelist re-entry cadence | 400–600ms director / 700–900ms recovery | 400–500ms director / 700–800ms recovery |
 
-No HP, damage, Player Combo, hitbox dimensions, Boss, stage, art, or new system changed.
+Reviewer-requested difficulty change: normal Enemy HP is tripled (Soldier 12,
+Mauler 15, Duelist 9). Damage, Player Combo, hitbox dimensions, Boss, stage,
+art, and new systems remain unchanged.
 
 ## Automated evidence
 
