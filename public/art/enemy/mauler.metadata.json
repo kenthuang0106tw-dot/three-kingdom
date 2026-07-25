@@ -9,7 +9,7 @@
     "y": 354
   },
   "displayScale": 1.1,
-  "sourceFacing": -1,
+  "sourceFacing": 1,
   "targetLogicalIdleHeight": 240,
   "logicalIdleHeight": 239.8,
   "animations": {

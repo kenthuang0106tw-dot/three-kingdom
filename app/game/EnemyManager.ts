@@ -4,6 +4,7 @@ import { BAMBOO_COMBAT_ROOM, clampStageX, clampStageY, type StageSpawnPoint } fr
 import { beginEncounter, createEncounterFlow, isEncounterCleared, recordEnemyRemoved, type EncounterFlowState } from "./stage/EncounterFlow";
 import { DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemyAnimationKey, enemySpriteShouldFlip, type EnemyConfig } from "./enemy/EnemyConfig";
 import { selectFairAttackCandidate } from "./enemy/AttackSlotPolicy";
+import { createAttackCommitment, isWithinAttackLine, type AttackCommitment } from "./enemy/AttackCommitment";
 
 export type EnemyState = "idle" | "walk" | "attack" | "hurt" | "dead";
 export type EnemyDamageResult = Readonly<{
@@ -48,6 +49,7 @@ export class EnemyCombatant {
   hasAttackSlot = false;
   attackApproachEndsAt = 0;
   attackSlotGrantCount = 0;
+  attackCommitment: AttackCommitment | null = null;
 
   constructor(readonly id: number, readonly assignedSlot: number, readonly config: EnemyConfig, scene: Phaser.Scene, x: number, y: number) {
     this.hp = config.maxHp;
@@ -151,7 +153,9 @@ export class EnemyManager {
       if (enemy.state === "dead" || enemy.state === "hurt") continue;
       if (enemy.state === "attack") {
         this.positionAttackHitbox(enemy);
-        if (enemy.attackBody.enable && !enemy.attackHitPlayer && this.scene.physics.overlap(enemy.attackZone, this.playerBodyZone)) {
+        if (enemy.attackBody.enable && !enemy.attackHitPlayer && enemy.attackCommitment &&
+          isWithinAttackLine(enemy.attackCommitment, this.playerBodyZone.y, enemy.config.combat.attackYRange) &&
+          this.scene.physics.overlap(enemy.attackZone, this.playerBodyZone)) {
           enemy.attackHitPlayer = true;
           this.callbacks.onPlayerHit(enemy);
         }
@@ -253,6 +257,7 @@ export class EnemyManager {
     enemy.state = next;
     enemy.body.setVelocity(0, 0);
     enemy.body.setImmovable(next === "hurt");
+    enemy.attackCommitment = next === "attack" ? createAttackCommitment(enemy.facing, enemy.bodyZone.y) : null;
     this.disableAttackHitbox(enemy);
     if (next === "idle") enemy.sprite.play(enemyAnimationKey(enemy.config, "idle"), true);
     else if (next === "walk") enemy.sprite.play(enemyAnimationKey(enemy.config, "walk"), true);
@@ -341,7 +346,9 @@ export class EnemyManager {
   }
 
   private positionAttackHitbox(enemy: EnemyCombatant) {
-    const x = Math.round(enemy.bodyZone.x + enemy.facing * enemy.config.combat.attackXRange * 0.7), y = Math.round(enemy.bodyZone.y - 58);
+    const commitment = enemy.attackCommitment;
+    const facing = commitment?.facing ?? enemy.facing;
+    const x = Math.round(enemy.bodyZone.x + facing * enemy.config.combat.attackXRange * 0.7), y = Math.round((commitment?.lineY ?? enemy.bodyZone.y) - 58);
     enemy.attackZone.setPosition(x, y);
     enemy.attackBody.reset(x, y);
   }

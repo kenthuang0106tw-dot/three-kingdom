@@ -1,0 +1,32 @@
+# M8 / Task 8.2B — Mixed Encounter Decision Prototype
+
+Status: implementation verification complete; strategy comparison pending reviewer playtest.
+
+## Before / after
+
+| Parameter | Before | After |
+| --- | --- | --- |
+| Mauler attack cadence | 125ms startup / 125ms active / 125ms recovery | 200ms startup / 200ms active / 200ms recovery |
+| Attack direction | implicit current facing | locked at attack entry |
+| Attack Y line | implicit overlap | locked at attack entry; ±48px is hittable |
+| Simultaneous attackers | one Attack Slot | unchanged: one Attack Slot |
+
+No HP, damage, Player Combo, hitbox dimensions, Boss, stage, art, or new system changed.
+
+## Automated evidence
+
+- `mixed-encounter-decision.test.mjs` verifies locked facing/Y commitment and reliable vertical line escape.
+- Existing manager flow retains slot release on attack complete, hurt, dead, and reset.
+- Full suite passed 115/115; TypeScript passed; ESLint has 0 errors and four existing shell-image warnings.
+
+## Reviewer ledger pending
+
+Run five encounter-2 rounds for each strategy before accepting balance:
+
+| Strategy | Runs | Damage taken | Time | Vertical dodges | Stop at attack2 | Target switches | Missed enemy attacks |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| A: fixed target, full Combo, no vertical movement | 5 | Pending | Pending | Pending | Pending | Pending | Pending |
+| B: deliberate evade / commitment / target switch | 5 | Pending | Pending | Pending | Pending | Pending | Pending |
+
+The prototype is accepted only if strategy B is clearly safer or more reliable
+without turning the encounter into permanent retreat.

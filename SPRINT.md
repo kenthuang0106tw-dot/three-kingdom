@@ -810,3 +810,13 @@ Status: accepted by reviewer on 2026-07-25.
 - [x] Reviewer accepted the 650 ms finisher and 400 ms Recovery as having sufficient commitment.
 
 See `docs/combat/m8-2a-combo-commitment.md` for the parameter table and evidence boundary.
+
+## M8 / Task 8.2B — Mixed Encounter Decision Prototype — 2026-07-25
+
+Status: implementation verification complete; reviewer strategy comparison pending.
+
+- [x] Mauler attack now locks weapon direction and Y line at startup.
+- [x] Mauler attack cadence is 200ms startup, 200ms active, and 200ms recovery.
+- [x] Duelist remains constrained by the existing one-attacker Attack Slot.
+- [x] Focused line-lock and vertical-escape tests added; full suite passed 115/115.
+- [ ] Record five fixed-target runs and five deliberate-play runs in encounter 2.
