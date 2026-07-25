@@ -820,3 +820,13 @@ Status: implementation verification complete; reviewer strategy comparison pendi
 - [x] Duelist remains constrained by the existing one-attacker Attack Slot.
 - [x] Focused line-lock and vertical-escape tests added; full suite passed 115/115.
 - [ ] Record five fixed-target runs and five deliberate-play runs in encounter 2.
+
+## TP-1 — Shield Guard Tactical Prototype — 2026-07-25
+
+Status: implementation verification complete; manual strategy comparison pending.
+
+- [x] Added development-only Test A (`?shieldGuardTest=A`) and Test B (`?shieldGuardTest=B`) without changing formal Stage encounters.
+- [x] Added forward-cone guard, 800 ms facing lock, attack line lock, 800–1200 ms recovery, block feedback, and per-attack block de-duplication.
+- [x] Preserved Soldier HP and the existing single Attack Slot; block produces neither damage nor Combo hit confirmation.
+- [x] 122 automated tests, typecheck, lint (0 errors; four existing image warnings), Vinext build, GitHub Pages build, and desktop browser smoke passed.
+- [ ] Record the required five frontal and five deliberate strategy runs before accepting TP-1 or planning TP-2.

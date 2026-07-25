@@ -32,6 +32,8 @@ export function mapGameplayEventToSfx(event: GameplayEvent): SfxCommand | undefi
       return command("player-attack", 0.48, (event.step - 1) * 80);
     case "enemy-hit":
       return command("hit-confirmed", 0.6);
+    case "enemy-blocked":
+      return command("hit-confirmed", 0.42, 360);
     case "player-hit":
       return command("player-hurt", 0.62);
     case "enemy-defeated":

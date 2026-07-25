@@ -19,7 +19,7 @@ import { advanceCameraHandoff, beginCameraHandoff, calculateCameraScroll, type C
 import { createCameraLockState, hasCameraLock, isCameraLocked, lockCamera, unlockCamera, type CameraLockState } from "./camera/CameraLock";
 import { createStageExitState, makeExitAvailable, resetStageExit, type StageExitState } from "./stage/StageExit";
 import { clearActiveEncounter, createBossEntryState, createEncounterSequence, isEncounterSequenceCleared, makeBossEntryEligible, triggerBossEntry, triggerNextEncounter, type BossEntryState, type EncounterSequenceState } from "./stage/EncounterFlow";
-import { DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemyAnimationKey } from "./enemy/EnemyConfig";
+import { DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SHIELD_GUARD_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemyAnimationKey } from "./enemy/EnemyConfig";
 import { BOSS_ACTOR_CONFIG, BossActor } from "./boss/BossActor";
 import { GameFlowStateMachine } from "./flow/GameFlowStateMachine";
 import { TitleStartController } from "./flow/TitleStartController";
@@ -170,6 +170,7 @@ export default class MainScene extends Phaser.Scene {
   private totalDamage = 0;
   private playerAttackId = 0;
   private playerHitTargetIds: ReadonlySet<number> = new Set();
+  private playerBlockedTargetIds: ReadonlySet<number> = new Set();
   private defeatedText?: Phaser.GameObjects.Container;
   private readonly transitionLog: string[] = [];
   private diagnosticMode = false;
@@ -182,6 +183,7 @@ export default class MainScene extends Phaser.Scene {
   private performanceProfileStarted = false;
   private performanceSampler?: PerformanceSampler;
   private previewMode = false;
+  private shieldGuardTestMode?: "A" | "B";
   private enemyPreviewMode = false;
   private resetSmokeMode = false;
   private encounterSmokeMode = false;
@@ -276,6 +278,8 @@ export default class MainScene extends Phaser.Scene {
       this.enemyPreviewIndex = frameIndex < 0 ? 0 : frameIndex;
     }
     this.previewMode = development && query.get("previewAttack") === "1";
+    const shieldGuardTest = query.get("shieldGuardTest")?.toUpperCase();
+    this.shieldGuardTestMode = development && (shieldGuardTest === "A" || shieldGuardTest === "B") ? shieldGuardTest : undefined;
     this.visualFreezeMode = development && query.get("visualFreeze") === "1";
     this.visualFreezeWarmupFrames = 0;
     this.visualFreezeDeltas.length = 0;
@@ -546,7 +550,7 @@ export default class MainScene extends Phaser.Scene {
     if (this.lifecycleClock.isPaused()) { this.updateDebugText(); return; }
     this.playerBody.setVelocity(0, 0);
     this.currentInput = this.touchInputController.readSnapshot(this.inputController.readSnapshot());
-    if (!this.bossSmokeMode && !this.bossCombatSmokeMode && !this.failureSmokeCycleActive) {
+    if (!this.shieldGuardTestMode && !this.bossSmokeMode && !this.bossCombatSmokeMode && !this.failureSmokeCycleActive) {
       this.updateEncounterSmoke();
       this.updateEncounterProgress();
       this.constrainPlayerToEncounterCamera();
@@ -756,7 +760,7 @@ export default class MainScene extends Phaser.Scene {
         repeat: 0,
       });
     }
-    for (const config of [SOLDIER_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, DUELIST_ENEMY_CONFIG]) {
+    for (const config of [SOLDIER_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, DUELIST_ENEMY_CONFIG, SHIELD_GUARD_ENEMY_CONFIG]) {
       this.anims.create({ key: enemyAnimationKey(config, "idle"), frames: config.animations.idle.map(frame => ({ key: config.assetKey, frame })), frameRate: config.animationRates.idle, repeat: -1 });
       this.anims.create({ key: enemyAnimationKey(config, "walk"), frames: config.animations.walk.map(frame => ({ key: config.assetKey, frame })), frameRate: config.animationRates.walk, repeat: -1 });
       this.anims.create({ key: enemyAnimationKey(config, "attack"), frames: config.animations.attack.map(frame => ({ key: config.assetKey, frame })), frameRate: config.animationRates.attack, repeat: 0 });
@@ -777,10 +781,21 @@ export default class MainScene extends Phaser.Scene {
       let hitLanded = false;
       let globalEffectsTriggered = false;
       const overlapping = this.enemyManager.getLivingEnemies().filter(enemy => this.physics.overlap(this.attackZone, enemy.bodyZone));
+      const blocked = overlapping.filter(enemy => this.enemyManager.isGuardBlocking(
+        enemy,
+        this.playerBodyZone.x,
+        this.playerBodyZone.y,
+      ) && !this.playerBlockedTargetIds.has(enemy.id));
+      if (blocked.length) {
+        this.playerBlockedTargetIds = new Set([...this.playerBlockedTargetIds, ...blocked.map(enemy => enemy.id)]);
+        blocked.forEach(enemy => this.applyBlockToEnemy(enemy));
+      }
       const resolution = resolveAttack({
         attackId: this.playerAttackId,
         damage: this.currentAttackImpact().damage,
-        targets: overlapping.map(enemy => ({ id: enemy.id, hp: enemy.hp, active: enemy.state !== "dead" })),
+        targets: overlapping
+          .filter(enemy => !this.playerBlockedTargetIds.has(enemy.id))
+          .map(enemy => ({ id: enemy.id, hp: enemy.hp, active: enemy.state !== "dead" })),
         hitTargetIds: this.playerHitTargetIds,
       });
       this.playerHitTargetIds = resolution.hitTargetIds;
@@ -825,6 +840,7 @@ export default class MainScene extends Phaser.Scene {
     this.comboWindowEndsAt = 0;
     this.playerAttackId += 1;
     this.playerHitTargetIds = new Set();
+    this.playerBlockedTargetIds = new Set();
     this.gameplayEvents.publish({ type: "player-attack-started", step, at: this.time.now });
     this.playerBody.setVelocity(0, 0);
     this.disableAttackHitbox();
@@ -862,6 +878,7 @@ export default class MainScene extends Phaser.Scene {
     this.comboWindowOpen = false;
     this.comboWindowEndsAt = 0;
     this.playerHitTargetIds = new Set();
+    this.playerBlockedTargetIds = new Set();
     this.attackController.finish();
   }
 
@@ -894,6 +911,13 @@ export default class MainScene extends Phaser.Scene {
       this.gameplayEvents.publish({ type: "enemy-defeated", enemyId: enemy.id, at: this.time.now });
     }
     if (triggerGlobalEffects) this.effectDirector.beginHitStop(impact.hitStopMs);
+  }
+
+  private applyBlockToEnemy(enemy: EnemyCombatant) {
+    const hitX = Math.round((this.attackBody.x + enemy.body.x) / 2);
+    const hitY = Math.round((this.attackBody.y + enemy.body.y) / 2);
+    this.effectDirector.createHitSpark(hitX, hitY);
+    this.gameplayEvents.publish({ type: "enemy-blocked", enemyId: enemy.id, at: this.time.now });
   }
 
   private applyHitToBoss(triggerGlobalEffects: boolean) {
@@ -1198,10 +1222,22 @@ export default class MainScene extends Phaser.Scene {
     this.pauseController.setFlowState(this.gameFlow.state);
     this.inputController.readSnapshot();
     this.currentInput = createActionSnapshot({ up: false, down: false, left: false, right: false });
+    if (this.shieldGuardTestMode) this.spawnShieldGuardPrototype(this.shieldGuardTestMode);
     this.updateTitleDataset(source);
     this.updatePauseDataset();
     this.updateAudioDataset();
     this.updateHud();
+  }
+
+  private spawnShieldGuardPrototype(mode: "A" | "B") {
+    const spawns = mode === "A"
+      ? [{ id: "shield-guard-test", x: 520, y: 560, enemyType: "shield-guard" as const }]
+      : [
+        { id: "shield-guard-test", x: 520, y: 560, enemyType: "shield-guard" as const },
+        { id: "duelist-test", x: 720, y: 635, enemyType: "duelist" as const },
+      ];
+    this.enemyManager.spawnPrototype(spawns);
+    if (process.env.NODE_ENV !== "production") this.game.canvas.dataset.shieldGuardTestMode = mode;
   }
 
   private updateTitleDataset(source?: TitleStartSource) {

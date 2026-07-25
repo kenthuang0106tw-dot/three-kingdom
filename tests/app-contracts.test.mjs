@@ -1020,7 +1020,7 @@ test("Recovery traversal starts unlocked while preserving explicit diagnostic lo
   const source = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
   assert.match(source, /if \(this\.bossSmokeMode \|\| this\.bossCombatSmokeMode \|\| this\.failureSmokeCycleActive\) \{/);
   assert.match(source, /this\.cameraLockState = lockCamera\(this\.cameraLockState, "encounter"\)/);
-  assert.match(source, /if \(!this\.bossSmokeMode && !this\.bossCombatSmokeMode && !this\.failureSmokeCycleActive\) \{\s+this\.updateEncounterSmoke\(\)/);
+  assert.match(source, /if \(!this\.shieldGuardTestMode && !this\.bossSmokeMode && !this\.bossCombatSmokeMode && !this\.failureSmokeCycleActive\) \{\s+this\.updateEncounterSmoke\(\)/);
   assert.match(source, /unlockCamera\(this\.cameraLockState, "encounter"\)/);
   assert.match(source, /if \(!isCameraLocked\(this\.cameraLockState\)\)/);
   assert.match(source, /dataset\.cameraScrollX/);
@@ -1206,7 +1206,7 @@ test("Mixed encounter composition assigns three archetypes with one attack direc
   assert.match(manager, /ENEMY_CONFIGS\[spawn\.enemyType \?\? "soldier"\]/);
   assert.match(manager, /if \(this\.currentAttacker \|\| this\.clock\.now\(\) < this\.directorReadyAt\) return/);
   assert.match(manager, /Math\.max\(enemy\.config\.combat\.minSpacing, other\.config\.combat\.minSpacing\)/);
-  assert.match(scene, /for \(const config of \[SOLDIER_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, DUELIST_ENEMY_CONFIG\]\)/);
+  assert.match(scene, /for \(const config of \[SOLDIER_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, DUELIST_ENEMY_CONFIG, SHIELD_GUARD_ENEMY_CONFIG\]\)/);
   assert.match(stage, /enemyType: "mauler"/);
   assert.match(stage, /enemyType: "duelist"/);
 });

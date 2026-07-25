@@ -14,7 +14,7 @@ export type StageSpawnPoint = {
   readonly id: string;
   readonly x: number;
   readonly y: number;
-  readonly enemyType?: "soldier" | "mauler" | "duelist";
+  readonly enemyType?: "soldier" | "mauler" | "duelist" | "shield-guard";
 };
 
 export type StageEncounter = {
@@ -131,7 +131,7 @@ export function validateStageConfig(config: StageConfig): StageConfig {
   const ids = new Set<string>();
   for (const point of config.spawnPoints) {
     assertPoint("spawn", point, config.walkBounds);
-    if (point.enemyType && !["soldier", "mauler", "duelist"].includes(point.enemyType)) throw new Error(`Unknown enemy type: ${point.enemyType}`);
+    if (point.enemyType && !["soldier", "mauler", "duelist", "shield-guard"].includes(point.enemyType)) throw new Error(`Unknown enemy type: ${point.enemyType}`);
     if (ids.has(point.id)) throw new Error(`Duplicate spawn point id: ${point.id}`);
     ids.add(point.id);
   }

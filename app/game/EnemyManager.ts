@@ -2,20 +2,22 @@ import * as Phaser from "phaser";
 import { PhaserGameplayClock, SeededRandom, type GameplayClock, type RandomSource } from "./time/GameplayTime";
 import { BAMBOO_COMBAT_ROOM, clampStageX, clampStageY, type StageSpawnPoint } from "./stage/StageConfig";
 import { beginEncounter, createEncounterFlow, isEncounterCleared, recordEnemyRemoved, type EncounterFlowState } from "./stage/EncounterFlow";
-import { DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemyAnimationKey, enemyAttackSpriteShouldFlip, enemySpriteShouldFlip, type EnemyConfig } from "./enemy/EnemyConfig";
+import { DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SHIELD_GUARD_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemyAnimationKey, enemyAttackSpriteShouldFlip, enemySpriteShouldFlip, type EnemyConfig } from "./enemy/EnemyConfig";
 import { selectFairAttackCandidate } from "./enemy/AttackSlotPolicy";
 import { createAttackCommitment, isWithinAttackLine, type AttackCommitment } from "./enemy/AttackCommitment";
+import { SHIELD_GUARD_TIMING, type ShieldGuardState, isAttackBlockedByGuard } from "./enemy/ShieldGuard";
 
-export type EnemyState = "idle" | "walk" | "attack" | "hurt" | "dead";
+export type EnemyState = "idle" | "walk" | "attack" | "hurt" | "dead" | "guard" | "recovery";
 export type EnemyDamageResult = Readonly<{
   applied: boolean;
   becameDead: boolean;
 }>;
 
-const ENEMY_CONFIGS: Record<"soldier" | "mauler" | "duelist", EnemyConfig> = {
+const ENEMY_CONFIGS: Record<"soldier" | "mauler" | "duelist" | "shield-guard", EnemyConfig> = {
   soldier: SOLDIER_ENEMY_CONFIG,
   mauler: MAULER_ENEMY_CONFIG,
   duelist: DUELIST_ENEMY_CONFIG,
+  "shield-guard": SHIELD_GUARD_ENEMY_CONFIG,
 };
 
 const ATTACK_APPROACH_TIMEOUT_MS = 1500;
@@ -27,10 +29,12 @@ const FORMATION_SLOTS = [
 ] as const;
 
 const TRANSITIONS: Record<EnemyState, ReadonlySet<EnemyState>> = {
-  idle: new Set(["walk", "attack", "hurt", "dead"]),
-  walk: new Set(["idle", "attack", "hurt", "dead"]),
-  attack: new Set(["idle", "hurt", "dead"]),
-  hurt: new Set(["idle", "dead"]),
+  idle: new Set(["walk", "attack", "guard", "hurt", "dead"]),
+  walk: new Set(["idle", "attack", "guard", "hurt", "dead"]),
+  attack: new Set(["idle", "recovery", "hurt", "dead"]),
+  guard: new Set(["attack", "hurt", "dead"]),
+  recovery: new Set(["guard", "hurt", "dead"]),
+  hurt: new Set(["idle", "guard", "dead"]),
   dead: new Set(),
 };
 
@@ -50,6 +54,8 @@ export class EnemyCombatant {
   attackApproachEndsAt = 0;
   attackSlotGrantCount = 0;
   attackCommitment: AttackCommitment | null = null;
+  guardUntil = 0;
+  guardMarker?: Phaser.GameObjects.Graphics;
 
   constructor(readonly id: number, readonly assignedSlot: number, readonly config: EnemyConfig, scene: Phaser.Scene, x: number, y: number) {
     this.hp = config.maxHp;
@@ -74,6 +80,10 @@ export class EnemyCombatant {
   }
 
   get slotName() { return FORMATION_SLOTS[this.assignedSlot].name; }
+  get isShieldGuard() { return this.config.id === "shield-guard"; }
+  get shieldState(): ShieldGuardState | undefined {
+    return this.isShieldGuard ? (this.state === "idle" || this.state === "walk" ? "approach" : this.state) : undefined;
+  }
 }
 
 type ManagerCallbacks = {
@@ -117,6 +127,15 @@ export class EnemyManager {
     });
   }
 
+  /** Development-only TP-1 entrance. It intentionally does not alter stage encounters. */
+  spawnPrototype(spawns: readonly StageSpawnPoint[]) {
+    if (this.enemies.length > 0) return;
+    spawns.forEach((spawn, index) => {
+      const config = ENEMY_CONFIGS[spawn.enemyType ?? "soldier"];
+      this.addEnemy(new EnemyCombatant(this.nextEnemyId++, index, config, this.scene, spawn.x, spawn.y));
+    });
+  }
+
   private addEnemy(enemy: EnemyCombatant) {
     this.enemies.push(enemy);
     this.colliderOwners.set(enemy, []);
@@ -129,6 +148,7 @@ export class EnemyManager {
     enemy.sprite.setData("animationUpdate", update).setData("animationComplete", complete);
     enemy.sprite.on(Phaser.Animations.Events.ANIMATION_UPDATE, update);
     enemy.sprite.on(Phaser.Animations.Events.ANIMATION_COMPLETE, complete);
+    if (enemy.isShieldGuard) enemy.guardMarker = this.scene.add.graphics().setDepth(8999);
     const playerCollider = this.scene.physics.add.collider(this.playerBodyZone, enemy.bodyZone);
     this.colliders.push(playerCollider);
     this.colliderOwners.get(enemy)!.push(playerCollider);
@@ -151,6 +171,7 @@ export class EnemyManager {
       enemy.body.setVelocity(0, 0);
       this.syncSprite(enemy);
       if (enemy.state === "dead" || enemy.state === "hurt") continue;
+      if (enemy.isShieldGuard && this.updateShieldGuard(enemy)) continue;
       if (enemy.state === "attack") {
         this.positionAttackHitbox(enemy);
         if (enemy.attackBody.enable && !enemy.attackHitPlayer && enemy.attackCommitment &&
@@ -165,6 +186,28 @@ export class EnemyManager {
       else this.updateFormationMovement(enemy);
     }
     this.assignAttackSlot(alive);
+  }
+
+  private updateShieldGuard(enemy: EnemyCombatant) {
+    if (enemy.state === "guard") {
+      if (enemy.hasAttackSlot && this.clock.now() >= enemy.guardUntil) this.setState(enemy, "attack");
+      return true;
+    }
+    if (enemy.state === "recovery") return true;
+    if (enemy.state === "attack") return false;
+    const dx = this.playerBodyZone.x - enemy.bodyZone.x;
+    const dy = this.playerBodyZone.y - enemy.bodyZone.y;
+    if (enemy.hasAttackSlot) {
+      this.updateAttackApproach(enemy);
+      return true;
+    }
+    if (Math.abs(dx) <= 155 && Math.abs(dy) <= 90) {
+      this.setFacing(enemy, dx >= 0 ? 1 : -1);
+      this.setState(enemy, "guard");
+      return true;
+    }
+    this.moveToward(enemy, this.playerBodyZone.x - (dx >= 0 ? 125 : -125), this.playerBodyZone.y);
+    return true;
   }
 
   private updateAttackApproach(enemy: EnemyCombatant) {
@@ -250,6 +293,12 @@ export class EnemyManager {
     return { applied: true, becameDead: enemy.hp === 0 };
   }
 
+  isGuardBlocking(enemy: EnemyCombatant, attackerX: number, attackerY: number) {
+    return enemy.isShieldGuard && enemy.state === "guard" && isAttackBlockedByGuard(
+      enemy.facing, enemy.bodyZone.x, enemy.bodyZone.y - 34, attackerX, attackerY,
+    );
+  }
+
   private setState(enemy: EnemyCombatant, next: EnemyState) {
     if (next === enemy.state) return;
     if (!TRANSITIONS[enemy.state].has(next)) throw new Error(`Invalid enemy transition: ${enemy.state} -> ${next}`);
@@ -261,6 +310,20 @@ export class EnemyManager {
     this.disableAttackHitbox(enemy);
     if (next === "idle") enemy.sprite.play(enemyAnimationKey(enemy.config, "idle"), true);
     else if (next === "walk") enemy.sprite.play(enemyAnimationKey(enemy.config, "walk"), true);
+    else if (next === "guard") {
+      enemy.guardUntil = this.clock.now() + SHIELD_GUARD_TIMING.guardLockMs;
+      enemy.sprite.play(enemyAnimationKey(enemy.config, "idle"), true);
+    } else if (next === "recovery") {
+      enemy.sprite.play(enemyAnimationKey(enemy.config, "idle"), true);
+      const timer = this.scene.time.delayedCall(this.random.between(
+        SHIELD_GUARD_TIMING.recoveryMinMs,
+        SHIELD_GUARD_TIMING.recoveryMaxMs,
+      ), () => {
+        this.stateTimers.delete(enemy);
+        if (enemy.sprite.active && enemy.state === "recovery") this.setState(enemy, "guard");
+      });
+      this.stateTimers.set(enemy, timer);
+    }
     else if (next === "attack") {
       enemy.attackHitPlayer = false;
       enemy.sprite.setFlipX(enemyAttackSpriteShouldFlip(enemy.config, enemy.facing)).play(enemyAnimationKey(enemy.config, "attack"), true);
@@ -270,7 +333,7 @@ export class EnemyManager {
         this.stateTimers.delete(enemy);
         if (enemy.sprite.active && enemy.state === "hurt") {
           enemy.cooldownUntil = this.clock.now() + this.random.between(enemy.config.timing.recoveryMin, enemy.config.timing.recoveryMax);
-          this.setState(enemy, "idle");
+          this.setState(enemy, enemy.isShieldGuard ? "guard" : "idle");
         }
       });
       this.stateTimers.set(enemy, timer);
@@ -284,8 +347,11 @@ export class EnemyManager {
     if (!enemy.sprite.active) return;
     if (animation.key === enemyAnimationKey(enemy.config, "attack") && enemy.state === "attack") {
       this.releaseAttackSlot(enemy);
-      enemy.cooldownUntil = this.clock.now() + this.random.between(enemy.config.timing.recoveryMin, enemy.config.timing.recoveryMax);
-      this.setState(enemy, "idle");
+      if (enemy.isShieldGuard) this.setState(enemy, "recovery");
+      else {
+        enemy.cooldownUntil = this.clock.now() + this.random.between(enemy.config.timing.recoveryMin, enemy.config.timing.recoveryMax);
+        this.setState(enemy, "idle");
+      }
     } else if (animation.key === enemyAnimationKey(enemy.config, "dead") && enemy.state === "dead") {
       enemy.sprite.setFrame(enemy.config.animations.dead.at(-1)!);
       this.scene.tweens.add({ targets: [enemy.sprite, enemy.shadow], alpha: 0, duration: 500, onComplete: () => this.remove(enemy) });
@@ -322,6 +388,7 @@ export class EnemyManager {
     enemy.sprite.off(Phaser.Animations.Events.ANIMATION_COMPLETE, complete);
     enemy.sprite.destroy();
     enemy.shadow.destroy();
+    enemy.guardMarker?.destroy();
     enemy.bodyZone.destroy();
     enemy.attackZone.destroy();
   }
@@ -337,6 +404,7 @@ export class EnemyManager {
     const x = Math.round(enemy.bodyZone.x), y = Math.round(enemy.bodyZone.y);
     enemy.shadow.setPosition(x, y + 4).setDepth(y - 1);
     enemy.sprite.setPosition(x, y).setDepth(y);
+    if (enemy.guardMarker) this.drawGuardMarker(enemy);
     if (enemy.attackBody.enable) this.positionAttackHitbox(enemy);
   }
 
@@ -374,6 +442,17 @@ export class EnemyManager {
       const y = clampStageY(this.playerBodyZone.y + slot.y, BAMBOO_COMBAT_ROOM.walkBounds);
       this.slotGraphics.strokeCircle(x, y, 10);
     }
+  }
+
+  private drawGuardMarker(enemy: EnemyCombatant) {
+    const marker = enemy.guardMarker;
+    if (!marker) return;
+    marker.clear();
+    if (enemy.state !== "guard") return;
+    const x = Math.round(enemy.bodyZone.x + enemy.facing * 42);
+    const y = Math.round(enemy.bodyZone.y - 70);
+    marker.fillStyle(0x69caff, 0.42).fillTriangle(x, y, x - enemy.facing * 32, y + 28, x - enemy.facing * 32, y - 28);
+    marker.lineStyle(3, 0xd9f3ff, 0.95).strokeTriangle(x, y, x - enemy.facing * 32, y + 28, x - enemy.facing * 32, y - 28);
   }
 
   getLivingEnemies() { return this.enemies.filter(enemy => enemy.state !== "dead"); }

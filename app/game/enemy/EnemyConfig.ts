@@ -94,6 +94,12 @@ export const SOLDIER_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
   timing: { hurtMs: 300, directorDelayMin: 500, directorDelayMax: 750, recoveryMin: 850, recoveryMax: 1100 },
 });
 
+/** Development-only TP-1 substitute: Soldier art with Shield Guard behavior. */
+export const SHIELD_GUARD_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
+  ...SOLDIER_ENEMY_CONFIG,
+  id: "shield-guard",
+});
+
 export const MAULER_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
   id: "mauler",
   assetKey: "enemy-mauler",
