@@ -31,6 +31,11 @@ replay block sparks or sound. Block feedback uses the existing temporary spark
 and a brighter, detuned existing hit cue; it intentionally does not add hit
 stop, damage, knockback, or player stun.
 
+A successful front block also renews the 800 ms Guard lock and releases the
+Attack Slot. Therefore frontal repetition keeps the shield up instead of
+forcing an immediate counterattack; once pressure stops, normal attack-slot
+cadence may resume.
+
 ## Test evidence
 
 Automated checks passed on 2026-07-25:

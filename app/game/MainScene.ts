@@ -914,6 +914,7 @@ export default class MainScene extends Phaser.Scene {
   }
 
   private applyBlockToEnemy(enemy: EnemyCombatant) {
+    this.enemyManager.reinforceGuardAfterBlock(enemy);
     const hitX = Math.round((this.attackBody.x + enemy.body.x) / 2);
     const hitY = Math.round((this.attackBody.y + enemy.body.y) / 2);
     this.effectDirector.createHitSpark(hitX, hitY);

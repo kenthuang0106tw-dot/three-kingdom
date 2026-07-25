@@ -306,6 +306,12 @@ export class EnemyManager {
     );
   }
 
+  reinforceGuardAfterBlock(enemy: EnemyCombatant) {
+    if (!enemy.isShieldGuard || enemy.state !== "guard") return;
+    enemy.guardUntil = this.clock.now() + SHIELD_GUARD_TIMING.guardLockMs;
+    this.releaseAttackSlot(enemy);
+  }
+
   private isPlayerInsideGuardCone(enemy: EnemyCombatant) {
     return isAttackBlockedByGuard(
       enemy.facing,

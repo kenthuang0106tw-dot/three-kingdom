@@ -30,6 +30,8 @@ test("Shield Guard keeps guard direction locked, disables guard while attacking,
   assert.match(source, /enemy\.hasAttackSlot && this\.clock\.now\(\) >= enemy\.guardUntil && this\.isInAttackRange\(enemy\)/);
   assert.match(source, /else if \(enemy\.hasAttackSlot && this\.clock\.now\(\) >= enemy\.guardUntil\) this\.setState\(enemy, "idle"\)/);
   assert.match(source, /this\.clock\.now\(\) >= enemy\.guardUntil && !this\.isPlayerInsideGuardCone\(enemy\)/);
+  assert.match(source, /reinforceGuardAfterBlock\(enemy: EnemyCombatant\)/);
+  assert.match(source, /enemy\.guardUntil = this\.clock\.now\(\) \+ SHIELD_GUARD_TIMING\.guardLockMs/);
   assert.match(source, /guard: new Set\(\["idle", "attack", "hurt", "dead"\]\)/);
   assert.match(source, /if \(enemy\.isShieldGuard\) this\.setState\(enemy, "recovery"\)/);
   assert.match(source, /this\.releaseAttackSlot\(enemy\);/);
@@ -43,6 +45,7 @@ test("Shield Guard block excludes damage and combo confirmation once per attack 
   assert.match(source, /this\.playerBlockedTargetIds = new Set/);
   assert.match(source, /filter\(enemy => !this\.playerBlockedTargetIds\.has\(enemy\.id\)\)/);
   assert.match(source, /this\.gameplayEvents\.publish\(\{ type: "enemy-blocked"/);
+  assert.match(source, /this\.enemyManager\.reinforceGuardAfterBlock\(enemy\)/);
   assert.match(source, /if \(hitLanded\) \{\s*this\.hitConfirmed = true/);
 });
 
