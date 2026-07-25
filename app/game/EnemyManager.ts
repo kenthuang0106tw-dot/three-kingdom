@@ -55,6 +55,7 @@ export class EnemyCombatant {
   attackSlotGrantCount = 0;
   attackCommitment: AttackCommitment | null = null;
   guardUntil = 0;
+  guardReacquireFacing?: 1 | -1;
   guardMarker?: Phaser.GameObjects.Graphics;
 
   constructor(readonly id: number, readonly assignedSlot: number, readonly config: EnemyConfig, scene: Phaser.Scene, x: number, y: number) {
@@ -193,6 +194,7 @@ export class EnemyManager {
       if (enemy.hasAttackSlot && this.clock.now() >= enemy.guardUntil && this.isInAttackRange(enemy)) this.setState(enemy, "attack");
       else if (enemy.hasAttackSlot && this.clock.now() >= enemy.guardUntil) this.setState(enemy, "idle");
       else if (this.clock.now() >= enemy.guardUntil && !this.isPlayerInsideGuardCone(enemy)) {
+        enemy.guardReacquireFacing = this.playerBodyZone.x >= enemy.bodyZone.x ? 1 : -1;
         this.releaseAttackSlot(enemy);
         this.setState(enemy, "recovery");
       }
@@ -297,6 +299,7 @@ export class EnemyManager {
       return { applied: false, becameDead: false };
     }
     enemy.hp = Math.max(0, enemy.hp - Math.max(0, Math.floor(amount)));
+    enemy.guardReacquireFacing = undefined;
     this.releaseAttackSlot(enemy);
     if (enemy.hp === 0) this.setState(enemy, "dead");
     else this.setState(enemy, "hurt");
@@ -347,12 +350,18 @@ export class EnemyManager {
         SHIELD_GUARD_TIMING.recoveryMaxMs,
       ), () => {
         this.stateTimers.delete(enemy);
-        if (enemy.sprite.active && enemy.state === "recovery") this.setState(enemy, "guard");
+        if (enemy.sprite.active && enemy.state === "recovery") {
+          const facing = enemy.guardReacquireFacing;
+          enemy.guardReacquireFacing = undefined;
+          if (facing) this.setFacing(enemy, facing);
+          this.setState(enemy, "guard");
+        }
       });
       this.stateTimers.set(enemy, timer);
     }
     else if (next === "attack") {
       enemy.attackHitPlayer = false;
+      enemy.guardReacquireFacing = undefined;
       enemy.sprite.setFlipX(enemyAttackSpriteShouldFlip(enemy.config, enemy.facing)).play(enemyAnimationKey(enemy.config, "attack"), true);
     } else if (next === "hurt") {
       enemy.sprite.play(enemyAnimationKey(enemy.config, "hurt"), true);

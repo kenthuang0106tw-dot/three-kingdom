@@ -43,6 +43,9 @@ knockback may change his world position.
 When the locked Guard direction is successfully flanked, the Shield Guard
 releases its Attack Slot and enters the existing 800–1200 ms exposed recovery.
 This prevents an immediate turn-and-chase and guarantees a usable flank reward.
+At the end of that window it re-acquires the flanker-facing snapshot once and
+re-enters Guard, so repeatedly attacking from the same side is not permanent
+free damage.
 
 ## Test evidence
 

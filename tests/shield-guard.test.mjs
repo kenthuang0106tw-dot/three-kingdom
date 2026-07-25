@@ -31,6 +31,8 @@ test("Shield Guard keeps guard direction locked, disables guard while attacking,
   assert.match(source, /else if \(enemy\.hasAttackSlot && this\.clock\.now\(\) >= enemy\.guardUntil\) this\.setState\(enemy, "idle"\)/);
   assert.match(source, /this\.clock\.now\(\) >= enemy\.guardUntil && !this\.isPlayerInsideGuardCone\(enemy\)/);
   assert.match(source, /this\.releaseAttackSlot\(enemy\);\s*this\.setState\(enemy, "recovery"\)/);
+  assert.match(source, /enemy\.guardReacquireFacing = this\.playerBodyZone\.x >= enemy\.bodyZone\.x \? 1 : -1/);
+  assert.match(source, /const facing = enemy\.guardReacquireFacing;\s*enemy\.guardReacquireFacing = undefined;\s*if \(facing\) this\.setFacing\(enemy, facing\)/);
   assert.match(source, /reinforceGuardAfterBlock\(enemy: EnemyCombatant\)/);
   assert.match(source, /enemy\.guardUntil = this\.clock\.now\(\) \+ SHIELD_GUARD_TIMING\.guardLockMs/);
   assert.match(source, /guard: new Set\(\["idle", "attack", "recovery", "hurt", "dead"\]\)/);
