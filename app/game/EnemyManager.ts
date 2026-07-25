@@ -55,6 +55,7 @@ export class EnemyCombatant {
   attackSlotGrantCount = 0;
   attackCommitment: AttackCommitment | null = null;
   guardUntil = 0;
+  guardCounterReady = false;
   guardReacquireFacing?: 1 | -1;
   guardMarker?: Phaser.GameObjects.Graphics;
 
@@ -191,7 +192,7 @@ export class EnemyManager {
 
   private updateShieldGuard(enemy: EnemyCombatant) {
     if (enemy.state === "guard") {
-      if (enemy.hasAttackSlot && this.clock.now() >= enemy.guardUntil && this.isInAttackRange(enemy)) this.setState(enemy, "attack");
+      if (enemy.hasAttackSlot && this.clock.now() >= enemy.guardUntil && (this.isInAttackRange(enemy) || enemy.guardCounterReady)) this.setState(enemy, "attack");
       else if (enemy.hasAttackSlot && this.clock.now() >= enemy.guardUntil) this.setState(enemy, "idle");
       else if (this.clock.now() >= enemy.guardUntil && !this.isPlayerInsideGuardCone(enemy)) {
         enemy.guardReacquireFacing = this.playerBodyZone.x >= enemy.bodyZone.x ? 1 : -1;
@@ -300,6 +301,7 @@ export class EnemyManager {
     }
     enemy.hp = Math.max(0, enemy.hp - Math.max(0, Math.floor(amount)));
     enemy.guardReacquireFacing = undefined;
+    enemy.guardCounterReady = false;
     this.releaseAttackSlot(enemy);
     if (enemy.hp === 0) this.setState(enemy, "dead");
     else this.setState(enemy, "hurt");
@@ -315,6 +317,7 @@ export class EnemyManager {
   reinforceGuardAfterBlock(enemy: EnemyCombatant) {
     if (!enemy.isShieldGuard || enemy.state !== "guard") return;
     enemy.guardUntil = this.clock.now() + SHIELD_GUARD_TIMING.guardLockMs;
+    enemy.guardCounterReady = true;
     this.releaseAttackSlot(enemy);
   }
 
@@ -362,6 +365,7 @@ export class EnemyManager {
     else if (next === "attack") {
       enemy.attackHitPlayer = false;
       enemy.guardReacquireFacing = undefined;
+      enemy.guardCounterReady = false;
       enemy.sprite.setFlipX(enemyAttackSpriteShouldFlip(enemy.config, enemy.facing)).play(enemyAnimationKey(enemy.config, "attack"), true);
     } else if (next === "hurt") {
       enemy.sprite.play(enemyAnimationKey(enemy.config, "hurt"), true);

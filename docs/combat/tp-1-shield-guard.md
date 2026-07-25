@@ -36,6 +36,11 @@ Attack Slot. Therefore frontal repetition keeps the shield up instead of
 forcing an immediate counterattack; once pressure stops, normal attack-slot
 cadence may resume.
 
+Once that post-block Guard lock ends and the Shield Guard regains the Attack
+Slot, it performs one locked-line counterattack before it may abandon Guard to
+reposition. The counterattack can be vertically evaded and still has the normal
+recovery; it is not a tracking hit.
+
 While stationary, the Shield Guard uses an immovable ground-occupancy body:
 player contact cannot push him. Only his own walk movement and combat
 knockback may change his world position.
