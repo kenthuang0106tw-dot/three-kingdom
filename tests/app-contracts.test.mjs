@@ -155,6 +155,7 @@ test("Touch input shares the action snapshot and releases pointer state", async 
   assert.match(source, /360-degree analog joystick/);
   assert.match(source, /pointermove/);
   assert.match(source, /pointercancel/);
+  assert.doesNotMatch(source, /gameout/);
   assert.match(source, /const JOYSTICK_RADIUS = 98/);
   assert.match(source, /const JOYSTICK_SCALE = 1\.25/);
   assert.match(source, /const ATTACK_BUTTON_SCALE = 1\.35/);
@@ -181,6 +182,8 @@ test("Mobile landscape keeps the Phaser canvas in a safe-area fitted contract", 
   assert.match(css, /orientation:landscape/);
   assert.match(css, /aspect-ratio:16\/9/);
   assert.match(css, /touch-action:none/);
+  assert.match(css, /@media \(pointer:coarse\)/);
+  assert.match(css, /\.side-art\{display:none\}/);
 });
 
 test("MainScene exposes a development-only reset smoke path with shutdown cleanup", async () => {

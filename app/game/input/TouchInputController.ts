@@ -24,7 +24,6 @@ export class TouchInputController {
     if (pointer.id === this.joystickPointerId) this.updateJoystick(pointer.x, pointer.y);
   };
   private readonly onPointerUp = (pointer: Phaser.Input.Pointer) => this.release(pointer.id);
-  private readonly onGameOut = () => this.releaseAll();
 
   constructor(private readonly scene: Phaser.Scene) {
     this.createJoystick();
@@ -33,7 +32,6 @@ export class TouchInputController {
     scene.input.on("pointerup", this.onPointerUp);
     scene.input.on("pointerupoutside", this.onPointerUp);
     scene.input.on("pointercancel", this.onPointerUp);
-    scene.input.on("gameout", this.onGameOut);
   }
 
   readSnapshot(keyboard: DirectionButtons & { attackPressed: boolean }): ActionSnapshot {
@@ -61,7 +59,6 @@ export class TouchInputController {
     this.scene.input.off("pointerup", this.onPointerUp);
     this.scene.input.off("pointerupoutside", this.onPointerUp);
     this.scene.input.off("pointercancel", this.onPointerUp);
-    this.scene.input.off("gameout", this.onGameOut);
     this.releaseAll();
     for (const control of this.controls) control.destroy();
     this.controls.length = 0;
