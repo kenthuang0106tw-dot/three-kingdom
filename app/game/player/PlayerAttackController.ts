@@ -11,25 +11,49 @@ export type AttackMetadata = Readonly<{
   startupFrames: readonly number[];
   activeFrames: readonly number[];
   recoveryFrames: readonly number[];
+  impact: Readonly<{
+    damage: number;
+    knockbackDistance: number;
+    hitStopMs: number;
+  }>;
 }>;
+
+const BASELINE_IMPACT = Object.freeze({
+  damage: 1,
+  knockbackDistance: 26,
+  hitStopMs: (1000 / 60) * 4,
+});
+
+const COMMITMENT_IMPACT = Object.freeze({
+  damage: 2,
+  knockbackDistance: 60,
+  hitStopMs: (1000 / 60) * 6,
+});
 
 export const PLAYER_ATTACKS: Readonly<Record<AttackStep, AttackMetadata>> = {
   1: {
     step: 1, animationKey: "guanyu-attack1", frames: GUANYU_ANIMATION_FRAMES.attack1,
     frameRate: 16, extraFrameDurationsMs: [0, 0, 0, 0, 62.5],
     startupFrames: [1, 2], activeFrames: [3, 4], recoveryFrames: [5],
+    impact: BASELINE_IMPACT,
   },
   2: {
     step: 2, animationKey: "guanyu-attack2", frames: GUANYU_ANIMATION_FRAMES.attack2,
     frameRate: 16, extraFrameDurationsMs: [0, 0, 0, 0, 0, 0],
     startupFrames: [1, 2], activeFrames: [3, 4], recoveryFrames: [5, 6],
+    impact: BASELINE_IMPACT,
   },
   3: {
     step: 3, animationKey: "guanyu-attack3", frames: GUANYU_ANIMATION_FRAMES.attack3,
-    frameRate: 24, extraFrameDurationsMs: [0, 0, 0, 0, 0, 0, 0, 1000 / 24],
+    frameRate: 24, extraFrameDurationsMs: [0, 0, 0, 0, 0, 0, 0, (1000 / 24) + 125],
     startupFrames: [1, 2, 3], activeFrames: [4, 5, 6], recoveryFrames: [7, 8],
+    impact: COMMITMENT_IMPACT,
   },
 };
+
+export function attackDurationMs(attack: AttackMetadata): number {
+  return attack.frames.reduce((total, _frame, index) => total + (1000 / attack.frameRate) + attack.extraFrameDurationsMs[index], 0);
+}
 
 /** Owns attack frame timing decisions without owning hit resolution or input. */
 export class PlayerAttackController {

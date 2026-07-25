@@ -235,11 +235,11 @@ export class EnemyManager {
     this.directorReadyAt = this.clock.now() + this.random.between(enemy.config.timing.directorDelayMin, enemy.config.timing.directorDelayMax);
   }
 
-  damage(enemy: EnemyCombatant): EnemyDamageResult {
+  damage(enemy: EnemyCombatant, amount = 1): EnemyDamageResult {
     if (enemy.state === "dead" || enemy.state === "hurt") {
       return { applied: false, becameDead: false };
     }
-    enemy.hp = Math.max(0, enemy.hp - 1);
+    enemy.hp = Math.max(0, enemy.hp - Math.max(0, Math.floor(amount)));
     this.releaseAttackSlot(enemy);
     if (enemy.hp === 0) this.setState(enemy, "dead");
     else this.setState(enemy, "hurt");

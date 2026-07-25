@@ -110,7 +110,7 @@ test("CombatResolver resolves each target once without Phaser or effect coupling
 
 test("EffectDirector preserves the established hit timing parameters", async () => {
   const source = await readFile(new URL("../app/game/combat/EffectDirector.ts", import.meta.url), "utf8");
-  assert.match(source, /beginHitStop\(\)/);
+  assert.match(source, /beginHitStop\(duration = EFFECT_PARAMS\.hitStopMs\)/);
   assert.match(source, /createHitSpark\(x: number, y: number\)/);
   assert.match(source, /knockback\(target/);
   assert.match(source, /hitStopMs: \(1000 \/ 60\) \* 4/);
@@ -514,7 +514,7 @@ test("PlayerAttackController defines independent three-stage timing metadata", a
     );
     assert.ok(Math.abs(phaseDuration(attack.startupFrames) - 125) < 0.001);
     assert.ok(Math.abs(phaseDuration(attack.activeFrames) - 125) < 0.001);
-    assert.ok(Math.abs(phaseDuration(attack.recoveryFrames) - 125) < 0.001);
+    assert.ok(Math.abs(phaseDuration(attack.recoveryFrames) - (attack.step === 3 ? 250 : 125)) < 0.001);
   }
 });
 

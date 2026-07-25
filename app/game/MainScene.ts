@@ -346,6 +346,7 @@ export default class MainScene extends Phaser.Scene {
     }
     this.playerStateMachine.reset();
     this.playerLifecycle.reset();
+    this.resetComboState();
     if (development) this.game.canvas.dataset.playerHp = String(this.playerHp);
     this.cameraLockState = createCameraLockState();
     this.stageExitState = resetStageExit();
@@ -778,7 +779,7 @@ export default class MainScene extends Phaser.Scene {
       const overlapping = this.enemyManager.getLivingEnemies().filter(enemy => this.physics.overlap(this.attackZone, enemy.bodyZone));
       const resolution = resolveAttack({
         attackId: this.playerAttackId,
-        damage: 1,
+        damage: this.currentAttackImpact().damage,
         targets: overlapping.map(enemy => ({ id: enemy.id, hp: enemy.hp, active: enemy.state !== "dead" })),
         hitTargetIds: this.playerHitTargetIds,
       });
@@ -795,7 +796,7 @@ export default class MainScene extends Phaser.Scene {
       if (bossActor?.isDamageable && this.physics.overlap(this.attackZone, bossActor.bodyZone)) {
         const bossResolution = resolveAttack({
           attackId: this.playerAttackId,
-          damage: 1,
+          damage: this.currentAttackImpact().damage,
           targets: [{ id: bossActor.targetId, hp: bossActor.hp, active: true }],
           hitTargetIds: this.playerHitTargetIds,
         });
@@ -854,9 +855,24 @@ export default class MainScene extends Phaser.Scene {
     this.transitionTo("idle");
   }
 
+  private resetComboState() {
+    this.comboStep = 0;
+    this.hitConfirmed = false;
+    this.comboBuffered = false;
+    this.comboWindowOpen = false;
+    this.comboWindowEndsAt = 0;
+    this.playerHitTargetIds = new Set();
+    this.attackController.finish();
+  }
+
+  private currentAttackImpact() {
+    return this.attackController.activeAttack?.impact ?? PLAYER_ATTACKS[1].impact;
+  }
+
   private applyHitToEnemy(enemy: EnemyCombatant, triggerGlobalEffects: boolean) {
+    const impact = this.currentAttackImpact();
     this.hitCount += 1;
-    this.totalDamage += 1;
+    this.totalDamage += impact.damage;
 
     const left = Math.max(this.attackBody.x, enemy.body.x);
     const right = Math.min(this.attackBody.right, enemy.body.right);
@@ -869,24 +885,25 @@ export default class MainScene extends Phaser.Scene {
     this.effectDirector.createHitSpark(hitX, hitY);
     if (triggerGlobalEffects) this.effectDirector.cameraShake();
 
-    const targetX = clampStageX(enemy.bodyZone.x + this.facing * EFFECT_PARAMS.knockbackDistance, BAMBOO_COMBAT_ROOM.walkBounds);
+    const targetX = clampStageX(enemy.bodyZone.x + this.facing * impact.knockbackDistance, BAMBOO_COMBAT_ROOM.walkBounds);
     this.effectDirector.knockback(enemy.bodyZone, targetX, () => this.enemyManager.syncPhysicsFromZone(enemy));
 
-    const damage = this.enemyManager.damage(enemy);
-    this.gameplayEvents.publish({ type: "enemy-hit", enemyId: enemy.id, damage: 1, at: this.time.now });
+    const damage = this.enemyManager.damage(enemy, impact.damage);
+    this.gameplayEvents.publish({ type: "enemy-hit", enemyId: enemy.id, damage: impact.damage, at: this.time.now });
     if (damage.becameDead) {
       this.gameplayEvents.publish({ type: "enemy-defeated", enemyId: enemy.id, at: this.time.now });
     }
-    if (triggerGlobalEffects) this.effectDirector.beginHitStop();
+    if (triggerGlobalEffects) this.effectDirector.beginHitStop(impact.hitStopMs);
   }
 
   private applyHitToBoss(triggerGlobalEffects: boolean) {
     const bossActor = this.bossActor;
     if (!bossActor) return;
-    const damage = bossActor.damage(1);
+    const impact = this.currentAttackImpact();
+    const damage = bossActor.damage(impact.damage);
     if (!damage.applied) return;
     this.hitCount += 1;
-    this.totalDamage += 1;
+    this.totalDamage += impact.damage;
 
     const left = Math.max(this.attackBody.x, bossActor.body.x);
     const right = Math.min(this.attackBody.right, bossActor.body.right);
@@ -899,12 +916,12 @@ export default class MainScene extends Phaser.Scene {
     this.effectDirector.createHitSpark(hitX, hitY);
     if (triggerGlobalEffects) this.effectDirector.cameraShake();
     const targetX = clampStageX(
-      bossActor.bodyZone.x + this.facing * EFFECT_PARAMS.knockbackDistance,
+      bossActor.bodyZone.x + this.facing * impact.knockbackDistance,
       BAMBOO_BOSS_ARENA.bounds,
     );
     this.effectDirector.knockback(bossActor.bodyZone, targetX, () => bossActor.syncVisuals());
-    this.gameplayEvents.publish({ type: "enemy-hit", enemyId: bossActor.targetId, damage: 1, at: this.time.now });
-    if (triggerGlobalEffects) this.effectDirector.beginHitStop();
+    this.gameplayEvents.publish({ type: "enemy-hit", enemyId: bossActor.targetId, damage: impact.damage, at: this.time.now });
+    if (triggerGlobalEffects) this.effectDirector.beginHitStop(impact.hitStopMs);
   }
 
   private applyHitToPlayer(attackerId: number, attackerFacing: 1 | -1, sourceId: string) {

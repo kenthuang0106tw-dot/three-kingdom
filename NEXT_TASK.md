@@ -1,67 +1,45 @@
 # Next Task
 
-## M8 / Task 8.2 — Game-Feel Timing Pass
+## M8 / Task 8.2A — Human Combo-Commitment Decision Ledger
 
 ### Why this is next
 
-The complete Vertical Slice, frozen visual/audio set, product flow, and
-performance/delivery budgets are now accepted. The next highest-priority M8
-work is to tune the timing of existing combat so attacks, hit reactions, Enemy
-pressure, and Boss rhythm feel deliberate across the whole stage. This is a
-bounded polish pass over existing parameters, not a feature or content task.
+The code-level experiment is verified, but its game-feel claim is not. The
+third strike now has distinct damage, knockback, hit stop, and recovery; only
+a human-controlled sample can establish whether players sometimes stop after
+attack2 and whether attack3 recovery is meaningfully punishable.
 
 ### Completion criteria
 
-- Record a reproducible before baseline for Player attack1–3, ordinary-Enemy
-  attack/recovery, Player/Enemy hurt recovery, and all three Boss attacks.
-- Centralize only the timing values that must change; do not refactor unrelated
-  state machines or create a general balance system.
-- Tune existing startup, active, recovery, hit-stop, hurt, and decision/recovery
-  timing only where before evidence identifies a readability or responsiveness
-  defect.
-- Preserve every animation frame sequence, atlas, hitbox geometry, damage,
-  health, movement speed, Stage coordinate, Camera rule, Audio cue, UI flow, and
-  production asset hash.
-- Keep each Player Combo input intentional: one press advances at most one
-  stage, missed attacks cannot chain, and active-frame hit records stay once per
-  target.
-- Keep ordinary enemies vertically dodgeable and limited to one Attack Slot.
-- Keep Boss startup telegraphs readable and prevent back-to-back attacks from
-  losing their recovery gap.
-- Produce matching before/after evidence and a concise table of every changed
-  parameter with its reason.
-- Preserve the accepted performance and 30 MiB delivery budgets.
+- Record ten second-hit decisions in each required scenario: Soldier, Mauler +
+  Duelist, and close-range Boss.
+- For every decision record whether attack3 was used, whether it finished an
+  enemy, whether the player was hit during its recovery, or whether the player
+  deliberately stopped after attack2.
+- Compare the totals to the acceptance and rejection criteria in
+  `docs/combat/m8-2a-combo-commitment.md`.
+- Record one conclusion only: accept the current values, adjust only attack3
+  parameters, or reject and restore its baseline values.
 
 ### Acceptance method
 
-- Run focused deterministic tests for Player attack phases, Combo gates,
-  ordinary-Enemy Attack Slot/recovery, hurt lockouts, Boss decision recovery,
-  and pause/hit-stop interaction.
-- Browser-test complete combat at normal encounters and Boss on desktop,
-  844×390 landscape touch, and 390×844 portrait fit.
-- Verify Failure/retry, Result/replay, ten Scene resets, one Canvas, one Audio
-  manager, and one gameplay subscription.
-- Compare before/after captures or timestamped frame traces at the same
-  checkpoints and document the reviewer decision.
-- Run `node tools/report_performance_assets.mjs`, `pnpm test`,
-  `pnpm typecheck`, `pnpm lint`, `pnpm build`, and
-  `pnpm build:github-pages`.
+- Run the production build on desktop or mobile and play the three scenarios.
+- Keep the code and configuration unchanged while collecting the samples.
+- Verify that all three scenarios contain at least one deliberate stop after
+  attack2 and that attack3 is neither the universal best option nor ignored.
+- Add the completed counts and reviewer decision to the task report.
 
 ### Expected files
 
-- Existing Player/Enemy/Boss timing config or metadata files only where evidence
-  requires a change
-- Focused timing/interaction tests
-- A Task 8.2 before/after timing report
-- `CHECKLIST.md`, `SPRINT.md`, `GAME_ROADMAP.md`, `TECH_DEBT.md`, `README.md`,
-  and `NEXT_TASK.md`
+- `docs/combat/m8-2a-combo-commitment.md`
+- `SPRINT.md`
+- `GAME_ROADMAP.md`
+- `TECH_DEBT.md` only if the result exposes a concrete follow-up risk
 
 ### Risks
 
-- Subjective tuning can become open-ended without a fixed before/after matrix.
-- Changing animation FPS can accidentally move active hitbox windows or Combo
-  input timing.
-- Faster enemies or shorter recovery can remove vertical dodge space.
-- Hit-stop and hurt timing share lifecycle ownership; changing one can break
-  Pause/resume or input recovery.
-- Art, Audio, damage, movement, and content changes would exceed this task.
+- Automated browser checks cannot infer player intent; fabricated tactical
+  counts would invalidate the experiment.
+- A result based on fewer than ten decisions per scenario is inconclusive.
+- Any proposed fix beyond attack3 damage, knockback, hit stop, or recovery is
+  out of scope and must become a separate task.

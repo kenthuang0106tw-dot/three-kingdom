@@ -68,9 +68,9 @@ export class EffectDirector {
     this.scene.cameras.main.shake(EFFECT_PARAMS.cameraShakeMs, EFFECT_PARAMS.cameraShakeIntensity);
   }
 
-  beginHitStop() {
+  beginHitStop(duration = EFFECT_PARAMS.hitStopMs) {
     if (this.lifecycleClock.isPaused()) return false;
-    this.lifecycleClock.beginHitStop(EFFECT_PARAMS.hitStopMs);
+    this.lifecycleClock.beginHitStop(duration);
     return true;
   }
 
