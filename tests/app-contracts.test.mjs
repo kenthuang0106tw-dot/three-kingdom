@@ -20,7 +20,7 @@ import { advanceCameraHandoff, beginCameraHandoff, calculateCameraScroll } from 
 import { createCameraLockState, hasCameraLock, isCameraLocked, lockCamera, unlockCamera } from "../app/game/camera/CameraLock.ts";
 import { beginEncounter, clearActiveEncounter, createBossEntryState, createEncounterFlow, createEncounterSequence, isEncounterCleared, isEncounterSequenceCleared, makeBossEntryEligible, recordEnemyRemoved, triggerBossEntry, triggerNextEncounter } from "../app/game/stage/EncounterFlow.ts";
 import { canRequestStageExit, createStageExitState, makeExitAvailable, requestStageExit, resetStageExit } from "../app/game/stage/StageExit.ts";
-import { DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemySpriteShouldFlip, validateEnemyConfig } from "../app/game/enemy/EnemyConfig.ts";
+import { DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemyAttackSpriteShouldFlip, enemySpriteShouldFlip, validateEnemyConfig } from "../app/game/enemy/EnemyConfig.ts";
 import { BossLifecycle } from "../app/game/boss/BossLifecycle.ts";
 import { BOSS_ATTACKS } from "../app/game/boss/BossAttackMetadata.ts";
 import { BossDecisionPolicy } from "../app/game/boss/BossDecisionPolicy.ts";
@@ -1223,7 +1223,7 @@ test("Enemy source facing, active frames, and attack-slot reachability match the
   const manager = await readFile(new URL("../app/game/EnemyManager.ts", import.meta.url), "utf8");
   const expectedSourceFacing = new Map([
     [SOLDIER_ENEMY_CONFIG, -1],
-    [MAULER_ENEMY_CONFIG, 1],
+    [MAULER_ENEMY_CONFIG, -1],
     [DUELIST_ENEMY_CONFIG, 1],
   ]);
 
@@ -1231,6 +1231,7 @@ test("Enemy source facing, active frames, and attack-slot reachability match the
     assert.equal(config.sourceFacing, sourceFacing);
     assert.equal(enemySpriteShouldFlip(config, sourceFacing), false);
     assert.equal(enemySpriteShouldFlip(config, sourceFacing * -1), true);
+    assert.equal(enemyAttackSpriteShouldFlip(config, config.attackSourceFacing), false);
     assert.equal(config.animations.attack[config.attackActiveFrame - 1], "attack-1");
   }
 

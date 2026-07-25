@@ -10,6 +10,7 @@ export type EnemyConfig = {
   };
   readonly animationRates: { readonly idle: number; readonly walk: number; readonly attack: number; readonly hurt: number; readonly dead: number };
   readonly sourceFacing: 1 | -1;
+  readonly attackSourceFacing: 1 | -1;
   /** Phaser AnimationFrame.index is one-based. */
   readonly attackActiveFrame: number;
   readonly maxHp: number;
@@ -52,6 +53,7 @@ export function validateEnemyConfig(config: EnemyConfig): EnemyConfig {
   }
   if (config.feetY > config.frameSize) throw new Error(`Enemy feet anchor is outside frame: ${config.id}`);
   if (config.sourceFacing !== -1 && config.sourceFacing !== 1) throw new Error(`Invalid enemy source facing: ${config.id}`);
+  if (config.attackSourceFacing !== -1 && config.attackSourceFacing !== 1) throw new Error(`Invalid enemy attack source facing: ${config.id}`);
   if (!Number.isInteger(config.attackActiveFrame) || config.attackActiveFrame < 1 || config.attackActiveFrame > config.animations.attack.length) {
     throw new Error(`Invalid enemy attack active frame: ${config.id}`);
   }
@@ -68,6 +70,10 @@ export function enemySpriteShouldFlip(config: EnemyConfig, facing: 1 | -1): bool
   return facing !== config.sourceFacing;
 }
 
+export function enemyAttackSpriteShouldFlip(config: EnemyConfig, facing: 1 | -1): boolean {
+  return facing !== config.attackSourceFacing;
+}
+
 export const SOLDIER_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
   id: "soldier",
   assetKey: "enemy-soldier",
@@ -77,6 +83,7 @@ export const SOLDIER_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
   },
   animationRates: { idle: 4, walk: 8, attack: 8, hurt: 8, dead: 8 },
   sourceFacing: -1,
+  attackSourceFacing: -1,
   attackActiveFrame: 2,
   maxHp: 4,
   displayScale: 1.34,
@@ -95,7 +102,8 @@ export const MAULER_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
     attack: ["attack-0", "attack-1", "attack-2"], hurt: ["hurt-0", "hurt-1"], dead: ["dead-0", "dead-1", "dead-2", "dead-3"],
   },
   animationRates: { idle: 4, walk: 8, attack: 5, hurt: 8, dead: 8 },
-  sourceFacing: 1,
+  sourceFacing: -1,
+  attackSourceFacing: 1,
   attackActiveFrame: 2,
   maxHp: 5,
   displayScale: 1.1,
@@ -115,6 +123,7 @@ export const DUELIST_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
   },
   animationRates: { idle: 6, walk: 10, attack: 10, hurt: 8, dead: 8 },
   sourceFacing: 1,
+  attackSourceFacing: 1,
   attackActiveFrame: 2,
   maxHp: 3,
   displayScale: 0.94,

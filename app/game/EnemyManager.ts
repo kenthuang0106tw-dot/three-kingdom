@@ -2,7 +2,7 @@ import * as Phaser from "phaser";
 import { PhaserGameplayClock, SeededRandom, type GameplayClock, type RandomSource } from "./time/GameplayTime";
 import { BAMBOO_COMBAT_ROOM, clampStageX, clampStageY, type StageSpawnPoint } from "./stage/StageConfig";
 import { beginEncounter, createEncounterFlow, isEncounterCleared, recordEnemyRemoved, type EncounterFlowState } from "./stage/EncounterFlow";
-import { DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemyAnimationKey, enemySpriteShouldFlip, type EnemyConfig } from "./enemy/EnemyConfig";
+import { DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemyAnimationKey, enemyAttackSpriteShouldFlip, enemySpriteShouldFlip, type EnemyConfig } from "./enemy/EnemyConfig";
 import { selectFairAttackCandidate } from "./enemy/AttackSlotPolicy";
 import { createAttackCommitment, isWithinAttackLine, type AttackCommitment } from "./enemy/AttackCommitment";
 
@@ -263,7 +263,7 @@ export class EnemyManager {
     else if (next === "walk") enemy.sprite.play(enemyAnimationKey(enemy.config, "walk"), true);
     else if (next === "attack") {
       enemy.attackHitPlayer = false;
-      enemy.sprite.play(enemyAnimationKey(enemy.config, "attack"), true);
+      enemy.sprite.setFlipX(enemyAttackSpriteShouldFlip(enemy.config, enemy.facing)).play(enemyAnimationKey(enemy.config, "attack"), true);
     } else if (next === "hurt") {
       enemy.sprite.play(enemyAnimationKey(enemy.config, "hurt"), true);
       const timer = this.scene.time.delayedCall(enemy.config.timing.hurtMs, () => {
