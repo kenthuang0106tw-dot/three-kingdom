@@ -1223,7 +1223,7 @@ test("Enemy source facing, active frames, and attack-slot reachability match the
   const manager = await readFile(new URL("../app/game/EnemyManager.ts", import.meta.url), "utf8");
   const expectedSourceFacing = new Map([
     [SOLDIER_ENEMY_CONFIG, -1],
-    [MAULER_ENEMY_CONFIG, 1],
+    [MAULER_ENEMY_CONFIG, -1],
     [DUELIST_ENEMY_CONFIG, 1],
   ]);
 
@@ -1239,6 +1239,7 @@ test("Enemy source facing, active frames, and attack-slot reachability match the
     /source facing/,
   );
   assert.match(manager, /const ATTACK_APPROACH_TIMEOUT_MS = 1500/);
+  assert.match(manager, /enemy\.body\.setImmovable\(next === "hurt"\)/);
   assert.match(manager, /enemy\.attackApproachEndsAt = this\.clock\.now\(\) \+ ATTACK_APPROACH_TIMEOUT_MS/);
   assert.match(manager, /this\.clock\.now\(\) >= enemy\.attackApproachEndsAt[\s\S]*this\.releaseAttackSlot\(enemy\)/);
 });

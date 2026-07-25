@@ -95,7 +95,7 @@ export const MAULER_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
     attack: ["attack-0", "attack-1", "attack-2"], hurt: ["hurt-0", "hurt-1"], dead: ["dead-0", "dead-1", "dead-2", "dead-3"],
   },
   animationRates: { idle: 4, walk: 8, attack: 8, hurt: 8, dead: 8 },
-  sourceFacing: 1,
+  sourceFacing: -1,
   attackActiveFrame: 2,
   maxHp: 5,
   displayScale: 1.1,

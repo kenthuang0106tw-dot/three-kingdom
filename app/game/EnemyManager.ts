@@ -252,6 +252,7 @@ export class EnemyManager {
     this.clearStateTimer(enemy);
     enemy.state = next;
     enemy.body.setVelocity(0, 0);
+    enemy.body.setImmovable(next === "hurt");
     this.disableAttackHitbox(enemy);
     if (next === "idle") enemy.sprite.play(enemyAnimationKey(enemy.config, "idle"), true);
     else if (next === "walk") enemy.sprite.play(enemyAnimationKey(enemy.config, "walk"), true);

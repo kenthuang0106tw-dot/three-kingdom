@@ -26,7 +26,7 @@ export class PlayerActor {
 
   showIdleFrame(): void {
     this.sprite.setOrigin(GUANYU_ORIGIN_X, GUANYU_ORIGIN_Y)
-      .setScale(GUANYU_DISPLAY_SCALE).setFlipX(this.facing < 0).play("guanyu-idle", true);
+      .setScale(GUANYU_DISPLAY_SCALE).setFlipX(this.facing < 0).stop().setFrame("idle-0");
   }
 
   playWalk(): void {
