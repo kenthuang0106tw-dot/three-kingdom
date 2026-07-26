@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { readFile } from "node:fs/promises";
 import { CROSSBOW_ENEMY_CONFIG } from "../app/game/enemy/EnemyConfig.ts";
-import { CROSSBOW_ATTACK_SLOT_RANGE, CROSSBOW_HIT_Y_TOLERANCE, CROSSBOW_TIMING, isCrossbowReadyToFire, isCrossbowTracking, isTargetOnCrossbowLine, nextAimLineY } from "../app/game/enemy/CrossbowLine.ts";
+import { CROSSBOW_ATTACK_SLOT_RANGE, CROSSBOW_TIMING, isCrossbowReadyToFire, isCrossbowTracking, isTargetOnCrossbowLine, nextAimLineY } from "../app/game/enemy/CrossbowLine.ts";
 
 test("Crossbow timing tracks before Lock and preserves the locked shot line", () => {
   assert.equal(CROSSBOW_TIMING.aimMs, 900);
@@ -10,15 +10,14 @@ test("Crossbow timing tracks before Lock and preserves the locked shot line", ()
   assert.equal(CROSSBOW_TIMING.lockedMs, 350);
   assert.equal(CROSSBOW_TIMING.reloadMs, 3000);
   assert.equal(CROSSBOW_ATTACK_SLOT_RANGE, 640);
-  assert.equal(CROSSBOW_HIT_Y_TOLERANCE, 14);
   assert.equal(isCrossbowTracking(549), true);
   assert.equal(isCrossbowTracking(550), false);
   assert.equal(nextAimLineY(560, 640, 100), 568);
   assert.equal(nextAimLineY(568, 640, 550), 568);
   assert.equal(isCrossbowReadyToFire(899), false);
   assert.equal(isCrossbowReadyToFire(900), true);
-  assert.equal(isTargetOnCrossbowLine(560, 574), true);
-  assert.equal(isTargetOnCrossbowLine(560, 575), false);
+  assert.equal(isTargetOnCrossbowLine(560, 560), true);
+  assert.equal(isTargetOnCrossbowLine(560, 561), false);
 });
 
 test("Crossbow is an explicit development-only Soldier-art config", () => {
@@ -32,7 +31,7 @@ test("Crossbow owns one Attack Slot, locks before fire, then reloads", async () 
   assert.match(source, /if \(enemy\.hasAttackSlot\) \{\s*this\.setFacing\(enemy, this\.playerBodyZone\.x >= enemy\.bodyZone\.x \? 1 : -1\);\s*this\.setState\(enemy, "aim"\)/);
   assert.match(source, /if \(isCrossbowTracking\(elapsed\)\) enemy\.aimLineY = nextAimLineY/);
   assert.match(source, /if \(elapsed >= CROSSBOW_TIMING\.trackingMs\) this\.setState\(enemy, "locked"\)/);
-  assert.match(source, /enemy\.lockedLineY = enemy\.aimLineY/);
+  assert.match(source, /enemy\.lockedLineY = this\.playerBodyZone\.y/);
   assert.match(source, /new CrossbowProjectile\(this\.scene, enemy\.id, enemy\.bodyZone\.x \+ enemy\.facing \* 42, enemy\.lockedLineY, enemy\.facing\)/);
   assert.match(source, /this\.releaseAttackSlot\(enemy\);\s*this\.setState\(enemy, "reload"\)/);
   assert.match(source, /CROSSBOW_TIMING\.reloadMs/);

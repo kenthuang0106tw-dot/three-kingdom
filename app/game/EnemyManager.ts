@@ -443,7 +443,7 @@ export class EnemyManager {
       enemy.aimLineY = this.playerBodyZone.y;
       enemy.sprite.play(enemyAnimationKey(enemy.config, "idle"), true);
     } else if (next === "locked") {
-      enemy.lockedLineY = enemy.aimLineY;
+      enemy.lockedLineY = this.playerBodyZone.y;
       this.callbacks.onCrossbowLocked?.(enemy);
     } else if (next === "fire") {
       enemy.aimLine?.clear();
