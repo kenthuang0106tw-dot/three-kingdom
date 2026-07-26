@@ -16,6 +16,8 @@ It spawns exactly one Shield Guard at `(510, 560)` and one Crossbow at
 3. Moving vertically to evade the locked arrow must not make the Shield Guard
    automatically rotate and block from behind.
 4. The best response is neither permanent waiting nor a fixed first target.
+5. Arrows pass through other enemies and only threaten the Player; the Shield
+   Guard cannot be blocked, damaged, or killed by its ally's shots.
 
 Record manual observations before accepting this prototype. No formal art,
 Stage configuration, new attacks, or extra enemy type belongs to TP-3.

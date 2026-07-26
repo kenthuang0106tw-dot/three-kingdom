@@ -1,6 +1,7 @@
 # TP-2 Crossbow Line-Control Prototype
 
-Status: implementation verification pending manual strategy comparison.
+Status: accepted by reviewer on 2026-07-26. Friendly fire was rejected after
+the Shield Guard composition exposed an illogical self-kill loop.
 
 ## Development-only entrances
 
@@ -18,15 +19,15 @@ Neither entrance changes the formal Stage encounter configuration.
 | Fire | immediate at 900 ms | One straight temporary arrow is created on the locked line. |
 | Reload | 3000 ms | Releases Attack Slot; no primary threat. |
 
-The arrow moves at 520 px/s for at most 960 px and is destroyed by its first valid Player or other Enemy overlap. At Lock, it snapshots the Player's feet Y; it is pinned to that horizontal line every update and only hits the Player with the same rounded feet Y. Any vertical movement after Lock avoids the arrow. Enemy ground bodies may intercept within 32px of the line, so deliberate friendly-fire setups remain practical without weakening Player vertical evasion. The Crossbow may obtain the single Attack Slot up to 640 px away (instead of melee's 220 px), so it can create a visible ranged decision before entering melee distance. Player hits use the existing Hurt path. Friendly Enemy hits deal 1 damage, Hurt, Flash, Spark, and a 16 px horizontal knockback without global hit-stop.
+The arrow moves at 520 px/s for at most 960 px. At Lock, it snapshots the Player's feet Y; it is pinned to that horizontal line every update and only hits the Player with the same rounded feet Y. Any vertical movement after Lock avoids the arrow. Other enemies neither block nor receive damage from the arrow, so the Crossbow creates player pressure rather than an ally-kill puzzle. The Crossbow may obtain the single Attack Slot up to 640 px away (instead of melee's 220 px), so it can create a visible ranged decision before entering melee distance. Player hits use the existing Hurt path.
 
 ## Manual acceptance ledger
 
 Do not treat this table as completed until the reviewer performs the runs.
 
-| Strategy | Runs | Player arrow hits | Successful vertical dodges | Aim interrupts | Combo stops | Target switches | Friendly hits | Completion time |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| A: ignore line, keep attacking nearest target | 0 / 5 | — | — | — | — | — | — | — |
-| B: read Lock, dodge, interrupt, switch targets | 0 / 5 | — | — | — | — | — | — | — |
+| Strategy | Runs | Player arrow hits | Successful vertical dodges | Aim interrupts | Combo stops | Target switches | Completion time |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| A: ignore line, keep attacking nearest target | 0 / 5 | — | — | — | — | — | — |
+| B: read Lock, dodge, interrupt, switch targets | 0 / 5 | — | — | — | — | — | — |
 
-Acceptance requires Strategy B to be materially safer than A, readable Lock timing in desktop/landscape/portrait, at least one deliberate friendly-fire attempt in Test B, and no simultaneous second primary attacker.
+Acceptance requires Strategy B to be materially safer than A, readable Lock timing in desktop/landscape/portrait, and no simultaneous second primary attacker.

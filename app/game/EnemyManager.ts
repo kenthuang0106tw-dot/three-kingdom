@@ -6,7 +6,7 @@ import { CROSSBOW_ENEMY_CONFIG, DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SHIEL
 import { selectFairAttackCandidate } from "./enemy/AttackSlotPolicy";
 import { createAttackCommitment, isWithinAttackLine, type AttackCommitment } from "./enemy/AttackCommitment";
 import { SHIELD_GUARD_PARAMS, SHIELD_GUARD_TIMING, type ShieldGuardState, isAttackBlockedByGuard } from "./enemy/ShieldGuard";
-import { CROSSBOW_ATTACK_SLOT_RANGE, CROSSBOW_TIMING, isCrossbowReadyToFire, isCrossbowTracking, isFriendlyTargetOnCrossbowLine, isTargetOnCrossbowLine, nextAimLineY } from "./enemy/CrossbowLine";
+import { CROSSBOW_ATTACK_SLOT_RANGE, CROSSBOW_TIMING, isCrossbowReadyToFire, isCrossbowTracking, isTargetOnCrossbowLine, nextAimLineY } from "./enemy/CrossbowLine";
 import { CrossbowProjectile } from "./enemy/CrossbowProjectile";
 
 export type EnemyState = "idle" | "walk" | "attack" | "hurt" | "dead" | "guard" | "recovery" | "position" | "aim" | "locked" | "fire" | "reload";
@@ -104,7 +104,6 @@ export class EnemyCombatant {
 
 type ManagerCallbacks = {
   onPlayerHit: (enemy: EnemyCombatant) => void;
-  onEnemyHitByProjectile: (target: EnemyCombatant, shooter: EnemyCombatant) => void;
   onCrossbowLocked?: (enemy: EnemyCombatant) => void;
   onAllDefeated: () => void;
 };
@@ -204,7 +203,7 @@ export class EnemyManager {
       if (enemy.hasAttackSlot) this.updateAttackApproach(enemy);
       else this.updateFormationMovement(enemy);
     }
-    this.updateProjectiles(alive);
+    this.updateProjectiles();
     this.assignAttackSlot(alive);
   }
 
@@ -248,24 +247,17 @@ export class EnemyManager {
     enemy.body.setVelocity(velocity.x, velocity.y);
   }
 
-  private updateProjectiles(alive: readonly EnemyCombatant[]) {
-    for (const shooter of alive) {
+  private updateProjectiles() {
+    for (const shooter of this.enemies) {
       const projectile = shooter.projectile;
       if (!projectile) continue;
       projectile.update(this.scene.game.loop.delta);
-      const candidates = [
-        { zone: this.playerBodyZone, target: "player" as const, distance: Math.abs(this.playerBodyZone.x - projectile.zone.x) },
-        ...alive.filter(enemy => enemy !== shooter).map(enemy => ({ zone: enemy.bodyZone, target: enemy, distance: Math.abs(enemy.bodyZone.x - projectile.zone.x) })),
-      ].filter(candidate => (candidate.target === "player"
-        ? isTargetOnCrossbowLine(projectile.y, candidate.zone.y)
-        : isFriendlyTargetOnCrossbowLine(projectile.y, candidate.zone.y)) && this.scene.physics.overlap(projectile.zone, candidate.zone))
-        .sort((a, b) => a.distance - b.distance);
-      const hit = candidates[0];
-      if (hit) {
-        if (hit.target === "player") this.callbacks.onPlayerHit(shooter);
-        else this.callbacks.onEnemyHitByProjectile(hit.target, shooter);
+      if (isTargetOnCrossbowLine(projectile.y, this.playerBodyZone.y) && this.scene.physics.overlap(projectile.zone, this.playerBodyZone)) {
+        this.callbacks.onPlayerHit(shooter);
         this.destroyProjectile(shooter);
-      } else if (projectile.expired) this.destroyProjectile(shooter);
+      } else if (projectile.expired) {
+        this.destroyProjectile(shooter);
+      }
     }
   }
 

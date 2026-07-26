@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { readFile } from "node:fs/promises";
 import { CROSSBOW_ENEMY_CONFIG } from "../app/game/enemy/EnemyConfig.ts";
-import { CROSSBOW_ATTACK_SLOT_RANGE, CROSSBOW_FRIENDLY_HIT_Y_TOLERANCE, CROSSBOW_TIMING, isCrossbowReadyToFire, isCrossbowTracking, isFriendlyTargetOnCrossbowLine, isTargetOnCrossbowLine, nextAimLineY } from "../app/game/enemy/CrossbowLine.ts";
+import { CROSSBOW_ATTACK_SLOT_RANGE, CROSSBOW_TIMING, isCrossbowReadyToFire, isCrossbowTracking, isTargetOnCrossbowLine, nextAimLineY } from "../app/game/enemy/CrossbowLine.ts";
 
 test("Crossbow timing tracks before Lock and preserves the locked shot line", () => {
   assert.equal(CROSSBOW_TIMING.aimMs, 900);
@@ -10,7 +10,6 @@ test("Crossbow timing tracks before Lock and preserves the locked shot line", ()
   assert.equal(CROSSBOW_TIMING.lockedMs, 350);
   assert.equal(CROSSBOW_TIMING.reloadMs, 3000);
   assert.equal(CROSSBOW_ATTACK_SLOT_RANGE, 640);
-  assert.equal(CROSSBOW_FRIENDLY_HIT_Y_TOLERANCE, 32);
   assert.equal(isCrossbowTracking(549), true);
   assert.equal(isCrossbowTracking(550), false);
   assert.equal(nextAimLineY(560, 640, 100), 568);
@@ -19,8 +18,6 @@ test("Crossbow timing tracks before Lock and preserves the locked shot line", ()
   assert.equal(isCrossbowReadyToFire(900), true);
   assert.equal(isTargetOnCrossbowLine(560, 560), true);
   assert.equal(isTargetOnCrossbowLine(560, 561), false);
-  assert.equal(isFriendlyTargetOnCrossbowLine(560, 592), true);
-  assert.equal(isFriendlyTargetOnCrossbowLine(560, 593), false);
 });
 
 test("Crossbow is an explicit development-only Soldier-art config", () => {
@@ -41,17 +38,16 @@ test("Crossbow owns one Attack Slot, locks before fire, then reloads", async () 
   assert.match(source, /enemy\.isCrossbow \? CROSSBOW_ATTACK_SLOT_RANGE : 220/);
 });
 
-test("Crossbow projectile applies to exactly one first overlap and cleans up", async () => {
+test("Crossbow projectile hits only the Player on its locked line and cleans up", async () => {
   const source = await readFile(new URL("../app/game/EnemyManager.ts", import.meta.url), "utf8");
   const projectile = await readFile(new URL("../app/game/enemy/CrossbowProjectile.ts", import.meta.url), "utf8");
-  assert.match(source, /sort\(\(a, b\) => a\.distance - b\.distance\)/);
-  assert.match(source, /isTargetOnCrossbowLine\(projectile\.y, candidate\.zone\.y\)/);
-  assert.match(source, /isFriendlyTargetOnCrossbowLine\(projectile\.y, candidate\.zone\.y\)/);
+  assert.match(source, /isTargetOnCrossbowLine\(projectile\.y, this\.playerBodyZone\.y\)/);
+  assert.doesNotMatch(source, /isFriendlyTargetOnCrossbowLine/);
+  assert.doesNotMatch(source, /onEnemyHitByProjectile/);
   assert.match(projectile, /this\.body\.setVelocityY\(0\)/);
   assert.match(projectile, /this\.zone\.y = this\.y/);
   assert.doesNotMatch(projectile, /updateFromGameObject/);
-  assert.match(source, /if \(hit\.target === "player"\) this\.callbacks\.onPlayerHit\(shooter\);/);
-  assert.match(source, /else this\.callbacks\.onEnemyHitByProjectile\(hit\.target, shooter\);/);
+  assert.match(source, /this\.callbacks\.onPlayerHit\(shooter\);/);
   assert.match(source, /this\.destroyProjectile\(shooter\);/);
   assert.match(source, /enemy\.aimLine\?\.clear\(\);\s*this\.destroyProjectile\(enemy\);/);
 });

@@ -8,5 +8,6 @@ vertical evasion, flanking, changing target, or waiting for a safe recovery.
 
 Completion requires both enemies to preserve the single Attack Slot, the
 arrow to remain vertically dodgeable, and the Shield Guard to preserve a
-reliable flank opportunity. Do not add formal art, Stage encounters, or new
+reliable flank opportunity. Arrows must pass through the Shield Guard and
+only threaten the Player. Do not add formal art, Stage encounters, or new
 combat systems before this manual result is recorded.

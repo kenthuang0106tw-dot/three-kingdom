@@ -434,7 +434,6 @@ export default class MainScene extends Phaser.Scene {
 
     this.enemyManager = new EnemyManager(this, this.playerBodyZone, {
       onPlayerHit: enemy => this.applyHitToPlayer(enemy.id, enemy.facing, enemy.config.id),
-      onEnemyHitByProjectile: (target, shooter) => this.applyCrossbowHitToEnemy(target, shooter),
       onCrossbowLocked: enemy => this.gameplayEvents.publish({ type: "crossbow-locked", enemyId: enemy.id, at: this.time.now }),
       onAllDefeated: () => this.handleEncounterCleared(),
     }, development, { clock: new PhaserGameplayClock(this), random: new SeededRandom(0x3a6f2d1) });
@@ -926,17 +925,6 @@ export default class MainScene extends Phaser.Scene {
     const hitY = Math.round((this.attackBody.y + enemy.body.y) / 2);
     this.effectDirector.createHitSpark(hitX, hitY);
     this.gameplayEvents.publish({ type: "enemy-blocked", enemyId: enemy.id, at: this.time.now });
-  }
-
-  private applyCrossbowHitToEnemy(enemy: EnemyCombatant, shooter: EnemyCombatant) {
-    const damage = this.enemyManager.damage(enemy, 1);
-    if (!damage.applied) return;
-    this.effectDirector.flash(enemy.sprite);
-    this.effectDirector.createHitSpark(Math.round(enemy.bodyZone.x), Math.round(enemy.bodyZone.y - 42));
-    const targetX = clampStageX(enemy.bodyZone.x + shooter.facing * 16, BAMBOO_COMBAT_ROOM.walkBounds);
-    this.effectDirector.knockback(enemy.bodyZone, targetX, () => this.enemyManager.syncPhysicsFromZone(enemy));
-    this.gameplayEvents.publish({ type: "enemy-hit", enemyId: enemy.id, damage: 1, at: this.time.now });
-    if (damage.becameDead) this.gameplayEvents.publish({ type: "enemy-defeated", enemyId: enemy.id, at: this.time.now });
   }
 
   private applyHitToBoss(triggerGlobalEffects: boolean) {
