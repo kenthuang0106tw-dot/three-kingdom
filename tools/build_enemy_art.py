@@ -36,14 +36,49 @@ DUELIST_SOURCE_RECTS = (
     (888, 619, 1212, 971),
     (1212, 619, 1619, 971),
 )
+MAULER_CELL = 288
+MAULER_FEET_Y = 265
+MAULER_PROCESSING_SCALE = 0.88
+MAULER_COLS = 5
+MAULER_ROWS = 4
+MAULER_SOURCE_RECTS = (
+    (20, 70, 252, 345),
+    (252, 70, 497, 345),
+    (497, 70, 739, 345),
+    (739, 70, 970, 345),
+    (970, 70, 1210, 345),
+    (0, 350, 232, 630),
+    (232, 350, 460, 630),
+    (460, 350, 660, 630),
+    (660, 350, 828, 630),
+    (828, 350, 1090, 630),
+    (0, 650, 250, 920),
+    (250, 650, 490, 920),
+    (490, 650, 735, 920),
+    (735, 650, 965, 920),
+    (965, 650, 1245, 920),
+    (0, 1040, 270, 1210),
+    (270, 1040, 545, 1210),
+)
 NAMES = [
     "idle-0", "idle-1", "walk-0", "walk-1", "walk-2",
     "walk-3", "attack-0", "attack-1", "attack-2", "hurt-0",
     "hurt-1", "dead-0", "dead-1", "dead-2", "dead-3",
 ]
+MAULER_NAMES = [
+    "idle-0", "idle-1", "walk-0", "walk-1", "walk-2",
+    "walk-3", "attack-0", "attack-1", "attack-2", "attack-3",
+    "attack-4", "hurt-0", "hurt-1", "dead-0", "dead-1",
+    "dead-2", "dead-3",
+]
 ANIMATIONS = {
     "idle": NAMES[0:2], "walk": NAMES[2:6], "attack": NAMES[6:9],
     "hurt": NAMES[9:11], "dead": NAMES[11:15],
+}
+MAULER_ANIMATIONS = {
+    "idle": MAULER_NAMES[0:2], "walk": MAULER_NAMES[2:6],
+    "attack": MAULER_NAMES[6:11], "hurt": MAULER_NAMES[11:13],
+    "dead": MAULER_NAMES[13:17],
 }
 SOLDIER_CORRECTION_SCALE = 0.2325
 SOLDIER_CORRECTION_SOURCES = {
@@ -70,7 +105,7 @@ class ActorSpec:
 
 ACTORS = (
     ActorSpec("soldier", "enemy-soldier-v2-source.png", "enemy-soldier.png", "enemy-soldier-v2-source-transparent.png", 1.025, -1, 210, "five-by-three-grid", "built-in image generation, ER.2 Soldier Production-Art Pilot"),
-    ActorSpec("mauler", "mauler-source.png", "mauler.png", "mauler-source-transparent.png", 1.10, -1, 240, "four-by-four-grid", "built-in image generation in earlier asset tasks; no new generation in M6A.3"),
+    ActorSpec("mauler", "mauler-source.png", "mauler.png", "mauler-source-transparent.png", 1.05, 1, 240, "measured-five-by-four", "built-in image generation, ER.4 Mauler Production-Art Replacement"),
     ActorSpec("duelist", "duelist-source.png", "duelist.png", "duelist-source-transparent.png", 1.025, 1, 205, "measured-five-by-three", "built-in image generation, ER.3R Duelist Approved-Prototype Correction"),
 )
 
@@ -88,9 +123,47 @@ def remove_green_chroma(image: Image.Image) -> Image.Image:
     return image
 
 
+def keep_largest_alpha_component(image: Image.Image) -> Image.Image:
+    alpha = image.getchannel("A")
+    visible = set()
+    pixels = alpha.load()
+    for y in range(alpha.height):
+        for x in range(alpha.width):
+            if pixels[x, y]:
+                visible.add((x, y))
+    components = []
+    while visible:
+        seed = visible.pop()
+        component = {seed}
+        stack = [seed]
+        while stack:
+            x, y = stack.pop()
+            for ny in range(max(0, y - 1), min(alpha.height, y + 2)):
+                for nx in range(max(0, x - 1), min(alpha.width, x + 2)):
+                    neighbor = (nx, ny)
+                    if neighbor in visible:
+                        visible.remove(neighbor)
+                        component.add(neighbor)
+                        stack.append(neighbor)
+        components.append(component)
+    if not components:
+        return image
+    keep = max(components, key=len)
+    cleaned = image.copy()
+    cleaned_alpha = cleaned.getchannel("A")
+    cleaned_pixels = cleaned_alpha.load()
+    for y in range(cleaned_alpha.height):
+        for x in range(cleaned_alpha.width):
+            if (x, y) not in keep:
+                cleaned_pixels[x, y] = 0
+    cleaned.putalpha(cleaned_alpha)
+    return cleaned
+
+
 def source_frames(spec: ActorSpec) -> list[tuple[Image.Image, dict[str, int | str]]]:
-    cell = SOLDIER_CELL if spec.actor == "soldier" else DUELIST_CELL if spec.actor == "duelist" else CELL
-    feet_y = SOLDIER_FEET_Y if spec.actor == "soldier" else DUELIST_FEET_Y if spec.actor == "duelist" else FEET_Y
+    cell = MAULER_CELL if spec.actor == "mauler" else SOLDIER_CELL if spec.actor == "soldier" else DUELIST_CELL if spec.actor == "duelist" else CELL
+    feet_y = MAULER_FEET_Y if spec.actor == "mauler" else SOLDIER_FEET_Y if spec.actor == "soldier" else DUELIST_FEET_Y if spec.actor == "duelist" else FEET_Y
+    names = MAULER_NAMES if spec.actor == "mauler" else NAMES
     transparent_path = ART / spec.transparent_source if spec.transparent_source else None
     source = Image.open(transparent_path if transparent_path and transparent_path.exists() else ART / spec.source).convert("RGBA")
     if spec.transparent_source and not transparent_path.exists():
@@ -107,11 +180,15 @@ def source_frames(spec: ActorSpec) -> list[tuple[Image.Image, dict[str, int | st
         if source.size != (1619, 971):
             raise RuntimeError(f"Unexpected Duelist source size: {source.size}")
         rects = list(DUELIST_SOURCE_RECTS)
+    elif spec.source_layout == "measured-five-by-four":
+        if source.size != (1254, 1254):
+            raise RuntimeError(f"Unexpected Mauler source size: {source.size}")
+        rects = list(MAULER_SOURCE_RECTS)
     elif spec.transparent_source:
         edges_x = [round(index * source.width / 4) for index in range(5)]
         edges_y = [round(index * source.height / 4) for index in range(5)]
         rects = []
-        for index in range(len(NAMES)):
+        for index in range(len(names)):
             row, col = divmod(index, 4)
             rects.append((edges_x[col], edges_y[row], edges_x[col + 1], edges_y[row + 1]))
     else:
@@ -125,6 +202,8 @@ def source_frames(spec: ActorSpec) -> list[tuple[Image.Image, dict[str, int | st
     frames = []
     for rect in rects:
         crop = source.crop(rect)
+        if spec.actor == "mauler":
+            crop = keep_largest_alpha_component(crop)
         bounds = crop.getchannel("A").getbbox()
         if not bounds:
             raise RuntimeError(f"No visible pixels in {spec.actor} source rectangle {rect}")
@@ -132,6 +211,7 @@ def source_frames(spec: ActorSpec) -> list[tuple[Image.Image, dict[str, int | st
         processing_scale = (
             SOLDIER_BASE_SCALE if spec.actor == "soldier"
             else DUELIST_PROCESSING_SCALE if spec.actor == "duelist"
+            else MAULER_PROCESSING_SCALE if spec.actor == "mauler"
             else 1
         )
         if processing_scale != 1:
@@ -178,26 +258,34 @@ def source_frames(spec: ActorSpec) -> list[tuple[Image.Image, dict[str, int | st
     return frames
 
 
-def phase_for(name: str) -> str | None:
+def phase_for(name: str, actor: str) -> str | None:
     if not name.startswith("attack-"):
         return None
+    if actor == "mauler":
+        return {
+            "attack-0": "startup", "attack-1": "startup",
+            "attack-2": "active", "attack-3": "recovery",
+            "attack-4": "recovery",
+        }[name]
     return {"attack-0": "startup", "attack-1": "active", "attack-2": "recovery"}[name]
 
 
 def build_actor(spec: ActorSpec) -> tuple[Image.Image, dict]:
-    cell = SOLDIER_CELL if spec.actor == "soldier" else DUELIST_CELL if spec.actor == "duelist" else CELL
-    feet_y = SOLDIER_FEET_Y if spec.actor == "soldier" else DUELIST_FEET_Y if spec.actor == "duelist" else FEET_Y
-    frame_source_facing = 1 if spec.actor == "mauler" else spec.source_facing
-    sheet = Image.new("RGBA", (cell * COLS, cell * ROWS), (0, 0, 0, 0))
+    cell = MAULER_CELL if spec.actor == "mauler" else SOLDIER_CELL if spec.actor == "soldier" else DUELIST_CELL if spec.actor == "duelist" else CELL
+    feet_y = MAULER_FEET_Y if spec.actor == "mauler" else SOLDIER_FEET_Y if spec.actor == "soldier" else DUELIST_FEET_Y if spec.actor == "duelist" else FEET_Y
+    names = MAULER_NAMES if spec.actor == "mauler" else NAMES
+    cols = MAULER_COLS if spec.actor == "mauler" else COLS
+    rows = MAULER_ROWS if spec.actor == "mauler" else ROWS
+    sheet = Image.new("RGBA", (cell * cols, cell * rows), (0, 0, 0, 0))
     atlas_frames = {}
     metadata_frames = []
     hashes = set()
 
     for index, (pose, source_rect) in enumerate(source_frames(spec)):
-        name = NAMES[index]
+        name = names[index]
         source_image = source_rect["sourceImage"]
         measured_rect = {key: value for key, value in source_rect.items() if key != "sourceImage"}
-        row, col = divmod(index, COLS)
+        row, col = divmod(index, cols)
         offset_x = (cell - pose.width) // 2
         offset_y = feet_y - pose.height
         sheet.alpha_composite(pose, (col * cell + offset_x, row * cell + offset_y))
@@ -209,7 +297,7 @@ def build_actor(spec: ActorSpec) -> tuple[Image.Image, dict]:
         metadata_frames.append({
             "name": name,
             "animation": name.split("-")[0],
-            "phase": phase_for(name),
+            "phase": phase_for(name, spec.actor),
             "sourceImage": source_image,
             "sourceRect": measured_rect,
             "runtimeAlphaBounds": runtime_bounds,
@@ -219,7 +307,7 @@ def build_actor(spec: ActorSpec) -> tuple[Image.Image, dict]:
             "displayOffsetY": offset_y,
             "feetAnchor": {"x": cell // 2, "y": feet_y},
             "displayScale": spec.display_scale,
-            "sourceFacing": frame_source_facing,
+            "sourceFacing": spec.source_facing,
             "accepted": True,
             "rejectionReason": None,
             "pixelHash": digest,
@@ -248,7 +336,7 @@ def build_actor(spec: ActorSpec) -> tuple[Image.Image, dict]:
         "sourceFacing": spec.source_facing,
         "targetLogicalIdleHeight": spec.target_height,
         "logicalIdleHeight": round(metadata_frames[0]["runtimeAlphaBounds"]["height"] * spec.display_scale, 2),
-        "animations": ANIMATIONS,
+        "animations": MAULER_ANIMATIONS if spec.actor == "mauler" else ANIMATIONS,
         "provenance": {
             "original": True,
             "source": spec.source,
@@ -269,12 +357,13 @@ def build_actor(spec: ActorSpec) -> tuple[Image.Image, dict]:
 
 
 def build_qa(spec: ActorSpec, sheet: Image.Image, frames: list[dict]) -> None:
-    cell = SOLDIER_CELL if spec.actor == "soldier" else DUELIST_CELL if spec.actor == "duelist" else CELL
-    feet_y = SOLDIER_FEET_Y if spec.actor == "soldier" else DUELIST_FEET_Y if spec.actor == "duelist" else FEET_Y
+    cell = MAULER_CELL if spec.actor == "mauler" else SOLDIER_CELL if spec.actor == "soldier" else DUELIST_CELL if spec.actor == "duelist" else CELL
+    feet_y = MAULER_FEET_Y if spec.actor == "mauler" else SOLDIER_FEET_Y if spec.actor == "soldier" else DUELIST_FEET_Y if spec.actor == "duelist" else FEET_Y
+    cols = MAULER_COLS if spec.actor == "mauler" else COLS
     debug = sheet.copy()
     draw = ImageDraw.Draw(debug)
     for index, frame in enumerate(frames):
-        row, col = divmod(index, COLS)
+        row, col = divmod(index, cols)
         x, y = col * cell, row * cell
         draw.rectangle((x, y, x + cell - 1, y + cell - 1), outline=(255, 0, 0, 255), width=3)
         draw.line((x, y + feet_y, x + cell - 1, y + feet_y), fill=(255, 64, 64, 220), width=2)
@@ -284,17 +373,17 @@ def build_qa(spec: ActorSpec, sheet: Image.Image, frames: list[dict]) -> None:
 
     onion = Image.new("RGBA", sheet.size, (0, 0, 0, 0))
     for index in range(len(frames)):
-        row, col = divmod(index, COLS)
+        row, col = divmod(index, cols)
         current = sheet.crop((col * cell, row * cell, (col + 1) * cell, (row + 1) * cell))
         if index:
-            previous_row, previous_col = divmod(index - 1, COLS)
+            previous_row, previous_col = divmod(index - 1, cols)
             previous = sheet.crop((previous_col * cell, previous_row * cell, (previous_col + 1) * cell, (previous_row + 1) * cell))
             previous.putalpha(previous.getchannel("A").point(lambda alpha: round(alpha * 0.35)))
             onion.alpha_composite(previous, (col * cell, row * cell))
         onion.alpha_composite(current, (col * cell, row * cell))
     onion.save(ART / f"{spec.actor}-onion.png")
 
-    silhouette = Image.new("RGBA", (cell * COLS // 4, cell * ROWS // 4), (0, 0, 0, 0))
+    silhouette = Image.new("RGBA", (sheet.width // 4, sheet.height // 4), (0, 0, 0, 0))
     small = sheet.resize(silhouette.size, Image.Resampling.NEAREST)
     silhouette.putalpha(small.getchannel("A"))
     silhouette.paste((16, 20, 15, 255), mask=small.getchannel("A"))

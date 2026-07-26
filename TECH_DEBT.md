@@ -608,7 +608,8 @@ fail.
 - **Resolution:** ER.2 proved the one-actor production pipeline. Shield Guard
   and Crossbow still require their larger role-specific frame budgets and must
   be replaced only in separate tasks after the formal melee cast.
-- **Target:** Enemy Redesign Track after Duelist and Mauler replacement.
+- **Target:** Dedicated Shield Guard and Crossbow production-art tasks after
+  the accepted formal melee replacements.
 
 ## TD-M11 — pnpm build dependency-approval blocker
 
@@ -632,8 +633,11 @@ fail.
   non-equal source rectangles, a 288×288 atlas, common `(144,265)` feet anchor,
   one display scale, alpha/debug/onion/silhouette QA, and three-viewport
   production smoke.
-- **Remaining:** Mauler is still on its earlier 384×384 presentation. Shield
-  Guard and Crossbow remain intentionally temporary under TD-M10.
+- **ER.4 update:** Mauler now has seventeen project-owned poses, measured
+  rectangles, a 288×288 atlas, common `(144,265)` feet anchor, one scale,
+  complete QA evidence, and accepted three-viewport production smoke.
+- **Remaining:** Shield Guard and Crossbow remain intentionally temporary under
+  TD-M10.
 
 ## TD-ER1 — Approved prototype references were not repository-owned
 

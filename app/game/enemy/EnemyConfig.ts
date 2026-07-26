@@ -9,6 +9,7 @@ export type EnemyConfig = {
     readonly dead: readonly string[];
   };
   readonly animationRates: { readonly idle: number; readonly walk: number; readonly attack: number; readonly hurt: number; readonly dead: number };
+  readonly attackFrameDurationsMs?: readonly number[];
   readonly sourceFacing: 1 | -1;
   readonly attackSourceFacing: 1 | -1;
   /** Phaser AnimationFrame.index is one-based. */
@@ -56,6 +57,11 @@ export function validateEnemyConfig(config: EnemyConfig): EnemyConfig {
   if (config.attackSourceFacing !== -1 && config.attackSourceFacing !== 1) throw new Error(`Invalid enemy attack source facing: ${config.id}`);
   if (!Number.isInteger(config.attackActiveFrame) || config.attackActiveFrame < 1 || config.attackActiveFrame > config.animations.attack.length) {
     throw new Error(`Invalid enemy attack active frame: ${config.id}`);
+  }
+  if (config.attackFrameDurationsMs &&
+    (config.attackFrameDurationsMs.length !== config.animations.attack.length ||
+      config.attackFrameDurationsMs.some(duration => !Number.isFinite(duration) || duration < 0))) {
+    throw new Error(`Invalid enemy attack frame durations: ${config.id}`);
   }
   return config;
 }
@@ -113,16 +119,17 @@ export const MAULER_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
   assetKey: "enemy-mauler",
   animations: {
     idle: ["idle-0", "idle-1"], walk: ["walk-0", "walk-1", "walk-2", "walk-3"],
-    attack: ["attack-0", "attack-1", "attack-2"], hurt: ["hurt-0", "hurt-1"], dead: ["dead-0", "dead-1", "dead-2", "dead-3"],
+    attack: ["attack-0", "attack-1", "attack-2", "attack-3", "attack-4"], hurt: ["hurt-0", "hurt-1"], dead: ["dead-0", "dead-1", "dead-2", "dead-3"],
   },
-  animationRates: { idle: 4, walk: 8, attack: 5, hurt: 8, dead: 8 },
-  sourceFacing: -1,
+  animationRates: { idle: 4, walk: 8, attack: 10, hurt: 8, dead: 8 },
+  attackFrameDurationsMs: [0, 0, 100, 0, 0],
+  sourceFacing: 1,
   attackSourceFacing: 1,
-  attackActiveFrame: 2,
+  attackActiveFrame: 3,
   maxHp: 15,
-  displayScale: 1.1,
-  frameSize: 384,
-  feetY: 354,
+  displayScale: 1.05,
+  frameSize: 288,
+  feetY: 265,
   movement: { walkSpeed: 62, detectionDistance: 500, verticalScale: 0.7 },
   combat: { attackXRange: 150, attackYRange: 48, minSpacing: 82 },
   timing: { hurtMs: 300, directorDelayMin: 500, directorDelayMax: 700, recoveryMin: 950, recoveryMax: 1150 },

@@ -1,48 +1,52 @@
 # NEXT_TASK
 
-## ER.4 — Mauler Production-Art Replacement
+## GX.1 — Duelist Leap Mobility Prototype
 
 ### Why this is next
 
-ER.3R corrected and accepted the Duelist against the repository-owned five-enemy
-prototype. Mauler is now the only formal melee cast member still using the
-earlier temporary 384×384 presentation, so replacing it completes the proven
-one-actor melee production sequence without mixing in gameplay expansion.
+ER.3R and ER.4 complete the accepted formal melee presentation sequence. The
+user explicitly wants selected agile enemies, especially the Duelist, to jump.
+GX.1 is the smallest isolated gameplay prototype that tests this identity
+without adding Player jumping, a generic aerial framework, or another enemy.
 
 ### Completion conditions
 
-- Replace only Mauler visual source, metadata, atlas, and QA evidence.
-- Preserve the approved broad red-brown heavy silhouette, large cleaver,
-  grounded stance, and visibly larger normal-enemy scale.
-- Produce 17 genuine frames: idle 2, walk 4, attack 5, hurt 2, dead 4.
-- Preserve current Mauler gameplay, attack timing and phases, body, hitbox,
-  speed, HP, damage, AI, Stage, Camera, UI, Audio, and Attack Slot behavior.
-- Use one actor-wide scale and feet anchor; do not use per-animation scale or
-  transforms to fake motion.
-- Do not implement Duelist leap behavior, Shield Guard/Crossbow production art,
-  or any unrelated feature.
+- Add Duelist-only takeoff, airborne, descent, and landing/recovery states.
+- Use genuine new animation poses; never move an idle or walk frame vertically
+  to fake a jump.
+- Keep the 2.5D ground/feet position separate from visual elevation and show a
+  readable ground shadow/landing lane.
+- Lock the destination before airborne travel; no homing after commitment.
+- Preserve the approved hood/cowl, shadowed face, long twin hooks, one actor
+  scale, common feet anchor, existing HP/damage, and single Attack Slot.
+- Keep the leap vertically avoidable and prevent overlap with another primary
+  attack.
+- Do not modify Shield Guard, Crossbow, Boss, Player moves, Stage content,
+  Combo, UI, Audio, or unrelated AI.
 
 ### Validation
 
-- Neutral-idle identity gate against both approved repository references before
-  full-sheet integration.
-- Native and 25% color/silhouette review, debug sheet, onion skin, measured
-  rectangles, feet anchors, frame hashes, and shared cast lineup.
+- Neutral and airborne art gates against the approved Duelist reference.
+- Frame metadata, debug sheet, onion skin, feet/ground/elevation checks, and
+  distinct pose hashes.
+- Focused tests for destination lock, Attack Slot ownership, Hurt/Dead/reset
+  cleanup, no homing, and no transform-faked animation.
 - `pnpm test`, `pnpm typecheck`, `pnpm lint`, `pnpm build`, and
   `pnpm build:github-pages`, with TD-M11 reported honestly if wrappers stop
   before project scripts.
-- Desktop, 844×390, and 390×844 production smoke tests.
+- Desktop, 844×390, and 390×844 Duelist leap readability smoke tests.
 
 ### Expected files
 
-- Mauler-only source/runtime art and metadata files.
-- Mauler generation/extraction tooling only where required.
-- ER.4 review evidence and the minimum corresponding project-document updates.
+- Duelist leap source/runtime art and metadata.
+- Duelist-only state/animation integration and focused tests.
+- GX.1 review evidence and minimum corresponding project-document updates.
 
 ### Risks
 
-- Producing a generic large Soldier instead of the approved heavy Mauler.
-- Cropping the cleaver or losing its silhouette at 288×288 runtime cell size.
-- Feet drift caused by wider attack/death poses.
-- Accidentally changing accepted Mauler combat timing or facing while replacing
-  presentation.
+- Turning a bounded Duelist prototype into a generic aerial system.
+- Faking elevation by changing the actor's feet/world Y instead of separating
+  visual elevation from ground ownership.
+- Homing during takeoff/airborne travel, making vertical evasion unreliable.
+- Losing the approved hood and long twin-hook silhouette in airborne poses.
+- Breaking Attack Slot, Hurt, Dead, Pause, or Scene-reset cleanup.

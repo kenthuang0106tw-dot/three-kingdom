@@ -17,8 +17,13 @@ test("EnemyManager snapshots the player Y when attack startup begins", async () 
 });
 
 test("Mauler has readable startup and recovery with the approved triple HP", () => {
-  assert.equal(MAULER_ENEMY_CONFIG.animationRates.attack, 5);
-  assert.equal(MAULER_ENEMY_CONFIG.attackActiveFrame, 2);
+  assert.equal(MAULER_ENEMY_CONFIG.animationRates.attack, 10);
+  assert.deepEqual(MAULER_ENEMY_CONFIG.attackFrameDurationsMs, [0, 0, 100, 0, 0]);
+  assert.equal(MAULER_ENEMY_CONFIG.attackActiveFrame, 3);
+  const attackDurationMs = MAULER_ENEMY_CONFIG.animations.attack.length *
+    (1000 / MAULER_ENEMY_CONFIG.animationRates.attack) +
+    MAULER_ENEMY_CONFIG.attackFrameDurationsMs.reduce((sum, duration) => sum + duration, 0);
+  assert.equal(attackDurationMs, 600);
   assert.equal(MAULER_ENEMY_CONFIG.maxHp, 15);
 });
 

@@ -1231,7 +1231,7 @@ test("Enemy source facing, active frames, and attack-slot reachability match the
   const manager = await readFile(new URL("../app/game/EnemyManager.ts", import.meta.url), "utf8");
   const expectedSourceFacing = new Map([
     [SOLDIER_ENEMY_CONFIG, -1],
-    [MAULER_ENEMY_CONFIG, -1],
+    [MAULER_ENEMY_CONFIG, 1],
     [DUELIST_ENEMY_CONFIG, 1],
   ]);
 
@@ -1240,7 +1240,10 @@ test("Enemy source facing, active frames, and attack-slot reachability match the
     assert.equal(enemySpriteShouldFlip(config, sourceFacing), false);
     assert.equal(enemySpriteShouldFlip(config, sourceFacing * -1), true);
     assert.equal(enemyAttackSpriteShouldFlip(config, config.attackSourceFacing), false);
-    assert.equal(config.animations.attack[config.attackActiveFrame - 1], "attack-1");
+    assert.equal(
+      config.animations.attack[config.attackActiveFrame - 1],
+      config === MAULER_ENEMY_CONFIG ? "attack-2" : "attack-1",
+    );
   }
 
   assert.throws(
@@ -1608,20 +1611,45 @@ test("Boss decision policy rejects illegal states and reset clears lockout", () 
   assert.notEqual(policy.selectAttack("idle"), null);
 });
 
-test("Mauler asset routes and atlas metadata are present", async () => {
-  const [manifest, atlas, metadata] = await Promise.all([
+test("ER.4 Mauler uses the approved measured 17-frame production contract", async () => {
+  const [manifest, atlas, metadata, sheet, configSource] = await Promise.all([
     readFile(new URL("../app/game/assets/AssetManifest.ts", import.meta.url), "utf8"),
-    readFile(new URL("../public/art/enemy/mauler.atlas.json", import.meta.url), "utf8"),
-    readFile(new URL("../public/art/enemy/mauler-debug.png", import.meta.url)),
+    readFile(new URL("../public/art/enemy/mauler.atlas.json", import.meta.url), "utf8").then(JSON.parse),
+    readFile(new URL("../public/art/enemy/mauler.metadata.json", import.meta.url), "utf8").then(JSON.parse),
+    readFile(new URL("../public/art/enemy/mauler.png", import.meta.url)),
+    readFile(new URL("../app/game/enemy/EnemyConfig.ts", import.meta.url), "utf8"),
   ]);
   assert.match(manifest, /enemy-mauler/);
-  const parsed = JSON.parse(atlas);
-  assert.deepEqual(Object.keys(parsed.frames), [
+  assert.deepEqual(Object.keys(atlas.frames), [
     "idle-0", "idle-1", "walk-0", "walk-1", "walk-2", "walk-3",
-    "attack-0", "attack-1", "attack-2", "hurt-0", "hurt-1", "dead-0", "dead-1", "dead-2", "dead-3",
+    "attack-0", "attack-1", "attack-2", "attack-3", "attack-4",
+    "hurt-0", "hurt-1", "dead-0", "dead-1", "dead-2", "dead-3",
   ]);
-  assert.equal(parsed.frames["attack-1"].frame.w, 384);
-  assert.ok(metadata.length > 1000);
+  assert.equal(sheet.readUInt32BE(16), 1440);
+  assert.equal(sheet.readUInt32BE(20), 1152);
+  assert.deepEqual(metadata.feetAnchor, { x: 144, y: 265 });
+  assert.equal(metadata.displayScale, 1.05);
+  assert.equal(metadata.sourceFacing, 1);
+  assert.equal(metadata.provenance.sourceLayout, "measured-five-by-four");
+  assert.match(metadata.provenance.generatedBy, /ER\.4 Mauler Production-Art Replacement/);
+  assert.equal(metadata.frames.length, 17);
+  assert.equal(new Set(metadata.frames.map(frame => frame.pixelHash)).size, 17);
+  assert.ok(metadata.frames.every(frame => frame.sourceImage === "mauler-source-transparent.png"));
+  assert.ok(metadata.frames.every(frame => frame.sourceRect.processingScale === 0.88));
+  assert.ok(metadata.frames.every(frame =>
+    frame.runtimeAlphaBounds.x > 0 &&
+    frame.runtimeAlphaBounds.x + frame.runtimeAlphaBounds.width < 288 &&
+    frame.runtimeAlphaBounds.y + frame.runtimeAlphaBounds.height === 265
+  ));
+  assert.deepEqual(metadata.frames.filter(frame => frame.phase).map(frame => frame.phase), [
+    "startup", "startup", "active", "recovery", "recovery",
+  ]);
+  assert.ok(Object.values(atlas.frames).every(frame =>
+    frame.frame.w === 288 && frame.frame.h === 288 &&
+    frame.pivot.x === 0.5 && frame.pivot.y === 265 / 288
+  ));
+  assert.match(configSource, /id: "mauler"[\s\S]*attackFrameDurationsMs: \[0, 0, 100, 0, 0\]/);
+  assert.match(configSource, /id: "mauler"[\s\S]*displayScale: 1\.05,[\s\S]*frameSize: 288,[\s\S]*feetY: 265,/);
 });
 
 test("Duelist config and asset routes define a third distinct melee archetype", async () => {
@@ -1681,8 +1709,10 @@ test("M6A enemy and Boss art share audited scale, feet, facing, and provenance c
     ["duelist", "duelist", DUELIST_ENEMY_CONFIG, 205],
   ];
   for (const [actor, stem, config, targetHeight] of actorFiles) {
-    const expectedCell = actor === "mauler" ? 384 : 288;
-    const expectedFeet = actor === "mauler" ? { x: 192, y: 354 } : { x: 144, y: 265 };
+    const expectedCell = 288;
+    const expectedFeet = { x: 144, y: 265 };
+    const expectedRows = actor === "mauler" ? 4 : 3;
+    const expectedFrames = actor === "mauler" ? 17 : 15;
     const atlasName = actor === "soldier" ? "enemy-soldier.atlas.json" : `${stem}.atlas.json`;
     const [atlas, metadata, sheet, onion, silhouette] = await Promise.all([
       readFile(new URL(`../public/art/enemy/${atlasName}`, import.meta.url), "utf8").then(JSON.parse),
@@ -1692,10 +1722,10 @@ test("M6A enemy and Boss art share audited scale, feet, facing, and provenance c
       readFile(new URL(`../public/art/enemy/${actor}-silhouette-25.png`, import.meta.url)),
     ]);
     assert.equal(sheet.readUInt32BE(16), expectedCell * 5);
-    assert.equal(sheet.readUInt32BE(20), expectedCell * 3);
-    assert.equal(Object.keys(atlas.frames).length, 15);
-    assert.equal(metadata.frames.length, 15);
-    assert.equal(new Set(metadata.frames.map(frame => frame.pixelHash)).size, 15);
+    assert.equal(sheet.readUInt32BE(20), expectedCell * expectedRows);
+    assert.equal(Object.keys(atlas.frames).length, expectedFrames);
+    assert.equal(metadata.frames.length, expectedFrames);
+    assert.equal(new Set(metadata.frames.map(frame => frame.pixelHash)).size, expectedFrames);
     assert.deepEqual(metadata.feetAnchor, expectedFeet);
     assert.equal(metadata.displayScale, config.displayScale);
     assert.equal(metadata.sourceFacing, config.sourceFacing);
@@ -1706,10 +1736,12 @@ test("M6A enemy and Boss art share audited scale, feet, facing, and provenance c
     assert.ok(metadata.frames.every(frame => frame.accepted && frame.rejectionReason === null));
     assert.ok(metadata.frames.every(frame => frame.feetAnchor.y === expectedFeet.y && frame.displayScale === config.displayScale));
     assert.ok(metadata.frames.every(frame => frame.runtimeAlphaBounds.y + frame.runtimeAlphaBounds.height === expectedFeet.y));
-    assert.deepEqual(metadata.animations.attack, ["attack-0", "attack-1", "attack-2"]);
+    assert.deepEqual(metadata.animations.attack, actor === "mauler"
+      ? ["attack-0", "attack-1", "attack-2", "attack-3", "attack-4"]
+      : ["attack-0", "attack-1", "attack-2"]);
     assert.equal(metadata.frames.find(frame => frame.name === "attack-0").phase, "startup");
-    assert.equal(metadata.frames.find(frame => frame.name === "attack-1").phase, "active");
-    assert.equal(metadata.frames.find(frame => frame.name === "attack-2").phase, "recovery");
+    assert.equal(metadata.frames.find(frame => frame.name === "attack-1").phase, actor === "mauler" ? "startup" : "active");
+    assert.equal(metadata.frames.find(frame => frame.name === "attack-2").phase, actor === "mauler" ? "active" : "recovery");
     if (actor === "soldier") {
       const correctedNames = [
         "walk-3", "attack-0", "attack-1", "attack-2",
@@ -1770,7 +1802,7 @@ test("M6A visual freeze has reproducible captures, assets, and runtime metrics",
   assert.equal(metrics.productionDebugLeak, false);
 });
 
-test("enemy redesign tasks retain the approved prototype lock and advance to Mauler", async () => {
+test("enemy redesign tasks retain the approved prototype lock and advance to Duelist leap", async () => {
   const [color, silhouette, prototypeContract, nextTask] = await Promise.all([
     readFile(new URL("../docs/visual-baselines/enemy-cast-v2/approved-five-enemy-color.png", import.meta.url)),
     readFile(new URL("../docs/visual-baselines/enemy-cast-v2/approved-five-enemy-silhouette.png", import.meta.url)),
@@ -1789,6 +1821,6 @@ test("enemy redesign tasks retain the approved prototype lock and advance to Mau
   assert.match(prototypeContract, /Exactly two long inward-curved hand hooks/);
   assert.match(prototypeContract, /GX\.1/);
   assert.match(prototypeContract, /genuine startup, airborne, descent, and landing/);
-  assert.match(nextTask, /ER\.4 — Mauler Production-Art Replacement/);
-  assert.match(nextTask, /Do not implement Duelist leap behavior/);
+  assert.match(nextTask, /GX\.1 — Duelist Leap Mobility Prototype/);
+  assert.match(nextTask, /Do not modify Shield Guard, Crossbow, Boss/);
 });

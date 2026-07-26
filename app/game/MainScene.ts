@@ -82,9 +82,14 @@ const ENEMY_PREVIEW_FRAMES = [
   "attack-0", "attack-1", "attack-2", "hurt-0", "hurt-1",
   "dead-0", "dead-1", "dead-2", "dead-3",
 ];
+const MAULER_PREVIEW_FRAMES = [
+  "idle-0", "idle-1", "walk-0", "walk-1", "walk-2", "walk-3",
+  "attack-0", "attack-1", "attack-2", "attack-3", "attack-4",
+  "hurt-0", "hurt-1", "dead-0", "dead-1", "dead-2", "dead-3",
+];
 const CAST_PREVIEW_ACTORS = [
   { id: "soldier", texture: "enemy-soldier", scale: SOLDIER_ENEMY_CONFIG.displayScale, frameSize: 384, feetY: 354, frames: ENEMY_PREVIEW_FRAMES },
-  { id: "mauler", texture: "enemy-mauler", scale: MAULER_ENEMY_CONFIG.displayScale, frameSize: 384, feetY: 354, frames: ENEMY_PREVIEW_FRAMES },
+  { id: "mauler", texture: "enemy-mauler", scale: MAULER_ENEMY_CONFIG.displayScale, frameSize: MAULER_ENEMY_CONFIG.frameSize, feetY: MAULER_ENEMY_CONFIG.feetY, frames: MAULER_PREVIEW_FRAMES },
   { id: "duelist", texture: "enemy-duelist", scale: DUELIST_ENEMY_CONFIG.displayScale, frameSize: DUELIST_ENEMY_CONFIG.frameSize, feetY: DUELIST_ENEMY_CONFIG.feetY, frames: ENEMY_PREVIEW_FRAMES },
   {
     id: "boss", texture: "boss-warlord-lifecycle", scale: BOSS_ACTOR_CONFIG.displayScale, frameSize: 448, feetY: 420,
@@ -769,7 +774,16 @@ export default class MainScene extends Phaser.Scene {
     for (const config of [SOLDIER_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, DUELIST_ENEMY_CONFIG, SHIELD_GUARD_ENEMY_CONFIG, CROSSBOW_ENEMY_CONFIG]) {
       this.anims.create({ key: enemyAnimationKey(config, "idle"), frames: config.animations.idle.map(frame => ({ key: config.assetKey, frame })), frameRate: config.animationRates.idle, repeat: -1 });
       this.anims.create({ key: enemyAnimationKey(config, "walk"), frames: config.animations.walk.map(frame => ({ key: config.assetKey, frame })), frameRate: config.animationRates.walk, repeat: -1 });
-      this.anims.create({ key: enemyAnimationKey(config, "attack"), frames: config.animations.attack.map(frame => ({ key: config.assetKey, frame })), frameRate: config.animationRates.attack, repeat: 0 });
+      this.anims.create({
+        key: enemyAnimationKey(config, "attack"),
+        frames: config.animations.attack.map((frame, index) => ({
+          key: config.assetKey,
+          frame,
+          duration: config.attackFrameDurationsMs?.[index] ?? 0,
+        })),
+        frameRate: config.animationRates.attack,
+        repeat: 0,
+      });
       this.anims.create({ key: enemyAnimationKey(config, "hurt"), frames: config.animations.hurt.map(frame => ({ key: config.assetKey, frame })), frameRate: config.animationRates.hurt, repeat: 0 });
       this.anims.create({ key: enemyAnimationKey(config, "dead"), frames: config.animations.dead.map(frame => ({ key: config.assetKey, frame })), frameRate: config.animationRates.dead, repeat: 0 });
     }

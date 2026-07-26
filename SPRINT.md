@@ -964,3 +964,29 @@ Status: completed and accepted.
 
 The only next task is ER.4 — Mauler Production-Art Replacement. GX.1 Duelist
 Leap Mobility remains separately planned and must not be mixed into ER.4.
+
+## ER.4 — Mauler Production-Art Replacement — 2026-07-26
+
+Status: completed and accepted.
+
+- [x] Passed the neutral-idle identity gate against both repository-owned
+  references: broad red/brown bearded heavy fighter with one long square-headed
+  war hammer.
+- [x] Replaced the temporary presentation with seventeen genuine poses: idle 2,
+  walk 4, attack 5, hurt 2, and dead 4.
+- [x] Used measured source rectangles, one 288×288 runtime cell contract,
+  common `(144,265)` feet anchor, one `1.05` scale, and 240.45px logical idle
+  height.
+- [x] Preserved HP, speed, range, damage, AI, body, hitbox, Attack Slot, and
+  exact 600ms attack timing.
+- [x] Added source/transparent derivatives, atlas, metadata, debug, onion,
+  25% silhouette, cast lineup, neutral gate, review baseline, and hashes.
+- [x] Direct suite passed 129/129; typecheck passed; lint has zero errors and
+  eight existing warnings; both direct builds and packaging passed.
+- [x] Desktop, 844×390, and 390×844 production smoke retained one 1280×720
+  Canvas, no overflow, and zero captured browser errors.
+- [ ] Package-manager wrappers remain affected by TD-M11; equivalent direct
+  project gates above are the recorded acceptance evidence.
+
+The only next task is GX.1 — Duelist Leap Mobility Prototype. Do not begin
+Shield Guard or Crossbow production art in the same task.

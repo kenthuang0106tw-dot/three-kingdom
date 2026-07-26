@@ -593,9 +593,19 @@ build, test, and three-viewport gates pass.
 
 **Dependencies:** ER.3R (satisfied).
 
+**Status:** Completed and accepted on 2026-07-26.
+
+**Closeout:** Seventeen genuine poses now use a measured 288×288 atlas,
+`(144,265)` feet anchor, one `1.05` scale, and 240.45px logical idle height.
+The approved broad red/brown bearded silhouette and single long square-headed
+war hammer passed the neutral identity gate and final debug/onion/25%/lineup
+review. Existing HP, speed, damage, AI, physics, attack reach, Attack Slot, and
+600ms attack cadence remain unchanged. Direct tests passed 129/129; typecheck,
+lint, both builds, packaging, and Desktop/844×390/390×844 browser gates passed.
+
 ## Planned Gameplay Expansion Track
 
-### GX.1 — Duelist Leap Mobility Prototype (Not current)
+### GX.1 — Duelist Leap Mobility Prototype
 
 **Goal:** Give the approved hooded twin-hook Duelist a readable, committed
 leap/reposition behavior so selected agile enemies can use verticality without
@@ -611,7 +621,7 @@ homes after takeoff, does not become constant spam, has punishable landing
 recovery, respects Stage/Camera/Attack Slot boundaries, and fully clears on
 hurt, death, pause, hit stop, and reset.
 
-**Dependencies:** ER.3R accepted. This is not part of the current NEXT_TASK and
+**Dependencies:** ER.3R and ER.4 accepted. This is the current NEXT_TASK and
 must receive its own prototype task and commit.
 
 ## 4. Global Acceptance Rules

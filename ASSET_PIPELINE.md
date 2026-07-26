@@ -312,7 +312,7 @@ must add project-owned source, transparent, atlas, metadata, debug, onion, and
 silhouette files; it must replace legacy runtime textures within the ER.1
 memory and delivery budgets rather than append them.
 
-## ER.2–ER.3R Production replacements
+## ER.2–ER.4 Production replacements
 
 - Soldier and Duelist now use project-owned 5×3 runtime atlases with 288×288
   cells, feet `(144,265)`, measured metadata, debug/onion/silhouette QA, and
@@ -322,8 +322,12 @@ memory and delivery budgets rather than append them.
   failed ninja identity with the approved full-hooded long twin-hook prototype
   without changing the 288×288 atlas, `(144,265)` feet anchor, `1.025` display
   scale, or gameplay contracts.
-- Mauler remains the next formal melee replacement after ER.3R. Shield Guard and Crossbow
-  remain temporary Soldier presentation until their dedicated production tasks.
-- ER.3R delivery measurements: 43 runtime requests, 12,788,345 encoded bytes,
-  128,888,320 decoded RGBA bytes, 46 packaged production files, and an
-  18,080,227-byte GitHub Pages artifact.
+- Mauler now uses seventeen measured genuine poses in a 288×288 atlas with
+  feet `(144,265)`, one `1.05` display scale, and 240.45px logical idle height.
+  The attack has five real frames while preserving its exact 600ms gameplay
+  cadence.
+- Shield Guard and Crossbow remain temporary Soldier presentation until their
+  dedicated production tasks.
+- ER.4 delivery measurements: 43 runtime requests, 12,620,761 encoded bytes,
+  126,676,480 decoded RGBA bytes, 46 packaged production files, and a
+  17,913,137-byte GitHub Pages artifact.

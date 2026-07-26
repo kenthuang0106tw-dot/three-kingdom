@@ -1224,3 +1224,19 @@
 | Scope | Pass | Duelist presentation only; no gameplay, animation timing, other actor art, Stage, Camera, UI, or Audio change |
 | Approved-prototype conformance | Go | Full-hooded long twin-hook identity accepted for runtime integration |
 | Next task | Selected | ER.4 — Mauler Production-Art Replacement |
+
+## ER.4 — Mauler Production-Art Replacement — 2026-07-26
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Identity gate | Pass | Broad red/brown bearded heavy fighter, square torso, wide stance, and exactly one long square-headed war hammer match both approved references |
+| Frame contract | Pass | 17 distinct hashes: idle 2, walk 4, attack 5, hurt 2, dead 4 |
+| Atlas/alignment | Pass | Measured 288×288 cells, feet `(144,265)`, one `1.05` scale, 240.45px logical idle height |
+| Attack contract | Pass | Two startup, one active, two recovery frames; exact 600ms timing and existing body/hitbox/gameplay unchanged |
+| QA/provenance | Pass | Repository-owned idle gate, source/transparent derivatives, measured metadata, debug, onion, 25% silhouette, lineup, hashes, and review report |
+| Delivery | Pass | 43 requests; 12,620,761 encoded bytes; 126,676,480 decoded RGBA; 17,913,137-byte GitHub Pages artifact |
+| Automated gates | Pass with TD-M11 noted | 129/129 direct tests, typecheck, lint 0 errors/8 existing warnings, direct Vinext/Vite builds and packaging |
+| Browser | Pass | Desktop, 844×390, and 390×844: one logical 1280×720 Canvas, no overflow, zero captured errors |
+| Scope | Pass | Mauler presentation and minimum per-frame metadata only; no balance, AI, Stage, Camera, UI, Audio, or unrelated gameplay change |
+| Approved-prototype conformance | Go | Largest normal enemy, smaller than Boss; square-headed long hammer and broad heavy silhouette preserved |
+| Next task | Selected | GX.1 — Duelist Leap Mobility Prototype |

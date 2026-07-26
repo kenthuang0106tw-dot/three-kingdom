@@ -53,3 +53,12 @@ passed, but its exposed-topknot masked-ninja identity was later rejected.
 hood/cowl, shadowed face, low stance, and two long inward-curved hooks pass
 side-by-side review against both approved repository references. Both files are
 QA evidence and are excluded from production packaging.
+
+## ER.4 Mauler approved-prototype replacement
+
+`mauler-er4-idle-gate.png` records the neutral identity gate.
+`mauler-er4-review.png` records the final seventeen measured frames: idle 2,
+walk 4, attack 5, hurt 2, and dead 4. The broad red/brown bearded heavy
+silhouette and single long square-headed war hammer pass both approved
+references. Both files are QA evidence only and are excluded from production
+packaging.
