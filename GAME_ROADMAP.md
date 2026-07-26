@@ -550,7 +550,7 @@ masked ninja with short hook blades. It does not preserve the approved full
 charcoal/navy hood and cowl or the two long inward-curved hand hooks. Technical
 evidence remains valid, but the production visual is not accepted.
 
-### ER.3R — Duelist Approved-Prototype Correction
+### ER.3R — Duelist Approved-Prototype Correction (Completed 2026-07-26)
 
 **Goal:** Correct only the Duelist visual identity to the approved hooded
 twin-hook prototype while preserving the proven ER.3 pipeline and gameplay.
@@ -568,6 +568,13 @@ build, gameplay-freeze, and three-viewport gates remain green.
 **Dependencies:** ER.3 technical integration and the approved-prototype
 conformance audit.
 
+**Closeout:** Accepted. The corrected fifteen-frame Duelist preserves the
+repository-owned full hood/cowl, shadowed face, low narrow stance, and exactly
+two long inward-curved hooks. The 288×288 atlas, `(144,265)` feet anchor,
+`1.025` scale, animation timing, physics, and gameplay contracts remain
+unchanged. Direct tests passed 129/129; typecheck, lint, both production
+builds, packaging, and Desktop/844×390/390×844 smoke gates passed.
+
 ### ER.4 — Mauler Production-Art Replacement
 
 **Goal:** Apply the proven one-actor pipeline to the Mauler while preserving
@@ -584,7 +591,7 @@ one feet anchor and scale; attack phase timing, body, hitbox, speed, HP,
 damage, AI, Stage data, and Attack Slot behavior remain unchanged; asset,
 build, test, and three-viewport gates pass.
 
-**Dependencies:** ER.3R.
+**Dependencies:** ER.3R (satisfied).
 
 ## Planned Gameplay Expansion Track
 

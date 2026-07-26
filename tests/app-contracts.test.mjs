@@ -1637,7 +1637,7 @@ test("Duelist config and asset routes define a third distinct melee archetype", 
   assert.equal(Object.keys(JSON.parse(atlas).frames).length, 15);
 });
 
-test("ER.3 Duelist replacement uses measured production frames without changing gameplay tuning", async () => {
+test("ER.3R Duelist correction uses measured approved-prototype frames without changing gameplay tuning", async () => {
   const [atlas, metadata, sheet, configSource] = await Promise.all([
     readFile(new URL("../public/art/enemy/duelist.atlas.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../public/art/enemy/duelist.metadata.json", import.meta.url), "utf8").then(JSON.parse),
@@ -1649,13 +1649,13 @@ test("ER.3 Duelist replacement uses measured production frames without changing 
   assert.deepEqual(metadata.feetAnchor, { x: 144, y: 265 });
   assert.equal(metadata.displayScale, 1.025);
   assert.equal(metadata.sourceFacing, 1);
-  assert.equal(metadata.logicalIdleHeight, 205);
+  assert.equal(metadata.logicalIdleHeight, 206.02);
   assert.equal(metadata.provenance.sourceLayout, "measured-five-by-three");
-  assert.match(metadata.provenance.generatedBy, /ER\.3 Duelist Production-Art Replacement/);
+  assert.match(metadata.provenance.generatedBy, /ER\.3R Duelist Approved-Prototype Correction/);
   assert.equal(metadata.frames.length, 15);
   assert.equal(new Set(metadata.frames.map(frame => frame.pixelHash)).size, 15);
   assert.ok(metadata.frames.every(frame => frame.sourceImage === "duelist-source-transparent.png"));
-  assert.ok(metadata.frames.every(frame => frame.sourceRect.processingScale === 0.86));
+  assert.ok(metadata.frames.every(frame => frame.sourceRect.processingScale === undefined));
   assert.ok(metadata.frames.every(frame => frame.runtimeAlphaBounds.x > 0));
   assert.ok(metadata.frames.every(frame =>
     frame.runtimeAlphaBounds.x + frame.runtimeAlphaBounds.width < 288 &&
@@ -1770,7 +1770,7 @@ test("M6A visual freeze has reproducible captures, assets, and runtime metrics",
   assert.equal(metrics.productionDebugLeak, false);
 });
 
-test("enemy redesign tasks retain the approved five-character prototype lock", async () => {
+test("enemy redesign tasks retain the approved prototype lock and advance to Mauler", async () => {
   const [color, silhouette, prototypeContract, nextTask] = await Promise.all([
     readFile(new URL("../docs/visual-baselines/enemy-cast-v2/approved-five-enemy-color.png", import.meta.url)),
     readFile(new URL("../docs/visual-baselines/enemy-cast-v2/approved-five-enemy-silhouette.png", import.meta.url)),
@@ -1789,5 +1789,6 @@ test("enemy redesign tasks retain the approved five-character prototype lock", a
   assert.match(prototypeContract, /Exactly two long inward-curved hand hooks/);
   assert.match(prototypeContract, /GX\.1/);
   assert.match(prototypeContract, /genuine startup, airborne, descent, and landing/);
-  assert.match(nextTask, /ER\.3R — Duelist Approved-Prototype Correction/);
+  assert.match(nextTask, /ER\.4 — Mauler Production-Art Replacement/);
+  assert.match(nextTask, /Do not implement Duelist leap behavior/);
 });

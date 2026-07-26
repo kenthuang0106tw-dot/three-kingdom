@@ -43,4 +43,13 @@ not a runtime texture.
 `duelist-er3-review.png` records the measured 15-frame Duelist runtime sheet:
 idle 2, walk 4, startup/active/recovery attack 3, hurt 2, and dead 4. All
 frames use the shared `(144,265)` feet line and one scale. The image is review
-evidence only and is excluded from production packaging.
+evidence only and is excluded from production packaging. Its technical layout
+passed, but its exposed-topknot masked-ninja identity was later rejected.
+
+## ER.3R Duelist approved-prototype correction
+
+`duelist-er3r-idle-gate.png` records the neutral-pose identity gate.
+`duelist-er3r-review.png` records the final fifteen measured frames. The full
+hood/cowl, shadowed face, low stance, and two long inward-curved hooks pass
+side-by-side review against both approved repository references. Both files are
+QA evidence and are excluded from production packaging.

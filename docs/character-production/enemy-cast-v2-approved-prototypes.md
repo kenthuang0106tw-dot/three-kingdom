@@ -105,7 +105,7 @@ for the two approved reference images.
 | Actor | Decision | Finding |
 | --- | --- | --- |
 | Soldier | Go | Long halberd, blue armor, upright military silhouette remain consistent with the approved prototype. |
-| Duelist | Revise | Current ER.3 art reads as an exposed-topknot masked ninja and its weapons read as short hook blades; it lacks the approved full hood/cowl and two long inward-curved hooks. |
+| Duelist | Go (ER.3R) | Full hood/cowl, shadowed face, low stance, and two long inward-curved hooks now match the approved identity; gameplay remains unchanged. |
 | Mauler | Pending | Production art must preserve the square-headed long war hammer and broad red/brown silhouette. |
 | Shield Guard | Pending | Production art must preserve the dominant round woven rattan shield. |
 | Crossbow | Pending | Production art must preserve the large horizontal repeating crossbow and rear bolt pack. |

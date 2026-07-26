@@ -18,7 +18,7 @@ SOLDIER_FEET_Y = 265
 SOLDIER_BASE_SCALE = 0.75
 DUELIST_CELL = 288
 DUELIST_FEET_Y = 265
-DUELIST_PROCESSING_SCALE = 0.86
+DUELIST_PROCESSING_SCALE = 1.0
 DUELIST_SOURCE_RECTS = (
     (0, 0, 346, 346),
     (346, 0, 661, 346),
@@ -71,7 +71,7 @@ class ActorSpec:
 ACTORS = (
     ActorSpec("soldier", "enemy-soldier-v2-source.png", "enemy-soldier.png", "enemy-soldier-v2-source-transparent.png", 1.025, -1, 210, "five-by-three-grid", "built-in image generation, ER.2 Soldier Production-Art Pilot"),
     ActorSpec("mauler", "mauler-source.png", "mauler.png", "mauler-source-transparent.png", 1.10, -1, 240, "four-by-four-grid", "built-in image generation in earlier asset tasks; no new generation in M6A.3"),
-    ActorSpec("duelist", "duelist-source.png", "duelist.png", "duelist-source-transparent.png", 1.025, 1, 205, "measured-five-by-three", "built-in image generation, ER.3 Duelist Production-Art Replacement"),
+    ActorSpec("duelist", "duelist-source.png", "duelist.png", "duelist-source-transparent.png", 1.025, 1, 205, "measured-five-by-three", "built-in image generation, ER.3R Duelist Approved-Prototype Correction"),
 )
 
 
@@ -187,6 +187,7 @@ def phase_for(name: str) -> str | None:
 def build_actor(spec: ActorSpec) -> tuple[Image.Image, dict]:
     cell = SOLDIER_CELL if spec.actor == "soldier" else DUELIST_CELL if spec.actor == "duelist" else CELL
     feet_y = SOLDIER_FEET_Y if spec.actor == "soldier" else DUELIST_FEET_Y if spec.actor == "duelist" else FEET_Y
+    frame_source_facing = 1 if spec.actor == "mauler" else spec.source_facing
     sheet = Image.new("RGBA", (cell * COLS, cell * ROWS), (0, 0, 0, 0))
     atlas_frames = {}
     metadata_frames = []
@@ -218,7 +219,7 @@ def build_actor(spec: ActorSpec) -> tuple[Image.Image, dict]:
             "displayOffsetY": offset_y,
             "feetAnchor": {"x": cell // 2, "y": feet_y},
             "displayScale": spec.display_scale,
-            "sourceFacing": spec.source_facing,
+            "sourceFacing": frame_source_facing,
             "accepted": True,
             "rejectionReason": None,
             "pixelHash": digest,
@@ -251,7 +252,7 @@ def build_actor(spec: ActorSpec) -> tuple[Image.Image, dict]:
         "provenance": {
             "original": True,
             "source": spec.source,
-            "correctionSources": SOLDIER_CORRECTION_SOURCES if spec.actor == "soldier" else None,
+            **({"correctionSources": SOLDIER_CORRECTION_SOURCES} if spec.actor == "soldier" else {}),
             "sourceLayout": spec.source_layout,
             "processingTool": "tools/build_enemy_art.py",
             "processingRevision": "2.0",

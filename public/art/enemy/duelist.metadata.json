@@ -11,7 +11,7 @@
   "displayScale": 1.025,
   "sourceFacing": 1,
   "targetLogicalIdleHeight": 205,
-  "logicalIdleHeight": 205.0,
+  "logicalIdleHeight": 206.02,
   "animations": {
     "idle": [
       "idle-0",
@@ -42,11 +42,10 @@
   "provenance": {
     "original": true,
     "source": "duelist-source.png",
-    "correctionSources": null,
     "sourceLayout": "measured-five-by-three",
     "processingTool": "tools/build_enemy_art.py",
     "processingRevision": "2.0",
-    "generatedBy": "built-in image generation, ER.3 Duelist Production-Art Replacement"
+    "generatedBy": "built-in image generation, ER.3R Duelist Approved-Prototype Correction"
   },
   "frames": [
     {
@@ -59,22 +58,21 @@
         "y": 0,
         "width": 346,
         "height": 346,
-        "alphaX": 118,
-        "alphaY": 73,
-        "alphaWidth": 153,
-        "alphaHeight": 233,
-        "processingScale": 0.86
+        "alphaX": 126,
+        "alphaY": 101,
+        "alphaWidth": 170,
+        "alphaHeight": 201
       },
       "runtimeAlphaBounds": {
-        "x": 78,
-        "y": 65,
-        "width": 132,
-        "height": 200
+        "x": 59,
+        "y": 64,
+        "width": 170,
+        "height": 201
       },
       "originX": 0.5,
       "originY": 0.9201388888888888,
-      "displayOffsetX": 78,
-      "displayOffsetY": 65,
+      "displayOffsetX": 59,
+      "displayOffsetY": 64,
       "feetAnchor": {
         "x": 144,
         "y": 265
@@ -83,7 +81,7 @@
       "sourceFacing": 1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "9a871bb40ab4b5d99f3a984a3348054f9f901bf361179ca922b49b0c9733fc2f"
+      "pixelHash": "f5373c53e161bdd10e8b964cd8f09a8a1942288b1402b0ca760bb6bbcbf233a7"
     },
     {
       "name": "idle-1",
@@ -95,22 +93,21 @@
         "y": 0,
         "width": 315,
         "height": 346,
-        "alphaX": 76,
-        "alphaY": 73,
-        "alphaWidth": 147,
-        "alphaHeight": 233,
-        "processingScale": 0.86
+        "alphaX": 81,
+        "alphaY": 101,
+        "alphaWidth": 165,
+        "alphaHeight": 201
       },
       "runtimeAlphaBounds": {
-        "x": 81,
-        "y": 65,
-        "width": 126,
-        "height": 200
+        "x": 61,
+        "y": 64,
+        "width": 165,
+        "height": 201
       },
       "originX": 0.5,
       "originY": 0.9201388888888888,
-      "displayOffsetX": 81,
-      "displayOffsetY": 65,
+      "displayOffsetX": 61,
+      "displayOffsetY": 64,
       "feetAnchor": {
         "x": 144,
         "y": 265
@@ -119,7 +116,7 @@
       "sourceFacing": 1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "d191a82e7bfcb4cc6a3da05fec12e4fb4cf6f9b23194861d20e1568b945f7008"
+      "pixelHash": "7cf0bf82f2ecbd0f3879c82f402770f0e9eae915a9834a669099ac76fcec966c"
     },
     {
       "name": "walk-0",
@@ -131,22 +128,21 @@
         "y": 0,
         "width": 304,
         "height": 346,
-        "alphaX": 92,
-        "alphaY": 73,
-        "alphaWidth": 155,
-        "alphaHeight": 235,
-        "processingScale": 0.86
+        "alphaX": 81,
+        "alphaY": 98,
+        "alphaWidth": 143,
+        "alphaHeight": 203
       },
       "runtimeAlphaBounds": {
-        "x": 77,
-        "y": 63,
-        "width": 133,
-        "height": 202
+        "x": 72,
+        "y": 62,
+        "width": 143,
+        "height": 203
       },
       "originX": 0.5,
       "originY": 0.9201388888888888,
-      "displayOffsetX": 77,
-      "displayOffsetY": 63,
+      "displayOffsetX": 72,
+      "displayOffsetY": 62,
       "feetAnchor": {
         "x": 144,
         "y": 265
@@ -155,7 +151,7 @@
       "sourceFacing": 1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "5bf51575e66b8461f82a42b7ebab05ad667266dbd49dbcecb573853ca0c441f2"
+      "pixelHash": "6b0c53263e243cd12f31e0dce72a1913d7ccd3f05673695072704cc322ae8feb"
     },
     {
       "name": "walk-1",
@@ -167,22 +163,21 @@
         "y": 0,
         "width": 291,
         "height": 346,
-        "alphaX": 56,
-        "alphaY": 73,
-        "alphaWidth": 158,
-        "alphaHeight": 235,
-        "processingScale": 0.86
+        "alphaX": 70,
+        "alphaY": 105,
+        "alphaWidth": 137,
+        "alphaHeight": 197
       },
       "runtimeAlphaBounds": {
-        "x": 76,
-        "y": 63,
-        "width": 136,
-        "height": 202
+        "x": 75,
+        "y": 68,
+        "width": 137,
+        "height": 197
       },
       "originX": 0.5,
       "originY": 0.9201388888888888,
-      "displayOffsetX": 76,
-      "displayOffsetY": 63,
+      "displayOffsetX": 75,
+      "displayOffsetY": 68,
       "feetAnchor": {
         "x": 144,
         "y": 265
@@ -191,7 +186,7 @@
       "sourceFacing": 1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "278c286040940a1884d6e3a451032b56e69173c9b8f219d5ff15c82101ea30d3"
+      "pixelHash": "d8458c2ee7200278aeba3ebf0605d0f9804d20e75959ad7f7ae391127a52e585"
     },
     {
       "name": "walk-2",
@@ -203,22 +198,21 @@
         "y": 0,
         "width": 363,
         "height": 346,
-        "alphaX": 77,
-        "alphaY": 72,
-        "alphaWidth": 150,
-        "alphaHeight": 236,
-        "processingScale": 0.86
+        "alphaX": 61,
+        "alphaY": 101,
+        "alphaWidth": 136,
+        "alphaHeight": 198
       },
       "runtimeAlphaBounds": {
-        "x": 79,
-        "y": 62,
-        "width": 129,
-        "height": 203
+        "x": 76,
+        "y": 67,
+        "width": 136,
+        "height": 198
       },
       "originX": 0.5,
       "originY": 0.9201388888888888,
-      "displayOffsetX": 79,
-      "displayOffsetY": 62,
+      "displayOffsetX": 76,
+      "displayOffsetY": 67,
       "feetAnchor": {
         "x": 144,
         "y": 265
@@ -227,7 +221,7 @@
       "sourceFacing": 1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "8ed7a6537ff3386d64b8bddd213ac15723da303df705fd9429f805b6fcc953d0"
+      "pixelHash": "51c76f38a0f43bb45a13798d938e60718d251609ba27a2221aaa1cae028746fc"
     },
     {
       "name": "walk-3",
@@ -239,22 +233,21 @@
         "y": 346,
         "width": 330,
         "height": 273,
-        "alphaX": 100,
-        "alphaY": 22,
-        "alphaWidth": 181,
-        "alphaHeight": 224,
-        "processingScale": 0.86
+        "alphaX": 130,
+        "alphaY": 41,
+        "alphaWidth": 129,
+        "alphaHeight": 200
       },
       "runtimeAlphaBounds": {
-        "x": 66,
-        "y": 72,
-        "width": 156,
-        "height": 193
+        "x": 79,
+        "y": 65,
+        "width": 129,
+        "height": 200
       },
       "originX": 0.5,
       "originY": 0.9201388888888888,
-      "displayOffsetX": 66,
-      "displayOffsetY": 72,
+      "displayOffsetX": 79,
+      "displayOffsetY": 65,
       "feetAnchor": {
         "x": 144,
         "y": 265
@@ -263,7 +256,7 @@
       "sourceFacing": 1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "78054c5fd1d4b86217727865092070049076a77820b418aaa737b8b25ab6657e"
+      "pixelHash": "4f123f740c77248533edcbced066f7f8c83d6041fe734c09cf8aa72230b62fce"
     },
     {
       "name": "attack-0",
@@ -275,22 +268,21 @@
         "y": 346,
         "width": 304,
         "height": 273,
-        "alphaX": 50,
-        "alphaY": 35,
-        "alphaWidth": 217,
-        "alphaHeight": 211,
-        "processingScale": 0.86
+        "alphaX": 62,
+        "alphaY": 43,
+        "alphaWidth": 171,
+        "alphaHeight": 199
       },
       "runtimeAlphaBounds": {
-        "x": 50,
-        "y": 84,
-        "width": 187,
-        "height": 181
+        "x": 58,
+        "y": 66,
+        "width": 171,
+        "height": 199
       },
       "originX": 0.5,
       "originY": 0.9201388888888888,
-      "displayOffsetX": 50,
-      "displayOffsetY": 84,
+      "displayOffsetX": 58,
+      "displayOffsetY": 66,
       "feetAnchor": {
         "x": 144,
         "y": 265
@@ -299,7 +291,7 @@
       "sourceFacing": 1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "f887d45b63cc72e61da786f783c45189f394def4decbca03a8d0d75a497a2f2f"
+      "pixelHash": "62227b2905e8937513f9ba00e602956716aea556911349ca15a15b72a10c9925"
     },
     {
       "name": "attack-1",
@@ -311,22 +303,21 @@
         "y": 346,
         "width": 371,
         "height": 273,
-        "alphaX": 37,
-        "alphaY": 59,
-        "alphaWidth": 309,
-        "alphaHeight": 186,
-        "processingScale": 0.86
+        "alphaX": 24,
+        "alphaY": 85,
+        "alphaWidth": 279,
+        "alphaHeight": 156
       },
       "runtimeAlphaBounds": {
-        "x": 11,
-        "y": 105,
-        "width": 266,
-        "height": 160
+        "x": 4,
+        "y": 109,
+        "width": 279,
+        "height": 156
       },
       "originX": 0.5,
       "originY": 0.9201388888888888,
-      "displayOffsetX": 11,
-      "displayOffsetY": 105,
+      "displayOffsetX": 4,
+      "displayOffsetY": 109,
       "feetAnchor": {
         "x": 144,
         "y": 265
@@ -335,7 +326,7 @@
       "sourceFacing": 1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "2477882cc3f82b9c955b56c79584abdedeb25542ca34e12346a1f246751cfa34"
+      "pixelHash": "ceb51b14e5743ef568b2f7f61e42b4012eb69231d3df5e086b72dba2475d1c47"
     },
     {
       "name": "attack-2",
@@ -347,22 +338,21 @@
         "y": 346,
         "width": 266,
         "height": 273,
-        "alphaX": 24,
-        "alphaY": 32,
-        "alphaWidth": 198,
-        "alphaHeight": 214,
-        "processingScale": 0.86
+        "alphaX": 23,
+        "alphaY": 55,
+        "alphaWidth": 153,
+        "alphaHeight": 186
       },
       "runtimeAlphaBounds": {
-        "x": 59,
-        "y": 81,
-        "width": 170,
-        "height": 184
+        "x": 67,
+        "y": 79,
+        "width": 153,
+        "height": 186
       },
       "originX": 0.5,
       "originY": 0.9201388888888888,
-      "displayOffsetX": 59,
-      "displayOffsetY": 81,
+      "displayOffsetX": 67,
+      "displayOffsetY": 79,
       "feetAnchor": {
         "x": 144,
         "y": 265
@@ -371,7 +361,7 @@
       "sourceFacing": 1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "03018235764c811145b92e42c27c8debdd28541535392aec05331ac2f3aa9a81"
+      "pixelHash": "312c96445fdcf28f7ba84c6a619ed0fab03e3b7681c1ea3941dce1596e10864b"
     },
     {
       "name": "hurt-0",
@@ -383,22 +373,21 @@
         "y": 346,
         "width": 348,
         "height": 273,
-        "alphaX": 43,
-        "alphaY": 45,
-        "alphaWidth": 181,
-        "alphaHeight": 200,
-        "processingScale": 0.86
+        "alphaX": 53,
+        "alphaY": 52,
+        "alphaWidth": 147,
+        "alphaHeight": 190
       },
       "runtimeAlphaBounds": {
-        "x": 66,
-        "y": 93,
-        "width": 156,
-        "height": 172
+        "x": 70,
+        "y": 75,
+        "width": 147,
+        "height": 190
       },
       "originX": 0.5,
       "originY": 0.9201388888888888,
-      "displayOffsetX": 66,
-      "displayOffsetY": 93,
+      "displayOffsetX": 70,
+      "displayOffsetY": 75,
       "feetAnchor": {
         "x": 144,
         "y": 265
@@ -407,7 +396,7 @@
       "sourceFacing": 1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "d7d3377c2ea6d501605abaf2667e872fa3398617387ce0989b51b0105f324d20"
+      "pixelHash": "f5c2c70091b8c85d828e77eac15ebb52ee0be3a4a96afca4ca0ef06c11162d01"
     },
     {
       "name": "hurt-1",
@@ -419,22 +408,21 @@
         "y": 619,
         "width": 323,
         "height": 352,
-        "alphaX": 46,
-        "alphaY": 32,
-        "alphaWidth": 246,
-        "alphaHeight": 207,
-        "processingScale": 0.86
+        "alphaX": 107,
+        "alphaY": 62,
+        "alphaWidth": 178,
+        "alphaHeight": 193
       },
       "runtimeAlphaBounds": {
-        "x": 38,
-        "y": 87,
-        "width": 212,
-        "height": 178
+        "x": 55,
+        "y": 72,
+        "width": 178,
+        "height": 193
       },
       "originX": 0.5,
       "originY": 0.9201388888888888,
-      "displayOffsetX": 38,
-      "displayOffsetY": 87,
+      "displayOffsetX": 55,
+      "displayOffsetY": 72,
       "feetAnchor": {
         "x": 144,
         "y": 265
@@ -443,7 +431,7 @@
       "sourceFacing": 1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "58d88cb697089918e6eb7ac718cd6cf29dce1ef4c5e7c2f86ab9c346b405b4e6"
+      "pixelHash": "fda80c0ac958b147cb89a4f9b36cd33edaee09679a4344ae72b42d9be62f41fd"
     },
     {
       "name": "dead-0",
@@ -455,22 +443,21 @@
         "y": 619,
         "width": 284,
         "height": 352,
-        "alphaX": 31,
-        "alphaY": 105,
-        "alphaWidth": 227,
-        "alphaHeight": 140,
-        "processingScale": 0.86
+        "alphaX": 83,
+        "alphaY": 119,
+        "alphaWidth": 128,
+        "alphaHeight": 140
       },
       "runtimeAlphaBounds": {
-        "x": 46,
-        "y": 145,
-        "width": 195,
-        "height": 120
+        "x": 80,
+        "y": 125,
+        "width": 128,
+        "height": 140
       },
       "originX": 0.5,
       "originY": 0.9201388888888888,
-      "displayOffsetX": 46,
-      "displayOffsetY": 145,
+      "displayOffsetX": 80,
+      "displayOffsetY": 125,
       "feetAnchor": {
         "x": 144,
         "y": 265
@@ -479,7 +466,7 @@
       "sourceFacing": 1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "480a933c7f298edad8590123e254c62afa8447e6cd4bce6d86364387801ceaa9"
+      "pixelHash": "9046855fa046825d67f09b0f788461465f585455541b7994aaecc2273d2c8d7c"
     },
     {
       "name": "dead-1",
@@ -491,22 +478,21 @@
         "y": 619,
         "width": 281,
         "height": 352,
-        "alphaX": 25,
-        "alphaY": 152,
-        "alphaWidth": 228,
-        "alphaHeight": 103,
-        "processingScale": 0.86
+        "alphaX": 30,
+        "alphaY": 146,
+        "alphaWidth": 221,
+        "alphaHeight": 113
       },
       "runtimeAlphaBounds": {
-        "x": 46,
-        "y": 176,
-        "width": 196,
-        "height": 89
+        "x": 33,
+        "y": 152,
+        "width": 221,
+        "height": 113
       },
       "originX": 0.5,
       "originY": 0.9201388888888888,
-      "displayOffsetX": 46,
-      "displayOffsetY": 176,
+      "displayOffsetX": 33,
+      "displayOffsetY": 152,
       "feetAnchor": {
         "x": 144,
         "y": 265
@@ -515,7 +501,7 @@
       "sourceFacing": 1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "db0a2efb133b7f245530f7d067198d1099792bd560764ccbe6041123571b2e1f"
+      "pixelHash": "45ebb986c683b2bbc1c06bf16ae12c8ea22bc9bb015a7a0ea7a09f112bc95b4e"
     },
     {
       "name": "dead-2",
@@ -527,22 +513,21 @@
         "y": 619,
         "width": 324,
         "height": 352,
-        "alphaX": 27,
-        "alphaY": 168,
-        "alphaWidth": 263,
-        "alphaHeight": 79,
-        "processingScale": 0.86
+        "alphaX": 77,
+        "alphaY": 147,
+        "alphaWidth": 223,
+        "alphaHeight": 121
       },
       "runtimeAlphaBounds": {
-        "x": 31,
-        "y": 197,
-        "width": 226,
-        "height": 68
+        "x": 32,
+        "y": 144,
+        "width": 223,
+        "height": 121
       },
       "originX": 0.5,
       "originY": 0.9201388888888888,
-      "displayOffsetX": 31,
-      "displayOffsetY": 197,
+      "displayOffsetX": 32,
+      "displayOffsetY": 144,
       "feetAnchor": {
         "x": 144,
         "y": 265
@@ -551,7 +536,7 @@
       "sourceFacing": 1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "7a35ed9b7256babd906312bfad1e3fac431fad4466288f31f843a7a4d5ec52e6"
+      "pixelHash": "d0bcbf19f2d457a36892de498676d67d47d18d7083dce518235cb7f1ebfc3725"
     },
     {
       "name": "dead-3",
@@ -563,22 +548,21 @@
         "y": 619,
         "width": 407,
         "height": 352,
-        "alphaX": 34,
-        "alphaY": 186,
-        "alphaWidth": 313,
-        "alphaHeight": 62,
-        "processingScale": 0.86
+        "alphaX": 44,
+        "alphaY": 199,
+        "alphaWidth": 266,
+        "alphaHeight": 70
       },
       "runtimeAlphaBounds": {
-        "x": 9,
-        "y": 212,
-        "width": 269,
-        "height": 53
+        "x": 11,
+        "y": 195,
+        "width": 266,
+        "height": 70
       },
       "originX": 0.5,
       "originY": 0.9201388888888888,
-      "displayOffsetX": 9,
-      "displayOffsetY": 212,
+      "displayOffsetX": 11,
+      "displayOffsetY": 195,
       "feetAnchor": {
         "x": 144,
         "y": 265
@@ -587,7 +571,7 @@
       "sourceFacing": 1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "d58ae93d20a8b4b8727ac0d557609f3fc3d13b9b46f0f1504ef07b39e968422e"
+      "pixelHash": "1e4bfb2b0b82c139000b5286594b2544f3cc4b1cd6cbdb142931061e503fb190"
     }
   ]
 }

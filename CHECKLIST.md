@@ -1208,3 +1208,19 @@
 | Approved-prototype conformance | Revise | Current exposed-topknot masked ninja and short hook blades do not match the approved full hood/cowl and two long inward-curved hooks |
 | Technical gates | Pass | Existing ER.3 atlas, animation, build, and viewport evidence remains valid; it does not override the visual decision |
 | Next task | Selected | ER.3R — Duelist Approved-Prototype Correction |
+
+## ER.3R — Duelist Approved-Prototype Correction — 2026-07-26
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Identity gate | Pass | Neutral idle matches both repository-approved references: full hood/cowl, shadowed face, low narrow stance, exactly two long inward-curved hooks |
+| Frame contract | Pass | 15 distinct hashes: idle 2, walk 4, attack 3, hurt 2, dead 4 |
+| Atlas/alignment | Pass | 5×3 288×288 cells, feet `(144,265)`, one `1.025` scale, 206.02px logical idle height; every runtime alpha bound ends at Y=265 |
+| Attack/facing | Pass | Existing startup/active/recovery order, right-authored facing, runtime flip, timing, body, and hitbox remain unchanged |
+| QA/provenance | Pass | Repository-owned idle gate, source/transparent derivatives, measured metadata, debug, onion, 25% silhouette, lineup, hashes, and correction report |
+| Delivery | Pass | 43 requests; 12,788,345 encoded bytes; 128,888,320 decoded RGBA; 18,080,227-byte GitHub Pages artifact |
+| Automated gates | Pass with TD-M11 noted | 129/129 direct tests, typecheck, lint 0 errors/8 existing warnings, direct Vinext/Vite builds and packaging |
+| Browser | Pass | Desktop, 844×390, and 390×844 production smoke: one 1280×720 Canvas, no overflow, zero captured errors |
+| Scope | Pass | Duelist presentation only; no gameplay, animation timing, other actor art, Stage, Camera, UI, or Audio change |
+| Approved-prototype conformance | Go | Full-hooded long twin-hook identity accepted for runtime integration |
+| Next task | Selected | ER.4 — Mauler Production-Art Replacement |

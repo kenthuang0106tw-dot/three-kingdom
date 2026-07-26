@@ -646,5 +646,10 @@ fail.
   when atlas, animation, build, and viewport checks passed.
 - **Resolution:** Both approved references and immutable five-character locks
   are now repository-owned and mandatory pre-generation inputs.
-- **Remaining:** Current ER.3 Duelist production art is `Revise` and must be
-  corrected in ER.3R before ER.4 begins.
+- **Resolved:** 2026-07-26, ER.3R.
+- **Evidence:** ER.3R used the repository-owned references as a neutral-idle
+  gate, then replaced the drifted exposed-topknot/short-blade presentation with
+  the approved full-hooded long twin-hook Duelist. Fifteen-frame atlas,
+  measured metadata, QA sheets, hashes, builds, and three-viewport smoke passed.
+- **Remaining:** None for reference ownership. GX.1 Duelist leap is a separate
+  planned gameplay prototype, not unresolved art debt.

@@ -1,6 +1,8 @@
 # ER.3 — Duelist Production-Art Replacement
 
-Status: completed on 2026-07-26.
+Status: technical integration completed on 2026-07-26; visual identity
+superseded by ER.3R. See
+`docs/character-production/er3r-duelist-approved-prototype-correction.md`.
 
 ## Runtime contract
 

@@ -936,3 +936,31 @@ technical evidence. Its visual identity is `Revise`: exposed-topknot masked
 ninja styling and short hook blades do not match the approved full hood/cowl
 and long twin hooks. The only next task is ER.3R — Duelist Approved-Prototype
 Correction. Do not begin ER.4.
+
+## ER.3R — Duelist Approved-Prototype Correction — 2026-07-26
+
+Status: completed and accepted.
+
+- [x] Passed a neutral-idle identity gate before full-sheet integration:
+  repository-approved full hood/cowl, shadowed face, low stance, and exactly
+  two long inward-curved hooks.
+- [x] Replaced only Duelist source, transparent derivative, atlas, metadata,
+  and QA evidence; no gameplay, animation timing, body, hitbox, Stage, Camera,
+  UI, Audio, or other actor asset changed.
+- [x] Preserved 15 distinct frames, 5×3 288×288 atlas, feet `(144,265)`,
+  `1.025` display scale, right-authored facing, and 206.02px logical idle
+  height.
+- [x] Debug, onion, 25% silhouette, lineup, measured rectangles, pixel hashes,
+  and repository-owned idle review evidence passed.
+- [x] Runtime remains 43 requests / 12,788,345 encoded bytes /
+  128,888,320 decoded RGBA bytes; GitHub Pages output is 18,080,227 bytes.
+- [x] Direct suite passed 129/129; typecheck passed; lint has zero errors and
+  eight existing image warnings; direct Vinext/Vite builds and packaging
+  passed.
+- [x] Production smoke passed at Desktop, 844×390, and 390×844 with one
+  1280×720 Canvas, no page overflow, and zero captured browser errors.
+- [ ] Package-manager wrappers remain affected by TD-M11; direct project gates
+  above are the recorded acceptance evidence.
+
+The only next task is ER.4 — Mauler Production-Art Replacement. GX.1 Duelist
+Leap Mobility remains separately planned and must not be mixed into ER.4.
