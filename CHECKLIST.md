@@ -1234,9 +1234,10 @@
 | Atlas/alignment | Pass | Measured 288×288 cells, feet `(144,265)`, one `1.05` scale, 240.45px logical idle height |
 | Attack contract | Pass | Two startup, one active, two recovery frames; exact 600ms timing and existing body/hitbox/gameplay unchanged |
 | QA/provenance | Pass | Repository-owned idle gate, source/transparent derivatives, measured metadata, debug, onion, 25% silhouette, lineup, hashes, and review report |
-| Delivery | Pass | 43 requests; 12,620,761 encoded bytes; 126,676,480 decoded RGBA; 17,913,137-byte GitHub Pages artifact |
+| Delivery | Pass | 43 requests; 12,621,623 encoded bytes; 126,676,480 decoded RGBA; 17,913,999-byte GitHub Pages artifact |
 | Automated gates | Pass with TD-M11 noted | 129/129 direct tests, typecheck, lint 0 errors/8 existing warnings, direct Vinext/Vite builds and packaging |
 | Browser | Pass | Desktop, 844×390, and 390×844: one logical 1280×720 Canvas, no overflow, zero captured errors |
 | Scope | Pass | Mauler presentation and minimum per-frame metadata only; no balance, AI, Stage, Camera, UI, Audio, or unrelated gameplay change |
 | Approved-prototype conformance | Go | Largest normal enemy, smaller than Boss; square-headed long hammer and broad heavy silhouette preserved |
+| Post-review crop correction | Pass | `attack-0` source rect is `(232,350,252,280)`; complete connected hammer retains 9px source and 41px runtime right padding with no adjacent pose |
 | Next task | Selected | GX.1 — Duelist Leap Mobility Prototype |

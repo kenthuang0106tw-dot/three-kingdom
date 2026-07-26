@@ -1641,6 +1641,24 @@ test("ER.4 Mauler uses the approved measured 17-frame production contract", asyn
     frame.runtimeAlphaBounds.x + frame.runtimeAlphaBounds.width < 288 &&
     frame.runtimeAlphaBounds.y + frame.runtimeAlphaBounds.height === 265
   ));
+  const attack0 = metadata.frames.find(frame => frame.name === "attack-0");
+  assert.deepEqual(
+    {
+      x: attack0.sourceRect.x,
+      y: attack0.sourceRect.y,
+      width: attack0.sourceRect.width,
+      height: attack0.sourceRect.height,
+    },
+    { x: 232, y: 350, width: 252, height: 280 },
+  );
+  assert.ok(
+    attack0.sourceRect.width - attack0.sourceRect.alphaX - attack0.sourceRect.alphaWidth >= 8,
+    "attack-0 source crop must retain the complete hammer head with right-side padding",
+  );
+  assert.ok(
+    288 - attack0.runtimeAlphaBounds.x - attack0.runtimeAlphaBounds.width >= 8,
+    "attack-0 runtime frame must retain hammer padding",
+  );
   assert.deepEqual(metadata.frames.filter(frame => frame.phase).map(frame => frame.phase), [
     "startup", "startup", "active", "recovery", "recovery",
   ]);

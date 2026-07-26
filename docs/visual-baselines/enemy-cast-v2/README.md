@@ -62,3 +62,7 @@ walk 4, attack 5, hurt 2, and dead 4. The broad red/brown bearded heavy
 silhouette and single long square-headed war hammer pass both approved
 references. Both files are QA evidence only and are excluded from production
 packaging.
+
+The review image was updated after the reviewer found a clipped `attack-0`
+hammer head. The corrected measured rectangle includes the complete connected
+hammer with explicit right-side padding and excludes the neighboring pose.

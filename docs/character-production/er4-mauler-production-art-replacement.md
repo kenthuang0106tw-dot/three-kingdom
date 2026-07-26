@@ -40,7 +40,7 @@ display scale `1.05`, and right-authored source facing.
 | walk-1 | — | `(739,70,231,275)` | `(66,52)` |
 | walk-2 | — | `(970,70,240,275)` | `(65,51)` |
 | walk-3 | — | `(0,350,232,280)` | `(63,56)` |
-| attack-0 | startup | `(232,350,228,280)` | `(47,85)` |
+| attack-0 | startup | `(232,350,252,280)` | `(40,85)` |
 | attack-1 | startup | `(460,350,200,280)` | `(65,97)` |
 | attack-2 | active | `(660,350,168,280)` | `(80,39)` |
 | attack-3 | recovery | `(828,350,262,280)` | `(29,87)` |
@@ -79,10 +79,19 @@ modified with rotate, scale, or interpolation to fake animation.
 | --- | --- |
 | `mauler-source.png` | `16B42315D277B89F93673EC597E3EC4E2D24AFAD83B86D934FDAAF8DB1152416` |
 | `mauler-source-transparent.png` | `0981C73C7825E7F68975A62CE8CF7806D56B8BC4CFD443E2E0D00BAE979F0AE7` |
-| `mauler.png` | `686EFEA879239913E0D520794E854C78A7127760E6C8C2644266FEA38CE05BE1` |
+| `mauler.png` | `A0D33E9240B10630DB282A5FB9779551D4D7AAB3C949D7636740D8E9A386618A` |
 | `mauler.atlas.json` | `2FCC17FDC62FA7DEB756A599A9785710241BF59524BC404FEAD4B12A5DB07800` |
-| `mauler.metadata.json` | `83E8269295C722B33E6FD18CC41FA0EE194566731DB26E8732E853E77EAB923C` |
-| `mauler-debug.png` | `8EA07C8719891FFB835DF09301EB6E5B0DE5BC7FC632398547E6B0332914869D` |
+| `mauler.metadata.json` | `739B018F87EB8070754635656148F3F3C3E36B65BAA3C09E816EAC723A73C4B0` |
+| `mauler-debug.png` | `2668FA2C7208EA2CA11078495D751EB13D7AFE9C7FBFAE75F8AA76CCC399E9A6` |
+
+## Post-review crop correction
+
+The reviewer found that `attack-0` retained only part of the hammer head. The
+measured source rectangle ended at X=460 while the connected Mauler/hammer
+component continued to X=475. The rectangle now ends at X=484, leaving nine
+transparent source pixels and 41 runtime pixels to the right of the complete
+hammer. The disconnected neighboring pose is still removed by connected-alpha
+isolation. No pose, timing, anchor, scale, or gameplay parameter changed.
 
 ## Validation
 
@@ -90,9 +99,9 @@ modified with rotate, scale, or interpolation to fake animation.
 - TypeScript: passed.
 - ESLint: 0 errors; 8 pre-existing `<img>` warnings.
 - Direct Vinext and GitHub Pages builds and production packaging: passed.
-- Runtime inventory: 35 logical entries, 43 request files, 12,620,761 encoded
+- Runtime inventory: 35 logical entries, 43 request files, 12,621,623 encoded
   bytes, 126,676,480 decoded RGBA bytes, and 46 packaged production files.
-- GitHub Pages artifact: 17,913,137 bytes.
+- GitHub Pages artifact: 17,913,999 bytes.
 - Browser: Desktop, 844×390, and 390×844 each retained one logical 1280×720
   Canvas, no page overflow, and zero captured runtime errors.
 - `pnpm` wrappers remain affected by TD-M11 before reaching project scripts;

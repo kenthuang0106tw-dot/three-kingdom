@@ -985,6 +985,10 @@ Status: completed and accepted.
   eight existing warnings; both direct builds and packaging passed.
 - [x] Desktop, 844×390, and 390×844 production smoke retained one 1280×720
   Canvas, no overflow, and zero captured browser errors.
+- [x] Post-review correction expanded only `attack-0` source X range from
+  `232..460` to `232..484`; the complete hammer now retains 9 source pixels
+  and 41 runtime pixels of right-side padding without neighboring-pose
+  contamination.
 - [ ] Package-manager wrappers remain affected by TD-M11; equivalent direct
   project gates above are the recorded acceptance evidence.
 

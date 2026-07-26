@@ -274,23 +274,23 @@
       "sourceRect": {
         "x": 232,
         "y": 350,
-        "width": 228,
+        "width": 252,
         "height": 280,
         "alphaX": 8,
         "alphaY": 61,
-        "alphaWidth": 220,
+        "alphaWidth": 235,
         "alphaHeight": 205,
         "processingScale": 0.88
       },
       "runtimeAlphaBounds": {
-        "x": 47,
+        "x": 40,
         "y": 85,
-        "width": 194,
+        "width": 207,
         "height": 180
       },
       "originX": 0.5,
       "originY": 0.9201388888888888,
-      "displayOffsetX": 47,
+      "displayOffsetX": 40,
       "displayOffsetY": 85,
       "feetAnchor": {
         "x": 144,
@@ -300,7 +300,7 @@
       "sourceFacing": 1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "2cf31b09dbb64b9a3ac43aadd71aa90d26fbe61f2ed0abc89c22bcc8821d0cca"
+      "pixelHash": "76ef58741951d36dda916fc6a0285465409b4c8746f8c7f747d583792e9b4719"
     },
     {
       "name": "attack-1",

@@ -328,6 +328,6 @@ memory and delivery budgets rather than append them.
   cadence.
 - Shield Guard and Crossbow remain temporary Soldier presentation until their
   dedicated production tasks.
-- ER.4 delivery measurements: 43 runtime requests, 12,620,761 encoded bytes,
+- ER.4 delivery measurements: 43 runtime requests, 12,621,623 encoded bytes,
   126,676,480 decoded RGBA bytes, 46 packaged production files, and a
-  17,913,137-byte GitHub Pages artifact.
+  17,913,999-byte GitHub Pages artifact.
