@@ -18,7 +18,11 @@ export class CrossbowProjectile {
   }
 
   update(deltaMs: number) {
+    // A locked shot is a horizontal lane, never a tracking or diagonal projectile.
+    this.body.setVelocityY(0);
     this.distance += Math.abs(this.body.velocity.x) * deltaMs / 1000;
+    this.zone.y = this.y;
+    this.body.updateFromGameObject();
     this.graphic.setPosition(this.zone.x, this.zone.y);
   }
 

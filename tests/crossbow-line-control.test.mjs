@@ -10,15 +10,15 @@ test("Crossbow timing tracks before Lock and preserves the locked shot line", ()
   assert.equal(CROSSBOW_TIMING.lockedMs, 350);
   assert.equal(CROSSBOW_TIMING.reloadMs, 3000);
   assert.equal(CROSSBOW_ATTACK_SLOT_RANGE, 640);
-  assert.equal(CROSSBOW_HIT_Y_TOLERANCE, 18);
+  assert.equal(CROSSBOW_HIT_Y_TOLERANCE, 6);
   assert.equal(isCrossbowTracking(549), true);
   assert.equal(isCrossbowTracking(550), false);
   assert.equal(nextAimLineY(560, 640, 100), 568);
   assert.equal(nextAimLineY(568, 640, 550), 568);
   assert.equal(isCrossbowReadyToFire(899), false);
   assert.equal(isCrossbowReadyToFire(900), true);
-  assert.equal(isTargetOnCrossbowLine(560, 578), true);
-  assert.equal(isTargetOnCrossbowLine(560, 579), false);
+  assert.equal(isTargetOnCrossbowLine(560, 566), true);
+  assert.equal(isTargetOnCrossbowLine(560, 567), false);
 });
 
 test("Crossbow is an explicit development-only Soldier-art config", () => {
@@ -41,8 +41,11 @@ test("Crossbow owns one Attack Slot, locks before fire, then reloads", async () 
 
 test("Crossbow projectile applies to exactly one first overlap and cleans up", async () => {
   const source = await readFile(new URL("../app/game/EnemyManager.ts", import.meta.url), "utf8");
+  const projectile = await readFile(new URL("../app/game/enemy/CrossbowProjectile.ts", import.meta.url), "utf8");
   assert.match(source, /sort\(\(a, b\) => a\.distance - b\.distance\)/);
   assert.match(source, /isTargetOnCrossbowLine\(projectile\.y, candidate\.zone\.y\)/);
+  assert.match(projectile, /this\.body\.setVelocityY\(0\)/);
+  assert.match(projectile, /this\.zone\.y = this\.y/);
   assert.match(source, /if \(hit\.target === "player"\) this\.callbacks\.onPlayerHit\(shooter\);/);
   assert.match(source, /else this\.callbacks\.onEnemyHitByProjectile\(hit\.target, shooter\);/);
   assert.match(source, /this\.destroyProjectile\(shooter\);/);
