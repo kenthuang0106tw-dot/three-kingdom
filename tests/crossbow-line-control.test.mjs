@@ -57,5 +57,8 @@ test("Crossbow test entrances stay out of the formal Stage", async () => {
   assert.match(source, /query\.get\("crossbowTest"\)/);
   assert.match(source, /spawnCrossbowPrototype\(mode: "A" \| "B"\)/);
   assert.match(source, /enemyType: "crossbow" as const/);
-  assert.match(source, /!this\.shieldGuardTestMode && !this\.crossbowTestMode/);
+  assert.match(source, /!this\.shieldGuardTestMode && !this\.crossbowTestMode && !this\.shieldCrossbowTestMode/);
+  assert.match(source, /query\.get\("shieldCrossbowTest"\) === "1"/);
+  assert.match(source, /spawnShieldCrossbowPrototype\(\)/);
+  assert.match(source, /enemyType: "shield-guard" as const/);
 });

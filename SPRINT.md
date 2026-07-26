@@ -833,10 +833,18 @@ Status: implementation verification complete; manual strategy comparison pending
 
 ## TP-2 — Crossbow Line-Control Prototype — 2026-07-26
 
-Status: implementation verification pending manual strategy comparison.
+Status: accepted by reviewer on 2026-07-26.
 
 - [x] Added development-only Test A (`?crossbowTest=A`) and Test B (`?crossbowTest=B`) without changing formal Stage encounters.
 - [x] Added 550 ms Aim tracking, 350 ms locked line, one straight temporary arrow at 900 ms, and 3000 ms Reload.
 - [x] Arrow stops on the first Player or Enemy body; Player uses existing Hurt and Enemy friendly-fire uses 1 damage / Hurt / Flash / Spark / 16 px knockback.
 - [x] Crossbow shares the existing single Attack Slot and releases it immediately after Fire or when its Aim is interrupted.
-- [ ] Record five line-ignoring and five intentional-play strategy runs before accepting TP-2 or planning a combined prototype.
+- [x] Reviewer accepted the prototype after local Crossbow line, range, and locked-lane verification on 2026-07-26.
+
+## TP-3 — Shield Guard + Crossbow Composition — 2026-07-26
+
+Status: implementation verification pending manual acceptance.
+
+- [x] Added development-only `?shieldCrossbowTest=1` with one Shield Guard and one Crossbow; formal Stage encounters remain unchanged.
+- [x] Composition retains the existing single Attack Slot, Shield Guard facing lock, and Crossbow locked-lane contract.
+- [ ] Record whether vertical evasion, flanking, target switching, and recovery windows are readable before accepting TP-3.

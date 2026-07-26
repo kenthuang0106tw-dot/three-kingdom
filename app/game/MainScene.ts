@@ -185,6 +185,7 @@ export default class MainScene extends Phaser.Scene {
   private previewMode = false;
   private shieldGuardTestMode?: "A" | "B";
   private crossbowTestMode?: "A" | "B";
+  private shieldCrossbowTestMode = false;
   private enemyPreviewMode = false;
   private resetSmokeMode = false;
   private encounterSmokeMode = false;
@@ -283,6 +284,7 @@ export default class MainScene extends Phaser.Scene {
     this.shieldGuardTestMode = development && (shieldGuardTest === "A" || shieldGuardTest === "B") ? shieldGuardTest : undefined;
     const crossbowTest = query.get("crossbowTest")?.toUpperCase();
     this.crossbowTestMode = development && (crossbowTest === "A" || crossbowTest === "B") ? crossbowTest : undefined;
+    this.shieldCrossbowTestMode = development && query.get("shieldCrossbowTest") === "1";
     this.visualFreezeMode = development && query.get("visualFreeze") === "1";
     this.visualFreezeWarmupFrames = 0;
     this.visualFreezeDeltas.length = 0;
@@ -555,7 +557,7 @@ export default class MainScene extends Phaser.Scene {
     if (this.lifecycleClock.isPaused()) { this.updateDebugText(); return; }
     this.playerBody.setVelocity(0, 0);
     this.currentInput = this.touchInputController.readSnapshot(this.inputController.readSnapshot());
-    if (!this.shieldGuardTestMode && !this.crossbowTestMode && !this.bossSmokeMode && !this.bossCombatSmokeMode && !this.failureSmokeCycleActive) {
+    if (!this.shieldGuardTestMode && !this.crossbowTestMode && !this.shieldCrossbowTestMode && !this.bossSmokeMode && !this.bossCombatSmokeMode && !this.failureSmokeCycleActive) {
       this.updateEncounterSmoke();
       this.updateEncounterProgress();
       this.constrainPlayerToEncounterCamera();
@@ -1241,6 +1243,7 @@ export default class MainScene extends Phaser.Scene {
     this.currentInput = createActionSnapshot({ up: false, down: false, left: false, right: false });
     if (this.shieldGuardTestMode) this.spawnShieldGuardPrototype(this.shieldGuardTestMode);
     else if (this.crossbowTestMode) this.spawnCrossbowPrototype(this.crossbowTestMode);
+    else if (this.shieldCrossbowTestMode) this.spawnShieldCrossbowPrototype();
     this.updateTitleDataset(source);
     this.updatePauseDataset();
     this.updateAudioDataset();
@@ -1267,6 +1270,15 @@ export default class MainScene extends Phaser.Scene {
       ];
     this.enemyManager.spawnPrototype(spawns);
     if (process.env.NODE_ENV !== "production") this.game.canvas.dataset.crossbowTestMode = mode;
+  }
+
+  /** Development-only TP-3 composition: one defender and one line-control threat. */
+  private spawnShieldCrossbowPrototype() {
+    this.enemyManager.spawnPrototype([
+      { id: "shield-guard-test", x: 510, y: 560, enemyType: "shield-guard" as const },
+      { id: "crossbow-test", x: 790, y: 500, enemyType: "crossbow" as const },
+    ]);
+    if (process.env.NODE_ENV !== "production") this.game.canvas.dataset.shieldCrossbowTestMode = "true";
   }
 
   private updateTitleDataset(source?: TitleStartSource) {

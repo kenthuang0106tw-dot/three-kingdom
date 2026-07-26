@@ -1,13 +1,12 @@
 # Next Task
 
-## TP-2 — Crossbow Line-Control Prototype: manual acceptance
+## TP-3 — Shield Guard + Crossbow Composition: manual acceptance
 
-The development-only implementation is complete. Run Test A with
-`?crossbowTest=A` and Test B with `?crossbowTest=B`, then record five
-line-ignoring and five intentional-play runs in
-`docs/combat/tp-2-crossbow-line-control.md`.
+Run the development-only `?shieldCrossbowTest=1` composition and record
+whether frontal guard plus locked-arrow pressure creates readable decisions:
+vertical evasion, flanking, changing target, or waiting for a safe recovery.
 
-Required outcome: Lock is readable and can be vertically dodged; an Aim hit
-cancels to Reload; the arrow stops at exactly one first target; friendly fire
-is deliberate rather than automatic; and the existing single Attack Slot
-remains readable. Do not begin TP-3 until these manual results are recorded.
+Completion requires both enemies to preserve the single Attack Slot, the
+arrow to remain vertically dodgeable, and the Shield Guard to preserve a
+reliable flank opportunity. Do not add formal art, Stage encounters, or new
+combat systems before this manual result is recorded.
