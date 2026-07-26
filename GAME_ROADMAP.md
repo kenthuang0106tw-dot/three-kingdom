@@ -483,7 +483,20 @@ M6A 不加入新角色、新敵人、新招式、第二關、Audio、技能、�
 - M8 / Task 8.4 (Production asset packaging and memory optimization) completed on 2026-07-24.
 - Evidence: one 46-file production public inventory, 99 copied source/QA files excluded from both outputs, exact SHA-256 preservation, 18,172,139-byte GitHub Pages artifact, 110 tests, both builds, three-viewport/six-checkpoint browser matrix, and three ten-cycle reset paths.
 - M8 / Task 8.2A Combo Commitment Prototype was accepted by the reviewer on 2026-07-25. M8 / Task 8.5 remains not required because Task 8.1 found no sustained GameObject, listener, texture, Canvas, Audio-owner, or heap growth attributable to effects.
-- Next eligible task: M8 / Task 8.2B Mixed Encounter Decision Prototype.
+- TP-3 Shield Guard + Crossbow Composition was accepted by the reviewer on 2026-07-26. Crossbow friendly fire was explicitly rejected; arrows only threaten the Player.
+- Next eligible task: ER.1 Five-Enemy Production Contract (planning-only; no runtime or gameplay changes).
+
+## Enemy Redesign Track
+
+### ER.1 — Five-Enemy Production Contract
+
+**Goal:** Define a production-ready visual and technical contract for Soldier, Duelist, Mauler, Shield Guard, and Crossbow before any replacement art is generated or integrated.
+
+**Scope:** Reference provenance, shared feet anchors and display scale, source-cell and atlas rules, required animation states/frame budgets, physics ownership, encoded/decoded memory budgets, and Go/Revise/No-Go criteria.
+
+**Acceptance Criteria:** A single reviewed contract covers all five actors without changing the runtime atlas, gameplay source, Stage configuration, or combat tuning; quality gates and asset-budget reporting remain documented.
+
+**Dependencies:** M6A visual freeze, M8 performance baseline, TP-1 Shield Guard acceptance, TP-2 Crossbow acceptance, and TP-3 composition acceptance.
 
 ## 4. Global Acceptance Rules
 

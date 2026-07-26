@@ -843,9 +843,12 @@ Status: accepted by reviewer on 2026-07-26.
 
 ## TP-3 — Shield Guard + Crossbow Composition — 2026-07-26
 
-Status: implementation verification pending manual acceptance.
+Status: accepted by reviewer on 2026-07-26.
 
 - [x] Added development-only `?shieldCrossbowTest=1` with one Shield Guard and one Crossbow; formal Stage encounters remain unchanged.
 - [x] Composition retains the existing single Attack Slot, Shield Guard facing lock, and Crossbow locked-lane contract.
 - [x] Crossbow arrows ignore other enemies so TP-3 tests player pressure, not ally self-damage.
-- [ ] Record whether vertical evasion, flanking, target switching, and recovery windows are readable before accepting TP-3.
+- [x] Reviewer accepted readable vertical evasion, flanking, target switching, and recovery windows on 2026-07-26.
+- [x] The friendly-fire experiment was removed before acceptance: arrows pass through allies and only pressure the Player.
+
+The next eligible task is ER.1 — Five-Enemy Production Contract. It is a planning-only production-art contract and must not change runtime assets or gameplay.

@@ -1,6 +1,6 @@
 # TP-3 Shield Guard + Crossbow Composition Prototype
 
-Status: implementation verification pending manual acceptance.
+Status: accepted by reviewer on 2026-07-26.
 
 ## Development-only entrance
 
@@ -19,5 +19,6 @@ It spawns exactly one Shield Guard at `(510, 560)` and one Crossbow at
 5. Arrows pass through other enemies and only threaten the Player; the Shield
    Guard cannot be blocked, damaged, or killed by its ally's shots.
 
-Record manual observations before accepting this prototype. No formal art,
-Stage configuration, new attacks, or extra enemy type belongs to TP-3.
+Reviewer accepted the composition after verifying the readable evade, flank,
+target-switch, and recovery decisions. No formal art, Stage configuration,
+new attacks, or extra enemy type belongs to TP-3.
