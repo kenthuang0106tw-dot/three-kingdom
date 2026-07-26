@@ -9,7 +9,7 @@ export const CROSSBOW_TIMING = {
 
 /** Keep the shooter on-screen while giving the line-control role a real ranged threat. */
 export const CROSSBOW_ATTACK_SLOT_RANGE = 640;
-export const CROSSBOW_HIT_Y_TOLERANCE = 6;
+export const CROSSBOW_HIT_Y_TOLERANCE = 14;
 
 /** A projectile can only hit a target that remains on its locked horizontal line. */
 export function isTargetOnCrossbowLine(lineY: number, targetY: number) {
