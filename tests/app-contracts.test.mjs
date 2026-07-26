@@ -1787,5 +1787,7 @@ test("enemy redesign tasks retain the approved five-character prototype lock", a
   assert.match(prototypeContract, /圓形藤盾兵/);
   assert.match(prototypeContract, /輕裝連弩兵/);
   assert.match(prototypeContract, /Exactly two long inward-curved hand hooks/);
+  assert.match(prototypeContract, /GX\.1/);
+  assert.match(prototypeContract, /genuine startup, airborne, descent, and landing/);
   assert.match(nextTask, /ER\.3R — Duelist Approved-Prototype Correction/);
 });

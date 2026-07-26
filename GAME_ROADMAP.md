@@ -586,6 +586,27 @@ build, test, and three-viewport gates pass.
 
 **Dependencies:** ER.3R.
 
+## Planned Gameplay Expansion Track
+
+### GX.1 — Duelist Leap Mobility Prototype (Not current)
+
+**Goal:** Give the approved hooded twin-hook Duelist a readable, committed
+leap/reposition behavior so selected agile enemies can use verticality without
+adding Player jumping or a generic aerial system.
+
+**Scope:** Duelist-only takeoff, airborne, landing/recovery states; genuine
+animation frames; separate visual elevation and 2.5D ground position; readable
+ground shadow; deterministic destination lock; focused tests and three-viewport
+playtest evidence.
+
+**Acceptance Criteria:** The leap is readable and vertically avoidable, never
+homes after takeoff, does not become constant spam, has punishable landing
+recovery, respects Stage/Camera/Attack Slot boundaries, and fully clears on
+hurt, death, pause, hit stop, and reset.
+
+**Dependencies:** ER.3R accepted. This is not part of the current NEXT_TASK and
+must receive its own prototype task and commit.
+
 ## 4. Global Acceptance Rules
 
 每個 Milestone 必須同時滿足：

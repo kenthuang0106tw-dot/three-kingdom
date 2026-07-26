@@ -45,6 +45,20 @@ The fixed left-to-right order is:
 - Exactly two long inward-curved hand hooks, one in each hand, with readable
   negative space between weapon and body.
 - Must not read as axes, short knives, swords, claws, or generic ninja weapons.
+- Planned gameplay signature: the Duelist is the first normal enemy selected
+  for a deliberate leap/reposition prototype. This is a future gameplay task,
+  not permission to add transform-faked jumping during ER.3R.
+
+#### Future leap art constraint
+
+- A production leap requires genuine startup, airborne, descent, and landing
+  poses; moving one idle frame vertically is prohibited.
+- Airborne visual elevation must be separate from the 2.5D ground/feet
+  position, with a ground shadow communicating the landing lane.
+- Takeoff and landing must preserve the actor's approved hood, long twin hooks,
+  display scale, and common feet anchor.
+- ER.3R corrects the current identity only. Leap behavior and additional frames
+  belong to the separately accepted `GX.1` prototype.
 
 ### 3. Mauler — 方頭戰鎚
 

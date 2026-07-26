@@ -23,6 +23,9 @@
 ## P1 — Vertical Slice Quality
 
 - 第二與第三種近戰小兵。
+- `GX.1 Duelist Leap Mobility Prototype`：讓兜帽雙鉤刺客以可讀的起跳、
+  空中、落地與 recovery 改變站位；必須使用真正逐幀動畫，禁止單張
+  sprite 上下位移假裝跳躍。
 - Boss phase 與 arena lock。
 - Continue flow。
 - 音量設定、flash/shake intensity 設定。
@@ -66,6 +69,41 @@
 - Backend gameplay dependency。
 - 關卡編輯器。
 - 通用 ECS 或自製 physics engine。
+
+## Planned Gameplay Expansion — GX.1
+
+### Duelist Leap Mobility Prototype
+
+**Purpose:** Verify that one selected agile enemy can use a committed leap to
+change lane or flank without becoming an unreadable teleport or an always-safe
+attack.
+
+**Dependencies:** ER.3R visual correction is accepted. The task must not be
+mixed into ER.3R or another enemy's production-art commit.
+
+**Prototype boundaries:**
+
+- Duelist only; no shared aerial framework and no Player jump.
+- Explicit `takeoff → airborne → landing/recovery` state flow.
+- Genuine animation frames for takeoff, air, descent, and landing.
+- Ground feet/body position and visual elevation remain separate; a shadow
+  keeps the destination lane readable.
+- Destination and facing lock at takeoff; no midair homing or instant Y-axis
+  correction.
+- The leap cannot bypass Stage bounds, Camera locks, Attack Slot ownership, or
+  cleanup/reset contracts.
+- Invulnerability, damage, and whether the leap itself attacks remain prototype
+  questions; do not assume them before playtesting.
+
+**Acceptance criteria:**
+
+- Desktop, 844×390, and 390×844 players can read takeoff and landing position.
+- Vertical movement can avoid or punish the leap reliably.
+- The Duelist uses it as an occasional reposition decision, not constant spam.
+- Landing has a punishable recovery and cannot immediately chain an unreadable
+  attack.
+- Hurt, death, pause, hit stop, and Scene reset leave no airborne state, timer,
+  shadow, collider, or Attack Slot behind.
 
 ## Promoted to M6A Visual Upgrade
 
