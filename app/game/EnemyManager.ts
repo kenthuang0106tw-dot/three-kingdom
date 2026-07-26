@@ -6,7 +6,7 @@ import { CROSSBOW_ENEMY_CONFIG, DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SHIEL
 import { selectFairAttackCandidate } from "./enemy/AttackSlotPolicy";
 import { createAttackCommitment, isWithinAttackLine, type AttackCommitment } from "./enemy/AttackCommitment";
 import { SHIELD_GUARD_PARAMS, SHIELD_GUARD_TIMING, type ShieldGuardState, isAttackBlockedByGuard } from "./enemy/ShieldGuard";
-import { CROSSBOW_TIMING, isCrossbowReadyToFire, isCrossbowTracking, nextAimLineY } from "./enemy/CrossbowLine";
+import { CROSSBOW_ATTACK_SLOT_RANGE, CROSSBOW_TIMING, isCrossbowReadyToFire, isCrossbowTracking, nextAimLineY } from "./enemy/CrossbowLine";
 import { CrossbowProjectile } from "./enemy/CrossbowProjectile";
 
 export type EnemyState = "idle" | "walk" | "attack" | "hurt" | "dead" | "guard" | "recovery" | "position" | "aim" | "locked" | "fire" | "reload";
@@ -351,7 +351,7 @@ export class EnemyManager {
   private assignAttackSlot(alive: EnemyCombatant[]) {
     if (this.currentAttacker || this.clock.now() < this.directorReadyAt) return;
     const candidates = alive.filter(enemy => enemy.state !== "hurt" && enemy.state !== "dead" && enemy.state !== "reload" && this.clock.now() >= enemy.cooldownUntil &&
-      Math.abs(enemy.bodyZone.x - this.playerBodyZone.x) < 220 && Math.abs(enemy.bodyZone.y - this.playerBodyZone.y) < 140);
+      Math.abs(enemy.bodyZone.x - this.playerBodyZone.x) < (enemy.isCrossbow ? CROSSBOW_ATTACK_SLOT_RANGE : 220) && Math.abs(enemy.bodyZone.y - this.playerBodyZone.y) < 140);
     if (!candidates.length) return;
     const enemy = selectFairAttackCandidate(candidates, this.lastAttackerId);
     if (!enemy) return;

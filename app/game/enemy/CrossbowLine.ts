@@ -7,6 +7,9 @@ export const CROSSBOW_TIMING = {
   projectileRange: 960,
 } as const;
 
+/** Keep the shooter on-screen while giving the line-control role a real ranged threat. */
+export const CROSSBOW_ATTACK_SLOT_RANGE = 640;
+
 /** The first part of Aim can follow the player; once locked this value must not change. */
 export function nextAimLineY(currentY: number, playerY: number, elapsedMs: number): number {
   if (elapsedMs >= CROSSBOW_TIMING.trackingMs) return currentY;

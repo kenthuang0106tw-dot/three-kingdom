@@ -2,13 +2,14 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { readFile } from "node:fs/promises";
 import { CROSSBOW_ENEMY_CONFIG } from "../app/game/enemy/EnemyConfig.ts";
-import { CROSSBOW_TIMING, isCrossbowReadyToFire, isCrossbowTracking, nextAimLineY } from "../app/game/enemy/CrossbowLine.ts";
+import { CROSSBOW_ATTACK_SLOT_RANGE, CROSSBOW_TIMING, isCrossbowReadyToFire, isCrossbowTracking, nextAimLineY } from "../app/game/enemy/CrossbowLine.ts";
 
 test("Crossbow timing tracks before Lock and preserves the locked shot line", () => {
   assert.equal(CROSSBOW_TIMING.aimMs, 900);
   assert.equal(CROSSBOW_TIMING.trackingMs, 550);
   assert.equal(CROSSBOW_TIMING.lockedMs, 350);
   assert.equal(CROSSBOW_TIMING.reloadMs, 3000);
+  assert.equal(CROSSBOW_ATTACK_SLOT_RANGE, 640);
   assert.equal(isCrossbowTracking(549), true);
   assert.equal(isCrossbowTracking(550), false);
   assert.equal(nextAimLineY(560, 640, 100), 568);
@@ -32,6 +33,7 @@ test("Crossbow owns one Attack Slot, locks before fire, then reloads", async () 
   assert.match(source, /new CrossbowProjectile\(this\.scene, enemy\.id, enemy\.bodyZone\.x \+ enemy\.facing \* 42, enemy\.lockedLineY, enemy\.facing\)/);
   assert.match(source, /this\.releaseAttackSlot\(enemy\);\s*this\.setState\(enemy, "reload"\)/);
   assert.match(source, /CROSSBOW_TIMING\.reloadMs/);
+  assert.match(source, /enemy\.isCrossbow \? CROSSBOW_ATTACK_SLOT_RANGE : 220/);
 });
 
 test("Crossbow projectile applies to exactly one first overlap and cleans up", async () => {
