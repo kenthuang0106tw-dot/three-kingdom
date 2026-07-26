@@ -169,6 +169,15 @@ control reachability；debug text/body 不列入美術差異。
 執行順序固定為 `6A.2 Guan Yu → 6A.3 Enemy/Boss → 6A.4 Stage → 6A.5 Effects/UI → 6A.6 Acceptance`。
 不得因某張圖容易生成而跳序，也不得在 6A.2 同時改 Stage 或 UI。
 
+## ER.1 Five-Enemy Production Constraint
+
+The post-freeze five-enemy redesign is governed by
+`docs/character-production/enemy-cast-v2-production-contract.md`. Soldier,
+Duelist, Mauler, Shield Guard, and Crossbow must share a reviewed feet-line,
+one display scale per actor, measured frame rectangles, and a 25% silhouette
+gate. The external five-enemy lineup is direction-only reference material; it
+is not runtime art and must not be copied into the game.
+
 ## 12. Review Method
 
 每個 visual Task 都必須同時提供：native-size runtime screenshot、25% silhouette

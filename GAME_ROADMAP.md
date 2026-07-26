@@ -488,7 +488,7 @@ M6A 不加入新角色、新敵人、新招式、第二關、Audio、技能、�
 
 ## Enemy Redesign Track
 
-### ER.1 — Five-Enemy Production Contract
+### ER.1 — Five-Enemy Production Contract (Completed 2026-07-26)
 
 **Goal:** Define a production-ready visual and technical contract for Soldier, Duelist, Mauler, Shield Guard, and Crossbow before any replacement art is generated or integrated.
 
@@ -497,6 +497,19 @@ M6A 不加入新角色、新敵人、新招式、第二關、Audio、技能、�
 **Acceptance Criteria:** A single reviewed contract covers all five actors without changing the runtime atlas, gameplay source, Stage configuration, or combat tuning; quality gates and asset-budget reporting remain documented.
 
 **Dependencies:** M6A visual freeze, M8 performance baseline, TP-1 Shield Guard acceptance, TP-2 Crossbow acceptance, and TP-3 composition acceptance.
+
+### ER.2 — Soldier Production-Art Pilot
+
+**Goal:** Prove the ER.1 pipeline on the Soldier only before committing any
+cast-wide art replacement.
+
+**Scope:** Project-owned Soldier source, transparent extraction, measured atlas
+metadata, debug/onion/silhouette QA, and a controlled runtime integration plan.
+
+**Acceptance Criteria:** One complete actor passes feet, frame, provenance,
+memory, three-viewport, and gameplay-freeze checks; no other enemy is changed.
+
+**Dependencies:** ER.1.
 
 ## 4. Global Acceptance Rules
 

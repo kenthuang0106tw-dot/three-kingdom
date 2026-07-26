@@ -852,3 +852,15 @@ Status: accepted by reviewer on 2026-07-26.
 - [x] The friendly-fire experiment was removed before acceptance: arrows pass through allies and only pressure the Player.
 
 The next eligible task is ER.1 — Five-Enemy Production Contract. It is a planning-only production-art contract and must not change runtime assets or gameplay.
+
+## ER.1 — Five-Enemy Production Contract — 2026-07-26
+
+Status: completed.
+
+- [x] Recorded the external color and silhouette references as review-only provenance; no reference image was copied into the repository or runtime build.
+- [x] Defined the five role silhouettes, source facing, logical display-height targets, shared anchor policy, measured-frame requirement, and one-scale-per-actor rule.
+- [x] Defined the full state/frame budgets, physics ownership boundaries, and Go/Revise/No-Go gates for Soldier, Duelist, Mauler, Shield Guard, and Crossbow.
+- [x] Set production decoded-memory, encoded-PNG, runtime texture-count, and GitHub Pages artifact ceilings before any art generation.
+- [x] Recorded the Shield Guard and Crossbow temporary-art debt and selected an isolated Soldier pilot as the next task.
+- [x] Full suite passed 127/127; typecheck passed; lint has 0 errors and 4 existing image warnings; direct Vinext/Vite production builds and asset packaging retained the 43 request files, 46 production files, and 136,629,760 decoded RGBA bytes.
+- [ ] `pnpm build` remains blocked by the repository's ignored dependency-build policy before it reaches Vinext; direct project build commands passed and the blocker is recorded in Technical Debt.

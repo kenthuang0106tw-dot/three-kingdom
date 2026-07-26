@@ -1,56 +1,48 @@
 # Next Task
 
-## ER.1 — Five-Enemy Production Contract
+## ER.2 — Soldier Production-Art Pilot
 
 ### Why this is next
 
-The Shield Guard, Crossbow, and their combined tactical prototype are now
-accepted. Before replacing any temporary enemy art, the five existing enemy
-roles need one shared production contract so visual upgrades cannot break
-feet alignment, combat reach, collision ownership, memory budgets, or the
-accepted tactical behavior.
+ER.1 now freezes the shared five-enemy art contract. The Soldier is the safest
+single actor to prove its pipeline because it has no special guard, projectile,
+or multi-stage attack presentation. A successful pilot validates the pipeline
+before Shield Guard and Crossbow receive distinct production art.
 
 ### Scope
 
-Planning and documentation only. Define the production contract for Soldier,
-Duelist, Mauler, Shield Guard, and Crossbow:
-
-- reference provenance and visual-role boundaries;
-- common feet anchors, Phaser origins, display-height targets, source facing,
-  alpha-bound padding, and atlas-cell rules;
-- animation state lists and per-state frame budgets;
-- body, attack-hitbox, guard-arc, and projectile ownership boundaries;
-- encoded/decoded texture-memory and production-artifact budgets; and
-- explicit Go, Revise, and No-Go review gates.
+Create project-owned Soldier art and its complete source-to-atlas QA package:
+source provenance, transparent extraction, measured frame metadata, debug
+sheet, onion sheet, 25% silhouette sheet, and a limited runtime replacement.
+Keep all gameplay tuning, body/hitbox dimensions, Stage data, Camera, UI, and
+other enemy assets unchanged.
 
 ### Completion criteria
 
-- Create `docs/character-production/enemy-cast-v2-production-contract.md`.
-- Add a provenance README under `docs/visual-baselines/enemy-cast-v2/` for
-  the supplied reference images; do not copy them into runtime assets.
-- Update `ART_BIBLE.md`, `ASSET_PIPELINE.md`, `GAME_ROADMAP.md`, `SPRINT.md`,
-  and `TECH_DEBT.md` only where they need to point to the contract or record
-  its pre-production constraint.
-- Do not edit runtime asset manifests, Phaser gameplay code, Stage data,
-  combat timings, or existing art files.
+- All fifteen Soldier contract frames are distinct and have measured source
+  rectangles, alpha bounds, offsets, common feet anchor, and one scale.
+- Soldier idle, walk, attack, hurt, and dead preserve the existing animation
+  keys and accepted gameplay phase windows.
+- New Soldier runtime art stays within the ER.1 memory and delivery budgets.
+- Desktop, 844 x 390, and 390 x 844 review shows no clipping, feet drift,
+  wrong-facing frame, or hitbox/body mismatch.
 
 ### Validation
 
-- Review the contract against all five enemy roles and the existing M6A asset
-  freeze.
-- Run `pnpm test`, `pnpm typecheck`, `pnpm lint`, and `git diff --check`.
-- Run `pnpm build`, `pnpm build:github-pages`, and
-  `node tools/report_performance_assets.mjs`; confirm no runtime inventory or
-  budget change.
+- Run the ER.1 provenance, frame, anchor, pixel-hash, and atlas checks.
+- Run `pnpm test`, `pnpm typecheck`, `pnpm lint`, `pnpm build`,
+  `pnpm build:github-pages`, `node tools/report_performance_assets.mjs`, and
+  `git diff --check`.
+- Perform development and production three-viewport gameplay smoke tests.
 
 ### Expected files
 
-`docs/character-production/enemy-cast-v2-production-contract.md`,
-`docs/visual-baselines/enemy-cast-v2/README.md`, `ART_BIBLE.md`,
-`ASSET_PIPELINE.md`, `GAME_ROADMAP.md`, `SPRINT.md`, and `TECH_DEBT.md`.
+Soldier art source/processed/atlas/metadata/QA files, the focused validation
+test, asset manifest entries only if required for replacement, and the ER.2
+evidence documents. No other enemy runtime asset is in scope.
 
 ### Risks
 
-The supplied reference material is planning input, not cleared runtime art.
-Do not invent frame sequences, change gameplay dimensions, or silently turn
-the production contract into an art-integration task.
+The reference lineup is not reusable art. Do not generate transform-faked
+frames, guess frame rectangles, expand collision to match a weapon, or use the
+pilot as permission to alter the remaining four actors.

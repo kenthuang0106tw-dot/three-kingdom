@@ -287,3 +287,13 @@ are not all runtime delivery assets.
 The accepted GitHub Pages artifact is 18,172,139 bytes. Runtime request bytes
 and decoded RGBA remain unchanged, so no atlas, image, audio, metadata, or
 visual-freeze file was regenerated.
+
+## ER.1 Enemy Cast v2 Pre-production
+
+`docs/character-production/enemy-cast-v2-production-contract.md` is the
+required gate before any new Soldier, Duelist, Mauler, Shield Guard, or
+Crossbow art is generated or integrated. The review references in
+`docs/visual-baselines/enemy-cast-v2/` remain external-only. A later art task
+must add project-owned source, transparent, atlas, metadata, debug, onion, and
+silhouette files; it must replace legacy runtime textures within the ER.1
+memory and delivery budgets rather than append them.

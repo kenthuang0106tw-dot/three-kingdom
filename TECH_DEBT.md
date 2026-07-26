@@ -597,3 +597,27 @@ Decoded RGBA remains 136,629,760 bytes and passes the 140 MiB budget, so no
 atlas rebuild was performed. Task 8.1 also found no growth that justifies
 conditional pooling; those changes remain deferred unless new measurements
 fail.
+
+## TD-M10 — Temporary Shield Guard and Crossbow presentation
+
+- **Evidence:** TP-1 and TP-2 deliberately reuse the Soldier visual contract
+  while their gameplay roles are accepted.
+- **Impact:** Their combat behavior is readable through development markers,
+  but their final silhouettes and state-specific animation poses do not exist.
+- **Resolution:** ER.1 defines the required production-art contract. A future
+  one-actor pilot must provide project-owned art and full QA evidence before
+  any cast-wide replacement.
+- **Target:** Enemy Redesign Track after ER.1 review.
+
+## TD-M11 — pnpm build dependency-approval blocker
+
+- **Evidence:** On 2026-07-26, `pnpm build` stopped during pnpm's dependency
+  status install because `esbuild`, `sharp`, `workerd`, and related build
+  scripts are marked ignored. It did not reach the project Vinext build.
+- **Impact:** The documented package-manager build command cannot currently be
+  used as a clean acceptance gate in this environment.
+- **Resolution:** Review the repository's pnpm dependency-build approval policy
+  in a dedicated tooling task. Until then, record both the pnpm failure and the
+  already-established direct Vinext/Vite build result; do not silently claim
+  that `pnpm build` passed.
+- **Target:** Tooling maintenance, outside ER.1 scope.
