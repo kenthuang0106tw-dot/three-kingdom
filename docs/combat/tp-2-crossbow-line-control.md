@@ -18,7 +18,7 @@ Neither entrance changes the formal Stage encounter configuration.
 | Fire | immediate at 900 ms | One straight temporary arrow is created on the locked line. |
 | Reload | 3000 ms | Releases Attack Slot; no primary threat. |
 
-The arrow moves at 520 px/s for at most 960 px and is destroyed by its first valid Player or other Enemy overlap. At Lock, it snapshots the Player's feet Y; it is pinned to that horizontal line every update and only hits a target with the same rounded feet Y. Any vertical movement after Lock avoids the arrow. The Crossbow may obtain the single Attack Slot up to 640 px away (instead of melee's 220 px), so it can create a visible ranged decision before entering melee distance. Player hits use the existing Hurt path. Friendly Enemy hits deal 1 damage, Hurt, Flash, Spark, and a 16 px horizontal knockback without global hit-stop.
+The arrow moves at 520 px/s for at most 960 px and is destroyed by its first valid Player or other Enemy overlap. At Lock, it snapshots the Player's feet Y; it is pinned to that horizontal line every update and only hits the Player with the same rounded feet Y. Any vertical movement after Lock avoids the arrow. Enemy ground bodies may intercept within 32px of the line, so deliberate friendly-fire setups remain practical without weakening Player vertical evasion. The Crossbow may obtain the single Attack Slot up to 640 px away (instead of melee's 220 px), so it can create a visible ranged decision before entering melee distance. Player hits use the existing Hurt path. Friendly Enemy hits deal 1 damage, Hurt, Flash, Spark, and a 16 px horizontal knockback without global hit-stop.
 
 ## Manual acceptance ledger
 

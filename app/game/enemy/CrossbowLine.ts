@@ -9,9 +9,15 @@ export const CROSSBOW_TIMING = {
 
 /** Keep the shooter on-screen while giving the line-control role a real ranged threat. */
 export const CROSSBOW_ATTACK_SLOT_RANGE = 640;
+export const CROSSBOW_FRIENDLY_HIT_Y_TOLERANCE = 32;
 /** A projectile can only hit a target that remains on its locked horizontal line. */
 export function isTargetOnCrossbowLine(lineY: number, targetY: number) {
   return Math.round(lineY) === Math.round(targetY);
+}
+
+/** Enemy ground bodies may intercept a lane within their visible occupation width. */
+export function isFriendlyTargetOnCrossbowLine(lineY: number, targetY: number) {
+  return Math.abs(lineY - targetY) <= CROSSBOW_FRIENDLY_HIT_Y_TOLERANCE;
 }
 
 /** The first part of Aim can follow the player; once locked this value must not change. */
