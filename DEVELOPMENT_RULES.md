@@ -114,6 +114,19 @@ tests/game/     Gameplay contract tests
 - 每個產生工具必須可重跑且不依賴未提交暫存檔。
 - 所有素材必須原創或具有明確授權。
 
+### Enemy Redesign visual lock
+
+- Five-enemy work must follow
+  `docs/character-production/enemy-cast-v2-approved-prototypes.md`.
+- Before generation, open both approved repository reference PNGs and copy the
+  selected actor's immutable locks into the prompt or art brief.
+- Conversation memory, temporary runtime sprites, and a generic “same style”
+  prompt are not valid references.
+- Review a neutral idle pose first; do not generate the complete animation set
+  until identity, weapon class, body mass, head treatment, and silhouette pass.
+- Missing references or a visual mismatch means stop and mark `Revise`; do not
+  improvise. Passing technical tests or builds does not override this gate.
+
 ## 12. Phaser Best Practices
 
 - 使用 Scene lifecycle 與 Phaser Clock。

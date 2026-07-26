@@ -175,8 +175,14 @@ The post-freeze five-enemy redesign is governed by
 `docs/character-production/enemy-cast-v2-production-contract.md`. Soldier,
 Duelist, Mauler, Shield Guard, and Crossbow must share a reviewed feet-line,
 one display scale per actor, measured frame rectangles, and a 25% silhouette
-gate. The external five-enemy lineup is direction-only reference material; it
-is not runtime art and must not be copied into the game.
+gate. The approved repository references are not runtime art, but their
+character identities are binding under
+`docs/character-production/enemy-cast-v2-approved-prototypes.md`.
+
+Before generating an enemy, open both approved repository reference images and
+copy that actor's immutable identity locks into the brief. Review a neutral idle
+pose against them before producing the animation set. A technically valid atlas,
+build, or test result cannot override a failed visual-identity review.
 
 ## 12. Review Method
 

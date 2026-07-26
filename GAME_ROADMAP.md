@@ -484,9 +484,12 @@ M6A 不加入新角色、新敵人、新招式、第二關、Audio、技能、�
 - Evidence: one 46-file production public inventory, 99 copied source/QA files excluded from both outputs, exact SHA-256 preservation, 18,172,139-byte GitHub Pages artifact, 110 tests, both builds, three-viewport/six-checkpoint browser matrix, and three ten-cycle reset paths.
 - M8 / Task 8.2A Combo Commitment Prototype was accepted by the reviewer on 2026-07-25. M8 / Task 8.5 remains not required because Task 8.1 found no sustained GameObject, listener, texture, Canvas, Audio-owner, or heap growth attributable to effects.
 - TP-3 Shield Guard + Crossbow Composition was accepted by the reviewer on 2026-07-26. Crossbow friendly fire was explicitly rejected; arrows only threaten the Player.
-- ER.1 Five-Enemy Production Contract, ER.2 Soldier Production-Art Pilot, and
-  ER.3 Duelist Production-Art Replacement completed on 2026-07-26.
-- Next eligible task: ER.4 Mauler Production-Art Replacement.
+- ER.1 Five-Enemy Production Contract and ER.2 Soldier Production-Art Pilot
+  completed on 2026-07-26.
+- ER.3 completed its technical integration gates, but its visual-identity review
+  was reopened as `Revise`: the current Duelist does not match the approved
+  full-hooded, long twin-hook prototype.
+- Next eligible task: ER.3R Duelist Approved-Prototype Correction.
 
 ## Enemy Redesign Track
 
@@ -520,7 +523,7 @@ silhouette QA, reviewer approval, 127/127 direct tests, typecheck, lint with
 zero errors, direct Vinext/Vite builds, packaged-asset hash checks, and final
 desktop/844×390/390×844 production smoke with one Canvas and zero errors.
 
-### ER.3 — Duelist Production-Art Replacement (Completed 2026-07-26)
+### ER.3 — Duelist Production-Art Replacement (Technical integration complete; visual review Revise 2026-07-26)
 
 **Goal:** Apply the proven ER.2 source-to-runtime pipeline to the Duelist while
 preserving its accepted flanking gameplay.
@@ -542,6 +545,29 @@ display scale, debug/onion/25% silhouette QA, 128/128 direct tests, typecheck,
 lint with zero errors, direct Vinext/Vite builds, packaging hash checks, and
 desktop/844×390/390×844 production smoke with one Canvas and zero errors.
 
+**Visual review finding:** The integrated art reads as an exposed-topknot
+masked ninja with short hook blades. It does not preserve the approved full
+charcoal/navy hood and cowl or the two long inward-curved hand hooks. Technical
+evidence remains valid, but the production visual is not accepted.
+
+### ER.3R — Duelist Approved-Prototype Correction
+
+**Goal:** Correct only the Duelist visual identity to the approved hooded
+twin-hook prototype while preserving the proven ER.3 pipeline and gameplay.
+
+**Scope:** Replace the Duelist source art, measured metadata, atlas, and QA
+evidence only. No gameplay, animation timing, physics, Stage, Camera, UI, or
+other enemy changes.
+
+**Acceptance Criteria:** The neutral idle and animation set preserve a full
+hood/cowl with shadowed face, the lineup's lowest narrow stance, and exactly two
+long inward-curved hand hooks. Color and silhouette pass side-by-side review
+against both approved repository references; all ER.3 feet, metadata, atlas,
+build, gameplay-freeze, and three-viewport gates remain green.
+
+**Dependencies:** ER.3 technical integration and the approved-prototype
+conformance audit.
+
 ### ER.4 — Mauler Production-Art Replacement
 
 **Goal:** Apply the proven one-actor pipeline to the Mauler while preserving
@@ -558,7 +584,7 @@ one feet anchor and scale; attack phase timing, body, hitbox, speed, HP,
 damage, AI, Stage data, and Attack Slot behavior remain unchanged; asset,
 build, test, and three-viewport gates pass.
 
-**Dependencies:** ER.3.
+**Dependencies:** ER.3R.
 
 ## 4. Global Acceptance Rules
 

@@ -5,15 +5,18 @@
 This directory records the review-only visual references for ER.1. It is not a
 runtime asset directory and it must not be added to `AssetManifest.ts`.
 
-## External reference records
+## Approved reference records
 
-| Reference | Local review path | Role in review | Runtime status |
+| Reference | Repository file | Original source path | Runtime status |
 | --- | --- | --- | --- |
-| Five-enemy color lineup | `C:\Users\kenth\.codex\generated_images\019f992e-0533-74d2-a618-4f828048c377\call_kG6k2CiTExM4w5SfiZtwV0BI.png` | Material, value, weapon, and role separation | Reference only; do not copy into `public/` |
-| Five-enemy silhouette lineup | `C:\Users\kenth\.codex\generated_images\019f992e-0533-74d2-a618-4f828048c377\call_VpAGONdvts6EsStpZkR6VMQE.png` | 25% silhouette and readable-role check | Reference only; do not copy into `public/` |
+| Five-enemy color lineup | `approved-five-enemy-color.png` | `C:\Users\kenth\.codex\generated_images\019f992e-0533-74d2-a618-4f828048c377\call_kG6k2CiTExM4w5SfiZtwV0BI.png` | Review only; excluded from `public/` |
+| Five-enemy silhouette lineup | `approved-five-enemy-silhouette.png` | `C:\Users\kenth\.codex\generated_images\019f992e-0533-74d2-a618-4f828048c377\call_VpAGONdvts6EsStpZkR6VMQE.png` | Review only; excluded from `public/` |
 
 The visual order is Soldier, Duelist, Mauler, Shield Guard, and Crossbow.
-The reference establishes role readability only. It does not establish frame
+The immutable character identities are recorded in
+`docs/character-production/enemy-cast-v2-approved-prototypes.md`. The
+repository copies are authoritative; future work must not rely on conversation
+memory or external-only paths. The reference does not establish frame
 boundaries, animation poses, physics dimensions, gameplay reach, or a license
 to reuse pixels. Each production actor still requires project-owned source art,
 metadata, a runtime atlas, and an accepted reviewer baseline.

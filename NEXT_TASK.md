@@ -1,54 +1,42 @@
-# Next Task
+# NEXT_TASK
 
-## ER.4 — Mauler Production-Art Replacement
+## ER.3R — Duelist Approved-Prototype Correction
 
 ### Why this is next
 
-ER.2 and ER.3 proved the 288×288 source-to-atlas workflow for the two standard
-melee actors. Mauler is the last formal melee runtime actor and the next
-highest-risk silhouette because its hammer and 240px target height must fit
-the same delivery budget without changing accepted reach or attack timing.
-Completing it before Shield Guard and Crossbow prevents temporary-role art
-from hiding a remaining formal-cast inconsistency.
+ER.3 passed its technical pipeline but failed the recovered approved-prototype
+review. The current Duelist reads as an exposed-topknot masked ninja with short
+hook blades instead of the locked full-hooded twin-hook character. Starting
+Mauler production before correcting this would allow known visual drift to
+remain in the cast.
 
-### Scope
+### Completion conditions
 
-Create project-owned Mauler art and its complete source-to-atlas QA package:
-seventeen genuine frames, source provenance, transparent extraction, measured
-frame metadata, debug sheet, onion sheet, 25% silhouette sheet, and an isolated
-runtime replacement. Preserve Mauler gameplay tuning, body/hitbox dimensions,
-authored-facing behavior, Stage data, Camera, UI, Soldier, Duelist, Shield
-Guard, and Crossbow.
-
-### Completion criteria
-
-- Idle 2, walk 4, attack 5, hurt 2, and dead 4 are distinct genuine poses.
-- Attack metadata preserves two startup, one active, and two recovery poses
-  without retiming the accepted gameplay window.
-- Every frame has measured rectangles, alpha bounds, offsets, a common feet
-  anchor, one scale, and sufficient hammer padding.
-- Mauler remains the largest normal enemy and distinct from Soldier/Duelist at
-  native and 25% silhouette scale.
-- Runtime memory, delivery, desktop, 844×390, and 390×844 gates pass.
+- Replace only Duelist visual source, metadata, atlas, and QA evidence.
+- Preserve the approved full charcoal/navy hood and cowl, shadowed face, low
+  narrow stance, and exactly two long inward-curved hand hooks.
+- Pass neutral-idle side-by-side review against both approved repository images
+  before producing or integrating the full animation set.
+- Preserve all ER.3 gameplay, frame budgets, timing, feet alignment, one-scale,
+  metadata, atlas, packaging, and performance contracts.
+- Do not modify Mauler or any unrelated gameplay/system content.
 
 ### Validation
 
-- Run provenance, frame, anchor, padding, pixel-hash, atlas, and gameplay-freeze
-  checks.
-- Run `pnpm test`, `pnpm typecheck`, `pnpm lint`, `pnpm build`,
-  `pnpm build:github-pages`, `node tools/report_performance_assets.mjs`, and
-  `git diff --check`; document TD-M11 if the wrapper still stops before scripts.
-- Perform development QA review and production three-viewport smoke tests.
+- Native and 25% color/silhouette comparison against both approved references.
+- Debug sheet, onion skin, measured rectangles, feet anchors, and frame hashes.
+- `pnpm test`, `pnpm typecheck`, `pnpm lint`, `pnpm build`, and
+  `pnpm build:github-pages`.
+- Desktop, 844×390, and 390×844 production smoke tests.
 
 ### Expected files
 
-Mauler source/processed/atlas/metadata/QA files, focused validation tests,
-pipeline constants needed for its seventeen-frame layout, ER.4 evidence, and
-project status documents. No other actor runtime asset is in scope.
+- Duelist-only source/runtime art and metadata files.
+- Duelist generation/extraction tooling only where required.
+- ER.3R visual evidence and the minimum corresponding project-document updates.
 
 ### Risks
 
-The hammer can exceed the 288px cell or visually imply gameplay reach beyond
-the frozen hitbox. Do not crop it, shrink animations independently, reuse
-frames, alter the hitbox, retime the attack, or compensate by changing Mauler
-gameplay.
+- Drifting back toward a generic ninja, exposed hair, or short axe/knife shapes.
+- Losing the long-hook negative space at runtime scale.
+- Accidentally changing accepted gameplay while replacing presentation.

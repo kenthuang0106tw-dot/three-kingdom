@@ -1205,4 +1205,6 @@
 | Automated gates | Pass with TD-M11 noted | 128/128 direct tests, typecheck, lint 0 errors/8 warnings, direct builds and packaging |
 | Browser | Pass | Development Duelist attack/walk/dead preview plus production 1280×720, 844×390, 390×844: one Canvas, no overflow, zero errors |
 | Scope | Pass | No gameplay, other actor, Stage, Camera, UI, Audio, or combat-rule change |
-| Next task | Selected | ER.4 — Mauler Production-Art Replacement |
+| Approved-prototype conformance | Revise | Current exposed-topknot masked ninja and short hook blades do not match the approved full hood/cowl and two long inward-curved hooks |
+| Technical gates | Pass | Existing ER.3 atlas, animation, build, and viewport evidence remains valid; it does not override the visual decision |
+| Next task | Selected | ER.3R — Duelist Approved-Prototype Correction |

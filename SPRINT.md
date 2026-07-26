@@ -920,5 +920,19 @@ Status: completed.
 - [ ] Package-manager commands remain blocked before project scripts by
   TD-M11; equivalent direct gates passed.
 
-The next eligible task is ER.4 — Mauler Production-Art Replacement. Do not
-begin it until the next task-runner cycle.
+The next eligible task was originally recorded as ER.4 — Mauler Production-Art
+Replacement.
+
+## ER.3 approved-prototype correction — 2026-07-26
+
+- [x] Restored the approved five-enemy color and silhouette references as
+  repository-owned review assets.
+- [x] Recorded immutable visual locks for all five original prototypes.
+- [x] Audited the current ER.3 Duelist against those references.
+- [ ] ER.3 production visual accepted.
+
+ER.3's atlas, metadata, animation, build, and viewport checks remain valid
+technical evidence. Its visual identity is `Revise`: exposed-topknot masked
+ninja styling and short hook blades do not match the approved full hood/cowl
+and long twin hooks. The only next task is ER.3R — Duelist Approved-Prototype
+Correction. Do not begin ER.4.

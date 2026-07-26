@@ -634,3 +634,17 @@ fail.
   production smoke.
 - **Remaining:** Mauler is still on its earlier 384×384 presentation. Shield
   Guard and Crossbow remain intentionally temporary under TD-M10.
+
+## TD-ER1 — Approved prototype references were not repository-owned
+
+- **Severity:** High.
+- **Evidence:** ER.1 recorded only external generated-image paths. The approved
+  color and silhouette files were not copied into the repository, allowing ER.3
+  to pass technical gates while drifting from the full-hooded long twin-hook
+  Duelist prototype.
+- **Impact:** Future agents could redesign character identity from memory even
+  when atlas, animation, build, and viewport checks passed.
+- **Resolution:** Both approved references and immutable five-character locks
+  are now repository-owned and mandatory pre-generation inputs.
+- **Remaining:** Current ER.3 Duelist production art is `Revise` and must be
+  corrected in ER.3R before ER.4 begins.

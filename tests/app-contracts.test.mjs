@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
@@ -1767,4 +1768,24 @@ test("M6A visual freeze has reproducible captures, assets, and runtime metrics",
   assert.equal(metrics.canvasCount, 1);
   assert.equal(metrics.runtimeErrorCount, 0);
   assert.equal(metrics.productionDebugLeak, false);
+});
+
+test("enemy redesign tasks retain the approved five-character prototype lock", async () => {
+  const [color, silhouette, prototypeContract, nextTask] = await Promise.all([
+    readFile(new URL("../docs/visual-baselines/enemy-cast-v2/approved-five-enemy-color.png", import.meta.url)),
+    readFile(new URL("../docs/visual-baselines/enemy-cast-v2/approved-five-enemy-silhouette.png", import.meta.url)),
+    readFile(new URL("../docs/character-production/enemy-cast-v2-approved-prototypes.md", import.meta.url), "utf8"),
+    readFile(new URL("../NEXT_TASK.md", import.meta.url), "utf8"),
+  ]);
+
+  const sha256 = buffer => createHash("sha256").update(buffer).digest("hex").toUpperCase();
+  assert.equal(sha256(color), "FFBEE16F1B171F1EF59B73A4D3A57CCFA389EA577BB172F8255F487FD4ECD55D");
+  assert.equal(sha256(silhouette), "1F5D220EA3423A3967D6D869BD9CEB34B340F9E7241C72F5E0EA1FB9C8E7310E");
+  assert.match(prototypeContract, /軍府戟兵/);
+  assert.match(prototypeContract, /兜帽雙鉤/);
+  assert.match(prototypeContract, /方頭戰鎚/);
+  assert.match(prototypeContract, /圓形藤盾兵/);
+  assert.match(prototypeContract, /輕裝連弩兵/);
+  assert.match(prototypeContract, /Exactly two long inward-curved hand hooks/);
+  assert.match(nextTask, /ER\.3R — Duelist Approved-Prototype Correction/);
 });

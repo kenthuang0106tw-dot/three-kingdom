@@ -18,6 +18,20 @@ combat contracts:
 The color and silhouette references listed in
 `docs/visual-baselines/enemy-cast-v2/README.md` are review input only. They are
 not source sprites, runtime textures, or a substitution for animation frames.
+Their character identities are binding and are defined in
+`docs/character-production/enemy-cast-v2-approved-prototypes.md`. Production
+work may not redesign the approved hood/head treatment, weapon class, armor
+mass, round shield, or repeating-crossbow silhouette.
+
+### Approved identity summary
+
+| Actor | Required identity |
+| --- | --- |
+| Soldier | Upright blue-grey military halberd infantry. |
+| Duelist | Low charcoal/navy full-hooded fighter with exactly two long inward-curved hand hooks. |
+| Mauler | Broad red/brown heavy fighter with one long square-headed war hammer. |
+| Shield Guard | Olive/brown line holder dominated by a round woven rattan shield. |
+| Crossbow | Blue-grey light ranged unit with a large horizontal repeating crossbow and rear bolt pack. |
 
 ## 2. Non-negotiable runtime ownership
 
@@ -117,6 +131,8 @@ new gameplay state in ER.1.
 
 - A pose is readable but feet drift, its weapon clips, or its silhouette is
   confused with another role.
+- Any head treatment, weapon class, armor mass, shield silhouette, or ranged
+  mechanism conflicts with the approved-prototype lock.
 - A state lacks an in-between frame, clear startup, active contact, or
   recovery pose.
 - The atlas can fit only by changing gameplay reach or collision dimensions.
