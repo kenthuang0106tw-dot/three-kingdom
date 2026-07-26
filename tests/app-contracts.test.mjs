@@ -1636,6 +1636,43 @@ test("Duelist config and asset routes define a third distinct melee archetype", 
   assert.equal(Object.keys(JSON.parse(atlas).frames).length, 15);
 });
 
+test("ER.3 Duelist replacement uses measured production frames without changing gameplay tuning", async () => {
+  const [atlas, metadata, sheet, configSource] = await Promise.all([
+    readFile(new URL("../public/art/enemy/duelist.atlas.json", import.meta.url), "utf8").then(JSON.parse),
+    readFile(new URL("../public/art/enemy/duelist.metadata.json", import.meta.url), "utf8").then(JSON.parse),
+    readFile(new URL("../public/art/enemy/duelist.png", import.meta.url)),
+    readFile(new URL("../app/game/enemy/EnemyConfig.ts", import.meta.url), "utf8"),
+  ]);
+  assert.equal(sheet.readUInt32BE(16), 1440);
+  assert.equal(sheet.readUInt32BE(20), 864);
+  assert.deepEqual(metadata.feetAnchor, { x: 144, y: 265 });
+  assert.equal(metadata.displayScale, 1.025);
+  assert.equal(metadata.sourceFacing, 1);
+  assert.equal(metadata.logicalIdleHeight, 205);
+  assert.equal(metadata.provenance.sourceLayout, "measured-five-by-three");
+  assert.match(metadata.provenance.generatedBy, /ER\.3 Duelist Production-Art Replacement/);
+  assert.equal(metadata.frames.length, 15);
+  assert.equal(new Set(metadata.frames.map(frame => frame.pixelHash)).size, 15);
+  assert.ok(metadata.frames.every(frame => frame.sourceImage === "duelist-source-transparent.png"));
+  assert.ok(metadata.frames.every(frame => frame.sourceRect.processingScale === 0.86));
+  assert.ok(metadata.frames.every(frame => frame.runtimeAlphaBounds.x > 0));
+  assert.ok(metadata.frames.every(frame =>
+    frame.runtimeAlphaBounds.x + frame.runtimeAlphaBounds.width < 288 &&
+    frame.runtimeAlphaBounds.y + frame.runtimeAlphaBounds.height === 265
+  ));
+  assert.deepEqual(metadata.frames.filter(frame => frame.phase).map(frame => frame.phase), [
+    "startup", "active", "recovery",
+  ]);
+  assert.equal(Object.keys(atlas.frames).length, 15);
+  assert.ok(Object.values(atlas.frames).every(frame =>
+    frame.frame.w === 288 && frame.frame.h === 288 &&
+    frame.pivot.x === 0.5 && frame.pivot.y === 265 / 288
+  ));
+  assert.match(configSource, /id: "duelist"[\s\S]*displayScale: 1\.025,[\s\S]*frameSize: 288,[\s\S]*feetY: 265,/);
+  assert.match(configSource, /id: "duelist"[\s\S]*walkSpeed: 96/);
+  assert.match(configSource, /id: "duelist"[\s\S]*attackXRange: 92[\s\S]*attackYRange: 40/);
+});
+
 test("M6A enemy and Boss art share audited scale, feet, facing, and provenance contracts", async () => {
   const actorFiles = [
     ["soldier", "enemy-soldier", SOLDIER_ENEMY_CONFIG, 210],
@@ -1643,8 +1680,8 @@ test("M6A enemy and Boss art share audited scale, feet, facing, and provenance c
     ["duelist", "duelist", DUELIST_ENEMY_CONFIG, 205],
   ];
   for (const [actor, stem, config, targetHeight] of actorFiles) {
-    const expectedCell = actor === "soldier" ? 288 : 384;
-    const expectedFeet = actor === "soldier" ? { x: 144, y: 265 } : { x: 192, y: 354 };
+    const expectedCell = actor === "mauler" ? 384 : 288;
+    const expectedFeet = actor === "mauler" ? { x: 192, y: 354 } : { x: 144, y: 265 };
     const atlasName = actor === "soldier" ? "enemy-soldier.atlas.json" : `${stem}.atlas.json`;
     const [atlas, metadata, sheet, onion, silhouette] = await Promise.all([
       readFile(new URL(`../public/art/enemy/${atlasName}`, import.meta.url), "utf8").then(JSON.parse),

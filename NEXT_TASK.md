@@ -1,51 +1,54 @@
 # Next Task
 
-## ER.3 — Duelist Production-Art Replacement
+## ER.4 — Mauler Production-Art Replacement
 
 ### Why this is next
 
-ER.2 proved the full source-to-atlas pipeline, the 288×288 delivery target, and
-the reviewer workflow on one actor. Duelist is the next lowest-risk formal
-runtime replacement: it uses the same fifteen-frame state budget but has a
-different silhouette, source facing, speed, and flanking role that must remain
-readable before the heavier or prototype-only actors are attempted.
+ER.2 and ER.3 proved the 288×288 source-to-atlas workflow for the two standard
+melee actors. Mauler is the last formal melee runtime actor and the next
+highest-risk silhouette because its hammer and 240px target height must fit
+the same delivery budget without changing accepted reach or attack timing.
+Completing it before Shield Guard and Crossbow prevents temporary-role art
+from hiding a remaining formal-cast inconsistency.
 
 ### Scope
 
-Create project-owned Duelist art and its complete source-to-atlas QA package:
-source provenance, transparent extraction, measured frame metadata, debug
-sheet, onion sheet, 25% silhouette sheet, and an isolated runtime replacement.
-Keep Duelist gameplay tuning, body/hitbox dimensions, source-facing behavior,
-Stage data, Camera, UI, Soldier, Mauler, Shield Guard, and Crossbow unchanged.
+Create project-owned Mauler art and its complete source-to-atlas QA package:
+seventeen genuine frames, source provenance, transparent extraction, measured
+frame metadata, debug sheet, onion sheet, 25% silhouette sheet, and an isolated
+runtime replacement. Preserve Mauler gameplay tuning, body/hitbox dimensions,
+authored-facing behavior, Stage data, Camera, UI, Soldier, Duelist, Shield
+Guard, and Crossbow.
 
 ### Completion criteria
 
-- All fifteen Duelist contract frames are distinct and have measured source
-  rectangles, alpha bounds, offsets, common feet anchor, and one scale.
-- Duelist idle, walk, attack, hurt, and dead preserve the existing animation
-  keys and accepted gameplay phase windows.
-- Duelist remains distinct from Soldier at native and 25% silhouette scale.
-- New Duelist runtime art stays within the ER.1 memory and delivery budgets.
-- Desktop, 844 x 390, and 390 x 844 review shows no clipping, feet drift,
-  wrong-facing frame, or hitbox/body mismatch.
+- Idle 2, walk 4, attack 5, hurt 2, and dead 4 are distinct genuine poses.
+- Attack metadata preserves two startup, one active, and two recovery poses
+  without retiming the accepted gameplay window.
+- Every frame has measured rectangles, alpha bounds, offsets, a common feet
+  anchor, one scale, and sufficient hammer padding.
+- Mauler remains the largest normal enemy and distinct from Soldier/Duelist at
+  native and 25% silhouette scale.
+- Runtime memory, delivery, desktop, 844×390, and 390×844 gates pass.
 
 ### Validation
 
-- Run the ER.1 provenance, frame, anchor, pixel-hash, and atlas checks.
+- Run provenance, frame, anchor, padding, pixel-hash, atlas, and gameplay-freeze
+  checks.
 - Run `pnpm test`, `pnpm typecheck`, `pnpm lint`, `pnpm build`,
   `pnpm build:github-pages`, `node tools/report_performance_assets.mjs`, and
-  `git diff --check`.
-- Perform development and production three-viewport gameplay smoke tests.
+  `git diff --check`; document TD-M11 if the wrapper still stops before scripts.
+- Perform development QA review and production three-viewport smoke tests.
 
 ### Expected files
 
-Duelist art source/processed/atlas/metadata/QA files, the focused validation
-test, asset manifest entries only if required for replacement, and the ER.3
-evidence documents. No other actor runtime asset is in scope.
+Mauler source/processed/atlas/metadata/QA files, focused validation tests,
+pipeline constants needed for its seventeen-frame layout, ER.4 evidence, and
+project status documents. No other actor runtime asset is in scope.
 
 ### Risks
 
-The reference lineup is not reusable art. Do not copy Soldier proportions,
-generate transform-faked frames, guess frame rectangles, change the existing
-right-facing contract, expand collision to match the twin-hook silhouette, or
-retune Duelist gameplay to compensate for art.
+The hammer can exceed the 288px cell or visually imply gameplay reach beyond
+the frozen hitbox. Do not crop it, shrink animations independently, reuse
+frames, alter the hitbox, retime the attack, or compensate by changing Mauler
+gameplay.

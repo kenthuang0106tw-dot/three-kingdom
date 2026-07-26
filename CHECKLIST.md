@@ -1190,3 +1190,19 @@
 | Browser | Pass | Final 1280×720, 844×390, and 390×844 production smoke: one Canvas, no overflow, zero errors |
 | Scope | Pass | No other actor art, gameplay, Stage, Camera, UI, Audio, or combat behavior changed |
 | Next task | Selected | ER.3 — Duelist Production-Art Replacement |
+
+## ER.3 — Duelist Production-Art Replacement — 2026-07-26
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Frame contract | Pass | 15 distinct hashes: idle 2, walk 4, attack 3, hurt 2, dead 4 |
+| Source rectangles | Pass | 15 measured, non-equal rectangles from the 1619×971 source |
+| Atlas | Pass | 5×3 288×288 cells, feet `(144,265)`, one `1.025` scale, 205px idle height |
+| Attack | Pass | Existing keys and startup/active/recovery order retained; timing and hitbox unchanged |
+| Facing | Pass | Right-authored source and existing runtime flip contract preserved |
+| QA/provenance | Pass | Source, alpha derivative, metadata, debug, onion, silhouette, lineup, and review baseline |
+| Delivery | Pass | 12,771,452 requested bytes; 128,888,320 decoded RGBA; 18,063,334-byte GitHub Pages artifact |
+| Automated gates | Pass with TD-M11 noted | 128/128 direct tests, typecheck, lint 0 errors/8 warnings, direct builds and packaging |
+| Browser | Pass | Development Duelist attack/walk/dead preview plus production 1280×720, 844×390, 390×844: one Canvas, no overflow, zero errors |
+| Scope | Pass | No gameplay, other actor, Stage, Camera, UI, Audio, or combat-rule change |
+| Next task | Selected | ER.4 — Mauler Production-Art Replacement |

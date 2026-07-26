@@ -16,6 +16,26 @@ FEET_Y = 354
 SOLDIER_CELL = 288
 SOLDIER_FEET_Y = 265
 SOLDIER_BASE_SCALE = 0.75
+DUELIST_CELL = 288
+DUELIST_FEET_Y = 265
+DUELIST_PROCESSING_SCALE = 0.86
+DUELIST_SOURCE_RECTS = (
+    (0, 0, 346, 346),
+    (346, 0, 661, 346),
+    (661, 0, 965, 346),
+    (965, 0, 1256, 346),
+    (1256, 0, 1619, 346),
+    (0, 346, 330, 619),
+    (330, 346, 634, 619),
+    (634, 346, 1005, 619),
+    (1005, 346, 1271, 619),
+    (1271, 346, 1619, 619),
+    (0, 619, 323, 971),
+    (323, 619, 607, 971),
+    (607, 619, 888, 971),
+    (888, 619, 1212, 971),
+    (1212, 619, 1619, 971),
+)
 NAMES = [
     "idle-0", "idle-1", "walk-0", "walk-1", "walk-2",
     "walk-3", "attack-0", "attack-1", "attack-2", "hurt-0",
@@ -51,7 +71,7 @@ class ActorSpec:
 ACTORS = (
     ActorSpec("soldier", "enemy-soldier-v2-source.png", "enemy-soldier.png", "enemy-soldier-v2-source-transparent.png", 1.025, -1, 210, "five-by-three-grid", "built-in image generation, ER.2 Soldier Production-Art Pilot"),
     ActorSpec("mauler", "mauler-source.png", "mauler.png", "mauler-source-transparent.png", 1.10, -1, 240, "four-by-four-grid", "built-in image generation in earlier asset tasks; no new generation in M6A.3"),
-    ActorSpec("duelist", "duelist-source.png", "duelist.png", "duelist-source-transparent.png", 0.94, 1, 205, "four-by-four-grid", "built-in image generation in earlier asset tasks; no new generation in M6A.3"),
+    ActorSpec("duelist", "duelist-source.png", "duelist.png", "duelist-source-transparent.png", 1.025, 1, 205, "measured-five-by-three", "built-in image generation, ER.3 Duelist Production-Art Replacement"),
 )
 
 
@@ -69,8 +89,8 @@ def remove_green_chroma(image: Image.Image) -> Image.Image:
 
 
 def source_frames(spec: ActorSpec) -> list[tuple[Image.Image, dict[str, int | str]]]:
-    cell = SOLDIER_CELL if spec.actor == "soldier" else CELL
-    feet_y = SOLDIER_FEET_Y if spec.actor == "soldier" else FEET_Y
+    cell = SOLDIER_CELL if spec.actor == "soldier" else DUELIST_CELL if spec.actor == "duelist" else CELL
+    feet_y = SOLDIER_FEET_Y if spec.actor == "soldier" else DUELIST_FEET_Y if spec.actor == "duelist" else FEET_Y
     transparent_path = ART / spec.transparent_source if spec.transparent_source else None
     source = Image.open(transparent_path if transparent_path and transparent_path.exists() else ART / spec.source).convert("RGBA")
     if spec.transparent_source and not transparent_path.exists():
@@ -83,6 +103,10 @@ def source_frames(spec: ActorSpec) -> list[tuple[Image.Image, dict[str, int | st
         for index in range(len(NAMES)):
             row, col = divmod(index, COLS)
             rects.append((edges_x[col], edges_y[row], edges_x[col + 1], edges_y[row + 1]))
+    elif spec.source_layout == "measured-five-by-three":
+        if source.size != (1619, 971):
+            raise RuntimeError(f"Unexpected Duelist source size: {source.size}")
+        rects = list(DUELIST_SOURCE_RECTS)
     elif spec.transparent_source:
         edges_x = [round(index * source.width / 4) for index in range(5)]
         edges_y = [round(index * source.height / 4) for index in range(5)]
@@ -105,7 +129,11 @@ def source_frames(spec: ActorSpec) -> list[tuple[Image.Image, dict[str, int | st
         if not bounds:
             raise RuntimeError(f"No visible pixels in {spec.actor} source rectangle {rect}")
         pose = crop.crop(bounds)
-        processing_scale = SOLDIER_BASE_SCALE if spec.actor == "soldier" else 1
+        processing_scale = (
+            SOLDIER_BASE_SCALE if spec.actor == "soldier"
+            else DUELIST_PROCESSING_SCALE if spec.actor == "duelist"
+            else 1
+        )
         if processing_scale != 1:
             pose = pose.resize(
                 (
@@ -157,8 +185,8 @@ def phase_for(name: str) -> str | None:
 
 
 def build_actor(spec: ActorSpec) -> tuple[Image.Image, dict]:
-    cell = SOLDIER_CELL if spec.actor == "soldier" else CELL
-    feet_y = SOLDIER_FEET_Y if spec.actor == "soldier" else FEET_Y
+    cell = SOLDIER_CELL if spec.actor == "soldier" else DUELIST_CELL if spec.actor == "duelist" else CELL
+    feet_y = SOLDIER_FEET_Y if spec.actor == "soldier" else DUELIST_FEET_Y if spec.actor == "duelist" else FEET_Y
     sheet = Image.new("RGBA", (cell * COLS, cell * ROWS), (0, 0, 0, 0))
     atlas_frames = {}
     metadata_frames = []
@@ -240,8 +268,8 @@ def build_actor(spec: ActorSpec) -> tuple[Image.Image, dict]:
 
 
 def build_qa(spec: ActorSpec, sheet: Image.Image, frames: list[dict]) -> None:
-    cell = SOLDIER_CELL if spec.actor == "soldier" else CELL
-    feet_y = SOLDIER_FEET_Y if spec.actor == "soldier" else FEET_Y
+    cell = SOLDIER_CELL if spec.actor == "soldier" else DUELIST_CELL if spec.actor == "duelist" else CELL
+    feet_y = SOLDIER_FEET_Y if spec.actor == "soldier" else DUELIST_FEET_Y if spec.actor == "duelist" else FEET_Y
     debug = sheet.copy()
     draw = ImageDraw.Draw(debug)
     for index, frame in enumerate(frames):

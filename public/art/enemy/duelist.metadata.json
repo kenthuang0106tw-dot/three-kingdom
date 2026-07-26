@@ -1,17 +1,17 @@
 {
   "actor": "duelist",
   "cell": {
-    "width": 384,
-    "height": 384
+    "width": 288,
+    "height": 288
   },
   "feetAnchor": {
-    "x": 192,
-    "y": 354
+    "x": 144,
+    "y": 265
   },
-  "displayScale": 0.94,
+  "displayScale": 1.025,
   "sourceFacing": 1,
   "targetLogicalIdleHeight": 205,
-  "logicalIdleHeight": 212.44,
+  "logicalIdleHeight": 205.0,
   "animations": {
     "idle": [
       "idle-0",
@@ -42,10 +42,11 @@
   "provenance": {
     "original": true,
     "source": "duelist-source.png",
-    "sourceLayout": "four-by-four-grid",
+    "correctionSources": null,
+    "sourceLayout": "measured-five-by-three",
     "processingTool": "tools/build_enemy_art.py",
     "processingRevision": "2.0",
-    "generatedBy": "built-in image generation in earlier asset tasks; no new generation in M6A.3"
+    "generatedBy": "built-in image generation, ER.3 Duelist Production-Art Replacement"
   },
   "frames": [
     {
@@ -56,32 +57,33 @@
       "sourceRect": {
         "x": 0,
         "y": 0,
-        "width": 314,
-        "height": 314,
-        "alphaX": 89,
-        "alphaY": 64,
-        "alphaWidth": 150,
-        "alphaHeight": 226
+        "width": 346,
+        "height": 346,
+        "alphaX": 118,
+        "alphaY": 73,
+        "alphaWidth": 153,
+        "alphaHeight": 233,
+        "processingScale": 0.86
       },
       "runtimeAlphaBounds": {
-        "x": 117,
-        "y": 128,
-        "width": 150,
-        "height": 226
+        "x": 78,
+        "y": 65,
+        "width": 132,
+        "height": 200
       },
       "originX": 0.5,
-      "originY": 0.921875,
-      "displayOffsetX": 117,
-      "displayOffsetY": 128,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 78,
+      "displayOffsetY": 65,
       "feetAnchor": {
-        "x": 192,
-        "y": 354
+        "x": 144,
+        "y": 265
       },
-      "displayScale": 0.94,
+      "displayScale": 1.025,
       "sourceFacing": 1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "301b077049a4b82a8bfad573c98bfca251448037ddffee2a92bdfb8ce88a9ffa"
+      "pixelHash": "9a871bb40ab4b5d99f3a984a3348054f9f901bf361179ca922b49b0c9733fc2f"
     },
     {
       "name": "idle-1",
@@ -89,34 +91,35 @@
       "phase": null,
       "sourceImage": "duelist-source-transparent.png",
       "sourceRect": {
-        "x": 314,
+        "x": 346,
         "y": 0,
-        "width": 313,
-        "height": 314,
-        "alphaX": 75,
-        "alphaY": 64,
-        "alphaWidth": 159,
-        "alphaHeight": 226
+        "width": 315,
+        "height": 346,
+        "alphaX": 76,
+        "alphaY": 73,
+        "alphaWidth": 147,
+        "alphaHeight": 233,
+        "processingScale": 0.86
       },
       "runtimeAlphaBounds": {
-        "x": 112,
-        "y": 128,
-        "width": 159,
-        "height": 226
+        "x": 81,
+        "y": 65,
+        "width": 126,
+        "height": 200
       },
       "originX": 0.5,
-      "originY": 0.921875,
-      "displayOffsetX": 112,
-      "displayOffsetY": 128,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 81,
+      "displayOffsetY": 65,
       "feetAnchor": {
-        "x": 192,
-        "y": 354
+        "x": 144,
+        "y": 265
       },
-      "displayScale": 0.94,
+      "displayScale": 1.025,
       "sourceFacing": 1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "9ffca8ae6162e8a4eea2b9b566ae0322f97f4efa845a1587ecbe623a347351eb"
+      "pixelHash": "d191a82e7bfcb4cc6a3da05fec12e4fb4cf6f9b23194861d20e1568b945f7008"
     },
     {
       "name": "walk-0",
@@ -124,34 +127,35 @@
       "phase": null,
       "sourceImage": "duelist-source-transparent.png",
       "sourceRect": {
-        "x": 627,
+        "x": 661,
         "y": 0,
-        "width": 313,
-        "height": 314,
-        "alphaX": 57,
-        "alphaY": 77,
-        "alphaWidth": 162,
-        "alphaHeight": 215
+        "width": 304,
+        "height": 346,
+        "alphaX": 92,
+        "alphaY": 73,
+        "alphaWidth": 155,
+        "alphaHeight": 235,
+        "processingScale": 0.86
       },
       "runtimeAlphaBounds": {
-        "x": 111,
-        "y": 139,
-        "width": 162,
-        "height": 215
+        "x": 77,
+        "y": 63,
+        "width": 133,
+        "height": 202
       },
       "originX": 0.5,
-      "originY": 0.921875,
-      "displayOffsetX": 111,
-      "displayOffsetY": 139,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 77,
+      "displayOffsetY": 63,
       "feetAnchor": {
-        "x": 192,
-        "y": 354
+        "x": 144,
+        "y": 265
       },
-      "displayScale": 0.94,
+      "displayScale": 1.025,
       "sourceFacing": 1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "6d4b9a3bddb56f050c3282d018a3a10c56d43043384c5f8a84cbfd0e8081c640"
+      "pixelHash": "5bf51575e66b8461f82a42b7ebab05ad667266dbd49dbcecb573853ca0c441f2"
     },
     {
       "name": "walk-1",
@@ -159,34 +163,35 @@
       "phase": null,
       "sourceImage": "duelist-source-transparent.png",
       "sourceRect": {
-        "x": 940,
+        "x": 965,
         "y": 0,
-        "width": 314,
-        "height": 314,
-        "alphaX": 51,
-        "alphaY": 77,
+        "width": 291,
+        "height": 346,
+        "alphaX": 56,
+        "alphaY": 73,
         "alphaWidth": 158,
-        "alphaHeight": 215
+        "alphaHeight": 235,
+        "processingScale": 0.86
       },
       "runtimeAlphaBounds": {
-        "x": 113,
-        "y": 139,
-        "width": 158,
-        "height": 215
+        "x": 76,
+        "y": 63,
+        "width": 136,
+        "height": 202
       },
       "originX": 0.5,
-      "originY": 0.921875,
-      "displayOffsetX": 113,
-      "displayOffsetY": 139,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 76,
+      "displayOffsetY": 63,
       "feetAnchor": {
-        "x": 192,
-        "y": 354
+        "x": 144,
+        "y": 265
       },
-      "displayScale": 0.94,
+      "displayScale": 1.025,
       "sourceFacing": 1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "bfa5878c043ed3212a10629b4b1e60494c9f2b703f0806076b5daaa45dad0297"
+      "pixelHash": "278c286040940a1884d6e3a451032b56e69173c9b8f219d5ff15c82101ea30d3"
     },
     {
       "name": "walk-2",
@@ -194,34 +199,35 @@
       "phase": null,
       "sourceImage": "duelist-source-transparent.png",
       "sourceRect": {
-        "x": 0,
-        "y": 314,
-        "width": 314,
-        "height": 313,
-        "alphaX": 72,
+        "x": 1256,
+        "y": 0,
+        "width": 363,
+        "height": 346,
+        "alphaX": 77,
         "alphaY": 72,
-        "alphaWidth": 162,
-        "alphaHeight": 216
+        "alphaWidth": 150,
+        "alphaHeight": 236,
+        "processingScale": 0.86
       },
       "runtimeAlphaBounds": {
-        "x": 111,
-        "y": 138,
-        "width": 162,
-        "height": 216
+        "x": 79,
+        "y": 62,
+        "width": 129,
+        "height": 203
       },
       "originX": 0.5,
-      "originY": 0.921875,
-      "displayOffsetX": 111,
-      "displayOffsetY": 138,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 79,
+      "displayOffsetY": 62,
       "feetAnchor": {
-        "x": 192,
-        "y": 354
+        "x": 144,
+        "y": 265
       },
-      "displayScale": 0.94,
+      "displayScale": 1.025,
       "sourceFacing": 1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "3119a82f3c5cf2fe3d291261fc5ea8f2307758dde647a0f544e4257e9427aa60"
+      "pixelHash": "8ed7a6537ff3386d64b8bddd213ac15723da303df705fd9429f805b6fcc953d0"
     },
     {
       "name": "walk-3",
@@ -229,34 +235,35 @@
       "phase": null,
       "sourceImage": "duelist-source-transparent.png",
       "sourceRect": {
-        "x": 314,
-        "y": 314,
-        "width": 313,
-        "height": 313,
-        "alphaX": 64,
-        "alphaY": 76,
-        "alphaWidth": 155,
-        "alphaHeight": 212
+        "x": 0,
+        "y": 346,
+        "width": 330,
+        "height": 273,
+        "alphaX": 100,
+        "alphaY": 22,
+        "alphaWidth": 181,
+        "alphaHeight": 224,
+        "processingScale": 0.86
       },
       "runtimeAlphaBounds": {
-        "x": 114,
-        "y": 142,
-        "width": 155,
-        "height": 212
+        "x": 66,
+        "y": 72,
+        "width": 156,
+        "height": 193
       },
       "originX": 0.5,
-      "originY": 0.921875,
-      "displayOffsetX": 114,
-      "displayOffsetY": 142,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 66,
+      "displayOffsetY": 72,
       "feetAnchor": {
-        "x": 192,
-        "y": 354
+        "x": 144,
+        "y": 265
       },
-      "displayScale": 0.94,
+      "displayScale": 1.025,
       "sourceFacing": 1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "339e5178c50cfc7e198633dfa2a8dc477cdd77ce611f569efe6f1e8bf67793b9"
+      "pixelHash": "78054c5fd1d4b86217727865092070049076a77820b418aaa737b8b25ab6657e"
     },
     {
       "name": "attack-0",
@@ -264,34 +271,35 @@
       "phase": "startup",
       "sourceImage": "duelist-source-transparent.png",
       "sourceRect": {
-        "x": 627,
-        "y": 314,
-        "width": 313,
-        "height": 313,
-        "alphaX": 60,
-        "alphaY": 56,
-        "alphaWidth": 172,
-        "alphaHeight": 230
+        "x": 330,
+        "y": 346,
+        "width": 304,
+        "height": 273,
+        "alphaX": 50,
+        "alphaY": 35,
+        "alphaWidth": 217,
+        "alphaHeight": 211,
+        "processingScale": 0.86
       },
       "runtimeAlphaBounds": {
-        "x": 106,
-        "y": 124,
-        "width": 172,
-        "height": 230
+        "x": 50,
+        "y": 84,
+        "width": 187,
+        "height": 181
       },
       "originX": 0.5,
-      "originY": 0.921875,
-      "displayOffsetX": 106,
-      "displayOffsetY": 124,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 50,
+      "displayOffsetY": 84,
       "feetAnchor": {
-        "x": 192,
-        "y": 354
+        "x": 144,
+        "y": 265
       },
-      "displayScale": 0.94,
+      "displayScale": 1.025,
       "sourceFacing": 1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "3508852410b6caa75274d804b0d4b6c9d357457af043912b079278a8929e5b1d"
+      "pixelHash": "f887d45b63cc72e61da786f783c45189f394def4decbca03a8d0d75a497a2f2f"
     },
     {
       "name": "attack-1",
@@ -299,34 +307,35 @@
       "phase": "active",
       "sourceImage": "duelist-source-transparent.png",
       "sourceRect": {
-        "x": 940,
-        "y": 314,
-        "width": 314,
-        "height": 313,
-        "alphaX": 21,
-        "alphaY": 83,
-        "alphaWidth": 211,
-        "alphaHeight": 203
+        "x": 634,
+        "y": 346,
+        "width": 371,
+        "height": 273,
+        "alphaX": 37,
+        "alphaY": 59,
+        "alphaWidth": 309,
+        "alphaHeight": 186,
+        "processingScale": 0.86
       },
       "runtimeAlphaBounds": {
-        "x": 86,
-        "y": 151,
-        "width": 211,
-        "height": 203
+        "x": 11,
+        "y": 105,
+        "width": 266,
+        "height": 160
       },
       "originX": 0.5,
-      "originY": 0.921875,
-      "displayOffsetX": 86,
-      "displayOffsetY": 151,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 11,
+      "displayOffsetY": 105,
       "feetAnchor": {
-        "x": 192,
-        "y": 354
+        "x": 144,
+        "y": 265
       },
-      "displayScale": 0.94,
+      "displayScale": 1.025,
       "sourceFacing": 1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "5fe7ef9cbc45d40d88f2f3b90a769c90ac18c76c95aaa60547a96508d7fb3213"
+      "pixelHash": "2477882cc3f82b9c955b56c79584abdedeb25542ca34e12346a1f246751cfa34"
     },
     {
       "name": "attack-2",
@@ -334,34 +343,35 @@
       "phase": "recovery",
       "sourceImage": "duelist-source-transparent.png",
       "sourceRect": {
-        "x": 0,
-        "y": 627,
-        "width": 314,
-        "height": 313,
-        "alphaX": 60,
-        "alphaY": 50,
-        "alphaWidth": 223,
-        "alphaHeight": 208
+        "x": 1005,
+        "y": 346,
+        "width": 266,
+        "height": 273,
+        "alphaX": 24,
+        "alphaY": 32,
+        "alphaWidth": 198,
+        "alphaHeight": 214,
+        "processingScale": 0.86
       },
       "runtimeAlphaBounds": {
-        "x": 80,
-        "y": 146,
-        "width": 223,
-        "height": 208
+        "x": 59,
+        "y": 81,
+        "width": 170,
+        "height": 184
       },
       "originX": 0.5,
-      "originY": 0.921875,
-      "displayOffsetX": 80,
-      "displayOffsetY": 146,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 59,
+      "displayOffsetY": 81,
       "feetAnchor": {
-        "x": 192,
-        "y": 354
+        "x": 144,
+        "y": 265
       },
-      "displayScale": 0.94,
+      "displayScale": 1.025,
       "sourceFacing": 1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "51b120390407e479661e4361456213f195d865cca2002bd357b9eb5fd7491a21"
+      "pixelHash": "03018235764c811145b92e42c27c8debdd28541535392aec05331ac2f3aa9a81"
     },
     {
       "name": "hurt-0",
@@ -369,34 +379,35 @@
       "phase": null,
       "sourceImage": "duelist-source-transparent.png",
       "sourceRect": {
-        "x": 314,
-        "y": 627,
-        "width": 313,
-        "height": 313,
-        "alphaX": 46,
-        "alphaY": 47,
-        "alphaWidth": 217,
-        "alphaHeight": 211
+        "x": 1271,
+        "y": 346,
+        "width": 348,
+        "height": 273,
+        "alphaX": 43,
+        "alphaY": 45,
+        "alphaWidth": 181,
+        "alphaHeight": 200,
+        "processingScale": 0.86
       },
       "runtimeAlphaBounds": {
-        "x": 83,
-        "y": 143,
-        "width": 217,
-        "height": 211
+        "x": 66,
+        "y": 93,
+        "width": 156,
+        "height": 172
       },
       "originX": 0.5,
-      "originY": 0.921875,
-      "displayOffsetX": 83,
-      "displayOffsetY": 143,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 66,
+      "displayOffsetY": 93,
       "feetAnchor": {
-        "x": 192,
-        "y": 354
+        "x": 144,
+        "y": 265
       },
-      "displayScale": 0.94,
+      "displayScale": 1.025,
       "sourceFacing": 1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "4410dfad7e2a28605a474fdb8d7015468eb2f1d2a0883d4a4ac48378d0125a0d"
+      "pixelHash": "d7d3377c2ea6d501605abaf2667e872fa3398617387ce0989b51b0105f324d20"
     },
     {
       "name": "hurt-1",
@@ -404,34 +415,35 @@
       "phase": null,
       "sourceImage": "duelist-source-transparent.png",
       "sourceRect": {
-        "x": 627,
-        "y": 627,
-        "width": 313,
-        "height": 313,
-        "alphaX": 60,
-        "alphaY": 51,
-        "alphaWidth": 188,
-        "alphaHeight": 206
+        "x": 0,
+        "y": 619,
+        "width": 323,
+        "height": 352,
+        "alphaX": 46,
+        "alphaY": 32,
+        "alphaWidth": 246,
+        "alphaHeight": 207,
+        "processingScale": 0.86
       },
       "runtimeAlphaBounds": {
-        "x": 98,
-        "y": 148,
-        "width": 188,
-        "height": 206
+        "x": 38,
+        "y": 87,
+        "width": 212,
+        "height": 178
       },
       "originX": 0.5,
-      "originY": 0.921875,
-      "displayOffsetX": 98,
-      "displayOffsetY": 148,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 38,
+      "displayOffsetY": 87,
       "feetAnchor": {
-        "x": 192,
-        "y": 354
+        "x": 144,
+        "y": 265
       },
-      "displayScale": 0.94,
+      "displayScale": 1.025,
       "sourceFacing": 1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "eb521f39f67571d67b21ccb6e6aa2159eeaf68641f4c93fd0b67111781f4659f"
+      "pixelHash": "58d88cb697089918e6eb7ac718cd6cf29dce1ef4c5e7c2f86ab9c346b405b4e6"
     },
     {
       "name": "dead-0",
@@ -439,34 +451,35 @@
       "phase": null,
       "sourceImage": "duelist-source-transparent.png",
       "sourceRect": {
-        "x": 940,
-        "y": 627,
-        "width": 314,
-        "height": 313,
-        "alphaX": 6,
-        "alphaY": 104,
-        "alphaWidth": 216,
-        "alphaHeight": 158
+        "x": 323,
+        "y": 619,
+        "width": 284,
+        "height": 352,
+        "alphaX": 31,
+        "alphaY": 105,
+        "alphaWidth": 227,
+        "alphaHeight": 140,
+        "processingScale": 0.86
       },
       "runtimeAlphaBounds": {
-        "x": 84,
-        "y": 196,
-        "width": 216,
-        "height": 158
+        "x": 46,
+        "y": 145,
+        "width": 195,
+        "height": 120
       },
       "originX": 0.5,
-      "originY": 0.921875,
-      "displayOffsetX": 84,
-      "displayOffsetY": 196,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 46,
+      "displayOffsetY": 145,
       "feetAnchor": {
-        "x": 192,
-        "y": 354
+        "x": 144,
+        "y": 265
       },
-      "displayScale": 0.94,
+      "displayScale": 1.025,
       "sourceFacing": 1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "751dc97b5332a5f458d3ad91a4d817dade807a33fab6af27680888900df567c2"
+      "pixelHash": "480a933c7f298edad8590123e254c62afa8447e6cd4bce6d86364387801ceaa9"
     },
     {
       "name": "dead-1",
@@ -474,34 +487,35 @@
       "phase": null,
       "sourceImage": "duelist-source-transparent.png",
       "sourceRect": {
-        "x": 0,
-        "y": 940,
-        "width": 314,
-        "height": 314,
-        "alphaX": 56,
-        "alphaY": 78,
-        "alphaWidth": 218,
-        "alphaHeight": 145
+        "x": 607,
+        "y": 619,
+        "width": 281,
+        "height": 352,
+        "alphaX": 25,
+        "alphaY": 152,
+        "alphaWidth": 228,
+        "alphaHeight": 103,
+        "processingScale": 0.86
       },
       "runtimeAlphaBounds": {
-        "x": 83,
-        "y": 209,
-        "width": 218,
-        "height": 145
+        "x": 46,
+        "y": 176,
+        "width": 196,
+        "height": 89
       },
       "originX": 0.5,
-      "originY": 0.921875,
-      "displayOffsetX": 83,
-      "displayOffsetY": 209,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 46,
+      "displayOffsetY": 176,
       "feetAnchor": {
-        "x": 192,
-        "y": 354
+        "x": 144,
+        "y": 265
       },
-      "displayScale": 0.94,
+      "displayScale": 1.025,
       "sourceFacing": 1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "2701ad113eb2737ac3dfe1ef1e54c2a44b58975eb138fb9f8b2280a727b5e10e"
+      "pixelHash": "db0a2efb133b7f245530f7d067198d1099792bd560764ccbe6041123571b2e1f"
     },
     {
       "name": "dead-2",
@@ -509,34 +523,35 @@
       "phase": null,
       "sourceImage": "duelist-source-transparent.png",
       "sourceRect": {
-        "x": 314,
-        "y": 940,
-        "width": 313,
-        "height": 314,
-        "alphaX": 35,
-        "alphaY": 111,
-        "alphaWidth": 231,
-        "alphaHeight": 114
+        "x": 888,
+        "y": 619,
+        "width": 324,
+        "height": 352,
+        "alphaX": 27,
+        "alphaY": 168,
+        "alphaWidth": 263,
+        "alphaHeight": 79,
+        "processingScale": 0.86
       },
       "runtimeAlphaBounds": {
-        "x": 76,
-        "y": 240,
-        "width": 231,
-        "height": 114
+        "x": 31,
+        "y": 197,
+        "width": 226,
+        "height": 68
       },
       "originX": 0.5,
-      "originY": 0.921875,
-      "displayOffsetX": 76,
-      "displayOffsetY": 240,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 31,
+      "displayOffsetY": 197,
       "feetAnchor": {
-        "x": 192,
-        "y": 354
+        "x": 144,
+        "y": 265
       },
-      "displayScale": 0.94,
+      "displayScale": 1.025,
       "sourceFacing": 1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "f5b10a6a74765378e9ca9b4033f9b63cf5b18f190bc53c800acaf93b7964c7ca"
+      "pixelHash": "7a35ed9b7256babd906312bfad1e3fac431fad4466288f31f843a7a4d5ec52e6"
     },
     {
       "name": "dead-3",
@@ -544,34 +559,35 @@
       "phase": null,
       "sourceImage": "duelist-source-transparent.png",
       "sourceRect": {
-        "x": 627,
-        "y": 940,
-        "width": 313,
-        "height": 314,
-        "alphaX": 6,
-        "alphaY": 152,
-        "alphaWidth": 244,
-        "alphaHeight": 76
+        "x": 1212,
+        "y": 619,
+        "width": 407,
+        "height": 352,
+        "alphaX": 34,
+        "alphaY": 186,
+        "alphaWidth": 313,
+        "alphaHeight": 62,
+        "processingScale": 0.86
       },
       "runtimeAlphaBounds": {
-        "x": 70,
-        "y": 278,
-        "width": 244,
-        "height": 76
+        "x": 9,
+        "y": 212,
+        "width": 269,
+        "height": 53
       },
       "originX": 0.5,
-      "originY": 0.921875,
-      "displayOffsetX": 70,
-      "displayOffsetY": 278,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 9,
+      "displayOffsetY": 212,
       "feetAnchor": {
-        "x": 192,
-        "y": 354
+        "x": 144,
+        "y": 265
       },
-      "displayScale": 0.94,
+      "displayScale": 1.025,
       "sourceFacing": 1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "7c47ce49dbf0ee796c382f429ea3c72f9c71f1efd8bbe66f2466024b04316fe1"
+      "pixelHash": "d58ae93d20a8b4b8727ac0d557609f3fc3d13b9b46f0f1504ef07b39e968422e"
     }
   ]
 }

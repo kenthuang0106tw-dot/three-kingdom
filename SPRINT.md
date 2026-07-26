@@ -896,3 +896,29 @@ Status: completed and accepted by reviewer.
 
 The next eligible task is ER.3 — Duelist Production-Art Replacement. Do not
 begin it until the next task-runner cycle.
+
+## ER.3 — Duelist Production-Art Replacement — 2026-07-26
+
+Status: completed.
+
+- [x] Replaced only Duelist presentation with fifteen distinct project-owned
+  idle, walk, attack, hurt, and dead poses.
+- [x] Measured the non-equal 1619×971 source rectangles instead of slicing an
+  assumed equal grid.
+- [x] Packed a 5×3 288×288 atlas with feet `(144,265)`, one `1.025` display
+  scale, right-authored facing, and exactly 205px logical idle height.
+- [x] Preserved Duelist HP, speed, range, attack timing, body, hitbox, AI,
+  Attack Slot, encounter, Stage, Camera, UI, Audio, and all other actor art.
+- [x] Added source/alpha provenance, runtime metadata, debug, onion, 25%
+  silhouette, shared lineup, review baseline, and focused contracts.
+- [x] Runtime requests remain 43 files; encoded bytes are 12,771,452, decoded
+  RGBA is 128,888,320, and the GitHub Pages artifact is 18,063,334 bytes.
+- [x] Direct suite passed 128/128; typecheck passed; lint has zero errors and
+  eight existing warnings; direct Vinext/Vite builds and packaging passed.
+- [x] Production smoke passed at 1280×720, 844×390, and 390×844 with one
+  Canvas, no overflow, and zero browser errors.
+- [ ] Package-manager commands remain blocked before project scripts by
+  TD-M11; equivalent direct gates passed.
+
+The next eligible task is ER.4 — Mauler Production-Art Replacement. Do not
+begin it until the next task-runner cycle.

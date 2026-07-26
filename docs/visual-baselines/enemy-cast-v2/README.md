@@ -34,3 +34,10 @@ the reviewer on 2026-07-26. The reviewer specifically rejected the first
 `walk-3`, `attack-0..2`, and `dead-0..3`; all eight were regenerated as
 independent source poses before acceptance. This review image is QA evidence,
 not a runtime texture.
+
+## ER.3 Duelist review
+
+`duelist-er3-review.png` records the measured 15-frame Duelist runtime sheet:
+idle 2, walk 4, startup/active/recovery attack 3, hurt 2, and dead 4. All
+frames use the shared `(144,265)` feet line and one scale. The image is review
+evidence only and is excluded from production packaging.

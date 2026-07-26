@@ -309,3 +309,16 @@ Crossbow art is generated or integrated. The review references in
 must add project-owned source, transparent, atlas, metadata, debug, onion, and
 silhouette files; it must replace legacy runtime textures within the ER.1
 memory and delivery budgets rather than append them.
+
+## ER.2–ER.3 Production replacements
+
+- Soldier and Duelist now use project-owned 5×3 runtime atlases with 288×288
+  cells, feet `(144,265)`, measured metadata, debug/onion/silhouette QA, and
+  one scale per actor.
+- Duelist source rectangles are explicitly measured per row from a 1619×971
+  source; the pipeline does not assume equal-width cells.
+- After ER.3 the runtime inventory remains 43 requests / 46 packaged public
+  files. Runtime encoded bytes are 12,771,452, decoded RGBA is 128,888,320,
+  and the GitHub Pages artifact is 18,063,334 bytes.
+- Mauler remains the next formal melee replacement. Shield Guard and Crossbow
+  remain temporary Soldier presentation until their dedicated production tasks.

@@ -85,7 +85,7 @@ const ENEMY_PREVIEW_FRAMES = [
 const CAST_PREVIEW_ACTORS = [
   { id: "soldier", texture: "enemy-soldier", scale: SOLDIER_ENEMY_CONFIG.displayScale, frameSize: 384, feetY: 354, frames: ENEMY_PREVIEW_FRAMES },
   { id: "mauler", texture: "enemy-mauler", scale: MAULER_ENEMY_CONFIG.displayScale, frameSize: 384, feetY: 354, frames: ENEMY_PREVIEW_FRAMES },
-  { id: "duelist", texture: "enemy-duelist", scale: DUELIST_ENEMY_CONFIG.displayScale, frameSize: 384, feetY: 354, frames: ENEMY_PREVIEW_FRAMES },
+  { id: "duelist", texture: "enemy-duelist", scale: DUELIST_ENEMY_CONFIG.displayScale, frameSize: DUELIST_ENEMY_CONFIG.frameSize, feetY: DUELIST_ENEMY_CONFIG.feetY, frames: ENEMY_PREVIEW_FRAMES },
   {
     id: "boss", texture: "boss-warlord-lifecycle", scale: BOSS_ACTOR_CONFIG.displayScale, frameSize: 448, feetY: 420,
     frames: [

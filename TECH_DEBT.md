@@ -624,3 +624,13 @@ fail.
   already-established direct Vinext/Vite build result; do not silently claim
   that `pnpm build` passed.
 - **Target:** Tooling maintenance, outside ER.1 scope.
+
+## ER.3 update — Legacy Duelist presentation resolved
+
+- **Resolved:** 2026-07-26.
+- **Evidence:** Duelist now has fifteen distinct project-owned poses, measured
+  non-equal source rectangles, a 288×288 atlas, common `(144,265)` feet anchor,
+  one display scale, alpha/debug/onion/silhouette QA, and three-viewport
+  production smoke.
+- **Remaining:** Mauler is still on its earlier 384×384 presentation. Shield
+  Guard and Crossbow remain intentionally temporary under TD-M10.

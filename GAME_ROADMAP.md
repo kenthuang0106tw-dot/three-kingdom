@@ -484,9 +484,9 @@ M6A 不加入新角色、新敵人、新招式、第二關、Audio、技能、�
 - Evidence: one 46-file production public inventory, 99 copied source/QA files excluded from both outputs, exact SHA-256 preservation, 18,172,139-byte GitHub Pages artifact, 110 tests, both builds, three-viewport/six-checkpoint browser matrix, and three ten-cycle reset paths.
 - M8 / Task 8.2A Combo Commitment Prototype was accepted by the reviewer on 2026-07-25. M8 / Task 8.5 remains not required because Task 8.1 found no sustained GameObject, listener, texture, Canvas, Audio-owner, or heap growth attributable to effects.
 - TP-3 Shield Guard + Crossbow Composition was accepted by the reviewer on 2026-07-26. Crossbow friendly fire was explicitly rejected; arrows only threaten the Player.
-- ER.1 Five-Enemy Production Contract and ER.2 Soldier Production-Art Pilot
-  completed on 2026-07-26.
-- Next eligible task: ER.3 Duelist Production-Art Replacement.
+- ER.1 Five-Enemy Production Contract, ER.2 Soldier Production-Art Pilot, and
+  ER.3 Duelist Production-Art Replacement completed on 2026-07-26.
+- Next eligible task: ER.4 Mauler Production-Art Replacement.
 
 ## Enemy Redesign Track
 
@@ -520,7 +520,7 @@ silhouette QA, reviewer approval, 127/127 direct tests, typecheck, lint with
 zero errors, direct Vinext/Vite builds, packaged-asset hash checks, and final
 desktop/844×390/390×844 production smoke with one Canvas and zero errors.
 
-### ER.3 — Duelist Production-Art Replacement
+### ER.3 — Duelist Production-Art Replacement (Completed 2026-07-26)
 
 **Goal:** Apply the proven ER.2 source-to-runtime pipeline to the Duelist while
 preserving its accepted flanking gameplay.
@@ -535,6 +535,30 @@ startup/active/recovery, body, hitbox, speed, AI, Stage data, and Attack Slot
 behavior remain unchanged; asset and three-viewport gates pass.
 
 **Dependencies:** ER.2.
+
+**Evidence:** Fifteen unique project-owned poses, measured non-equal source
+rectangles, one 288×288 atlas, common `(144,265)` feet anchor, one `1.025`
+display scale, debug/onion/25% silhouette QA, 128/128 direct tests, typecheck,
+lint with zero errors, direct Vinext/Vite builds, packaging hash checks, and
+desktop/844×390/390×844 production smoke with one Canvas and zero errors.
+
+### ER.4 — Mauler Production-Art Replacement
+
+**Goal:** Apply the proven one-actor pipeline to the Mauler while preserving
+its accepted heavy commitment and space-control gameplay.
+
+**Scope:** Project-owned Mauler source with seventeen genuine frames: idle 2,
+walk 4, attack 5 (2 startup / 1 active / 2 recovery), hurt 2, and dead 4;
+288×288 atlas where the weapon fits the ER.1 padding contract, measured
+metadata, debug/onion/silhouette QA, and isolated runtime replacement.
+
+**Acceptance Criteria:** Mauler remains the largest normal enemy and is
+distinct from Soldier and Duelist at native and 25% scale; every frame shares
+one feet anchor and scale; attack phase timing, body, hitbox, speed, HP,
+damage, AI, Stage data, and Attack Slot behavior remain unchanged; asset,
+build, test, and three-viewport gates pass.
+
+**Dependencies:** ER.3.
 
 ## 4. Global Acceptance Rules
 
