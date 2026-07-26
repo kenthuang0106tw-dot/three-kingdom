@@ -994,3 +994,29 @@ Status: completed and accepted.
 
 The only next task is GX.1 — Duelist Leap Mobility Prototype. Do not begin
 Shield Guard or Crossbow production art in the same task.
+
+## GX.1 — Duelist Leap Mobility Prototype — 2026-07-26
+
+Status: completed.
+
+- [x] Revalidated ER.4 with the complete 129-test baseline before implementation.
+- [x] Used both repository-owned approved lineup references and the accepted
+  ER.3R Duelist as mandatory visual inputs.
+- [x] Added four genuine poses: takeoff, airborne, descent, and landing.
+- [x] Preserved one `1.025` scale, one `(144,265)` feet anchor, full hood/cowl,
+  shadowed face, and exactly two long inward-curved hooks.
+- [x] Locked the landing destination before takeoff; no airborne homing reads
+  current Player position.
+- [x] Separated sprite elevation from ground/body position and displayed a
+  locked landing shadow.
+- [x] Retained the single Attack Slot through leap commitment and released it
+  on landing, Hurt, Dead, suspension cleanup, and reset.
+- [x] Added a localhost-only `?duelistLeapTest=1` entrance without changing
+  formal Stage encounters.
+- [x] Direct tests passed 131/131; typecheck passed; lint has zero errors and
+  eight existing warnings; both builds and production packaging passed.
+- [x] Desktop, 844×390, and 390×844 smoke showed the airborne pose with one
+  Canvas, no overflow, and zero captured browser errors.
+
+The only next task is ER.5 — Shield Guard Production-Art Replacement. Do not
+begin Crossbow production art or alter TP-1 gameplay in the same task.

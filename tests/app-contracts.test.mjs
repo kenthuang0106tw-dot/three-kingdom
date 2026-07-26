@@ -22,6 +22,7 @@ import { createCameraLockState, hasCameraLock, isCameraLocked, lockCamera, unloc
 import { beginEncounter, clearActiveEncounter, createBossEntryState, createEncounterFlow, createEncounterSequence, isEncounterCleared, isEncounterSequenceCleared, makeBossEntryEligible, recordEnemyRemoved, triggerBossEntry, triggerNextEncounter } from "../app/game/stage/EncounterFlow.ts";
 import { canRequestStageExit, createStageExitState, makeExitAvailable, requestStageExit, resetStageExit } from "../app/game/stage/StageExit.ts";
 import { DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemyAttackSpriteShouldFlip, enemySpriteShouldFlip, validateEnemyConfig } from "../app/game/enemy/EnemyConfig.ts";
+import { createDuelistLeapPlan, DUELIST_LEAP_TIMING, sampleDuelistLeap } from "../app/game/enemy/DuelistLeap.ts";
 import { BossLifecycle } from "../app/game/boss/BossLifecycle.ts";
 import { BOSS_ATTACKS } from "../app/game/boss/BossAttackMetadata.ts";
 import { BossDecisionPolicy } from "../app/game/boss/BossDecisionPolicy.ts";
@@ -213,7 +214,7 @@ test("Runtime asset manifest preserves keys and reports missing required assets"
     "ui-hud-frame", "ui-modal-frame", "ui-button-frame",
     "ui-joystick-base", "ui-joystick-knob", "ui-attack-frame",
     "dragon-pixel",
-    "guanyu-v2", "enemy-soldier", "enemy-mauler", "enemy-duelist", "boss-warlord-attacks", "boss-warlord-lifecycle",
+    "guanyu-v2", "enemy-soldier", "enemy-mauler", "enemy-duelist", "enemy-duelist-leap", "boss-warlord-attacks", "boss-warlord-lifecycle",
     "sfx-player-attack", "sfx-hit-confirmed", "sfx-player-hurt", "sfx-enemy-death",
     "sfx-ui-start", "sfx-ui-pause", "sfx-ui-resume", "sfx-ui-failure", "sfx-ui-result", "sfx-ui-confirm",
     "bgm-stage", "bgm-boss",
@@ -1021,7 +1022,7 @@ test("Recovery traversal starts unlocked while preserving explicit diagnostic lo
   const source = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
   assert.match(source, /if \(this\.bossSmokeMode \|\| this\.bossCombatSmokeMode \|\| this\.failureSmokeCycleActive\) \{/);
   assert.match(source, /this\.cameraLockState = lockCamera\(this\.cameraLockState, "encounter"\)/);
-  assert.match(source, /if \(!this\.shieldGuardTestMode && !this\.crossbowTestMode && !this\.shieldCrossbowTestMode && !this\.bossSmokeMode && !this\.bossCombatSmokeMode && !this\.failureSmokeCycleActive\) \{\s+this\.updateEncounterSmoke\(\)/);
+  assert.match(source, /if \(!this\.shieldGuardTestMode && !this\.crossbowTestMode && !this\.shieldCrossbowTestMode && !this\.duelistLeapTestMode && !this\.bossSmokeMode && !this\.bossCombatSmokeMode && !this\.failureSmokeCycleActive\) \{\s+this\.updateEncounterSmoke\(\)/);
   assert.match(source, /unlockCamera\(this\.cameraLockState, "encounter"\)/);
   assert.match(source, /if \(!isCameraLocked\(this\.cameraLockState\)\)/);
   assert.match(source, /dataset\.cameraScrollX/);
@@ -1720,6 +1721,48 @@ test("ER.3R Duelist correction uses measured approved-prototype frames without c
   assert.match(configSource, /id: "duelist"[\s\S]*attackXRange: 92[\s\S]*attackYRange: 40/);
 });
 
+test("GX.1 Duelist leap locks its destination and separates elevation from ground travel", () => {
+  const plan = createDuelistLeapPlan(600, 620, 720, 550, value => value, value => value);
+  assert.deepEqual(plan, { startX: 600, startY: 620, destinationX: 798, destinationY: 550 });
+  const airborne = sampleDuelistLeap(plan, DUELIST_LEAP_TIMING.takeoffMs + 80);
+  assert.equal(airborne.phase, "airborne");
+  assert.ok(airborne.elevation > 0);
+  const sameLockedSample = sampleDuelistLeap(plan, DUELIST_LEAP_TIMING.takeoffMs + 80);
+  assert.deepEqual(sameLockedSample, airborne);
+  const landed = sampleDuelistLeap(plan, 99999);
+  assert.deepEqual(
+    { phase: landed.phase, x: landed.x, y: landed.y, elevation: Math.round(landed.elevation), complete: landed.complete },
+    { phase: "landing", x: 798, y: 550, elevation: 0, complete: true },
+  );
+});
+
+test("GX.1 Duelist leap owns genuine four-pose art and Duelist-only cleanup contracts", async () => {
+  const [atlas, metadata, manager, manifest, scene] = await Promise.all([
+    readFile(new URL("../public/art/enemy/duelist-leap.atlas.json", import.meta.url), "utf8").then(JSON.parse),
+    readFile(new URL("../public/art/enemy/duelist-leap.metadata.json", import.meta.url), "utf8").then(JSON.parse),
+    readFile(new URL("../app/game/EnemyManager.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/assets/AssetManifest.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8"),
+  ]);
+  assert.deepEqual(Object.keys(atlas.frames), ["leap-takeoff", "leap-airborne", "leap-descent", "leap-landing"]);
+  assert.equal(new Set(metadata.frames.map(frame => frame.pixelHash)).size, 4);
+  assert.ok(metadata.frames.every(frame =>
+    frame.feetAnchor.x === 144 && frame.feetAnchor.y === 265 &&
+    frame.displayScale === DUELIST_ENEMY_CONFIG.displayScale &&
+    frame.runtimeAlphaBounds.x >= 0 &&
+    frame.runtimeAlphaBounds.x + frame.runtimeAlphaBounds.width < 288 &&
+    frame.runtimeAlphaBounds.y + frame.runtimeAlphaBounds.height === 265
+  ));
+  assert.match(manifest, /key: "enemy-duelist-leap"/);
+  assert.match(scene, /duelistLeapAnimationKey/);
+  assert.match(scene, /\(development \|\| localPrototypeHost\) && query\.get\("duelistLeapTest"\) === "1"/);
+  assert.match(scene, /spawnDuelistLeapPrototype/);
+  assert.match(manager, /enemy\.leapPlan = createDuelistLeapPlan/);
+  assert.match(manager, /enemy\.sprite\.setPosition\(x, Math\.round\(y - enemy\.visualElevation\)\)/);
+  assert.match(manager, /this\.releaseAttackSlot\(enemy\);[\s\S]*this\.setState\(enemy, "idle"\)/);
+  assert.match(manager, /cancelDuelistLeap\(enemy\)/);
+});
+
 test("M6A enemy and Boss art share audited scale, feet, facing, and provenance contracts", async () => {
   const actorFiles = [
     ["soldier", "enemy-soldier", SOLDIER_ENEMY_CONFIG, 210],
@@ -1820,7 +1863,7 @@ test("M6A visual freeze has reproducible captures, assets, and runtime metrics",
   assert.equal(metrics.productionDebugLeak, false);
 });
 
-test("enemy redesign tasks retain the approved prototype lock and advance to Duelist leap", async () => {
+test("enemy redesign tasks retain the approved prototype lock and advance to Shield Guard production", async () => {
   const [color, silhouette, prototypeContract, nextTask] = await Promise.all([
     readFile(new URL("../docs/visual-baselines/enemy-cast-v2/approved-five-enemy-color.png", import.meta.url)),
     readFile(new URL("../docs/visual-baselines/enemy-cast-v2/approved-five-enemy-silhouette.png", import.meta.url)),
@@ -1839,6 +1882,8 @@ test("enemy redesign tasks retain the approved prototype lock and advance to Due
   assert.match(prototypeContract, /Exactly two long inward-curved hand hooks/);
   assert.match(prototypeContract, /GX\.1/);
   assert.match(prototypeContract, /genuine startup, airborne, descent, and landing/);
-  assert.match(nextTask, /GX\.1 — Duelist Leap Mobility Prototype/);
-  assert.match(nextTask, /Do not modify Shield Guard, Crossbow, Boss/);
+  assert.match(nextTask, /ER\.5 — Shield Guard Production-Art Replacement/);
+  assert.match(nextTask, /dominant round woven[\s\S]*rattan shield/);
+  assert.match(nextTask, /preserve its accepted HP, speed,[\s\S]*guard cone/);
+  assert.match(nextTask, /Do not start Crossbow art/);
 });

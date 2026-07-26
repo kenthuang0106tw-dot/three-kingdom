@@ -1241,3 +1241,19 @@
 | Approved-prototype conformance | Go | Largest normal enemy, smaller than Boss; square-headed long hammer and broad heavy silhouette preserved |
 | Post-review crop correction | Pass | `attack-0` source rect is `(232,350,252,280)`; complete connected hammer retains 9px source and 41px runtime right padding with no adjacent pose |
 | Next task | Selected | GX.1 — Duelist Leap Mobility Prototype |
+
+## GX.1 — Duelist Leap Mobility Prototype — 2026-07-26
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Identity | Pass | Approved full hood/cowl, shadowed face, low narrow silhouette, and exactly two long inward-curved hooks retained |
+| Genuine poses | Pass | Four distinct pixel hashes: takeoff, airborne, descent, landing; no transform-faked frame |
+| Atlas/alignment | Pass | 288×288 cells, shared feet `(144,265)`, one `1.025` display scale |
+| Commitment | Pass | Destination captured once; policy samples only the frozen plan and never current Player position |
+| 2.5D elevation | Pass | Ground/body X/Y owns depth while sprite Y subtracts independent visual elevation; locked landing shadow remains on ground |
+| Attack Slot | Pass | One slot retained through leap and released on landing, Hurt, Dead, suspension cleanup, or reset |
+| Scope | Pass | Duelist-only reposition; no leap damage, Player jump, generic aerial framework, Stage/Camera/UI/Audio change |
+| Delivery | Pass | 45 requests; 12,836,324 encoded bytes; 128,003,584 decoded RGBA; 18,132,212-byte GitHub Pages artifact |
+| Automated gates | Pass with TD-M11 noted | 131/131 direct tests, typecheck, lint 0 errors/8 existing warnings, both direct builds and packaging |
+| Browser | Pass | Desktop, 844×390, 390×844: readable airborne pose, one Canvas, no overflow, zero captured errors |
+| Next task | Selected | ER.5 — Shield Guard Production-Art Replacement |

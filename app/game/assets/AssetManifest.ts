@@ -36,6 +36,7 @@ export const RUNTIME_ASSET_MANIFEST: readonly RuntimeAsset[] = [
   { kind: "atlas", key: "enemy-soldier", textureURL: assetUrl("/art/enemy/enemy-soldier.png"), atlasURL: assetUrl("/art/enemy/enemy-soldier.atlas.json") },
   { kind: "atlas", key: "enemy-mauler", textureURL: assetUrl("/art/enemy/mauler.png"), atlasURL: assetUrl("/art/enemy/mauler.atlas.json") },
   { kind: "atlas", key: "enemy-duelist", textureURL: assetUrl("/art/enemy/duelist.png"), atlasURL: assetUrl("/art/enemy/duelist.atlas.json") },
+  { kind: "atlas", key: "enemy-duelist-leap", textureURL: assetUrl("/art/enemy/duelist-leap.png"), atlasURL: assetUrl("/art/enemy/duelist-leap.atlas.json") },
   { kind: "atlas", key: "boss-warlord-attacks", textureURL: assetUrl("/art/boss/warlord-attacks.png"), atlasURL: assetUrl("/art/boss/warlord-attacks.atlas.json") },
   { kind: "atlas", key: "boss-warlord-lifecycle", textureURL: assetUrl("/art/boss/warlord-lifecycle.png"), atlasURL: assetUrl("/art/boss/warlord-lifecycle.atlas.json") },
   { kind: "audio", key: "sfx-player-attack", urls: [assetUrl("/audio/sfx/player-attack.wav")] },

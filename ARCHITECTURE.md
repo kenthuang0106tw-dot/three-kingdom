@@ -750,6 +750,20 @@ Mauler 239.8px, and Boss 300.99px against Guan Yu 230.4px. Soldier/Boss source
 art faces left; Mauler/Duelist faces right. `enemySpriteShouldFlip` and the Boss
 source-facing rule remain the only runtime mirroring boundaries.
 
+## Duelist Leap Boundary (GX.1)
+
+`enemy/DuelistLeap.ts` is Phaser-free and owns only the immutable leap timing,
+destination plan, trajectory sample, and animation-key contract. The plan
+captures start and destination once; later samples accept no Player input, so
+airborne homing is structurally unavailable.
+
+`EnemyManager` alone decides when the Duelist may start the behavior. It
+retains the existing Attack Slot, moves the ground body along the locked plan,
+and stores visual elevation separately. `syncSprite()` subtracts elevation from
+sprite Y while depth, collision, shadow, and landing ownership continue using
+ground/body Y. Hurt, Dead, completion, suspension cleanup, and destroy release
+the slot and clear all leap-local presentation.
+
 ## Stage Visual Contract (M6A / Task 6A.4)
 
 `StageConfig` remains the gameplay geometry owner and now declares three

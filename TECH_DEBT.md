@@ -655,5 +655,7 @@ fail.
   gate, then replaced the drifted exposed-topknot/short-blade presentation with
   the approved full-hooded long twin-hook Duelist. Fifteen-frame atlas,
   measured metadata, QA sheets, hashes, builds, and three-viewport smoke passed.
-- **Remaining:** None for reference ownership. GX.1 Duelist leap is a separate
-  planned gameplay prototype, not unresolved art debt.
+- **Remaining:** None for reference ownership. GX.1 completed with the
+  repository-owned references and a reproducible four-pose pipeline. Shield
+  Guard and Crossbow production presentation remain planned work, not hidden
+  debt in the accepted Soldier, Duelist, or Mauler assets.

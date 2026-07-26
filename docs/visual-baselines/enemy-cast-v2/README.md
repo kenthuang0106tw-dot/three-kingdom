@@ -66,3 +66,7 @@ packaging.
 The review image was updated after the reviewer found a clipped `attack-0`
 hammer head. The corrected measured rectangle includes the complete connected
 hammer with explicit right-side padding and excludes the neighboring pose.
+
+`duelist-gx1-leap-review.png` is the GX.1 four-pose review sheet. It records
+genuine takeoff, airborne, descent, and landing poses against one feet line;
+runtime visual elevation is applied separately from the shared ground anchor.

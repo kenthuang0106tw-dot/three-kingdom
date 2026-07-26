@@ -331,3 +331,11 @@ memory and delivery budgets rather than append them.
 - ER.4 delivery measurements: 43 runtime requests, 12,621,623 encoded bytes,
   126,676,480 decoded RGBA bytes, 46 packaged production files, and a
   17,913,999-byte GitHub Pages artifact.
+- GX.1 adds one four-frame Duelist-only leap atlas generated from the approved
+  color/silhouette references and accepted ER.3R runtime identity. Source and
+  transparent derivatives, 288×288 runtime cells, measured metadata, debug,
+  onion, and review evidence are reproducible through
+  `tools/build_duelist_leap_art.py`.
+- GX.1 delivery measurements: 45 runtime requests, 12,836,324 encoded bytes,
+  128,003,584 decoded RGBA bytes, 48 packaged production files, and an
+  18,132,212-byte GitHub Pages artifact.

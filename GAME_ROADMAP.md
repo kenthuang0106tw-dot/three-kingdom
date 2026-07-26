@@ -624,6 +624,36 @@ hurt, death, pause, hit stop, and reset.
 **Dependencies:** ER.3R and ER.4 accepted. This is the current NEXT_TASK and
 must receive its own prototype task and commit.
 
+**Status:** Completed on 2026-07-26.
+
+**Closeout:** Four genuine takeoff/airborne/descent/landing poses preserve the
+approved hooded twin-hook identity. A Duelist-only policy locks the landing
+destination before takeoff, separates visual elevation from 2.5D ground
+ownership, retains the single Attack Slot, and clears on Hurt, Dead, suspension,
+and reset. The leap has no damage and changes no Player, Stage, Camera, UI,
+Audio, HP, or normal-attack contract. Direct tests passed 131/131; typecheck,
+lint, both builds, packaging, and three-viewport browser smoke passed.
+
+### ER.5 — Shield Guard Production-Art Replacement
+
+**Goal:** Replace the TP-1 Soldier-art substitute with the approved round
+rattan-shield infantry identity without changing the accepted directional
+guard gameplay.
+
+**Scope:** Neutral identity gate followed by genuine idle, walk, guard, attack,
+hurt, and dead poses; measured atlas/metadata; debug, onion, silhouette, and
+three-viewport evidence; isolated Shield Guard runtime integration.
+
+**Acceptance Criteria:** The dominant round woven shield remains approximately
+55–60% of body height and readable at 25% scale; guard facing, cone, lock,
+counter timing, Attack Slot, HP, speed, damage, body, hitbox, and Stage
+composition remain unchanged; one feet anchor and display scale apply to every
+frame; asset, test, build, and browser gates pass.
+
+**Dependencies:** TP-1 accepted; ER.1 production contract; GX.1 completed.
+
+**Status:** Planned. This is the current NEXT_TASK.
+
 ## 4. Global Acceptance Rules
 
 每個 Milestone 必須同時滿足：

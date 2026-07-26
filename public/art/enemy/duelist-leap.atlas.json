@@ -1,0 +1,111 @@
+{
+  "frames": {
+    "leap-takeoff": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 288
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 288
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 288
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.9201388888888888
+      }
+    },
+    "leap-airborne": {
+      "frame": {
+        "x": 288,
+        "y": 0,
+        "w": 288,
+        "h": 288
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 288
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 288
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.9201388888888888
+      }
+    },
+    "leap-descent": {
+      "frame": {
+        "x": 576,
+        "y": 0,
+        "w": 288,
+        "h": 288
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 288
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 288
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.9201388888888888
+      }
+    },
+    "leap-landing": {
+      "frame": {
+        "x": 864,
+        "y": 0,
+        "w": 288,
+        "h": 288
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 288,
+        "h": 288
+      },
+      "sourceSize": {
+        "w": 288,
+        "h": 288
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.9201388888888888
+      }
+    }
+  },
+  "meta": {
+    "app": "Three Kingdom GX.1 Duelist leap builder",
+    "version": "1.0",
+    "image": "duelist-leap.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 1152,
+      "h": 288
+    },
+    "scale": "1"
+  }
+}

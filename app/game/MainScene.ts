@@ -20,6 +20,7 @@ import { createCameraLockState, hasCameraLock, isCameraLocked, lockCamera, unloc
 import { createStageExitState, makeExitAvailable, resetStageExit, type StageExitState } from "./stage/StageExit";
 import { clearActiveEncounter, createBossEntryState, createEncounterSequence, isEncounterSequenceCleared, makeBossEntryEligible, triggerBossEntry, triggerNextEncounter, type BossEntryState, type EncounterSequenceState } from "./stage/EncounterFlow";
 import { CROSSBOW_ENEMY_CONFIG, DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SHIELD_GUARD_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemyAnimationKey } from "./enemy/EnemyConfig";
+import { duelistLeapAnimationKey, type DuelistLeapPhase } from "./enemy/DuelistLeap";
 import { BOSS_ACTOR_CONFIG, BossActor } from "./boss/BossActor";
 import { GameFlowStateMachine } from "./flow/GameFlowStateMachine";
 import { TitleStartController } from "./flow/TitleStartController";
@@ -191,6 +192,7 @@ export default class MainScene extends Phaser.Scene {
   private shieldGuardTestMode?: "A" | "B";
   private crossbowTestMode?: "A" | "B";
   private shieldCrossbowTestMode = false;
+  private duelistLeapTestMode = false;
   private enemyPreviewMode = false;
   private resetSmokeMode = false;
   private encounterSmokeMode = false;
@@ -275,6 +277,7 @@ export default class MainScene extends Phaser.Scene {
   create() {
     const development = process.env.NODE_ENV !== "production";
     const query = new URLSearchParams(window.location.search);
+    const localPrototypeHost = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost";
     this.enemyPreviewMode = development && query.get("previewEnemy") === "1";
     if (this.enemyPreviewMode) {
       const requestedActor = query.get("previewEnemyActor");
@@ -290,6 +293,7 @@ export default class MainScene extends Phaser.Scene {
     const crossbowTest = query.get("crossbowTest")?.toUpperCase();
     this.crossbowTestMode = development && (crossbowTest === "A" || crossbowTest === "B") ? crossbowTest : undefined;
     this.shieldCrossbowTestMode = development && query.get("shieldCrossbowTest") === "1";
+    this.duelistLeapTestMode = (development || localPrototypeHost) && query.get("duelistLeapTest") === "1";
     this.visualFreezeMode = development && query.get("visualFreeze") === "1";
     this.visualFreezeWarmupFrames = 0;
     this.visualFreezeDeltas.length = 0;
@@ -561,7 +565,7 @@ export default class MainScene extends Phaser.Scene {
     if (this.lifecycleClock.isPaused()) { this.updateDebugText(); return; }
     this.playerBody.setVelocity(0, 0);
     this.currentInput = this.touchInputController.readSnapshot(this.inputController.readSnapshot());
-    if (!this.shieldGuardTestMode && !this.crossbowTestMode && !this.shieldCrossbowTestMode && !this.bossSmokeMode && !this.bossCombatSmokeMode && !this.failureSmokeCycleActive) {
+    if (!this.shieldGuardTestMode && !this.crossbowTestMode && !this.shieldCrossbowTestMode && !this.duelistLeapTestMode && !this.bossSmokeMode && !this.bossCombatSmokeMode && !this.failureSmokeCycleActive) {
       this.updateEncounterSmoke();
       this.updateEncounterProgress();
       this.constrainPlayerToEncounterCamera();
@@ -786,6 +790,20 @@ export default class MainScene extends Phaser.Scene {
       });
       this.anims.create({ key: enemyAnimationKey(config, "hurt"), frames: config.animations.hurt.map(frame => ({ key: config.assetKey, frame })), frameRate: config.animationRates.hurt, repeat: 0 });
       this.anims.create({ key: enemyAnimationKey(config, "dead"), frames: config.animations.dead.map(frame => ({ key: config.assetKey, frame })), frameRate: config.animationRates.dead, repeat: 0 });
+    }
+    const leapFrames: Record<DuelistLeapPhase, string> = {
+      takeoff: "leap-takeoff",
+      airborne: "leap-airborne",
+      descent: "leap-descent",
+      landing: "leap-landing",
+    };
+    for (const phase of Object.keys(leapFrames) as DuelistLeapPhase[]) {
+      this.anims.create({
+        key: duelistLeapAnimationKey(phase),
+        frames: [{ key: "enemy-duelist-leap", frame: leapFrames[phase] }],
+        frameRate: 8,
+        repeat: 0,
+      });
     }
     this.effectDirector.createHitSparkAnimation();
   }
@@ -1246,6 +1264,7 @@ export default class MainScene extends Phaser.Scene {
     if (this.shieldGuardTestMode) this.spawnShieldGuardPrototype(this.shieldGuardTestMode);
     else if (this.crossbowTestMode) this.spawnCrossbowPrototype(this.crossbowTestMode);
     else if (this.shieldCrossbowTestMode) this.spawnShieldCrossbowPrototype();
+    else if (this.duelistLeapTestMode) this.spawnDuelistLeapPrototype();
     this.updateTitleDataset(source);
     this.updatePauseDataset();
     this.updateAudioDataset();
@@ -1281,6 +1300,14 @@ export default class MainScene extends Phaser.Scene {
       { id: "crossbow-test", x: 790, y: 500, enemyType: "crossbow" as const },
     ]);
     if (process.env.NODE_ENV !== "production") this.game.canvas.dataset.shieldCrossbowTestMode = "true";
+  }
+
+  /** Development-only GX.1 entrance; formal encounter composition is unchanged. */
+  private spawnDuelistLeapPrototype() {
+    this.enemyManager.spawnPrototype([
+      { id: "duelist-leap-test", x: 360, y: 540, enemyType: "duelist" as const },
+    ]);
+    this.game.canvas.dataset.duelistLeapTestMode = "true";
   }
 
   private updateTitleDataset(source?: TitleStartSource) {

@@ -1,0 +1,165 @@
+{
+  "actor": "duelist",
+  "task": "GX.1",
+  "cell": {
+    "width": 288,
+    "height": 288
+  },
+  "feetAnchor": {
+    "x": 144,
+    "y": 265
+  },
+  "displayScale": 1.025,
+  "sourceFacing": 1,
+  "animations": {
+    "takeoff": [
+      "leap-takeoff"
+    ],
+    "airborne": [
+      "leap-airborne"
+    ],
+    "descent": [
+      "leap-descent"
+    ],
+    "landing": [
+      "leap-landing"
+    ]
+  },
+  "provenance": {
+    "original": true,
+    "source": "duelist-leap-source.png",
+    "transparentSource": "duelist-leap-source-transparent.png",
+    "processingTool": "tools/build_duelist_leap_art.py",
+    "generatedBy": "built-in image generation, GX.1 Duelist Leap Mobility Prototype"
+  },
+  "frames": [
+    {
+      "name": "leap-takeoff",
+      "sourceImage": "duelist-leap-source-transparent.png",
+      "sourceRect": {
+        "x": 0,
+        "y": 0,
+        "width": 543,
+        "height": 724,
+        "alphaX": 137,
+        "alphaY": 342,
+        "alphaWidth": 355,
+        "alphaHeight": 273,
+        "processingScale": 0.57
+      },
+      "runtimeAlphaBounds": {
+        "x": 43,
+        "y": 109,
+        "width": 202,
+        "height": 156
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 43,
+      "displayOffsetY": 109,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": 1,
+      "pixelHash": "558d5f3c355edaf2be7f4f9435a3ef3da02ca64e1ee9ca319db1484794a30030"
+    },
+    {
+      "name": "leap-airborne",
+      "sourceImage": "duelist-leap-source-transparent.png",
+      "sourceRect": {
+        "x": 543,
+        "y": 0,
+        "width": 543,
+        "height": 724,
+        "alphaX": 119,
+        "alphaY": 94,
+        "alphaWidth": 395,
+        "alphaHeight": 360,
+        "processingScale": 0.57
+      },
+      "runtimeAlphaBounds": {
+        "x": 31,
+        "y": 60,
+        "width": 225,
+        "height": 205
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 31,
+      "displayOffsetY": 60,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": 1,
+      "pixelHash": "96c0401f2d34faf9e822b1381da09dbec79f68736f1276ccc35a15aa29dc00e7"
+    },
+    {
+      "name": "leap-descent",
+      "sourceImage": "duelist-leap-source-transparent.png",
+      "sourceRect": {
+        "x": 1086,
+        "y": 0,
+        "width": 543,
+        "height": 724,
+        "alphaX": 119,
+        "alphaY": 195,
+        "alphaWidth": 393,
+        "alphaHeight": 420,
+        "processingScale": 0.57
+      },
+      "runtimeAlphaBounds": {
+        "x": 32,
+        "y": 26,
+        "width": 224,
+        "height": 239
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 32,
+      "displayOffsetY": 26,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": 1,
+      "pixelHash": "8bfdb42e4cb79a934576732a5fb201187025eb9972ae8d5074762cc0260dd68e"
+    },
+    {
+      "name": "leap-landing",
+      "sourceImage": "duelist-leap-source-transparent.png",
+      "sourceRect": {
+        "x": 1629,
+        "y": 0,
+        "width": 543,
+        "height": 724,
+        "alphaX": 50,
+        "alphaY": 359,
+        "alphaWidth": 379,
+        "alphaHeight": 256,
+        "processingScale": 0.57
+      },
+      "runtimeAlphaBounds": {
+        "x": 36,
+        "y": 119,
+        "width": 216,
+        "height": 146
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 36,
+      "displayOffsetY": 119,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": 1,
+      "pixelHash": "b48d89dc18720d2215d24ad3573ed8fef6120156531553312faac4926ec70c5a"
+    }
+  ]
+}

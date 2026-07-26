@@ -8,8 +8,9 @@ import { createAttackCommitment, isWithinAttackLine, type AttackCommitment } fro
 import { SHIELD_GUARD_PARAMS, SHIELD_GUARD_TIMING, type ShieldGuardState, isAttackBlockedByGuard } from "./enemy/ShieldGuard";
 import { CROSSBOW_ATTACK_SLOT_RANGE, CROSSBOW_TIMING, isCrossbowReadyToFire, isCrossbowTracking, isTargetOnCrossbowLine, nextAimLineY } from "./enemy/CrossbowLine";
 import { CrossbowProjectile } from "./enemy/CrossbowProjectile";
+import { createDuelistLeapPlan, duelistLeapAnimationKey, DUELIST_LEAP_TIMING, sampleDuelistLeap, type DuelistLeapPhase, type DuelistLeapPlan } from "./enemy/DuelistLeap";
 
-export type EnemyState = "idle" | "walk" | "attack" | "hurt" | "dead" | "guard" | "recovery" | "position" | "aim" | "locked" | "fire" | "reload";
+export type EnemyState = "idle" | "walk" | "attack" | "hurt" | "dead" | "guard" | "recovery" | "position" | "aim" | "locked" | "fire" | "reload" | DuelistLeapPhase;
 export type EnemyDamageResult = Readonly<{
   applied: boolean;
   becameDead: boolean;
@@ -32,8 +33,8 @@ const FORMATION_SLOTS = [
 ] as const;
 
 const TRANSITIONS: Record<EnemyState, ReadonlySet<EnemyState>> = {
-  idle: new Set(["walk", "attack", "guard", "hurt", "dead", "position", "aim"]),
-  walk: new Set(["idle", "attack", "guard", "hurt", "dead", "position"]),
+  idle: new Set(["walk", "attack", "guard", "hurt", "dead", "position", "aim", "takeoff"]),
+  walk: new Set(["idle", "attack", "guard", "hurt", "dead", "position", "takeoff"]),
   attack: new Set(["idle", "recovery", "hurt", "dead"]),
   guard: new Set(["idle", "attack", "recovery", "hurt", "dead"]),
   recovery: new Set(["guard", "hurt", "dead"]),
@@ -43,6 +44,10 @@ const TRANSITIONS: Record<EnemyState, ReadonlySet<EnemyState>> = {
   locked: new Set(["fire", "reload", "hurt", "dead"]),
   fire: new Set(["reload", "hurt", "dead"]),
   reload: new Set(["position", "hurt", "dead"]),
+  takeoff: new Set(["airborne", "hurt", "dead"]),
+  airborne: new Set(["descent", "hurt", "dead"]),
+  descent: new Set(["landing", "hurt", "dead"]),
+  landing: new Set(["idle", "hurt", "dead"]),
   dead: new Set(),
 };
 
@@ -71,6 +76,11 @@ export class EnemyCombatant {
   aimLineY = 0;
   lockedLineY = 0;
   projectile?: CrossbowProjectile;
+  leapPlan: DuelistLeapPlan | null = null;
+  leapStartedAt = 0;
+  nextLeapAt = 0;
+  visualElevation = 0;
+  landingShadow?: Phaser.GameObjects.Image;
 
   constructor(readonly id: number, readonly assignedSlot: number, readonly config: EnemyConfig, scene: Phaser.Scene, x: number, y: number) {
     this.hp = config.maxHp;
@@ -97,6 +107,7 @@ export class EnemyCombatant {
   get slotName() { return FORMATION_SLOTS[this.assignedSlot].name; }
   get isShieldGuard() { return this.config.id === "shield-guard"; }
   get isCrossbow() { return this.config.id === "crossbow"; }
+  get isDuelist() { return this.config.id === "duelist"; }
   get shieldState(): ShieldGuardState | undefined {
     return this.isShieldGuard ? (this.state === "idle" || this.state === "walk" ? "approach" : this.state as ShieldGuardState) : undefined;
   }
@@ -166,6 +177,11 @@ export class EnemyManager {
     enemy.sprite.on(Phaser.Animations.Events.ANIMATION_UPDATE, update);
     enemy.sprite.on(Phaser.Animations.Events.ANIMATION_COMPLETE, complete);
     if (enemy.isShieldGuard) enemy.guardMarker = this.scene.add.graphics().setDepth(8999);
+    if (enemy.isDuelist) {
+      enemy.nextLeapAt = this.clock.now();
+      enemy.landingShadow = this.scene.add.image(enemy.bodyZone.x, enemy.bodyZone.y + 4, "combat-effects", "actor-shadow")
+        .setAlpha(0.28).setScale(0.92).setVisible(false);
+    }
     const playerCollider = this.scene.physics.add.collider(this.playerBodyZone, enemy.bodyZone);
     this.colliders.push(playerCollider);
     this.colliderOwners.get(enemy)!.push(playerCollider);
@@ -190,6 +206,7 @@ export class EnemyManager {
       if (enemy.state === "dead" || enemy.state === "hurt") continue;
       if (enemy.isCrossbow && this.updateCrossbow(enemy)) continue;
       if (enemy.isShieldGuard && this.updateShieldGuard(enemy)) continue;
+      if (enemy.isDuelist && this.updateDuelistLeap(enemy)) continue;
       if (enemy.state === "attack") {
         this.positionAttackHitbox(enemy);
         if (enemy.attackBody.enable && !enemy.attackHitPlayer && enemy.attackCommitment &&
@@ -305,6 +322,57 @@ export class EnemyManager {
     this.moveToward(enemy, attackX, this.playerBodyZone.y);
   }
 
+  private updateDuelistLeap(enemy: EnemyCombatant) {
+    if (enemy.leapPlan) {
+      const sample = sampleDuelistLeap(enemy.leapPlan, this.clock.now() - enemy.leapStartedAt);
+      enemy.visualElevation = sample.elevation;
+      enemy.bodyZone.setPosition(Math.round(sample.x), Math.round(sample.y));
+      enemy.body.reset(enemy.bodyZone.x, enemy.bodyZone.y);
+      if (enemy.state !== sample.phase) this.setState(enemy, sample.phase);
+      if (sample.complete) this.finishDuelistLeap(enemy);
+      return true;
+    }
+    if (!enemy.hasAttackSlot || this.clock.now() < enemy.nextLeapAt ||
+      (enemy.state !== "idle" && enemy.state !== "walk")) return false;
+    const dx = Math.abs(this.playerBodyZone.x - enemy.bodyZone.x);
+    const dy = Math.abs(this.playerBodyZone.y - enemy.bodyZone.y);
+    if (dx > 220 || (dx <= enemy.config.combat.attackXRange && dy < enemy.config.combat.attackYRange)) return false;
+    this.startDuelistLeap(enemy);
+    return true;
+  }
+
+  private startDuelistLeap(enemy: EnemyCombatant) {
+    this.setFacing(enemy, this.playerBodyZone.x >= enemy.bodyZone.x ? 1 : -1);
+    enemy.leapPlan = createDuelistLeapPlan(
+      enemy.bodyZone.x,
+      enemy.bodyZone.y,
+      this.playerBodyZone.x,
+      this.playerBodyZone.y,
+      value => clampStageX(value, BAMBOO_COMBAT_ROOM.walkBounds),
+      value => clampStageY(value, BAMBOO_COMBAT_ROOM.walkBounds),
+    );
+    enemy.leapStartedAt = this.clock.now();
+    enemy.landingShadow?.setPosition(enemy.leapPlan.destinationX, enemy.leapPlan.destinationY + 4)
+      .setDepth(enemy.leapPlan.destinationY - 2).setVisible(true);
+    this.setState(enemy, "takeoff");
+  }
+
+  private finishDuelistLeap(enemy: EnemyCombatant) {
+    enemy.visualElevation = 0;
+    enemy.leapPlan = null;
+    enemy.landingShadow?.setVisible(false);
+    enemy.nextLeapAt = this.clock.now() + DUELIST_LEAP_TIMING.cooldownMs;
+    enemy.cooldownUntil = this.clock.now() + DUELIST_LEAP_TIMING.landingMs;
+    this.releaseAttackSlot(enemy);
+    this.setState(enemy, "idle");
+  }
+
+  private cancelDuelistLeap(enemy: EnemyCombatant) {
+    enemy.visualElevation = 0;
+    enemy.leapPlan = null;
+    enemy.landingShadow?.setVisible(false);
+  }
+
   private isInAttackRange(enemy: EnemyCombatant) {
     return Math.abs(this.playerBodyZone.x - enemy.bodyZone.x) <= enemy.config.combat.attackXRange &&
       Math.abs(this.playerBodyZone.y - enemy.bodyZone.y) < enemy.config.combat.attackYRange;
@@ -372,6 +440,7 @@ export class EnemyManager {
     enemy.hp = Math.max(0, enemy.hp - Math.max(0, Math.floor(amount)));
     enemy.guardReacquireFacing = undefined;
     enemy.guardCounterReady = false;
+    this.cancelDuelistLeap(enemy);
     this.releaseAttackSlot(enemy);
     if (enemy.hp === 0) this.setState(enemy, "dead");
     else this.setState(enemy, "hurt");
@@ -413,6 +482,9 @@ export class EnemyManager {
     this.disableAttackHitbox(enemy);
     if (next === "idle" || next === "position") enemy.sprite.play(enemyAnimationKey(enemy.config, "idle"), true);
     else if (next === "walk") enemy.sprite.play(enemyAnimationKey(enemy.config, "walk"), true);
+    else if (next === "takeoff" || next === "airborne" || next === "descent" || next === "landing") {
+      enemy.sprite.play(duelistLeapAnimationKey(next), true);
+    }
     else if (next === "guard") {
       enemy.guardUntil = this.clock.now() + SHIELD_GUARD_TIMING.guardLockMs;
       enemy.sprite.play(enemyAnimationKey(enemy.config, "idle"), true);
@@ -522,6 +594,7 @@ export class EnemyManager {
     enemy.sprite.destroy();
     enemy.shadow.destroy();
     enemy.guardMarker?.destroy();
+    enemy.landingShadow?.destroy();
     enemy.aimLine?.destroy();
     this.destroyProjectile(enemy);
     enemy.bodyZone.destroy();
@@ -538,7 +611,7 @@ export class EnemyManager {
   syncSprite(enemy: EnemyCombatant) {
     const x = Math.round(enemy.bodyZone.x), y = Math.round(enemy.bodyZone.y);
     enemy.shadow.setPosition(x, y + 4).setDepth(y - 1);
-    enemy.sprite.setPosition(x, y).setDepth(y);
+    enemy.sprite.setPosition(x, Math.round(y - enemy.visualElevation)).setDepth(y);
     if (enemy.guardMarker) this.drawGuardMarker(enemy);
     if (enemy.attackBody.enable) this.positionAttackHitbox(enemy);
   }
@@ -615,6 +688,7 @@ export class EnemyManager {
     for (const timer of this.stateTimers.values()) timer.paused = true;
     for (const enemy of this.enemies) {
       enemy.body.stop();
+      this.cancelDuelistLeap(enemy);
       this.disableAttackHitbox(enemy);
       enemy.aimLine?.clear();
       this.destroyProjectile(enemy);
