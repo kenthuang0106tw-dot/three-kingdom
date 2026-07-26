@@ -484,7 +484,9 @@ M6A 不加入新角色、新敵人、新招式、第二關、Audio、技能、�
 - Evidence: one 46-file production public inventory, 99 copied source/QA files excluded from both outputs, exact SHA-256 preservation, 18,172,139-byte GitHub Pages artifact, 110 tests, both builds, three-viewport/six-checkpoint browser matrix, and three ten-cycle reset paths.
 - M8 / Task 8.2A Combo Commitment Prototype was accepted by the reviewer on 2026-07-25. M8 / Task 8.5 remains not required because Task 8.1 found no sustained GameObject, listener, texture, Canvas, Audio-owner, or heap growth attributable to effects.
 - TP-3 Shield Guard + Crossbow Composition was accepted by the reviewer on 2026-07-26. Crossbow friendly fire was explicitly rejected; arrows only threaten the Player.
-- Next eligible task: ER.1 Five-Enemy Production Contract (planning-only; no runtime or gameplay changes).
+- ER.1 Five-Enemy Production Contract and ER.2 Soldier Production-Art Pilot
+  completed on 2026-07-26.
+- Next eligible task: ER.3 Duelist Production-Art Replacement.
 
 ## Enemy Redesign Track
 
@@ -498,7 +500,7 @@ M6A 不加入新角色、新敵人、新招式、第二關、Audio、技能、�
 
 **Dependencies:** M6A visual freeze, M8 performance baseline, TP-1 Shield Guard acceptance, TP-2 Crossbow acceptance, and TP-3 composition acceptance.
 
-### ER.2 — Soldier Production-Art Pilot
+### ER.2 — Soldier Production-Art Pilot (Completed 2026-07-26)
 
 **Goal:** Prove the ER.1 pipeline on the Soldier only before committing any
 cast-wide art replacement.
@@ -510,6 +512,29 @@ metadata, debug/onion/silhouette QA, and a controlled runtime integration plan.
 memory, three-viewport, and gameplay-freeze checks; no other enemy is changed.
 
 **Dependencies:** ER.1.
+
+**Evidence:** Fifteen distinct project-owned frames, eight independently
+corrected source poses, measured per-frame metadata, common `(144,265)` feet
+anchor, one `1.025` display scale, 288×288 production cells, debug/onion/25%
+silhouette QA, reviewer approval, 127/127 direct tests, typecheck, lint with
+zero errors, direct Vinext/Vite builds, packaged-asset hash checks, and final
+desktop/844×390/390×844 production smoke with one Canvas and zero errors.
+
+### ER.3 — Duelist Production-Art Replacement
+
+**Goal:** Apply the proven ER.2 source-to-runtime pipeline to the Duelist while
+preserving its accepted flanking gameplay.
+
+**Scope:** Project-owned Duelist source and fifteen genuine idle/walk/attack/
+hurt/dead frames, 288×288 atlas, measured metadata, debug/onion/silhouette QA,
+and an isolated runtime replacement.
+
+**Acceptance Criteria:** Duelist remains visually distinct from Soldier at
+native and 25% scale; all frames share one feet anchor and scale; facing,
+startup/active/recovery, body, hitbox, speed, AI, Stage data, and Attack Slot
+behavior remain unchanged; asset and three-viewport gates pass.
+
+**Dependencies:** ER.2.
 
 ## 4. Global Acceptance Rules
 

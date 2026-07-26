@@ -1643,6 +1643,8 @@ test("M6A enemy and Boss art share audited scale, feet, facing, and provenance c
     ["duelist", "duelist", DUELIST_ENEMY_CONFIG, 205],
   ];
   for (const [actor, stem, config, targetHeight] of actorFiles) {
+    const expectedCell = actor === "soldier" ? 288 : 384;
+    const expectedFeet = actor === "soldier" ? { x: 144, y: 265 } : { x: 192, y: 354 };
     const atlasName = actor === "soldier" ? "enemy-soldier.atlas.json" : `${stem}.atlas.json`;
     const [atlas, metadata, sheet, onion, silhouette] = await Promise.all([
       readFile(new URL(`../public/art/enemy/${atlasName}`, import.meta.url), "utf8").then(JSON.parse),
@@ -1651,12 +1653,12 @@ test("M6A enemy and Boss art share audited scale, feet, facing, and provenance c
       readFile(new URL(`../public/art/enemy/${actor}-onion.png`, import.meta.url)),
       readFile(new URL(`../public/art/enemy/${actor}-silhouette-25.png`, import.meta.url)),
     ]);
-    assert.equal(sheet.readUInt32BE(16), 1920);
-    assert.equal(sheet.readUInt32BE(20), 1152);
+    assert.equal(sheet.readUInt32BE(16), expectedCell * 5);
+    assert.equal(sheet.readUInt32BE(20), expectedCell * 3);
     assert.equal(Object.keys(atlas.frames).length, 15);
     assert.equal(metadata.frames.length, 15);
     assert.equal(new Set(metadata.frames.map(frame => frame.pixelHash)).size, 15);
-    assert.deepEqual(metadata.feetAnchor, { x: 192, y: 354 });
+    assert.deepEqual(metadata.feetAnchor, expectedFeet);
     assert.equal(metadata.displayScale, config.displayScale);
     assert.equal(metadata.sourceFacing, config.sourceFacing);
     assert.equal(metadata.targetLogicalIdleHeight, targetHeight);
@@ -1664,12 +1666,24 @@ test("M6A enemy and Boss art share audited scale, feet, facing, and provenance c
     assert.equal(metadata.provenance.original, true);
     assert.match(metadata.provenance.processingTool, /build_enemy_art\.py/);
     assert.ok(metadata.frames.every(frame => frame.accepted && frame.rejectionReason === null));
-    assert.ok(metadata.frames.every(frame => frame.feetAnchor.y === 354 && frame.displayScale === config.displayScale));
-    assert.ok(metadata.frames.every(frame => frame.runtimeAlphaBounds.y + frame.runtimeAlphaBounds.height === 354));
+    assert.ok(metadata.frames.every(frame => frame.feetAnchor.y === expectedFeet.y && frame.displayScale === config.displayScale));
+    assert.ok(metadata.frames.every(frame => frame.runtimeAlphaBounds.y + frame.runtimeAlphaBounds.height === expectedFeet.y));
     assert.deepEqual(metadata.animations.attack, ["attack-0", "attack-1", "attack-2"]);
     assert.equal(metadata.frames.find(frame => frame.name === "attack-0").phase, "startup");
     assert.equal(metadata.frames.find(frame => frame.name === "attack-1").phase, "active");
     assert.equal(metadata.frames.find(frame => frame.name === "attack-2").phase, "recovery");
+    if (actor === "soldier") {
+      const correctedNames = [
+        "walk-3", "attack-0", "attack-1", "attack-2",
+        "dead-0", "dead-1", "dead-2", "dead-3",
+      ];
+      const correctedFrames = metadata.frames.filter(frame => correctedNames.includes(frame.name));
+      assert.equal(correctedFrames.length, correctedNames.length);
+      assert.equal(new Set(correctedFrames.map(frame => frame.sourceImage)).size, correctedNames.length);
+      assert.ok(correctedFrames.every(frame => frame.sourceImage === `source/soldier-v2/${frame.name}-transparent.png`));
+      assert.ok(correctedFrames.every(frame => frame.sourceRect.processingScale === 0.2325));
+      assert.ok(correctedFrames.every(frame => frame.runtimeAlphaBounds.width < 288));
+    }
     assert.ok(onion.length > 1000 && silhouette.length > 100);
   }
 

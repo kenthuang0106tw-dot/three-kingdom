@@ -1,29 +1,31 @@
 # Next Task
 
-## ER.2 — Soldier Production-Art Pilot
+## ER.3 — Duelist Production-Art Replacement
 
 ### Why this is next
 
-ER.1 now freezes the shared five-enemy art contract. The Soldier is the safest
-single actor to prove its pipeline because it has no special guard, projectile,
-or multi-stage attack presentation. A successful pilot validates the pipeline
-before Shield Guard and Crossbow receive distinct production art.
+ER.2 proved the full source-to-atlas pipeline, the 288×288 delivery target, and
+the reviewer workflow on one actor. Duelist is the next lowest-risk formal
+runtime replacement: it uses the same fifteen-frame state budget but has a
+different silhouette, source facing, speed, and flanking role that must remain
+readable before the heavier or prototype-only actors are attempted.
 
 ### Scope
 
-Create project-owned Soldier art and its complete source-to-atlas QA package:
+Create project-owned Duelist art and its complete source-to-atlas QA package:
 source provenance, transparent extraction, measured frame metadata, debug
-sheet, onion sheet, 25% silhouette sheet, and a limited runtime replacement.
-Keep all gameplay tuning, body/hitbox dimensions, Stage data, Camera, UI, and
-other enemy assets unchanged.
+sheet, onion sheet, 25% silhouette sheet, and an isolated runtime replacement.
+Keep Duelist gameplay tuning, body/hitbox dimensions, source-facing behavior,
+Stage data, Camera, UI, Soldier, Mauler, Shield Guard, and Crossbow unchanged.
 
 ### Completion criteria
 
-- All fifteen Soldier contract frames are distinct and have measured source
+- All fifteen Duelist contract frames are distinct and have measured source
   rectangles, alpha bounds, offsets, common feet anchor, and one scale.
-- Soldier idle, walk, attack, hurt, and dead preserve the existing animation
+- Duelist idle, walk, attack, hurt, and dead preserve the existing animation
   keys and accepted gameplay phase windows.
-- New Soldier runtime art stays within the ER.1 memory and delivery budgets.
+- Duelist remains distinct from Soldier at native and 25% silhouette scale.
+- New Duelist runtime art stays within the ER.1 memory and delivery budgets.
 - Desktop, 844 x 390, and 390 x 844 review shows no clipping, feet drift,
   wrong-facing frame, or hitbox/body mismatch.
 
@@ -37,12 +39,13 @@ other enemy assets unchanged.
 
 ### Expected files
 
-Soldier art source/processed/atlas/metadata/QA files, the focused validation
-test, asset manifest entries only if required for replacement, and the ER.2
-evidence documents. No other enemy runtime asset is in scope.
+Duelist art source/processed/atlas/metadata/QA files, the focused validation
+test, asset manifest entries only if required for replacement, and the ER.3
+evidence documents. No other actor runtime asset is in scope.
 
 ### Risks
 
-The reference lineup is not reusable art. Do not generate transform-faked
-frames, guess frame rectangles, expand collision to match a weapon, or use the
-pilot as permission to alter the remaining four actors.
+The reference lineup is not reusable art. Do not copy Soldier proportions,
+generate transform-faked frames, guess frame rectangles, change the existing
+right-facing contract, expand collision to match the twin-hook silhouette, or
+retune Duelist gameplay to compensate for art.

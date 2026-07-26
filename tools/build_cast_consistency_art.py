@@ -100,7 +100,7 @@ def crop_named(sheet_path: Path, atlas_path: Path, frame_name: str) -> Image.Ima
 def build_lineup() -> None:
     actors = [
         ("GUAN YU", crop_named(GUANYU_ART / "guanyu-v2.png", GUANYU_ART / "guanyu-v2.atlas.json", "idle-0"), 0.64),
-        ("SOLDIER", crop_named(ENEMY_ART / "enemy-soldier.png", ENEMY_ART / "enemy-soldier.atlas.json", "idle-0"), 1.34),
+        ("SOLDIER", crop_named(ENEMY_ART / "enemy-soldier.png", ENEMY_ART / "enemy-soldier.atlas.json", "idle-0"), 1.025),
         ("DUELIST", crop_named(ENEMY_ART / "duelist.png", ENEMY_ART / "duelist.atlas.json", "idle-0"), 0.94),
         ("MAULER", crop_named(ENEMY_ART / "mauler.png", ENEMY_ART / "mauler.atlas.json", "idle-0"), 1.10),
         ("BOSS", crop_named(BOSS_ART / "warlord-lifecycle.png", BOSS_ART / "warlord-lifecycle.atlas.json", "idle-0"), 1.27),

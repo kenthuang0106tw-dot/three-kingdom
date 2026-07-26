@@ -1175,3 +1175,18 @@
 | Automated gates | Pass | 110/110 tests, typecheck, lint 0 errors (8 existing warnings), both builds |
 | Scope | Pass | Packaging and route MIME only; no gameplay, art, Audio, animation, balance, Camera, or Stage change |
 | Next task | Selected | M8 / Task 8.2 — Game-feel timing pass |
+
+## ER.2 — Soldier Production-Art Pilot — 2026-07-26
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Frame contract | Pass | 15 distinct hashes: idle 2, walk 4, attack 3, hurt 2, dead 4 |
+| Corrections | Pass | Eight reviewer-rejected frames replaced by eight independent source poses |
+| Atlas | Pass | 5×3 288×288 cells, feet `(144,265)`, one `1.025` scale, 210.12px idle height |
+| Attack | Pass | Existing keys and startup/active/recovery order retained; gameplay timing and hitbox unchanged |
+| QA/provenance | Pass | Source, transparent derivatives, measured metadata, debug, onion, silhouette, and reviewer baseline present |
+| Delivery | Pass | 12,880,839 requested bytes; 132,759,040 decoded RGBA; 18,516,446-byte GitHub Pages artifact |
+| Automated gates | Pass with TD-M11 noted | 127/127 direct tests, typecheck, lint 0 errors/8 warnings, direct Vinext/Vite builds and packaging passed; pnpm wrapper stops before scripts |
+| Browser | Pass | Final 1280×720, 844×390, and 390×844 production smoke: one Canvas, no overflow, zero errors |
+| Scope | Pass | No other actor art, gameplay, Stage, Camera, UI, Audio, or combat behavior changed |
+| Next task | Selected | ER.3 — Duelist Production-Art Replacement |

@@ -66,16 +66,28 @@ geometry freeze。`tools/build_bamboo_stage_art.py` 可重建 9 張 runtime laye
 |---|---|
 | Runtime sheet | `enemy-soldier.png` |
 | Frames | 15 |
-| Layout | 5×3，每格 384×384 |
+| Layout | 5×3，每格 288×288 |
 | Animations | idle 2、walk 4、attack 3、hurt 2、dead 4 |
-| Feet anchor | `(192, 354)` |
-| Origin | `(0.5, 0.921875)` |
-| Display scale | `1.34` |
+| Feet anchor | `(144, 265)` |
+| Origin | `(0.5, 0.920138...)` |
+| Display scale | `1.025` |
 | Metadata | `enemy-soldier.atlas.json`, `soldier.metadata.json` |
 | QA | `enemy-soldier-debug.png`, `soldier-onion.png`, `soldier-silhouette-25.png` |
 | Rebuild tool | `tools/build_enemy_art.py` |
 
-Mauler 與 Duelist 也使用 5×3、384×384、feet `(192,354)` runtime contract，display scale 分別為 `1.10` 與 `0.94`。三者 source-facing 分別為 Soldier left、Mauler right、Duelist right；attack frame 順序仍為 startup／active／recovery，active index 與 gameplay timing 未更動。`tools/build_cast_consistency_art.py` 會從 source 重建 processed transparent、atlas、metadata、red-box/feet-line、onion、25% silhouette 與共同 lineup。
+ER.2 Soldier 使用 built-in image generation 建立專案自有 source。初版完整
+5×3 source 保留於 `enemy-soldier-v2-source.png`；經 reviewer 指出的
+`walk-3`、`attack-0..2`、`dead-0..3` 八格各有獨立 source 與 transparent
+derivative，位於 `source/soldier-v2/`。Builder 只以 nearest-neighbor 做來源
+正規化，不以 transform 冒充動畫；15 個 runtime pixel hash 全部不同，logical
+idle height 為 210.12px。
+
+Mauler 與 Duelist 暫時仍使用舊 5×3、384×384、feet `(192,354)` runtime
+contract，display scale 分別為 `1.10` 與 `0.94`；它們會在各自 Enemy
+Redesign Task 中獨立遷移，不得與 Soldier 一起批次替換。三者 source-facing
+分別為 Soldier left、Mauler left、Duelist right；attack frame 順序仍為
+startup／active／recovery，active index 與 gameplay timing 未更動。
+`tools/build_cast_consistency_art.py` 會重建共同 lineup。
 
 ### Effects
 

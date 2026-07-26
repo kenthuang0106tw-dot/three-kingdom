@@ -864,3 +864,35 @@ Status: completed.
 - [x] Recorded the Shield Guard and Crossbow temporary-art debt and selected an isolated Soldier pilot as the next task.
 - [x] Full suite passed 127/127; typecheck passed; lint has 0 errors and 4 existing image warnings; direct Vinext/Vite production builds and asset packaging retained the 43 request files, 46 production files, and 136,629,760 decoded RGBA bytes.
 - [ ] `pnpm build` remains blocked by the repository's ignored dependency-build policy before it reaches Vinext; direct project build commands passed and the blocker is recorded in Technical Debt.
+
+## ER.2 — Soldier Production-Art Pilot — 2026-07-26
+
+Status: completed and accepted by reviewer.
+
+- [x] Replaced only the Soldier runtime presentation with 15 distinct
+  project-owned idle, walk, attack, hurt, and dead poses.
+- [x] Replaced the rejected `walk-3`, all three attack poses, and all four dead
+  poses with independent corrected sources; the reviewer accepted the revised
+  animation sheet.
+- [x] Packed the final runtime atlas into ER.1-compliant 288×288 cells with
+  feet `(144,265)`, origin `(0.5,0.920138...)`, one `1.025` display scale, and
+  a 210.12px logical idle height.
+- [x] Preserved Soldier animation keys, attack phase order, gameplay body,
+  attack hitbox, HP, damage, speed, AI, Stage data, Camera, UI, and other enemy
+  assets.
+- [x] Added measured source rectangles, runtime alpha bounds, display offsets,
+  pixel hashes, provenance, debug sheet, onion sheet, and 25% silhouette QA.
+- [x] Runtime requested bytes decreased to 12,880,839 and decoded RGBA to
+  132,759,040; the GitHub Pages artifact remains 18,516,446 bytes.
+- [x] Direct deterministic suite passed 127/127; typecheck passed; lint has
+  zero errors and eight existing image warnings.
+- [x] Direct Vinext and Vite builds plus both production-asset packaging passes
+  succeeded; all 46 production files preserve source hashes.
+- [x] Final production smoke passed at 1280×720, 844×390, and 390×844 with one
+  Canvas, no overflow, and zero captured browser errors.
+- [ ] Package-manager commands remain blocked before their scripts by TD-M11's
+  ignored-build dependency-status check; the equivalent direct project
+  commands above passed and the failure is not hidden.
+
+The next eligible task is ER.3 — Duelist Production-Art Replacement. Do not
+begin it until the next task-runner cycle.

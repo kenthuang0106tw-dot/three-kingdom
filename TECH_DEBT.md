@@ -601,19 +601,22 @@ fail.
 ## TD-M10 — Temporary Shield Guard and Crossbow presentation
 
 - **Evidence:** TP-1 and TP-2 deliberately reuse the Soldier visual contract
-  while their gameplay roles are accepted.
+  while their gameplay roles are accepted. ER.2 has now replaced the formal
+  Soldier with production art, but both development-only roles still reuse it.
 - **Impact:** Their combat behavior is readable through development markers,
   but their final silhouettes and state-specific animation poses do not exist.
-- **Resolution:** ER.1 defines the required production-art contract. A future
-  one-actor pilot must provide project-owned art and full QA evidence before
-  any cast-wide replacement.
-- **Target:** Enemy Redesign Track after ER.1 review.
+- **Resolution:** ER.2 proved the one-actor production pipeline. Shield Guard
+  and Crossbow still require their larger role-specific frame budgets and must
+  be replaced only in separate tasks after the formal melee cast.
+- **Target:** Enemy Redesign Track after Duelist and Mauler replacement.
 
 ## TD-M11 — pnpm build dependency-approval blocker
 
-- **Evidence:** On 2026-07-26, `pnpm build` stopped during pnpm's dependency
-  status install because `esbuild`, `sharp`, `workerd`, and related build
-  scripts are marked ignored. It did not reach the project Vinext build.
+- **Evidence:** On 2026-07-26, both `pnpm build` and `pnpm test` stopped during
+  pnpm's dependency-status install because `esbuild`, `sharp`, `workerd`, and
+  related build scripts are marked ignored. Neither command reached its
+  project script. Direct Node tests, TypeScript, ESLint, Vinext, Vite, and
+  packaging commands all completed independently.
 - **Impact:** The documented package-manager build command cannot currently be
   used as a clean acceptance gate in this environment.
 - **Resolution:** Review the repository's pnpm dependency-build approval policy

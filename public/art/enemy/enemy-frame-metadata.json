@@ -1,17 +1,17 @@
 {
   "actor": "soldier",
   "cell": {
-    "width": 384,
-    "height": 384
+    "width": 288,
+    "height": 288
   },
   "feetAnchor": {
-    "x": 192,
-    "y": 354
+    "x": 144,
+    "y": 265
   },
-  "displayScale": 1.34,
+  "displayScale": 1.025,
   "sourceFacing": -1,
   "targetLogicalIdleHeight": 210,
-  "logicalIdleHeight": 213.06,
+  "logicalIdleHeight": 210.12,
   "animations": {
     "idle": [
       "idle-0",
@@ -41,537 +41,562 @@
   },
   "provenance": {
     "original": true,
-    "source": "enemy-source-transparent.png",
-    "sourceLayout": "soldier-gutter-grid",
+    "source": "enemy-soldier-v2-source.png",
+    "correctionSources": {
+      "walk-3": "source/soldier-v2/walk-3-transparent.png",
+      "attack-0": "source/soldier-v2/attack-0-transparent.png",
+      "attack-1": "source/soldier-v2/attack-1-transparent.png",
+      "attack-2": "source/soldier-v2/attack-2-transparent.png",
+      "dead-0": "source/soldier-v2/dead-0-transparent.png",
+      "dead-1": "source/soldier-v2/dead-1-transparent.png",
+      "dead-2": "source/soldier-v2/dead-2-transparent.png",
+      "dead-3": "source/soldier-v2/dead-3-transparent.png"
+    },
+    "sourceLayout": "five-by-three-grid",
     "processingTool": "tools/build_enemy_art.py",
     "processingRevision": "2.0",
-    "generatedBy": "built-in image generation in earlier asset tasks; no new generation in M6A.3"
+    "generatedBy": "built-in image generation, ER.2 Soldier Production-Art Pilot"
   },
   "frames": [
     {
       "name": "idle-0",
       "animation": "idle",
       "phase": null,
-      "sourceImage": "enemy-source-transparent.png",
+      "sourceImage": "enemy-soldier-v2-source-transparent.png",
       "sourceRect": {
         "x": 0,
         "y": 0,
-        "width": 307,
-        "height": 330,
-        "alphaX": 135,
-        "alphaY": 91,
-        "alphaWidth": 140,
-        "alphaHeight": 159
+        "width": 334,
+        "height": 314,
+        "alphaX": 121,
+        "alphaY": 28,
+        "alphaWidth": 125,
+        "alphaHeight": 273,
+        "processingScale": 0.75
       },
       "runtimeAlphaBounds": {
-        "x": 122,
-        "y": 195,
-        "width": 140,
-        "height": 159
+        "x": 97,
+        "y": 60,
+        "width": 94,
+        "height": 205
       },
       "originX": 0.5,
-      "originY": 0.921875,
-      "displayOffsetX": 122,
-      "displayOffsetY": 195,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 97,
+      "displayOffsetY": 60,
       "feetAnchor": {
-        "x": 192,
-        "y": 354
+        "x": 144,
+        "y": 265
       },
-      "displayScale": 1.34,
+      "displayScale": 1.025,
       "sourceFacing": -1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "5329314a7b40bbe12394ede971d82d11bfb78a5044a56bf25281f48a13125dc3"
+      "pixelHash": "af074838dad9e27ae4a92f49acd1dfe0f42e5c4ff4b27f30f5c05a6a3476658c"
     },
     {
       "name": "idle-1",
       "animation": "idle",
       "phase": null,
-      "sourceImage": "enemy-source-transparent.png",
+      "sourceImage": "enemy-soldier-v2-source-transparent.png",
       "sourceRect": {
-        "x": 307,
+        "x": 334,
         "y": 0,
-        "width": 307,
-        "height": 330,
-        "alphaX": 118,
-        "alphaY": 91,
-        "alphaWidth": 139,
-        "alphaHeight": 159
+        "width": 335,
+        "height": 314,
+        "alphaX": 54,
+        "alphaY": 28,
+        "alphaWidth": 128,
+        "alphaHeight": 273,
+        "processingScale": 0.75
       },
       "runtimeAlphaBounds": {
-        "x": 122,
-        "y": 195,
-        "width": 139,
-        "height": 159
+        "x": 96,
+        "y": 60,
+        "width": 96,
+        "height": 205
       },
       "originX": 0.5,
-      "originY": 0.921875,
-      "displayOffsetX": 122,
-      "displayOffsetY": 195,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 96,
+      "displayOffsetY": 60,
       "feetAnchor": {
-        "x": 192,
-        "y": 354
+        "x": 144,
+        "y": 265
       },
-      "displayScale": 1.34,
+      "displayScale": 1.025,
       "sourceFacing": -1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "71eafabbfdf8572a0c2ef152bbe4b17d9a93ed5228426e806e76d7c9c0bb7890"
+      "pixelHash": "76fd0d0ea2154a284e797bc7c462857f3a4403d13b126d44181d7d8e8c8746b5"
     },
     {
       "name": "walk-0",
       "animation": "walk",
       "phase": null,
-      "sourceImage": "enemy-source-transparent.png",
+      "sourceImage": "enemy-soldier-v2-source-transparent.png",
       "sourceRect": {
-        "x": 614,
+        "x": 669,
         "y": 0,
-        "width": 308,
-        "height": 330,
-        "alphaX": 120,
-        "alphaY": 91,
-        "alphaWidth": 142,
-        "alphaHeight": 158
+        "width": 334,
+        "height": 314,
+        "alphaX": 55,
+        "alphaY": 30,
+        "alphaWidth": 131,
+        "alphaHeight": 271,
+        "processingScale": 0.75
       },
       "runtimeAlphaBounds": {
-        "x": 121,
-        "y": 196,
-        "width": 142,
-        "height": 158
+        "x": 95,
+        "y": 62,
+        "width": 98,
+        "height": 203
       },
       "originX": 0.5,
-      "originY": 0.921875,
-      "displayOffsetX": 121,
-      "displayOffsetY": 196,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 95,
+      "displayOffsetY": 62,
       "feetAnchor": {
-        "x": 192,
-        "y": 354
+        "x": 144,
+        "y": 265
       },
-      "displayScale": 1.34,
+      "displayScale": 1.025,
       "sourceFacing": -1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "136e54ac0de55abf5fa774ce3b864e080ec1817184cbfca18e8da945acf8b349"
+      "pixelHash": "fa14e20bc66b282a269c27b17df11de63820b571d2ea5327d836feae887383d0"
     },
     {
       "name": "walk-1",
       "animation": "walk",
       "phase": null,
-      "sourceImage": "enemy-source-transparent.png",
+      "sourceImage": "enemy-soldier-v2-source-transparent.png",
       "sourceRect": {
-        "x": 922,
+        "x": 1003,
         "y": 0,
-        "width": 307,
-        "height": 330,
-        "alphaX": 104,
-        "alphaY": 96,
-        "alphaWidth": 146,
-        "alphaHeight": 154
+        "width": 335,
+        "height": 314,
+        "alphaX": 22,
+        "alphaY": 33,
+        "alphaWidth": 161,
+        "alphaHeight": 268,
+        "processingScale": 0.75
       },
       "runtimeAlphaBounds": {
-        "x": 119,
-        "y": 200,
-        "width": 146,
-        "height": 154
+        "x": 83,
+        "y": 64,
+        "width": 121,
+        "height": 201
       },
       "originX": 0.5,
-      "originY": 0.921875,
-      "displayOffsetX": 119,
-      "displayOffsetY": 200,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 83,
+      "displayOffsetY": 64,
       "feetAnchor": {
-        "x": 192,
-        "y": 354
+        "x": 144,
+        "y": 265
       },
-      "displayScale": 1.34,
+      "displayScale": 1.025,
       "sourceFacing": -1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "0a6a93492dcef3c298cd0eadb64f11ab5e5461a319208fb89c3d4ec18c8669f4"
+      "pixelHash": "fde7e30f6f7dc1ff5d39bb3e51e1b57aacaa9999efc82af00eda93ed1394bd71"
     },
     {
       "name": "walk-2",
       "animation": "walk",
       "phase": null,
-      "sourceImage": "enemy-source-transparent.png",
+      "sourceImage": "enemy-soldier-v2-source-transparent.png",
       "sourceRect": {
-        "x": 1229,
+        "x": 1338,
         "y": 0,
-        "width": 307,
-        "height": 330,
-        "alphaX": 82,
-        "alphaY": 95,
-        "alphaWidth": 140,
-        "alphaHeight": 156
+        "width": 334,
+        "height": 314,
+        "alphaX": 37,
+        "alphaY": 30,
+        "alphaWidth": 152,
+        "alphaHeight": 273,
+        "processingScale": 0.75
       },
       "runtimeAlphaBounds": {
-        "x": 122,
-        "y": 198,
-        "width": 140,
-        "height": 156
+        "x": 87,
+        "y": 60,
+        "width": 114,
+        "height": 205
       },
       "originX": 0.5,
-      "originY": 0.921875,
-      "displayOffsetX": 122,
-      "displayOffsetY": 198,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 87,
+      "displayOffsetY": 60,
       "feetAnchor": {
-        "x": 192,
-        "y": 354
+        "x": 144,
+        "y": 265
       },
-      "displayScale": 1.34,
+      "displayScale": 1.025,
       "sourceFacing": -1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "970c3b7565b5866ced843185c8d1be5216fc03e550295413e76bcd8d22579729"
+      "pixelHash": "8004eecf9095b601edb233f41721ad229dc294d5af4f9f10a675864dba915ac5"
     },
     {
       "name": "walk-3",
       "animation": "walk",
       "phase": null,
-      "sourceImage": "enemy-source-transparent.png",
+      "sourceImage": "source/soldier-v2/walk-3-transparent.png",
       "sourceRect": {
+        "processingScale": 0.2325,
         "x": 0,
-        "y": 330,
-        "width": 307,
-        "height": 280,
-        "alphaX": 128,
-        "alphaY": 42,
-        "alphaWidth": 139,
-        "alphaHeight": 155
+        "y": 0,
+        "width": 1254,
+        "height": 1254,
+        "alphaX": 402,
+        "alphaY": 125,
+        "alphaWidth": 424,
+        "alphaHeight": 876
       },
       "runtimeAlphaBounds": {
-        "x": 122,
-        "y": 199,
-        "width": 139,
-        "height": 155
+        "x": 94,
+        "y": 61,
+        "width": 99,
+        "height": 204
       },
       "originX": 0.5,
-      "originY": 0.921875,
-      "displayOffsetX": 122,
-      "displayOffsetY": 199,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 94,
+      "displayOffsetY": 61,
       "feetAnchor": {
-        "x": 192,
-        "y": 354
+        "x": 144,
+        "y": 265
       },
-      "displayScale": 1.34,
+      "displayScale": 1.025,
       "sourceFacing": -1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "52aac17f0b8d1cdf2b8a7232378a562d3cbf717590cc987591179998e44d475f"
+      "pixelHash": "a9cfae26b181fa11dd93ac455e731422850632d787584a6362b2406893429c65"
     },
     {
       "name": "attack-0",
       "animation": "attack",
       "phase": "startup",
-      "sourceImage": "enemy-source-transparent.png",
+      "sourceImage": "source/soldier-v2/attack-0-transparent.png",
       "sourceRect": {
-        "x": 307,
-        "y": 330,
-        "width": 307,
-        "height": 280,
-        "alphaX": 121,
-        "alphaY": 37,
-        "alphaWidth": 156,
-        "alphaHeight": 159
+        "processingScale": 0.2325,
+        "x": 0,
+        "y": 0,
+        "width": 1672,
+        "height": 941,
+        "alphaX": 595,
+        "alphaY": 127,
+        "alphaWidth": 683,
+        "alphaHeight": 627
       },
       "runtimeAlphaBounds": {
-        "x": 114,
-        "y": 195,
-        "width": 156,
-        "height": 159
+        "x": 64,
+        "y": 119,
+        "width": 159,
+        "height": 146
       },
       "originX": 0.5,
-      "originY": 0.921875,
-      "displayOffsetX": 114,
-      "displayOffsetY": 195,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 64,
+      "displayOffsetY": 119,
       "feetAnchor": {
-        "x": 192,
-        "y": 354
+        "x": 144,
+        "y": 265
       },
-      "displayScale": 1.34,
+      "displayScale": 1.025,
       "sourceFacing": -1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "5fbe7c94d4cc33d1704ea04af87208c1f484d0808205f7088499130b623b5b86"
+      "pixelHash": "d7accdee7904e4c383c7773db6a52e51d9bb30add445dc27fd939191eb6fd88b"
     },
     {
       "name": "attack-1",
       "animation": "attack",
       "phase": "active",
-      "sourceImage": "enemy-source-transparent.png",
+      "sourceImage": "source/soldier-v2/attack-1-transparent.png",
       "sourceRect": {
-        "x": 614,
-        "y": 330,
-        "width": 308,
-        "height": 280,
-        "alphaX": 56,
-        "alphaY": 53,
-        "alphaWidth": 205,
-        "alphaHeight": 139
+        "processingScale": 0.2325,
+        "x": 0,
+        "y": 0,
+        "width": 1672,
+        "height": 941,
+        "alphaX": 281,
+        "alphaY": 203,
+        "alphaWidth": 919,
+        "alphaHeight": 552
       },
       "runtimeAlphaBounds": {
-        "x": 89,
-        "y": 215,
-        "width": 205,
-        "height": 139
+        "x": 37,
+        "y": 137,
+        "width": 214,
+        "height": 128
       },
       "originX": 0.5,
-      "originY": 0.921875,
-      "displayOffsetX": 89,
-      "displayOffsetY": 215,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 37,
+      "displayOffsetY": 137,
       "feetAnchor": {
-        "x": 192,
-        "y": 354
+        "x": 144,
+        "y": 265
       },
-      "displayScale": 1.34,
+      "displayScale": 1.025,
       "sourceFacing": -1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "97f32c15f1b9685f5b2467df00b100a5e16ee917817f414ce8f523b5569bf10b"
+      "pixelHash": "c518de3220f1af5140549a554c6776d86d38fbdaa217bc2ced5a6f66f3246095"
     },
     {
       "name": "attack-2",
       "animation": "attack",
       "phase": "recovery",
-      "sourceImage": "enemy-source-transparent.png",
+      "sourceImage": "source/soldier-v2/attack-2-transparent.png",
       "sourceRect": {
-        "x": 922,
-        "y": 330,
-        "width": 307,
-        "height": 280,
-        "alphaX": 93,
-        "alphaY": 51,
-        "alphaWidth": 161,
-        "alphaHeight": 140
+        "processingScale": 0.2325,
+        "x": 0,
+        "y": 0,
+        "width": 1672,
+        "height": 941,
+        "alphaX": 255,
+        "alphaY": 235,
+        "alphaWidth": 921,
+        "alphaHeight": 519
       },
       "runtimeAlphaBounds": {
-        "x": 111,
-        "y": 214,
-        "width": 161,
-        "height": 140
+        "x": 37,
+        "y": 144,
+        "width": 214,
+        "height": 121
       },
       "originX": 0.5,
-      "originY": 0.921875,
-      "displayOffsetX": 111,
-      "displayOffsetY": 214,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 37,
+      "displayOffsetY": 144,
       "feetAnchor": {
-        "x": 192,
-        "y": 354
+        "x": 144,
+        "y": 265
       },
-      "displayScale": 1.34,
+      "displayScale": 1.025,
       "sourceFacing": -1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "6bf689e02f54e59d583dfaa30f1d296ef8f5a4f3be7a6f1f4433ec6e33b520ea"
+      "pixelHash": "011ecb845b7869f35483e638b5c0bf0345bdc13cbd8ef2e8a77f3785add4e102"
     },
     {
       "name": "hurt-0",
       "animation": "hurt",
       "phase": null,
-      "sourceImage": "enemy-source-transparent.png",
+      "sourceImage": "enemy-soldier-v2-source-transparent.png",
       "sourceRect": {
-        "x": 1229,
-        "y": 330,
-        "width": 307,
-        "height": 280,
-        "alphaX": 93,
-        "alphaY": 57,
-        "alphaWidth": 136,
-        "alphaHeight": 136
+        "x": 1338,
+        "y": 314,
+        "width": 334,
+        "height": 313,
+        "alphaX": 25,
+        "alphaY": 15,
+        "alphaWidth": 172,
+        "alphaHeight": 259,
+        "processingScale": 0.75
       },
       "runtimeAlphaBounds": {
-        "x": 124,
-        "y": 218,
-        "width": 136,
-        "height": 136
+        "x": 79,
+        "y": 71,
+        "width": 129,
+        "height": 194
       },
       "originX": 0.5,
-      "originY": 0.921875,
-      "displayOffsetX": 124,
-      "displayOffsetY": 218,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 79,
+      "displayOffsetY": 71,
       "feetAnchor": {
-        "x": 192,
-        "y": 354
+        "x": 144,
+        "y": 265
       },
-      "displayScale": 1.34,
+      "displayScale": 1.025,
       "sourceFacing": -1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "27b00dc128c1b2374562dc6f478473bcd0423ce08710e9b0f3f95070027ef790"
+      "pixelHash": "8adcfaa94d91e3ba3462b8b75b12e3c6235a5238621f2f4320a84e63c879333e"
     },
     {
       "name": "hurt-1",
       "animation": "hurt",
       "phase": null,
-      "sourceImage": "enemy-source-transparent.png",
+      "sourceImage": "enemy-soldier-v2-source-transparent.png",
       "sourceRect": {
         "x": 0,
-        "y": 610,
-        "width": 307,
-        "height": 414,
-        "alphaX": 0,
-        "alphaY": 38,
-        "alphaWidth": 262,
-        "alphaHeight": 323
+        "y": 627,
+        "width": 334,
+        "height": 314,
+        "alphaX": 65,
+        "alphaY": 0,
+        "alphaWidth": 186,
+        "alphaHeight": 246,
+        "processingScale": 0.75
       },
       "runtimeAlphaBounds": {
-        "x": 61,
-        "y": 31,
-        "width": 262,
-        "height": 323
+        "x": 74,
+        "y": 81,
+        "width": 140,
+        "height": 184
       },
       "originX": 0.5,
-      "originY": 0.921875,
-      "displayOffsetX": 61,
-      "displayOffsetY": 31,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 74,
+      "displayOffsetY": 81,
       "feetAnchor": {
-        "x": 192,
-        "y": 354
+        "x": 144,
+        "y": 265
       },
-      "displayScale": 1.34,
+      "displayScale": 1.025,
       "sourceFacing": -1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "1496871e8d0b6cf625f985b00bfff4664d26c15d815942ad7afa23a182e5f34a"
+      "pixelHash": "47d4109840ccdd22106d3a863831fdddd4415410d000562e7589750f00318a16"
     },
     {
       "name": "dead-0",
       "animation": "dead",
       "phase": null,
-      "sourceImage": "enemy-source-transparent.png",
+      "sourceImage": "source/soldier-v2/dead-0-transparent.png",
       "sourceRect": {
-        "x": 307,
-        "y": 610,
-        "width": 307,
-        "height": 414,
-        "alphaX": 116,
-        "alphaY": 64,
-        "alphaWidth": 129,
-        "alphaHeight": 133
+        "processingScale": 0.2325,
+        "x": 0,
+        "y": 0,
+        "width": 1254,
+        "height": 1254,
+        "alphaX": 366,
+        "alphaY": 93,
+        "alphaWidth": 521,
+        "alphaHeight": 993
       },
       "runtimeAlphaBounds": {
-        "x": 127,
-        "y": 221,
-        "width": 129,
-        "height": 133
+        "x": 83,
+        "y": 34,
+        "width": 121,
+        "height": 231
       },
       "originX": 0.5,
-      "originY": 0.921875,
-      "displayOffsetX": 127,
-      "displayOffsetY": 221,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 83,
+      "displayOffsetY": 34,
       "feetAnchor": {
-        "x": 192,
-        "y": 354
+        "x": 144,
+        "y": 265
       },
-      "displayScale": 1.34,
+      "displayScale": 1.025,
       "sourceFacing": -1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "347b895c221175f76e966cd7128cfadc32ff3cd5b306417647b3ae9df9d4e7e3"
+      "pixelHash": "774f0218137ab69f9b30e8b28a4c8e94758f4d17c62b0b5c853dd23dc01eb497"
     },
     {
       "name": "dead-1",
       "animation": "dead",
       "phase": null,
-      "sourceImage": "enemy-source-transparent.png",
+      "sourceImage": "source/soldier-v2/dead-1-transparent.png",
       "sourceRect": {
-        "x": 614,
-        "y": 610,
-        "width": 308,
-        "height": 414,
-        "alphaX": 84,
-        "alphaY": 57,
-        "alphaWidth": 168,
-        "alphaHeight": 135
+        "processingScale": 0.2325,
+        "x": 0,
+        "y": 0,
+        "width": 1254,
+        "height": 1254,
+        "alphaX": 248,
+        "alphaY": 171,
+        "alphaWidth": 730,
+        "alphaHeight": 905
       },
       "runtimeAlphaBounds": {
-        "x": 108,
-        "y": 219,
-        "width": 168,
-        "height": 135
+        "x": 59,
+        "y": 55,
+        "width": 170,
+        "height": 210
       },
       "originX": 0.5,
-      "originY": 0.921875,
-      "displayOffsetX": 108,
-      "displayOffsetY": 219,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 59,
+      "displayOffsetY": 55,
       "feetAnchor": {
-        "x": 192,
-        "y": 354
+        "x": 144,
+        "y": 265
       },
-      "displayScale": 1.34,
+      "displayScale": 1.025,
       "sourceFacing": -1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "0ce662dd84fd047d409ad39dfb1ee0e6a8dc4ba6b05d986c2ade767ada404706"
+      "pixelHash": "17d29d0308a00fe0006e484400a1c9b56bcfd5ca15fbf2afd2f266d91d28a89b"
     },
     {
       "name": "dead-2",
       "animation": "dead",
       "phase": null,
-      "sourceImage": "enemy-source-transparent.png",
+      "sourceImage": "source/soldier-v2/dead-2-transparent.png",
       "sourceRect": {
-        "x": 922,
-        "y": 610,
-        "width": 307,
-        "height": 414,
-        "alphaX": 88,
-        "alphaY": 79,
-        "alphaWidth": 168,
-        "alphaHeight": 120
+        "processingScale": 0.2325,
+        "x": 0,
+        "y": 0,
+        "width": 1254,
+        "height": 1254,
+        "alphaX": 248,
+        "alphaY": 615,
+        "alphaWidth": 901,
+        "alphaHeight": 377
       },
       "runtimeAlphaBounds": {
-        "x": 108,
-        "y": 234,
-        "width": 168,
-        "height": 120
+        "x": 39,
+        "y": 177,
+        "width": 209,
+        "height": 88
       },
       "originX": 0.5,
-      "originY": 0.921875,
-      "displayOffsetX": 108,
-      "displayOffsetY": 234,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 39,
+      "displayOffsetY": 177,
       "feetAnchor": {
-        "x": 192,
-        "y": 354
+        "x": 144,
+        "y": 265
       },
-      "displayScale": 1.34,
+      "displayScale": 1.025,
       "sourceFacing": -1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "7383a0090e2c069b70fff574a63f4d4bf72d8e4af6c705e41cf20cd781073943"
+      "pixelHash": "8a7862ea8f07d7385d6e414fc29f8ea65f83af90dd451a8f7cf57ae0082f2608"
     },
     {
       "name": "dead-3",
       "animation": "dead",
       "phase": null,
-      "sourceImage": "enemy-source-transparent.png",
+      "sourceImage": "source/soldier-v2/dead-3-transparent.png",
       "sourceRect": {
-        "x": 1229,
-        "y": 610,
-        "width": 307,
-        "height": 414,
-        "alphaX": 81,
-        "alphaY": 146,
-        "alphaWidth": 192,
-        "alphaHeight": 51
+        "processingScale": 0.2325,
+        "x": 0,
+        "y": 0,
+        "width": 1254,
+        "height": 1254,
+        "alphaX": 0,
+        "alphaY": 665,
+        "alphaWidth": 1149,
+        "alphaHeight": 589
       },
       "runtimeAlphaBounds": {
-        "x": 96,
-        "y": 303,
-        "width": 192,
-        "height": 51
+        "x": 10,
+        "y": 128,
+        "width": 267,
+        "height": 137
       },
       "originX": 0.5,
-      "originY": 0.921875,
-      "displayOffsetX": 96,
-      "displayOffsetY": 303,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 10,
+      "displayOffsetY": 128,
       "feetAnchor": {
-        "x": 192,
-        "y": 354
+        "x": 144,
+        "y": 265
       },
-      "displayScale": 1.34,
+      "displayScale": 1.025,
       "sourceFacing": -1,
       "accepted": true,
       "rejectionReason": null,
-      "pixelHash": "768f932cdeadf585b5af4c81ae77d712dda900211718b1b3f9afc15ee4783d08"
+      "pixelHash": "342bcffe3ee5953e8a8f4d4eb81d6db8a7259735ccf5bfb29e9ca5cb1549bddc"
     }
   ]
 }

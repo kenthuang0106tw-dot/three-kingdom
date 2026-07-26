@@ -26,3 +26,11 @@ metadata, a runtime atlas, and an accepted reviewer baseline.
 - Preserve the existing Japanese-realistic pixel-art direction; do not make a
   derivative copy of the reference image.
 - Keep references outside the production build and GitHub Pages inventory.
+
+## ER.2 accepted Soldier review
+
+`soldier-er2-review.png` records the revised 15-frame debug sheet accepted by
+the reviewer on 2026-07-26. The reviewer specifically rejected the first
+`walk-3`, `attack-0..2`, and `dead-0..3`; all eight were regenerated as
+independent source poses before acceptance. This review image is QA evidence,
+not a runtime texture.
