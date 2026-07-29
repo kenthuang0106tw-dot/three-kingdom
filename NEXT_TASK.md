@@ -1,30 +1,28 @@
 # NEXT_TASK
 
-## M8 / Task 8.7 — Full QA Matrix
+## M9 / Task 9.1 — Production Route and Hosting Verification
 
 ### Why this is next
 
-The formal three-screen Stage now includes all five production enemy roles and
-all planned M8 implementation tasks are complete. Before release work, the
-project needs one evidence-driven regression pass across the complete playable
-slice. This task verifies existing contracts; it does not add or retune
-features.
+M8 Full QA is accepted with no Critical, High, or Medium defect. Release
+engineering must now prove that the actual production and GitHub Pages hosting
+contracts serve every required route correctly before versioning or platform
+sign-off. M8.7 also found one Low route issue: the optional root favicon
+request returns 404 in the GitHub Pages preview.
 
 ### Completion conditions
 
-- Execute every applicable item in `CHECKLIST.md` across Title, formal
-  five-enemy Stage, Boss, Failure/Retry, Result/Replay, Pause, mobile controls,
-  accessibility settings, Audio, Camera, combat, and reset ownership.
-- Record Desktop, 844×390, and 390×844 evidence with one Canvas, no document
-  overflow, no missing asset, and zero runtime error.
-- Confirm all five enemy roles visibly enter formal combat and cannot block
-  encounter clear, Boss entry, Failure, Result, Retry, or Replay.
-- Confirm production excludes physics/debug overlays, diagnostic datasets, and
-  development-only entrances.
-- Classify every discovered defect by severity. Fix no unrelated issue inside
-  this task; any required fix must become one explicit follow-up task.
-- Produce a final QA matrix and a release-readiness recommendation backed by
-  reproducible evidence.
+- Inventory every production HTML, JavaScript, CSS, image, Atlas, font, and
+  Audio route required by the Vinext and GitHub Pages builds.
+- Verify the local production server, GitHub Pages preview, and deployed
+  GitHub Pages URL use the correct base path, status code, and MIME type.
+- Resolve or explicitly waive the optional `/favicon.ico` 404 without changing
+  gameplay, art direction, or asset packaging ownership.
+- Confirm direct navigation and reload work at the public repository base path.
+- Confirm production still exposes one Canvas, no development dataset/debug
+  presentation, no overflow, and zero runtime error at Desktop, 844×390, and
+  390×844.
+- Record a reproducible hosting matrix and identify the exact deployed commit.
 
 ### Acceptance and validation
 
@@ -33,21 +31,21 @@ features.
 - `pnpm lint`
 - `pnpm build`
 - `pnpm build:github-pages`
-- Development and production browser matrix on Desktop, 844×390, and 390×844.
-- At least one deterministic full-stage success path, Failure/Retry path,
-  Result/Replay path, Pause/resume path, and accessibility-toggle path.
-- No Critical or High defect may remain open for a release-readiness pass.
+- Automated route/status/MIME checks for both local production outputs.
+- Browser smoke on local production, GitHub Pages preview, and the deployed
+  public URL.
+- No required production route may return 404 or an incorrect MIME type.
 
 ### Expected files
 
-- Focused regression tests only if an acceptance contract lacks coverage.
-- `docs/quality/m8-7-full-qa-matrix.md`.
-- `GAME_ROADMAP.md`, `SPRINT.md`, `CHECKLIST.md`, `TECH_DEBT.md`, and
-  `NEXT_TASK.md` closeout updates.
+- Hosting/route tests or scripts only where existing coverage is insufficient.
+- Minimum favicon or shell metadata change if the Low finding is fixed.
+- `docs/quality/m9-1-production-hosting.md`.
+- Roadmap, Sprint, Checklist, Technical Debt, and NEXT_TASK closeout updates.
 
 ### Risks
 
-- The matrix can become unbounded if testing is mixed with feature work.
-- Automated smoke paths may hide physical touch or audio-unlock defects.
-- A late Critical/High defect may require stopping QA and creating one separate
-  corrective task rather than claiming release readiness.
+- Local preview may pass while the deployed repository base path is wrong.
+- Cache propagation can make a newly deployed commit appear stale.
+- Scope can drift into release versioning, platform QA, or unrelated asset
+  optimization; those remain later M9 tasks.

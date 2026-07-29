@@ -676,3 +676,18 @@ fail.
   encounter director. Existing cleanup, one Attack Slot, Boss entry, terminal
   flow, and reset contracts passed focused and end-to-end validation.
 - **Remaining:** Full cross-feature evidence belongs to M8 / Task 8.7.
+
+## TD-M8.7 — Full QA matrix closeout
+
+- **Resolved:** 2026-07-30.
+- **Evidence:** 147/147 tests, typecheck, lint, both builds, three development
+  success viewports, ten Failure/Retry cycles, ten Result/Replay cycles,
+  Pause/accessibility, mobile touch, Audio ownership, and three production
+  isolation viewports passed with zero captured runtime errors.
+- **Defect summary:** 0 Critical, 0 High, 0 Medium, 1 Low.
+- **Remaining Low:** GitHub Pages preview requests optional root
+  `/favicon.ico`, which returns 404. Required HTML, PNG, Atlas, font, and Audio
+  assets load normally. M9.1 owns route/hosting verification.
+- **Evidence gap:** No new physical device/browser versions were supplied.
+  Earlier user-accepted iOS Safari and Android Chrome evidence remains recorded
+  without inferred version numbers.

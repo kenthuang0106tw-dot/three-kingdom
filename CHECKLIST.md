@@ -1335,3 +1335,26 @@
 | 390×844 | Pass | Intrinsic 1280×720 Canvas, full Stage completion, no overflow, zero captured errors |
 | Scope | Pass | No enemy tuning, Player, Boss, Camera, Audio, art, animation, or new director |
 | Next task | Selected | M8 / Task 8.7 — Full QA Matrix |
+
+## M8 / Task 8.7 — Full QA Matrix — 2026-07-30
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Previous task | Pass | Task 8.2C focused revalidation passed 102/102 |
+| Full automated suite | Pass | 147/147 |
+| Type/lint/build | Pass | Typecheck; lint 0 errors/8 existing warnings; both builds; 52 packaged files |
+| Formal Stage | Pass | Five roles across two ordered encounters; Boss clear reaches Result once |
+| Desktop | Pass | 1067×600 fitted Canvas, no overflow, zero captured errors |
+| Landscape | Pass | 693×390 fitted Canvas, touch move/attack, full clear, zero captured errors |
+| Portrait | Pass | 325×183 fitted Canvas, diagonal touch move/attack, full clear, zero captured errors |
+| Failure/Retry | Pass | 10 entries/restarts; blocked/suspended terminal state; deterministic Title reset |
+| Result/Replay | Pass | 10 entries/replays; deterministic Title reset and completion re-arm |
+| Pause | Pass | Velocity 0, hitbox off, actor state retained, resume exactly once |
+| Accessibility | Pass | Reduced flash and reduced shake independently toggle and survive resume |
+| Audio | Pass | One manager and one gameplay subscription through full success path |
+| Production isolation | Pass | Three viewports; one Canvas; zero dataset keys; no overflow/error |
+| GitHub Pages | Pass with Low finding | Base-prefixed runtime assets load; optional root favicon is 404 |
+| Defect severity | Pass | Critical 0, High 0, Medium 0, Low 1 |
+| Physical device metadata | Deferred — Low evidence gap | Prior iOS/Android user acceptance exists; versions unavailable |
+| Scope | Pass | QA/tests/docs only; no gameplay, art, balance, Stage, Camera, Audio, or UI change |
+| Next task | Selected | M9 / Task 9.1 — Production route/hosting verification |

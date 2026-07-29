@@ -1151,3 +1151,30 @@ Status: completed.
 
 The only next task is M8 / Task 8.7 — Full QA Matrix. Do not add content,
 retune combat, or begin release changes in the same task.
+
+## M8 / Task 8.7 — Full QA Matrix — 2026-07-30
+
+Status: completed. Milestone 8 accepted.
+
+- [x] Revalidated Task 8.2C with 102/102 focused tests.
+- [x] Passed 147/147 full tests, typecheck, lint with zero errors/eight
+  existing warnings, Vinext build, and GitHub Pages build.
+- [x] Completed the formal five-enemy Stage and Boss on Desktop, 844×390, and
+  390×844 with one Canvas, no overflow, and zero captured runtime errors.
+- [x] Completed 10 deterministic Failure/Retry and 10 Result/Replay cycles.
+- [x] Verified Pause/resume, reduced flash, reduced shake, Audio ownership,
+  Camera/Stage flow, landscape touch movement/attack, and portrait touch
+  movement/attack.
+- [x] Verified production ignores development query modes and exposes zero
+  Canvas dataset keys in all three viewports.
+- [x] Verified representative Vinext and GitHub Pages HTML, Player PNG, and
+  Stage BGM routes return 200 with correct content types.
+- [x] Classified defects: Critical 0, High 0, Medium 0, Low 1.
+- [ ] Optional root `/favicon.ico` returns 404 in the GitHub Pages preview;
+  carry this route finding into M9.1 without changing M8 code.
+- [ ] New physical device versions were unavailable; prior user-accepted iOS
+  Safari and Android Chrome evidence remains valid but lacks version metadata.
+
+The only next task is M9 / Task 9.1 — Production route/hosting verification.
+Do not start versioning, platform acceptance, rollback, release, or gameplay
+work in the same task.

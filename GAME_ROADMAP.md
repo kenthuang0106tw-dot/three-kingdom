@@ -397,6 +397,25 @@ runtime errors.
 
 **Next:** M8 / Task 8.7 — Full QA Matrix.
 
+### M8 / Task 8.7 — Full QA Matrix (Completed 2026-07-30)
+
+**Status:** Completed. Milestone 8 is accepted.
+
+**Evidence:** Task 8.2C revalidation passed 102/102 and the complete suite
+passed 147/147. Typecheck, lint with zero errors/eight existing warnings,
+Vinext build, GitHub Pages build, and the 52-file production inventory passed.
+Desktop, 844×390, and 390×844 development success paths reached Result with
+one Canvas and zero runtime errors. Ten Failure/Retry and ten Result/Replay
+cycles reset deterministically. Pause, both accessibility toggles, landscape
+and portrait touch movement/attack, production debug exclusion, Audio
+ownership, Camera, Boss, and five-enemy Stage contracts passed.
+
+**Defects:** 0 Critical, 0 High, 0 Medium, 1 Low. The GitHub Pages preview
+requests optional root `/favicon.ico` and receives 404; required gameplay
+assets remain 200 and unaffected.
+
+**Next:** M9 / Task 9.1 — Production route/hosting verification.
+
 ### M8 / Task 8.6 — Flash/Shake Accessibility Settings (Completed 2026-07-30)
 
 **Status:** Completed.

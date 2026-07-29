@@ -1893,11 +1893,12 @@ test("enemy redesign tasks retain the approved prototype lock after all five pro
   assert.match(prototypeContract, /Crossbow \| Go \(ER\.6\)/);
 });
 
-test("the five-enemy Stage closeout advances only to the full QA matrix", async () => {
-  const [visualReport, accessibilityReport, stageReport, nextTask] = await Promise.all([
+test("the full QA closeout advances only to production route verification", async () => {
+  const [visualReport, accessibilityReport, stageReport, qaReport, nextTask] = await Promise.all([
     readFile(new URL("../docs/quality/m8-3-release-visual-defect-pass.md", import.meta.url), "utf8"),
     readFile(new URL("../docs/quality/m8-6-accessibility-settings.md", import.meta.url), "utf8"),
     readFile(new URL("../docs/quality/m8-2c-five-enemy-stage.md", import.meta.url), "utf8"),
+    readFile(new URL("../docs/quality/m8-7-full-qa-matrix.md", import.meta.url), "utf8"),
     readFile(new URL("../NEXT_TASK.md", import.meta.url), "utf8"),
   ]);
 
@@ -1909,7 +1910,13 @@ test("the five-enemy Stage closeout advances only to the full QA matrix", async 
   assert.match(stageReport, /Soldier \+ Shield Guard/);
   assert.match(stageReport, /Mauler \+ Duelist \+ Crossbow/);
   assert.match(stageReport, /M8 \/ Task 8\.7 — Full QA/);
-  assert.match(nextTask, /M8 \/ Task 8\.7 — Full QA Matrix/);
-  assert.match(nextTask, /formal three-screen Stage/);
-  assert.match(nextTask, /does not add or retune\s+features/);
+  assert.match(qaReport, /147\/147/);
+  assert.match(qaReport, /Critical \| 0/);
+  assert.match(qaReport, /High \| 0/);
+  assert.match(qaReport, /Medium \| 0/);
+  assert.match(qaReport, /Low \| 1/);
+  assert.match(qaReport, /M9 \/ Task 9\.1 production-route verification/);
+  assert.match(nextTask, /M9 \/ Task 9\.1 — Production Route and Hosting Verification/);
+  assert.match(nextTask, /optional `\/favicon\.ico` 404/);
+  assert.match(nextTask, /deployed\s+GitHub Pages URL/);
 });
