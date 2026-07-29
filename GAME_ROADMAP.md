@@ -366,7 +366,7 @@ M6A 不加入新角色、新敵人、新招式、第二關、Audio、技能、�
 |---|---|---:|---:|---|---|---|---|
 | 8.1 | 設定並量測 performance budget (Completed 2026-07-24) | P0 | Medium | M7 | FPS、memory、load size 有基準 | profiling docs/tests | 無目標裝置 |
 | 8.2 | Game-feel timing pass | P0 | High | Complete gameplay | 參數變更有 before/after evidence | configs | 無止境微調 |
-| 8.3 | Release visual defect pass | P1 | Medium | M6A accepted | 只修 clipping、seam、readability 與平台差異；不新增整套 art scope | existing assets/checklist | 重開已 freeze 的美術方向 |
+| 8.3 | Release visual defect pass (Completed 2026-07-29) | P1 | Medium | M6A accepted | No Critical/High/Medium defect; clipping、seam、readability、production debug 與三 viewport 有 evidence | existing assets/checklist | 重開已 freeze 的美術方向 |
 | 8.4 | Production asset packaging and memory optimization (Completed 2026-07-24) | P0 | High | 8.1 | production 只包含 runtime 必要資源且符合 delivery budget；decoded memory 未超標時不重製 atlas | build/assets/tests | 漏包間接引用素材 |
 | 8.5 | Conditional pooling (Not required by 8.1 evidence) | P2 | Medium | 8.1 | 只有 profiling 證明 GC spike 才實作 | effects/pools | YAGNI |
 | 8.6 | Flash/shake/accessibility settings | P1 | Medium | M6 UI | 可降低強度；預設手感不變 | settings/UI | 設定 scope 膨脹 |
@@ -694,6 +694,20 @@ tests passed 133/133; typecheck, lint, both builds, packaging, and
 desktop/844×390/390×844 browser smoke passed with zero captured errors.
 
 **Next:** M8 / Task 8.3 — Release Visual Defect Pass.
+
+### M8 / Task 8.3 — Release Visual Defect Pass (Completed 2026-07-29)
+
+**Status:** Completed without production visual changes.
+
+**Evidence:** Player, five enemy roles, Boss, three Stage sections, camera
+handoff, HUD, touch controls, Failure, Result, and production debug exclusion
+were inspected. No reproducible Critical, High, or Medium visual defect was
+found. Focused tests protect actor cell bounds/feet anchors, Boss alignment,
+Stage continuity, pixel filtering, FIT scaling, safe area, and production debug
+exclusion. Eight browser paths produced zero captured errors. New physical
+coarse-pointer evidence remains a Low M8.7 follow-up rather than a claimed pass.
+
+**Next:** M8 / Task 8.6 — Flash/Shake Accessibility Settings.
 
 ## 4. Global Acceptance Rules
 

@@ -1,52 +1,48 @@
 # NEXT_TASK
 
-## M8 / Task 8.3 — Release Visual Defect Pass
+## M8 / Task 8.6 — Flash/Shake Accessibility Settings
 
 ### Why this is next
 
-ER.2 through ER.6 now give all five approved enemy roles project-owned
-production presentation. Before accessibility settings, the full QA matrix, or
-release work, the accepted Player, enemies, Boss, Stage, effects, and responsive
-layouts need one bounded visual-defect pass. This is the earliest remaining
-task that can find clipping, seams, readability regressions, and platform
-differences without reopening the frozen art direction.
+M8.3 found no blocking visual defect. The remaining M8.7 full QA matrix depends
+on completing the planned accessibility control first. This task is the
+smallest eligible change that lets photosensitive or motion-sensitive players
+reduce hit flash and camera shake without changing the default arcade feel.
 
 ### Completion conditions
 
-- Inspect the existing accepted assets and runtime presentation only; do not
-  generate a new character set or change gameplay balance.
-- Check Player, five enemy roles, Boss, Stage transitions, hit effects, HUD,
-  touch controls, and camera presentation for clipping, visible seams,
-  incorrect stacking, unreadable state changes, and viewport-specific defects.
-- Fix only defects that are reproducible and directly evidenced.
-- Preserve all current animation timing, hitboxes, HP, AI, Encounter, Camera,
-  Audio, and control contracts unless a visual defect is caused by an incorrect
-  presentation mapping.
-- Record every inspected defect as fixed, deferred with severity, or not
-  reproducible.
+- Add one minimal accessibility setting surface using the existing product UI;
+  do not create a general settings framework.
+- Provide independently testable reduced-flash and reduced-shake behavior.
+- Default behavior and every existing combat parameter remain unchanged.
+- Reduced flash must lower or remove full-white hit flashes without changing
+  hit timing, damage, hit-stop, spark ownership, or animation.
+- Reduced shake must lower or disable camera shake without changing camera
+  follow, lock, handoff, or combat timing.
+- Settings must survive Pause/resume and Scene reset for the current page
+  session without using React gameplay state or a new backend/save system.
+- Touch and keyboard users must both be able to operate the setting surface.
 
 ### Validation
 
-- Focused regression tests for each changed presentation path.
+- Focused tests for default parity, reduced-flash, reduced-shake, Pause/resume,
+  Scene reset, and absence of combat/camera timing changes.
 - `pnpm test`, `pnpm typecheck`, `pnpm lint`, `pnpm build`, and
   `pnpm build:github-pages`, with TD-M11 reported honestly if package-manager
   wrappers stop before project scripts.
-- Desktop, 844×390, and 390×844 full vertical-slice smoke, including every
-  enemy role and Boss.
-- No new console errors, Canvas duplication, overflow, asset 404, or production
-  debug leak.
+- Desktop, 844×390, and 390×844 visual smoke for default and reduced settings.
+- Production contains no debug controls, console errors, Canvas duplication,
+  overflow, or asset 404.
 
 ### Expected files
 
-- Existing presentation assets or mappings only when a defect is proven.
-- Focused tests and visual evidence.
-- M8.3 report and corresponding roadmap, sprint, checklist, architecture,
-  asset-pipeline, and technical-debt updates where applicable.
+- Minimal accessibility policy/config and existing Phaser UI integration.
+- Effect/camera consumption points only where required.
+- Focused tests and M8.6 evidence/document updates.
 
 ### Risks
 
-- A broad “polish” pass could silently reopen accepted art direction.
-- Visual fixes could accidentally alter gameplay anchors, hitboxes, camera
-  behavior, or responsive input.
-- Device-only defects may require explicit reviewer evidence rather than local
-  browser emulation.
+- A settings task could expand into a general menu, persistence, or UI redesign.
+- Reduced feedback could accidentally change combat timing instead of only
+  presentation intensity.
+- React state or DOM controls could become coupled to Phaser gameplay.

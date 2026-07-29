@@ -1863,12 +1863,11 @@ test("M6A visual freeze has reproducible captures, assets, and runtime metrics",
   assert.equal(metrics.productionDebugLeak, false);
 });
 
-test("enemy redesign tasks retain the approved prototype lock and advance to the visual defect pass", async () => {
-  const [color, silhouette, prototypeContract, nextTask] = await Promise.all([
+test("enemy redesign tasks retain the approved prototype lock after all five production replacements", async () => {
+  const [color, silhouette, prototypeContract] = await Promise.all([
     readFile(new URL("../docs/visual-baselines/enemy-cast-v2/approved-five-enemy-color.png", import.meta.url)),
     readFile(new URL("../docs/visual-baselines/enemy-cast-v2/approved-five-enemy-silhouette.png", import.meta.url)),
     readFile(new URL("../docs/character-production/enemy-cast-v2-approved-prototypes.md", import.meta.url), "utf8"),
-    readFile(new URL("../NEXT_TASK.md", import.meta.url), "utf8"),
   ]);
 
   const sha256 = buffer => createHash("sha256").update(buffer).digest("hex").toUpperCase();
@@ -1883,7 +1882,18 @@ test("enemy redesign tasks retain the approved prototype lock and advance to the
   assert.match(prototypeContract, /GX\.1/);
   assert.match(prototypeContract, /genuine startup, airborne, descent, and landing/);
   assert.match(prototypeContract, /Crossbow \| Go \(ER\.6\)/);
-  assert.match(nextTask, /M8 \/ Task 8\.3 — Release Visual Defect Pass/);
-  assert.match(nextTask, /do not\s+generate a new character set/);
-  assert.match(nextTask, /Desktop, 844×390, and 390×844/);
+});
+
+test("the release visual audit closes without reopening art and advances only to accessibility", async () => {
+  const [report, nextTask] = await Promise.all([
+    readFile(new URL("../docs/quality/m8-3-release-visual-defect-pass.md", import.meta.url), "utf8"),
+    readFile(new URL("../NEXT_TASK.md", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(report, /No Critical, High, or Medium visual defect was found/);
+  assert.match(report, /changes no art, animation\s+mapping, gameplay, camera, Stage, control, or responsive CSS/);
+  assert.match(report, /Eight inspected browser paths reported zero captured errors/);
+  assert.match(nextTask, /M8 \/ Task 8\.6 — Flash\/Shake Accessibility Settings/);
+  assert.match(nextTask, /do not create a general settings framework/);
+  assert.match(nextTask, /Default behavior and every existing combat parameter remain unchanged/);
 });

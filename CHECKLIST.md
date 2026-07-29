@@ -1287,3 +1287,18 @@
 | Browser | Pass | Desktop, 844×390, 390×844: readable runtime aim/locked/reload states, one logical Canvas, zero captured errors |
 | Scope | Pass | Crossbow presentation only; no TP-2/TP-3 retuning, friendly fire, Player, Stage, Camera, UI, Audio, or other enemy art change |
 | Next task | Selected | M8 / Task 8.3 — Release Visual Defect Pass |
+
+## M8 / Task 8.3 — Release Visual Defect Pass — 2026-07-29
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Player and five enemies | Pass | Runtime bounds remain inside cells; all frames retain one feet anchor and display scale |
+| Boss | Pass | Lifecycle and weapon poses remain inside 448px cells and end at feet Y 420 |
+| Stage and Camera | Pass | Three contiguous 1280px sections; handoff smoke crossed entry/ambush without visible seam or snap |
+| HUD and overlays | Pass | Player/Boss HUD, Failure, Victory, touch controls, and hit feedback remain readable |
+| Responsive layout | Pass locally | Desktop, 844×390, and 390×844: one Canvas, no document overflow |
+| Production debug | Pass | Empty production Canvas dataset; no physics lines, debug text, duplicate Canvas, or browser error |
+| Automated gates | Pass | `pnpm test` 138/138, typecheck, lint 0 errors/8 existing warnings, both pnpm builds and 52-file packaging passes |
+| Physical mobile | Deferred — Low | No new device/OS/browser evidence in this cycle; recheck in M8.7 |
+| Scope | Pass | No art, gameplay, animation timing, Camera, Stage, control, or CSS change |
+| Next task | Selected | M8 / Task 8.6 — Flash/Shake Accessibility Settings |

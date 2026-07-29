@@ -611,6 +611,7 @@ fail.
 
 ## TD-M11 — pnpm build dependency-approval blocker
 
+- **Resolved:** 2026-07-29 during M8 / Task 8.3.
 - **Evidence:** On 2026-07-26, both `pnpm build` and `pnpm test` stopped during
   pnpm's dependency-status install because `esbuild`, `sharp`, `workerd`, and
   related build scripts are marked ignored. Neither command reached its
@@ -618,11 +619,12 @@ fail.
   packaging commands all completed independently.
 - **Impact:** The documented package-manager build command cannot currently be
   used as a clean acceptance gate in this environment.
-- **Resolution:** Review the repository's pnpm dependency-build approval policy
-  in a dedicated tooling task. Until then, record both the pnpm failure and the
-  already-established direct Vinext/Vite build result; do not silently claim
-  that `pnpm build` passed.
-- **Target:** Tooling maintenance, outside ER.1 scope.
+- **Resolution:** The blocker did not reproduce on 2026-07-29. `pnpm test`
+  (138/138), `pnpm typecheck`, `pnpm lint`, `pnpm build`, and
+  `pnpm build:github-pages` all reached and completed their repository scripts;
+  both packaging passes retained 52 files. Reopen this debt only if a clean
+  environment reproduces the dependency-approval stop.
+- **Target:** Resolved; no dedicated tooling task remains.
 
 ## ER.3 update — Legacy Duelist presentation resolved
 

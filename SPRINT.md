@@ -1075,3 +1075,28 @@ Status: completed.
 The only next task is M8 / Task 8.3 — Release Visual Defect Pass. Do not reopen
 the approved enemy identities or begin accessibility, full QA, or release work
 in the same task.
+
+## M8 / Task 8.3 — Release Visual Defect Pass — 2026-07-29
+
+Status: completed.
+
+- [x] Inspected Player, Soldier, Duelist, Mauler, Shield Guard, Crossbow, Boss,
+  three Stage sections, camera handoff, HUD, touch controls, Failure, and Result.
+- [x] Found no reproducible Critical, High, or Medium visual defect; changed no
+  production art, gameplay, Camera, Stage, control, or responsive CSS.
+- [x] Added focused bounds, feet-anchor, Boss alignment, Stage continuity,
+  pixel-filtering, FIT, safe-area, and production-debug regression checks.
+- [x] Development formal encounter, composition, Boss, Failure, Result, and
+  cast-preview paths retained one Canvas and zero captured errors.
+- [x] Production Desktop, 844×390, and 390×844 retained one Canvas, no overflow,
+  no diagnostic dataset/debug overlay, and zero captured errors.
+- [x] `pnpm test` passed 138/138; `pnpm typecheck`, `pnpm lint` with zero
+  errors/eight existing `<img>` warnings, `pnpm build`, and
+  `pnpm build:github-pages` all reached and completed their project scripts;
+  both outputs preserve 52 production files.
+- [ ] New physical coarse-pointer device evidence was unavailable; retained as
+  a Low M8.7 follow-up without invalidating prior reported mobile acceptance.
+
+The only next task is M8 / Task 8.6 — Flash/Shake Accessibility Settings. Do
+not begin the full QA matrix, release work, new content, or art generation in
+the same task.
