@@ -63,12 +63,12 @@ test("Performance profiling is development-only and exposes readonly datasets", 
 test("Performance asset report separates requested runtime files from deployment size", async () => {
   const report = await collectPerformanceAssetReport(fileURLToPath(new URL("..", import.meta.url)));
 
-  assert.equal(report.logicalEntries, 36);
-  assert.equal(report.requestFiles, 45);
-  assert.equal(report.byExtension[".png"].files, 24);
+  assert.equal(report.logicalEntries, 37);
+  assert.equal(report.requestFiles, 47);
+  assert.equal(report.byExtension[".png"].files, 25);
   assert.equal(report.byExtension[".wav"].files, 12);
-  assert.equal(report.decodedRgbaBytes, 128_003_584);
-  assert.equal(report.productionPublicFiles, 48);
+  assert.equal(report.decodedRgbaBytes, 136_297_984);
+  assert.equal(report.productionPublicFiles, 50);
   assert.ok(report.productionPublicBytes > report.encodedBytes);
   assert.ok(report.encodedBytes < 15 * 1024 * 1024);
   assert.ok(report.githubPagesBytes === null || report.githubPagesBytes > report.encodedBytes);

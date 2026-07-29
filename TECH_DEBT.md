@@ -598,18 +598,16 @@ atlas rebuild was performed. Task 8.1 also found no growth that justifies
 conditional pooling; those changes remain deferred unless new measurements
 fail.
 
-## TD-M10 — Temporary Shield Guard and Crossbow presentation
+## TD-M10 — Temporary Crossbow presentation
 
-- **Evidence:** TP-1 and TP-2 deliberately reuse the Soldier visual contract
-  while their gameplay roles are accepted. ER.2 has now replaced the formal
-  Soldier with production art, but both development-only roles still reuse it.
-- **Impact:** Their combat behavior is readable through development markers,
-  but their final silhouettes and state-specific animation poses do not exist.
-- **Resolution:** ER.2 proved the one-actor production pipeline. Shield Guard
-  and Crossbow still require their larger role-specific frame budgets and must
-  be replaced only in separate tasks after the formal melee cast.
-- **Target:** Dedicated Shield Guard and Crossbow production-art tasks after
-  the accepted formal melee replacements.
+- **Evidence:** ER.5 resolved the Shield Guard substitute with 21 genuine
+  project-owned frames while preserving TP-1. TP-2 Crossbow still deliberately
+  reuses Soldier presentation and development aiming markers.
+- **Impact:** Crossbow gameplay is readable, but its repeating-crossbow
+  silhouette and aim/locked/reload poses are still temporary.
+- **Resolution:** Execute ER.6 as one isolated production-art task. Do not
+  retune TP-2 or reintroduce rejected friendly fire.
+- **Target:** ER.6 Crossbow Production-Art Replacement.
 
 ## TD-M11 — pnpm build dependency-approval blocker
 
@@ -636,8 +634,11 @@ fail.
 - **ER.4 update:** Mauler now has seventeen project-owned poses, measured
   rectangles, a 288×288 atlas, common `(144,265)` feet anchor, one scale,
   complete QA evidence, and accepted three-viewport production smoke.
-- **Remaining:** Shield Guard and Crossbow remain intentionally temporary under
-  TD-M10.
+- **ER.5 update:** Shield Guard now has 21 project-owned poses, measured
+  rectangles, a 288×288 atlas, common `(144,265)` feet anchor, one `1.025`
+  scale, dedicated guard/block/recovery animation paths, and accepted
+  three-viewport smoke.
+- **Remaining:** Crossbow remains intentionally temporary under TD-M10.
 
 ## TD-ER1 — Approved prototype references were not repository-owned
 
@@ -657,5 +658,6 @@ fail.
   measured metadata, QA sheets, hashes, builds, and three-viewport smoke passed.
 - **Remaining:** None for reference ownership. GX.1 completed with the
   repository-owned references and a reproducible four-pose pipeline. Shield
-  Guard and Crossbow production presentation remain planned work, not hidden
-  debt in the accepted Soldier, Duelist, or Mauler assets.
+  Guard production presentation is now complete. Crossbow production
+  presentation remains planned work, not hidden debt in the accepted melee
+  assets.

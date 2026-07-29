@@ -107,5 +107,5 @@ for the two approved reference images.
 | Soldier | Go | Long halberd, blue armor, upright military silhouette remain consistent with the approved prototype. |
 | Duelist | Go (ER.3R) | Full hood/cowl, shadowed face, low stance, and two long inward-curved hooks now match the approved identity; gameplay remains unchanged. |
 | Mauler | Go (ER.4) | Seventeen-frame production art preserves the square-headed long war hammer, beard, broad red/brown silhouette, and largest-normal-enemy scale. |
-| Shield Guard | Pending | Production art must preserve the dominant round woven rattan shield. |
+| Shield Guard | Go (ER.5) | Twenty-one production poses preserve the dominant round woven rattan shield, olive/brown build, small secondary weapon, and shared feet line without changing TP-1 gameplay. |
 | Crossbow | Pending | Production art must preserve the large horizontal repeating crossbow and rear bolt pack. |

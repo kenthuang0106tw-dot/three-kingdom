@@ -1257,3 +1257,18 @@
 | Automated gates | Pass with TD-M11 noted | 131/131 direct tests, typecheck, lint 0 errors/8 existing warnings, both direct builds and packaging |
 | Browser | Pass | Desktop, 844×390, 390×844: readable airborne pose, one Canvas, no overflow, zero captured errors |
 | Next task | Selected | ER.5 — Shield Guard Production-Art Replacement |
+
+## ER.5 — Shield Guard Production-Art Replacement — 2026-07-29
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Identity gate | Pass | Olive/brown standard build, left-authored facing, dominant round woven rattan shield, readable rim/weave/boss, small secondary weapon |
+| Frame contract | Pass | 21 distinct hashes: idle 2, walk 4, attack 3, hurt 2, dead 4, guard 2, block 2, recovery 2 |
+| Atlas/alignment | Pass | 288×288 cells, feet `(144,265)` in every frame, one `1.025` scale, 215.25px logical idle height |
+| Gameplay freeze | Pass | HP, speed, damage, ranges, guard cone/lock, recovery, body, hitbox, Attack Slot, and Stage isolation unchanged |
+| QA/provenance | Pass | Source/transparent derivatives, measured metadata, debug, onion, 25% silhouette, idle gate, review sheet, hashes, reproducible tool |
+| Delivery | Pass | 47 requests; 13,881,969 encoded bytes; 136,297,984 decoded RGBA; 50 production files; 19,178,685-byte GitHub Pages artifact |
+| Automated gates | Pass with TD-M11 noted | 132/132 direct tests, typecheck, lint 0 errors/4 existing warnings, direct Vinext/Vite builds and packaging |
+| Browser | Pass | Desktop, 844×390, 390×844: readable runtime guard pose, one logical Canvas, zero captured errors |
+| Scope | Pass | Shield Guard presentation only; no TP-1 retuning, Player, Stage, Camera, UI, Audio, or other enemy art change |
+| Next task | Selected | ER.6 — Crossbow Production-Art Replacement |

@@ -1,0 +1,824 @@
+{
+  "actor": "shield-guard",
+  "cell": {
+    "width": 288,
+    "height": 288
+  },
+  "feetAnchor": {
+    "x": 144,
+    "y": 265
+  },
+  "displayScale": 1.025,
+  "sourceFacing": -1,
+  "targetLogicalIdleHeight": 215,
+  "logicalIdleHeight": 215.25,
+  "animations": {
+    "idle": [
+      "idle-0",
+      "idle-1"
+    ],
+    "walk": [
+      "walk-0",
+      "walk-1",
+      "walk-2",
+      "walk-3"
+    ],
+    "attack": [
+      "attack-0",
+      "attack-1",
+      "attack-2"
+    ],
+    "hurt": [
+      "hurt-0",
+      "hurt-1"
+    ],
+    "dead": [
+      "dead-0",
+      "dead-1",
+      "dead-2",
+      "dead-3"
+    ],
+    "guard": [
+      "guard-0",
+      "guard-1"
+    ],
+    "block": [
+      "block-0",
+      "block-1"
+    ],
+    "recovery": [
+      "recovery-0",
+      "recovery-1"
+    ]
+  },
+  "provenance": {
+    "original": true,
+    "identityGate": "shield-guard-idle-gate-source.png",
+    "sources": [
+      "shield-guard-source.png",
+      "shield-guard-extra-source.png"
+    ],
+    "sourceLayout": "measured-five-by-three-plus-three-by-two",
+    "processingTool": "tools/build_shield_guard_art.py",
+    "processingRevision": "1.0",
+    "generatedBy": "built-in image generation, ER.5 Shield Guard Production-Art Replacement"
+  },
+  "frames": [
+    {
+      "name": "idle-0",
+      "animation": "idle",
+      "phase": null,
+      "sourceImage": "shield-guard-source-transparent.png",
+      "sourceRect": {
+        "x": 99,
+        "y": 40,
+        "width": 197,
+        "height": 287,
+        "alphaX": 7,
+        "alphaY": 8,
+        "alphaWidth": 183,
+        "alphaHeight": 271,
+        "processingScale": 0.775
+      },
+      "runtimeAlphaBounds": {
+        "x": 73,
+        "y": 55,
+        "width": 142,
+        "height": 210
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 73,
+      "displayOffsetY": 55,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": -1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "f44789e14208c1ca28de57e50ca159ecaf78f9e5af88214a9aecb79b4fcb6a16"
+    },
+    {
+      "name": "idle-1",
+      "animation": "idle",
+      "phase": null,
+      "sourceImage": "shield-guard-source-transparent.png",
+      "sourceRect": {
+        "x": 370,
+        "y": 41,
+        "width": 205,
+        "height": 286,
+        "alphaX": 8,
+        "alphaY": 8,
+        "alphaWidth": 190,
+        "alphaHeight": 270,
+        "processingScale": 0.775
+      },
+      "runtimeAlphaBounds": {
+        "x": 70,
+        "y": 56,
+        "width": 147,
+        "height": 209
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 70,
+      "displayOffsetY": 56,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": -1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "49897acfcc730b942c8cdec481f004b71b034eeb66791ced81ea3c3c31e5ccec"
+    },
+    {
+      "name": "walk-0",
+      "animation": "walk",
+      "phase": null,
+      "sourceImage": "shield-guard-source-transparent.png",
+      "sourceRect": {
+        "x": 635,
+        "y": 42,
+        "width": 195,
+        "height": 282,
+        "alphaX": 8,
+        "alphaY": 8,
+        "alphaWidth": 179,
+        "alphaHeight": 266,
+        "processingScale": 0.775
+      },
+      "runtimeAlphaBounds": {
+        "x": 74,
+        "y": 59,
+        "width": 139,
+        "height": 206
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 74,
+      "displayOffsetY": 59,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": -1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "b3162745b2678ceeff8b881eaaff8bd57f0a879d1529d365a24e51130ba8ae27"
+    },
+    {
+      "name": "walk-1",
+      "animation": "walk",
+      "phase": null,
+      "sourceImage": "shield-guard-source-transparent.png",
+      "sourceRect": {
+        "x": 885,
+        "y": 42,
+        "width": 220,
+        "height": 282,
+        "alphaX": 8,
+        "alphaY": 8,
+        "alphaWidth": 204,
+        "alphaHeight": 266,
+        "processingScale": 0.775
+      },
+      "runtimeAlphaBounds": {
+        "x": 65,
+        "y": 59,
+        "width": 158,
+        "height": 206
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 65,
+      "displayOffsetY": 59,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": -1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "dc5c6b4479e96b44e2412d008d0e1a57fe22240492e2933985a7e6e6ea78da13"
+    },
+    {
+      "name": "walk-2",
+      "animation": "walk",
+      "phase": null,
+      "sourceImage": "shield-guard-source-transparent.png",
+      "sourceRect": {
+        "x": 1162,
+        "y": 45,
+        "width": 221,
+        "height": 280,
+        "alphaX": 8,
+        "alphaY": 8,
+        "alphaWidth": 205,
+        "alphaHeight": 264,
+        "processingScale": 0.775
+      },
+      "runtimeAlphaBounds": {
+        "x": 64,
+        "y": 60,
+        "width": 159,
+        "height": 205
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 64,
+      "displayOffsetY": 60,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": -1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "7efc0169f5d53bf04b0f22af15e3b663b14e8c5351db2f503ebd6ea4a9dcb3e0"
+    },
+    {
+      "name": "walk-3",
+      "animation": "walk",
+      "phase": null,
+      "sourceImage": "shield-guard-source-transparent.png",
+      "sourceRect": {
+        "x": 52,
+        "y": 371,
+        "width": 221,
+        "height": 276,
+        "alphaX": 8,
+        "alphaY": 8,
+        "alphaWidth": 206,
+        "alphaHeight": 260,
+        "processingScale": 0.775
+      },
+      "runtimeAlphaBounds": {
+        "x": 64,
+        "y": 63,
+        "width": 160,
+        "height": 202
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 64,
+      "displayOffsetY": 63,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": -1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "58da2f5826a8c6926cc7d434dc0f311692d82ffa36be47443651f7c07ec630de"
+    },
+    {
+      "name": "attack-0",
+      "animation": "attack",
+      "phase": "startup",
+      "sourceImage": "shield-guard-source-transparent.png",
+      "sourceRect": {
+        "x": 344,
+        "y": 378,
+        "width": 244,
+        "height": 267,
+        "alphaX": 8,
+        "alphaY": 8,
+        "alphaWidth": 228,
+        "alphaHeight": 251,
+        "processingScale": 0.775
+      },
+      "runtimeAlphaBounds": {
+        "x": 55,
+        "y": 70,
+        "width": 177,
+        "height": 195
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 55,
+      "displayOffsetY": 70,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": -1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "a9843294960a672f6189fc74314ca6b38efc208e9f5d20df597bc2c3d0ee9848"
+    },
+    {
+      "name": "attack-1",
+      "animation": "attack",
+      "phase": "active",
+      "sourceImage": "shield-guard-source-transparent.png",
+      "sourceRect": {
+        "x": 609,
+        "y": 403,
+        "width": 290,
+        "height": 242,
+        "alphaX": 8,
+        "alphaY": 8,
+        "alphaWidth": 274,
+        "alphaHeight": 226,
+        "processingScale": 0.775
+      },
+      "runtimeAlphaBounds": {
+        "x": 38,
+        "y": 90,
+        "width": 212,
+        "height": 175
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 38,
+      "displayOffsetY": 90,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": -1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "4599189767a140c18607b00235e459d3fd80585e1ca7e270f1decd15665abc55"
+    },
+    {
+      "name": "attack-2",
+      "animation": "attack",
+      "phase": "recovery",
+      "sourceImage": "shield-guard-source-transparent.png",
+      "sourceRect": {
+        "x": 924,
+        "y": 388,
+        "width": 226,
+        "height": 259,
+        "alphaX": 8,
+        "alphaY": 8,
+        "alphaWidth": 210,
+        "alphaHeight": 242,
+        "processingScale": 0.775
+      },
+      "runtimeAlphaBounds": {
+        "x": 62,
+        "y": 77,
+        "width": 163,
+        "height": 188
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 62,
+      "displayOffsetY": 77,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": -1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "9ec8e698453a02e6002617c4527ba2b80a09cd5365e96fae977d90b1eb80e8ae"
+    },
+    {
+      "name": "hurt-0",
+      "animation": "hurt",
+      "phase": null,
+      "sourceImage": "shield-guard-source-transparent.png",
+      "sourceRect": {
+        "x": 1192,
+        "y": 387,
+        "width": 218,
+        "height": 260,
+        "alphaX": 8,
+        "alphaY": 8,
+        "alphaWidth": 203,
+        "alphaHeight": 244,
+        "processingScale": 0.775
+      },
+      "runtimeAlphaBounds": {
+        "x": 65,
+        "y": 76,
+        "width": 157,
+        "height": 189
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 65,
+      "displayOffsetY": 76,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": -1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "92b8fe88da587ca41757f6bcd08c87bdcda838db706d97c37741e9bf8117a10e"
+    },
+    {
+      "name": "hurt-1",
+      "animation": "hurt",
+      "phase": null,
+      "sourceImage": "shield-guard-source-transparent.png",
+      "sourceRect": {
+        "x": 51,
+        "y": 688,
+        "width": 213,
+        "height": 257,
+        "alphaX": 8,
+        "alphaY": 8,
+        "alphaWidth": 197,
+        "alphaHeight": 241,
+        "processingScale": 0.775
+      },
+      "runtimeAlphaBounds": {
+        "x": 67,
+        "y": 78,
+        "width": 153,
+        "height": 187
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 67,
+      "displayOffsetY": 78,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": -1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "8db096b5ae94ff61465c16bbb76c49f411d73f8680a67675c765627309c28a51"
+    },
+    {
+      "name": "dead-0",
+      "animation": "dead",
+      "phase": null,
+      "sourceImage": "shield-guard-source-transparent.png",
+      "sourceRect": {
+        "x": 317,
+        "y": 733,
+        "width": 238,
+        "height": 206,
+        "alphaX": 8,
+        "alphaY": 8,
+        "alphaWidth": 222,
+        "alphaHeight": 190,
+        "processingScale": 0.775
+      },
+      "runtimeAlphaBounds": {
+        "x": 58,
+        "y": 118,
+        "width": 172,
+        "height": 147
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 58,
+      "displayOffsetY": 118,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": -1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "ae21fa2f8466c42bf3e0da3e03e2ebcc63f633bc0e293da4cfc287cb3859a573"
+    },
+    {
+      "name": "dead-1",
+      "animation": "dead",
+      "phase": null,
+      "sourceImage": "shield-guard-source-transparent.png",
+      "sourceRect": {
+        "x": 594,
+        "y": 762,
+        "width": 256,
+        "height": 187,
+        "alphaX": 8,
+        "alphaY": 8,
+        "alphaWidth": 241,
+        "alphaHeight": 171,
+        "processingScale": 0.775
+      },
+      "runtimeAlphaBounds": {
+        "x": 50,
+        "y": 132,
+        "width": 187,
+        "height": 133
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 50,
+      "displayOffsetY": 132,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": -1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "bbf92f5650dd49deb5f9ca4bee92c4ee2aad86b08682588810518a9b8a21ff13"
+    },
+    {
+      "name": "dead-2",
+      "animation": "dead",
+      "phase": null,
+      "sourceImage": "shield-guard-source-transparent.png",
+      "sourceRect": {
+        "x": 856,
+        "y": 813,
+        "width": 311,
+        "height": 147,
+        "alphaX": 7,
+        "alphaY": 8,
+        "alphaWidth": 296,
+        "alphaHeight": 118,
+        "processingScale": 0.775
+      },
+      "runtimeAlphaBounds": {
+        "x": 29,
+        "y": 174,
+        "width": 229,
+        "height": 91
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 29,
+      "displayOffsetY": 174,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": -1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "eefc627dfe759b9f4246a54f164e855b08305b21396e4bb2fa7b707cd09706f3"
+    },
+    {
+      "name": "dead-3",
+      "animation": "dead",
+      "phase": null,
+      "sourceImage": "shield-guard-source-transparent.png",
+      "sourceRect": {
+        "x": 1153,
+        "y": 841,
+        "width": 340,
+        "height": 112,
+        "alphaX": 0,
+        "alphaY": 8,
+        "alphaWidth": 332,
+        "alphaHeight": 103,
+        "processingScale": 0.775
+      },
+      "runtimeAlphaBounds": {
+        "x": 15,
+        "y": 185,
+        "width": 257,
+        "height": 80
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 15,
+      "displayOffsetY": 185,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": -1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "e8db7a058ea72fb9af1b5c0df7d202b297d131ee4ec67f130d4e3c7498cf181b"
+    },
+    {
+      "name": "guard-0",
+      "animation": "guard",
+      "phase": null,
+      "sourceImage": "shield-guard-extra-source-transparent.png",
+      "sourceRect": {
+        "x": 138,
+        "y": 53,
+        "width": 320,
+        "height": 414,
+        "alphaX": 8,
+        "alphaY": 8,
+        "alphaWidth": 304,
+        "alphaHeight": 398,
+        "processingScale": 0.53
+      },
+      "runtimeAlphaBounds": {
+        "x": 63,
+        "y": 54,
+        "width": 161,
+        "height": 211
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 63,
+      "displayOffsetY": 54,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": -1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "80a6ec7a517f4b43cc3b240708e16831079df0802258a4ab71e5148738440903"
+    },
+    {
+      "name": "guard-1",
+      "animation": "guard",
+      "phase": null,
+      "sourceImage": "shield-guard-extra-source-transparent.png",
+      "sourceRect": {
+        "x": 618,
+        "y": 54,
+        "width": 322,
+        "height": 413,
+        "alphaX": 7,
+        "alphaY": 8,
+        "alphaWidth": 307,
+        "alphaHeight": 397,
+        "processingScale": 0.53
+      },
+      "runtimeAlphaBounds": {
+        "x": 62,
+        "y": 55,
+        "width": 163,
+        "height": 210
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 62,
+      "displayOffsetY": 55,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": -1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "a1d51df45b5adac5d125fbd8f50fd04ea8a81f8ded9b184190ee070f867c00fe"
+    },
+    {
+      "name": "block-0",
+      "animation": "block",
+      "phase": null,
+      "sourceImage": "shield-guard-extra-source-transparent.png",
+      "sourceRect": {
+        "x": 1090,
+        "y": 88,
+        "width": 317,
+        "height": 379,
+        "alphaX": 8,
+        "alphaY": 8,
+        "alphaWidth": 301,
+        "alphaHeight": 363,
+        "processingScale": 0.53
+      },
+      "runtimeAlphaBounds": {
+        "x": 64,
+        "y": 73,
+        "width": 160,
+        "height": 192
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 64,
+      "displayOffsetY": 73,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": -1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "e1f63efbed75c192ab1b7e340563e276d6ca945ac6a8fee3cf5442f4ef058a69"
+    },
+    {
+      "name": "block-1",
+      "animation": "block",
+      "phase": null,
+      "sourceImage": "shield-guard-extra-source-transparent.png",
+      "sourceRect": {
+        "x": 122,
+        "y": 540,
+        "width": 325,
+        "height": 386,
+        "alphaX": 8,
+        "alphaY": 8,
+        "alphaWidth": 309,
+        "alphaHeight": 370,
+        "processingScale": 0.53
+      },
+      "runtimeAlphaBounds": {
+        "x": 62,
+        "y": 69,
+        "width": 164,
+        "height": 196
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 62,
+      "displayOffsetY": 69,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": -1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "7272e782284771874d6a8ee46b1cfa7132d7020180b5969dd18e4853a91aaf80"
+    },
+    {
+      "name": "recovery-0",
+      "animation": "recovery",
+      "phase": null,
+      "sourceImage": "shield-guard-extra-source-transparent.png",
+      "sourceRect": {
+        "x": 530,
+        "y": 532,
+        "width": 407,
+        "height": 394,
+        "alphaX": 8,
+        "alphaY": 8,
+        "alphaWidth": 391,
+        "alphaHeight": 378,
+        "processingScale": 0.53
+      },
+      "runtimeAlphaBounds": {
+        "x": 40,
+        "y": 65,
+        "width": 207,
+        "height": 200
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 40,
+      "displayOffsetY": 65,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": -1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "e47f9fff95644093f695e7a1835e2b3511bcd5a33bbefd303d21a050026244d6"
+    },
+    {
+      "name": "recovery-1",
+      "animation": "recovery",
+      "phase": null,
+      "sourceImage": "shield-guard-extra-source-transparent.png",
+      "sourceRect": {
+        "x": 1025,
+        "y": 530,
+        "width": 367,
+        "height": 396,
+        "alphaX": 8,
+        "alphaY": 8,
+        "alphaWidth": 351,
+        "alphaHeight": 380,
+        "processingScale": 0.53
+      },
+      "runtimeAlphaBounds": {
+        "x": 51,
+        "y": 64,
+        "width": 186,
+        "height": 201
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 51,
+      "displayOffsetY": 64,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": -1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "6f8a6b4bf4d451ec257d2c0dbf79ca75f46a3cb67eeb5768f378ac3abc856323"
+    }
+  ]
+}

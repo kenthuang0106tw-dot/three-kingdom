@@ -80,6 +80,18 @@ export function enemyAttackSpriteShouldFlip(config: EnemyConfig, facing: 1 | -1)
   return facing !== config.attackSourceFacing;
 }
 
+export type ShieldGuardPresentationState = "guard" | "block" | "recovery";
+
+export const SHIELD_GUARD_EXTRA_ANIMATIONS: Record<ShieldGuardPresentationState, readonly string[]> = {
+  guard: ["guard-0", "guard-1"],
+  block: ["block-0", "block-1"],
+  recovery: ["recovery-0", "recovery-1"],
+};
+
+export function shieldGuardAnimationKey(state: ShieldGuardPresentationState): string {
+  return `enemy-shield-guard-${state}`;
+}
+
 export const SOLDIER_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
   id: "soldier",
   assetKey: "enemy-soldier",
@@ -100,10 +112,19 @@ export const SOLDIER_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
   timing: { hurtMs: 300, directorDelayMin: 500, directorDelayMax: 750, recoveryMin: 850, recoveryMax: 1100 },
 });
 
-/** Development-only TP-1 substitute: Soldier art with Shield Guard behavior. */
+/** Development-only TP-1 behavior with dedicated ER.5 production presentation. */
 export const SHIELD_GUARD_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
   ...SOLDIER_ENEMY_CONFIG,
   id: "shield-guard",
+  assetKey: "enemy-shield-guard",
+  animations: {
+    idle: ["idle-0", "idle-1"], walk: ["walk-0", "walk-1", "walk-2", "walk-3"],
+    attack: ["attack-0", "attack-1", "attack-2"], hurt: ["hurt-0", "hurt-1"],
+    dead: ["dead-0", "dead-1", "dead-2", "dead-3"],
+  },
+  displayScale: 1.025,
+  frameSize: 288,
+  feetY: 265,
   combat: { ...SOLDIER_ENEMY_CONFIG.combat, attackYRange: 28 },
 });
 

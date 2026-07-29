@@ -288,17 +288,17 @@ are not all runtime delivery assets.
 
 `tools/package-production-assets.mjs` defines the production boundary:
 
-- 43 request files are derived from `AssetManifest.ts`.
+- 47 request files are derived from `AssetManifest.ts`.
 - Three unique cabinet side-art files are added explicitly.
 - `pnpm build` and `pnpm build:github-pages` prune only copied public files
-  outside this 46-file inventory from their output directories.
+  outside this 50-file inventory from their output directories.
 - Every preserved output file must match the source SHA-256.
 - The tool accepts only `dist/client` and `dist-github`; it cannot target
   `public/`.
 
-The accepted GitHub Pages artifact is 18,172,139 bytes. Runtime request bytes
-and decoded RGBA remain unchanged, so no atlas, image, audio, metadata, or
-visual-freeze file was regenerated.
+The current GitHub Pages artifact is 19,178,685 bytes. Runtime requested assets
+are 13,881,969 encoded bytes and 136,297,984 decoded RGBA bytes after the ER.5
+Shield Guard atlas integration.
 
 ## ER.1 Enemy Cast v2 Pre-production
 
@@ -326,8 +326,10 @@ memory and delivery budgets rather than append them.
   feet `(144,265)`, one `1.05` display scale, and 240.45px logical idle height.
   The attack has five real frames while preserving its exact 600ms gameplay
   cadence.
-- Shield Guard and Crossbow remain temporary Soldier presentation until their
-  dedicated production tasks.
+- Shield Guard now uses 21 measured project-owned poses in a dedicated 288×288
+  atlas with feet `(144,265)`, one `1.025` display scale, 215.25px logical
+  idle height, and dedicated guard/block/recovery presentation.
+- Crossbow remains the final temporary Soldier presentation until ER.6.
 - ER.4 delivery measurements: 43 runtime requests, 12,621,623 encoded bytes,
   126,676,480 decoded RGBA bytes, 46 packaged production files, and a
   17,913,999-byte GitHub Pages artifact.
@@ -339,3 +341,9 @@ memory and delivery budgets rather than append them.
 - GX.1 delivery measurements: 45 runtime requests, 12,836,324 encoded bytes,
   128,003,584 decoded RGBA bytes, 48 packaged production files, and an
   18,132,212-byte GitHub Pages artifact.
+- ER.5 is reproducible through `tools/build_shield_guard_art.py`; its source,
+  transparent derivatives, atlas, measured metadata, debug, onion, 25%
+  silhouette, idle gate, and review evidence are repository-owned.
+- ER.5 delivery measurements: 47 runtime requests, 13,881,969 encoded bytes,
+  136,297,984 decoded RGBA bytes, 50 packaged production files, and a
+  19,178,685-byte GitHub Pages artifact.

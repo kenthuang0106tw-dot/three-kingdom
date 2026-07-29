@@ -19,7 +19,7 @@ import { advanceCameraHandoff, beginCameraHandoff, calculateCameraScroll, type C
 import { createCameraLockState, hasCameraLock, isCameraLocked, lockCamera, unlockCamera, type CameraLockState } from "./camera/CameraLock";
 import { createStageExitState, makeExitAvailable, resetStageExit, type StageExitState } from "./stage/StageExit";
 import { clearActiveEncounter, createBossEntryState, createEncounterSequence, isEncounterSequenceCleared, makeBossEntryEligible, triggerBossEntry, triggerNextEncounter, type BossEntryState, type EncounterSequenceState } from "./stage/EncounterFlow";
-import { CROSSBOW_ENEMY_CONFIG, DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SHIELD_GUARD_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemyAnimationKey } from "./enemy/EnemyConfig";
+import { CROSSBOW_ENEMY_CONFIG, DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SHIELD_GUARD_ENEMY_CONFIG, SHIELD_GUARD_EXTRA_ANIMATIONS, SOLDIER_ENEMY_CONFIG, enemyAnimationKey, shieldGuardAnimationKey } from "./enemy/EnemyConfig";
 import { duelistLeapAnimationKey, type DuelistLeapPhase } from "./enemy/DuelistLeap";
 import { BOSS_ACTOR_CONFIG, BossActor } from "./boss/BossActor";
 import { GameFlowStateMachine } from "./flow/GameFlowStateMachine";
@@ -790,6 +790,14 @@ export default class MainScene extends Phaser.Scene {
       });
       this.anims.create({ key: enemyAnimationKey(config, "hurt"), frames: config.animations.hurt.map(frame => ({ key: config.assetKey, frame })), frameRate: config.animationRates.hurt, repeat: 0 });
       this.anims.create({ key: enemyAnimationKey(config, "dead"), frames: config.animations.dead.map(frame => ({ key: config.assetKey, frame })), frameRate: config.animationRates.dead, repeat: 0 });
+    }
+    for (const state of ["guard", "block", "recovery"] as const) {
+      this.anims.create({
+        key: shieldGuardAnimationKey(state),
+        frames: SHIELD_GUARD_EXTRA_ANIMATIONS[state].map(frame => ({ key: SHIELD_GUARD_ENEMY_CONFIG.assetKey, frame })),
+        frameRate: state === "block" ? 8 : 4,
+        repeat: state === "block" ? 0 : -1,
+      });
     }
     const leapFrames: Record<DuelistLeapPhase, string> = {
       takeoff: "leap-takeoff",

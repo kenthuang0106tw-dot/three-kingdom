@@ -70,3 +70,13 @@ hammer with explicit right-side padding and excludes the neighboring pose.
 `duelist-gx1-leap-review.png` is the GX.1 four-pose review sheet. It records
 genuine takeoff, airborne, descent, and landing poses against one feet line;
 runtime visual elevation is applied separately from the shared ground anchor.
+
+## ER.5 Shield Guard approved-prototype replacement
+
+`shield-guard-er5-idle-gate.png` records the neutral identity gate.
+`shield-guard-er5-review.png` records all 21 measured frames and the 25%
+silhouette check. The olive/brown standard build, dominant round woven rattan
+shield, readable rim/weave/central boss, and small secondary weapon pass both
+approved references. Desktop, 844×390, and 390×844 runtime captures are stored
+beside the review evidence. These files are QA evidence and excluded from
+production packaging.

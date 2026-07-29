@@ -930,13 +930,27 @@ separate roadmap task.
 
 ## Production Public Asset Packaging Contract
 
-`tools/package-production-assets.mjs` derives the 43 Phaser request files from
+`tools/package-production-assets.mjs` derives the 47 Phaser request files from
 the runtime manifest and adds the three unique React/GitHub Pages side-art
 files. After either production build, it removes only copied `public/` files
 outside that inventory from `dist/client` or `dist-github`.
 
 The helper refuses unsupported output paths and verifies SHA-256 equality for
-all 46 preserved files. Source, metadata, debug, onion-skin, silhouette, and QA
+all 50 preserved files. Source, metadata, debug, onion-skin, silhouette, and QA
 assets remain repository-owned under `public/`; packaging never regenerates or
 deletes them. Build-generated HTML, JavaScript, CSS, fonts, and server output
 are outside this pruning boundary.
+
+## Shield Guard Production Presentation
+
+ER.5 gives Shield Guard a dedicated `enemy-shield-guard` atlas while retaining
+the existing `EnemyManager` gameplay owner. `EnemyConfig` owns the basic
+idle/walk/attack/hurt/dead frame selection and the Shield Guard-only
+guard/block/recovery presentation mapping. `MainScene` creates those Phaser
+animations once. `EnemyManager` selects them from existing TP-1 states and
+returns block completion to the guard loop.
+
+Art pixels never define collision or defense. The independent ground body,
+attack hitbox, forward guard cone, facing lock, timers, and Attack Slot remain
+gameplay-owned. All 21 frames share one `(144,265)` feet anchor and one display
+scale, so animation changes do not move the world feet position.

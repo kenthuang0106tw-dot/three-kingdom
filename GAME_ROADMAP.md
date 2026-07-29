@@ -634,7 +634,7 @@ and reset. The leap has no damage and changes no Player, Stage, Camera, UI,
 Audio, HP, or normal-attack contract. Direct tests passed 131/131; typecheck,
 lint, both builds, packaging, and three-viewport browser smoke passed.
 
-### ER.5 — Shield Guard Production-Art Replacement
+### ER.5 — Shield Guard Production-Art Replacement (Completed 2026-07-29)
 
 **Goal:** Replace the TP-1 Soldier-art substitute with the approved round
 rattan-shield infantry identity without changing the accepted directional
@@ -651,6 +651,37 @@ composition remain unchanged; one feet anchor and display scale apply to every
 frame; asset, test, build, and browser gates pass.
 
 **Dependencies:** TP-1 accepted; ER.1 production contract; GX.1 completed.
+
+**Status:** Completed.
+
+**Evidence:** Twenty-one genuine project-owned poses, one 288×288 atlas,
+measured non-equal source rectangles, common `(144,265)` feet anchor, one
+`1.025` display scale, 215.25px logical idle height, dedicated
+guard/block/recovery animation keys, identity/debug/onion/25% silhouette QA,
+132 direct tests, typecheck, lint, both builds, packaging, and
+desktop/844×390/390×844 browser smoke with zero captured errors. Accepted TP-1
+gameplay values were not changed.
+
+### ER.6 — Crossbow Production-Art Replacement
+
+**Goal:** Replace the TP-2 Soldier-art substitute with the approved light
+repeating-crossbow identity without changing locked-lane ranged gameplay.
+
+**Scope:** Neutral identity gate followed by genuine idle, walk, fire, hurt,
+dead, aim, locked, and reload poses; measured atlas/metadata; debug, onion,
+silhouette, and three-viewport evidence; isolated Crossbow presentation
+integration.
+
+**Acceptance Criteria:** Blue-grey light armor, tied cloth headwear, one large
+horizontal repeating crossbow, and rear bolt/quiver pack remain readable at
+native and 25% scale; the projectile stays a separate Player-only object; Aim
+tracking, Lock timing, lane, Fire, Reload, Attack Slot, HP, movement, body,
+hitbox, Stage isolation, and friendly-fire rejection remain unchanged; every
+frame shares one feet anchor and scale; asset, test, build, and browser gates
+pass.
+
+**Dependencies:** TP-2 and TP-3 accepted; ER.1 production contract; ER.5
+completed.
 
 **Status:** Planned. This is the current NEXT_TASK.
 

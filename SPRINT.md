@@ -1020,3 +1020,30 @@ Status: completed.
 
 The only next task is ER.5 — Shield Guard Production-Art Replacement. Do not
 begin Crossbow production art or alter TP-1 gameplay in the same task.
+
+## ER.5 — Shield Guard Production-Art Replacement — 2026-07-29
+
+Status: completed.
+
+- [x] Passed a neutral-idle identity gate against both repository-owned
+  references before full-sheet integration.
+- [x] Replaced the Soldier substitute with 21 genuine poses: idle 2, walk 4,
+  attack 3, hurt 2, dead 4, guard 2, block 2, and recovery 2.
+- [x] Preserved one 288×288 cell contract, `(144,265)` feet anchor, `1.025`
+  scale, 215.25px logical idle height, and 21 distinct pixel hashes.
+- [x] Integrated dedicated guard, block, and recovery animations without
+  changing TP-1 gameplay constants or formal Stage configuration.
+- [x] Added measured atlas metadata, source/transparent derivatives, debug,
+  onion, 25% silhouette, identity gate, review sheet, and build tool.
+- [x] Runtime inventory is 47 requests / 13,881,969 encoded bytes /
+  136,297,984 decoded RGBA bytes; production inventory is 50 files /
+  17,658,589 bytes; GitHub Pages output is 19,178,685 bytes.
+- [x] Desktop, 844×390, and 390×844 smoke passed with readable Shield Guard
+  identity and zero captured browser errors.
+- [x] Direct suite passed 132/132; typecheck passed; lint has zero errors and
+  four existing `<img>` warnings; Vinext/Vite builds and packaging passed.
+- [ ] Package-manager wrappers remain affected by TD-M11; equivalent direct
+  project gates are the acceptance evidence.
+
+The only next task is ER.6 — Crossbow Production-Art Replacement. Do not alter
+TP-2 gameplay or begin another enemy, Stage, Player, Camera, UI, or Audio task.

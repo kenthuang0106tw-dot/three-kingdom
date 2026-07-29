@@ -2,7 +2,7 @@ import * as Phaser from "phaser";
 import { PhaserGameplayClock, SeededRandom, type GameplayClock, type RandomSource } from "./time/GameplayTime";
 import { BAMBOO_COMBAT_ROOM, clampStageX, clampStageY, type StageSpawnPoint } from "./stage/StageConfig";
 import { beginEncounter, createEncounterFlow, isEncounterCleared, recordEnemyRemoved, type EncounterFlowState } from "./stage/EncounterFlow";
-import { CROSSBOW_ENEMY_CONFIG, DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SHIELD_GUARD_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemyAnimationKey, enemyAttackSpriteShouldFlip, enemySpriteShouldFlip, type EnemyConfig } from "./enemy/EnemyConfig";
+import { CROSSBOW_ENEMY_CONFIG, DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SHIELD_GUARD_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemyAnimationKey, enemyAttackSpriteShouldFlip, enemySpriteShouldFlip, shieldGuardAnimationKey, type EnemyConfig } from "./enemy/EnemyConfig";
 import { selectFairAttackCandidate } from "./enemy/AttackSlotPolicy";
 import { createAttackCommitment, isWithinAttackLine, type AttackCommitment } from "./enemy/AttackCommitment";
 import { SHIELD_GUARD_PARAMS, SHIELD_GUARD_TIMING, type ShieldGuardState, isAttackBlockedByGuard } from "./enemy/ShieldGuard";
@@ -457,6 +457,7 @@ export class EnemyManager {
     if (!enemy.isShieldGuard || enemy.state !== "guard") return;
     enemy.guardUntil = this.clock.now() + SHIELD_GUARD_TIMING.guardLockMs;
     enemy.guardCounterReady = true;
+    enemy.sprite.play(shieldGuardAnimationKey("block"), true);
     this.releaseAttackSlot(enemy);
   }
 
@@ -487,9 +488,9 @@ export class EnemyManager {
     }
     else if (next === "guard") {
       enemy.guardUntil = this.clock.now() + SHIELD_GUARD_TIMING.guardLockMs;
-      enemy.sprite.play(enemyAnimationKey(enemy.config, "idle"), true);
+      enemy.sprite.play(shieldGuardAnimationKey("guard"), true);
     } else if (next === "recovery") {
-      enemy.sprite.play(enemyAnimationKey(enemy.config, "idle"), true);
+      enemy.sprite.play(shieldGuardAnimationKey("recovery"), true);
       const timer = this.scene.time.delayedCall(this.random.between(
         SHIELD_GUARD_TIMING.recoveryMinMs,
         SHIELD_GUARD_TIMING.recoveryMaxMs,
@@ -560,6 +561,8 @@ export class EnemyManager {
     } else if (animation.key === enemyAnimationKey(enemy.config, "dead") && enemy.state === "dead") {
       enemy.sprite.setFrame(enemy.config.animations.dead.at(-1)!);
       this.scene.tweens.add({ targets: [enemy.sprite, enemy.shadow], alpha: 0, duration: 500, onComplete: () => this.remove(enemy) });
+    } else if (animation.key === shieldGuardAnimationKey("block") && enemy.state === "guard") {
+      enemy.sprite.play(shieldGuardAnimationKey("guard"), true);
     }
   }
 
