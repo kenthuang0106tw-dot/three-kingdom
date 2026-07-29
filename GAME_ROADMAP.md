@@ -369,7 +369,7 @@ M6A 不加入新角色、新敵人、新招式、第二關、Audio、技能、�
 | 8.3 | Release visual defect pass (Completed 2026-07-29) | P1 | Medium | M6A accepted | No Critical/High/Medium defect; clipping、seam、readability、production debug 與三 viewport 有 evidence | existing assets/checklist | 重開已 freeze 的美術方向 |
 | 8.4 | Production asset packaging and memory optimization (Completed 2026-07-24) | P0 | High | 8.1 | production 只包含 runtime 必要資源且符合 delivery budget；decoded memory 未超標時不重製 atlas | build/assets/tests | 漏包間接引用素材 |
 | 8.5 | Conditional pooling (Not required by 8.1 evidence) | P2 | Medium | 8.1 | 只有 profiling 證明 GC spike 才實作 | effects/pools | YAGNI |
-| 8.6 | Flash/shake/accessibility settings | P1 | Medium | M6 UI | 可降低強度；預設手感不變 | settings/UI | 設定 scope 膨脹 |
+| 8.6 | Flash/shake/accessibility settings (Completed 2026-07-30) | P1 | Medium | M6 UI | 可降低強度；預設手感不變 | settings/UI | 設定 scope 膨脹 |
 | 8.2C | Five-enemy Stage encounter integration | P0 | High | 8.6、ER.2–ER.6、TP-1–TP-3 | Soldier、Duelist、Mauler、Shield Guard、Crossbow 全部出現在正式三畫面關卡；遭遇節奏、Attack Slot、手機可讀性與 reset 通過驗收 | stage config/tests/docs | 敵人組合造成不可讀壓力或破壞既有節奏 |
 | 8.7 | Full QA matrix | P0 | High | 8.1–8.6、8.2C | CHECKLIST 全部有 evidence，五種正式敵人皆納入最終關卡驗收，無 Critical/High defect | tests/docs | 測試時間不足 |
 
@@ -384,6 +384,14 @@ M6A 不加入新角色、新敵人、新招式、第二關、Audio、技能、�
 **Acceptance Criteria:** 五種敵人都能在正式流程中生成、戰鬥、死亡與清除；任何時間最多一名主要攻擊者；遠近、正面封鎖與垂直換線壓力可讀且可避；沒有畫面外無提示攻擊、不可讀的重疊傷害或固定唯一擊殺順序；Camera、Pause、Failure/Retry、Result/Replay、Boss entry 與 Scene reset 契約維持正常；三個 viewport 均可完整通關且無 runtime error。
 
 **Dependencies:** M8.6、ER.2–ER.6、TP-1、TP-2、TP-3。必須在 M8.7 Full QA Matrix 前完成。
+
+### M8 / Task 8.6 — Flash/Shake Accessibility Settings (Completed 2026-07-30)
+
+**Status:** Completed.
+
+**Evidence:** The Phaser Pause overlay now exposes independent keyboard and touch controls for reduced hit flash and reduced camera shake. Default full-white flash, 90ms duration, 50ms shake, and `0.003` intensity remain unchanged; reduced mode uses tint `0x9fb3a0` and shake intensity `0.0008` without changing damage, Hit Stop, animation, Camera ownership, or combat timing. One Scene-owned settings instance survives Pause/resume and Scene restart within the current page session. Tests passed 143/143; typecheck, lint with zero errors/eight existing warnings, both production builds, three viewport interaction smoke, production isolation, and zero browser errors passed.
+
+**Next:** M8 / Task 8.2C — Five-Enemy Stage Encounter Integration.
 
 ---
 

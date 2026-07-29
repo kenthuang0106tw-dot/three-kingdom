@@ -1302,3 +1302,19 @@
 | Physical mobile | Deferred — Low | No new device/OS/browser evidence in this cycle; recheck in M8.7 |
 | Scope | Pass | No art, gameplay, animation timing, Camera, Stage, control, or CSS change |
 | Next task | Selected | M8 / Task 8.6 — Flash/Shake Accessibility Settings |
+
+## M8 / Task 8.6 — Flash/Shake Accessibility Settings — 2026-07-30
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Default parity | Pass | Flash `0xffffff` / 90ms; shake 50ms / `0.003`; existing combat parameters unchanged |
+| Reduced flash | Pass | Independent setting changes tint to `0x9fb3a0` without changing flash duration or hit timing |
+| Reduced shake | Pass | Independent setting changes intensity to `0.0008` without changing Camera duration or ownership |
+| Input | Pass | Pause overlay supports keyboard `F` / `K` and separate touch targets |
+| Pause/resume | Pass | Both setting values remain selected after resume and re-pause |
+| Scene reset | Pass | One Scene-owned settings instance is not reset by create/retry/replay |
+| Automated gates | Pass | 143/143 tests, typecheck, lint 0 errors/8 existing warnings, both builds, 52-file packaging |
+| Viewports | Pass | Desktop, 844×390, 390×844 UI and touch/keyboard interaction smoke |
+| Production | Pass | One Canvas, empty development dataset, no overflow, zero captured browser errors |
+| Scope | Pass | No art, damage, Hit Stop, animation, AI, Stage, Camera flow, Audio, or React-state change |
+| Next task | Selected | M8 / Task 8.2C — Five-Enemy Stage Encounter Integration |

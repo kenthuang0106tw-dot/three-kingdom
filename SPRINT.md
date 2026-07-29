@@ -1106,3 +1106,28 @@ Stage Encounter Integration. It will place Soldier, Duelist, Mauler, Shield
 Guard, and Crossbow into the formal three-screen Stage before M8.7 full QA.
 Shield Guard and Crossbow remain development-only encounter content until that
 task is implemented and accepted.
+
+## M8 / Task 8.6 — Flash/Shake Accessibility Settings — 2026-07-30
+
+Status: completed.
+
+- [x] Added one Scene-owned, Phaser-free settings object; no React state,
+  backend, local storage, or general settings framework.
+- [x] Added independent Pause-menu toggles: keyboard `F` / `K` and two touch
+  targets for reduced flash and reduced shake.
+- [x] Preserved default flash tint `0xffffff`, flash duration 90ms, shake
+  duration 50ms, and shake intensity `0.003`.
+- [x] Reduced mode uses flash tint `0x9fb3a0` and shake intensity `0.0008`;
+  damage, Hit Stop, spark, animation, knockback, Camera follow/lock/handoff,
+  Pause timing, and combat state remain unchanged.
+- [x] Pause/resume retained both settings. Scene restart retains the same
+  Scene-owned settings object for the current page session.
+- [x] `pnpm test` passed 143/143; typecheck passed; lint has zero errors/eight
+  existing `<img>` warnings; both production builds retained 52 files.
+- [x] Desktop, 844×390, and 390×844 showed the settings surface and accepted
+  keyboard/touch changes with one Canvas, no overflow, and zero browser errors.
+- [x] Production exposed the settings UI but no development Canvas dataset.
+
+The only next task is M8 / Task 8.2C — Five-Enemy Stage Encounter Integration.
+Do not begin M8.7 full QA, release work, a new Stage, enemy art, or new gameplay
+systems in the same task.

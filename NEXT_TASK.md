@@ -1,49 +1,50 @@
 # NEXT_TASK
 
-## M8 / Task 8.6 — Flash/Shake Accessibility Settings
+## M8 / Task 8.2C — Five-Enemy Stage Encounter Integration
 
 ### Why this is next
 
-M8.3 found no blocking visual defect. The planned M8.2C five-enemy formal Stage
-integration and the remaining M8.7 full QA matrix both depend on completing the
-accessibility control first. This task is the smallest eligible change that
-lets photosensitive or motion-sensitive players reduce hit flash and camera
-shake without changing the default arcade feel.
+All five enemy roles now have accepted gameplay prototypes and production
+presentation, but the formal three-screen Stage still uses only Soldier,
+Mauler, and Duelist. Shield Guard and Crossbow remain development-only. M8.7
+full QA must not begin until the final encounter content is actually playable.
 
 ### Completion conditions
 
-- Add one minimal accessibility setting surface using the existing product UI;
-  do not create a general settings framework.
-- Provide independently testable reduced-flash and reduced-shake behavior.
-- Default behavior and every existing combat parameter remain unchanged.
-- Reduced flash must lower or remove full-white hit flashes without changing
-  hit timing, damage, hit-stop, spark ownership, or animation.
-- Reduced shake must lower or disable camera shake without changing camera
-  follow, lock, handoff, or combat timing.
-- Settings must survive Pause/resume and Scene reset for the current page
-  session without using React gameplay state or a new backend/save system.
-- Touch and keyboard users must both be able to operate the setting surface.
+- Place Soldier, Duelist, Mauler, Shield Guard, and Crossbow in the formal
+  three-screen Stage; every role must appear at least once.
+- Change only Stage encounter spawn/composition and the minimum necessary
+  encounter cadence. Preserve existing Enemy configs, HP, damage, animation,
+  AI contracts, Attack Slot, Player, Boss, art, Audio, and Camera ownership.
+- Keep the existing single-primary-attacker rule and readable recovery windows.
+- Shield Guard and Crossbow must create useful position/target decisions without
+  overlapping into unavoidable or off-screen damage.
+- Do not create a general Encounter Director, new Stage, new enemy, new attack,
+  new art, or new progression system.
+- Failure/Retry, Result/Replay, Boss entry, Pause, accessibility settings, and
+  Scene reset must retain deterministic ownership.
 
 ### Validation
 
-- Focused tests for default parity, reduced-flash, reduced-shake, Pause/resume,
-  Scene reset, and absence of combat/camera timing changes.
+- Focused StageConfig/encounter tests for all five roles, deterministic spawn,
+  Attack Slot exclusivity, cleanup, clear progression, and reset.
+- Before/after encounter composition and pressure report.
 - `pnpm test`, `pnpm typecheck`, `pnpm lint`, `pnpm build`, and
-  `pnpm build:github-pages`, with TD-M11 reported honestly if package-manager
-  wrappers stop before project scripts.
-- Desktop, 844×390, and 390×844 visual smoke for default and reduced settings.
-- Production contains no debug controls, console errors, Canvas duplication,
-  overflow, or asset 404.
+  `pnpm build:github-pages`.
+- Complete the formal Stage on Desktop, 844×390, and 390×844 with one Canvas,
+  no overflow, no asset 404, and zero runtime errors.
+- Verify each role visibly enters combat, can be defeated, and cannot block
+  Boss entry or terminal flow.
 
 ### Expected files
 
-- Minimal accessibility policy/config and existing Phaser UI integration.
-- Effect/camera consumption points only where required.
-- Focused tests and M8.6 evidence/document updates.
+- Existing Stage encounter configuration/composition.
+- Minimum necessary encounter tests and acceptance report.
+- Roadmap, Sprint, Checklist, and NEXT_TASK closeout updates.
 
 ### Risks
 
-- A settings task could expand into a general menu, persistence, or UI redesign.
-- Reduced feedback could accidentally change combat timing instead of only
-  presentation intensity.
-- React state or DOM controls could become coupled to Phaser gameplay.
+- Five roles may create unreadable simultaneous pressure.
+- Adding enemies may extend combat duration without adding decisions.
+- Shield Guard or Crossbow may become a fixed first target.
+- Scope may drift into AI retuning, a new director, or another Stage.

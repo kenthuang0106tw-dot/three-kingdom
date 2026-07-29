@@ -1,4 +1,10 @@
 import * as Phaser from "phaser";
+import {
+  DEFAULT_ACCESSIBILITY_SETTINGS,
+  resolveFlashTint,
+  resolveShakeIntensity,
+  type AccessibilitySettingsSnapshot,
+} from "../accessibility/AccessibilitySettings";
 import { LifecycleClock } from "../time/LifecycleClock";
 
 export const EFFECT_PARAMS = {
@@ -19,10 +25,16 @@ export class EffectDirector {
   private readonly tweens = new Set<Phaser.Tweens.Tween>();
   private readonly scene: Phaser.Scene;
   private readonly lifecycleClock: LifecycleClock;
+  private readonly getAccessibilitySettings: () => AccessibilitySettingsSnapshot;
 
-  constructor(scene: Phaser.Scene, lifecycleClock: LifecycleClock) {
+  constructor(
+    scene: Phaser.Scene,
+    lifecycleClock: LifecycleClock,
+    getAccessibilitySettings: () => AccessibilitySettingsSnapshot = () => DEFAULT_ACCESSIBILITY_SETTINGS,
+  ) {
     this.scene = scene;
     this.lifecycleClock = lifecycleClock;
+    this.getAccessibilitySettings = getAccessibilitySettings;
   }
 
   createHitSparkAnimation() {
@@ -45,7 +57,7 @@ export class EffectDirector {
   }
 
   flash(sprite: Phaser.GameObjects.Sprite) {
-    sprite.setTintFill(0xffffff);
+    sprite.setTintFill(resolveFlashTint(this.getAccessibilitySettings()));
     this.schedule(EFFECT_PARAMS.hitFlashMs, () => {
       if (sprite.active) sprite.clearTint();
     });
@@ -65,7 +77,10 @@ export class EffectDirector {
   }
 
   cameraShake() {
-    this.scene.cameras.main.shake(EFFECT_PARAMS.cameraShakeMs, EFFECT_PARAMS.cameraShakeIntensity);
+    this.scene.cameras.main.shake(
+      EFFECT_PARAMS.cameraShakeMs,
+      resolveShakeIntensity(this.getAccessibilitySettings()),
+    );
   }
 
   beginHitStop(duration = EFFECT_PARAMS.hitStopMs) {

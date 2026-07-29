@@ -969,3 +969,16 @@ The aiming line, projectile, Player-only target rule, 550ms tracking phase,
 350ms locked phase, Attack Slot, physics body, and Stage isolation remain
 gameplay-owned and independent from the 20 art frames. All frames share the
 same `(144,265)` feet anchor and `1.025` display scale.
+
+## Accessibility Presentation Settings
+
+M8 / Task 8.6 keeps one `AccessibilitySettings` instance on `MainScene`.
+`PauseController` is the only setting-input surface and supports keyboard and
+touch. `EffectDirector` receives a readonly snapshot callback and may alter
+only hit-flash tint and camera-shake intensity.
+
+The default presentation remains the accepted arcade output. Reduced settings
+cannot alter damage, Hit Stop, animation, spark, knockback, Camera ownership,
+or any timer duration. Scene restart reuses the Scene-owned instance for the
+current page session; React, DOM state, persistence services, and global
+mutable settings are outside this boundary.

@@ -1884,16 +1884,19 @@ test("enemy redesign tasks retain the approved prototype lock after all five pro
   assert.match(prototypeContract, /Crossbow \| Go \(ER\.6\)/);
 });
 
-test("the release visual audit closes without reopening art and advances only to accessibility", async () => {
-  const [report, nextTask] = await Promise.all([
+test("the release visual audit and accessibility closeout advance only to five-enemy Stage integration", async () => {
+  const [visualReport, accessibilityReport, nextTask] = await Promise.all([
     readFile(new URL("../docs/quality/m8-3-release-visual-defect-pass.md", import.meta.url), "utf8"),
+    readFile(new URL("../docs/quality/m8-6-accessibility-settings.md", import.meta.url), "utf8"),
     readFile(new URL("../NEXT_TASK.md", import.meta.url), "utf8"),
   ]);
 
-  assert.match(report, /No Critical, High, or Medium visual defect was found/);
-  assert.match(report, /changes no art, animation\s+mapping, gameplay, camera, Stage, control, or responsive CSS/);
-  assert.match(report, /Eight inspected browser paths reported zero captured errors/);
-  assert.match(nextTask, /M8 \/ Task 8\.6 — Flash\/Shake Accessibility Settings/);
-  assert.match(nextTask, /do not create a general settings framework/);
-  assert.match(nextTask, /Default behavior and every existing combat parameter remain unchanged/);
+  assert.match(visualReport, /No Critical, High, or Medium visual defect was found/);
+  assert.match(visualReport, /changes no art, animation\s+mapping, gameplay, camera, Stage, control, or responsive CSS/);
+  assert.match(accessibilityReport, /0x9fb3a0/);
+  assert.match(accessibilityReport, /0\.0008/);
+  assert.match(accessibilityReport, /143\/143/);
+  assert.match(nextTask, /M8 \/ Task 8\.2C — Five-Enemy Stage Encounter Integration/);
+  assert.match(nextTask, /formal three-screen Stage/);
+  assert.match(nextTask, /M8\.7\s+full QA must not begin/);
 });

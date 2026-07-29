@@ -31,6 +31,7 @@ import { ResultController, type ResultReplaySource as ExplicitResultReplaySource
 import { addButtonFrame, addModalFrame, addUiText, UI_COLORS } from "./ui/UiArt";
 import { AudioManager, type AudioContextBackend, type AudioSoundBackend, type AudioTrackBackend } from "./audio/AudioManager";
 import { PERFORMANCE_SAMPLE_CONFIG, PerformanceSampler } from "./debug/PerformanceSampler";
+import { AccessibilitySettings } from "./accessibility/AccessibilitySettings";
 
 type AttackState = "attack1" | "attack2" | "attack3";
 type TitleStartSource = "keyboard" | "pointer" | "smoke";
@@ -140,6 +141,7 @@ export default class MainScene extends Phaser.Scene {
   private lifecycleClock!: LifecycleClock;
   private audioManager!: AudioManager;
   private effectDirector!: EffectDirector;
+  private readonly accessibilitySettings = new AccessibilitySettings();
   private readonly gameplayEvents = new GameplayEventHub();
   private lastLifecyclePaused = false;
   private pendingRestartAudioAction?: "retry" | "replay";
@@ -400,7 +402,11 @@ export default class MainScene extends Phaser.Scene {
       this.gameplayEvents.publish({ type: "ui-action", action: pendingRestartAudioAction, at: this.time.now });
     }
     this.lastLifecyclePaused = false;
-    this.effectDirector = new EffectDirector(this, this.lifecycleClock);
+    this.effectDirector = new EffectDirector(
+      this,
+      this.lifecycleClock,
+      () => this.accessibilitySettings.getSnapshot(),
+    );
     this.createCombatAnimations();
     this.cameras.main.setRoundPixels(true);
     this.cameras.main.setBounds(
@@ -481,7 +487,11 @@ export default class MainScene extends Phaser.Scene {
       }
     }
     this.hud = new GameHud(this, this.gameplayEvents, development);
-    this.pauseController = new PauseController(this);
+    this.pauseController = new PauseController(
+      this,
+      this.accessibilitySettings,
+      () => this.updateAccessibilityDataset(),
+    );
     this.failureController = new FailureController(this);
     this.resultController = new ResultController(this);
     this.updateFailureDataset();
@@ -489,6 +499,7 @@ export default class MainScene extends Phaser.Scene {
     this.updateCamera();
     this.createTitleOverlay(keyboard);
     this.updatePauseDataset();
+    this.updateAccessibilityDataset();
     this.updateAudioDataset();
     this.updateHud();
     if (this.bossClearedSmokeMode) this.startGame("smoke");
@@ -1342,7 +1353,7 @@ export default class MainScene extends Phaser.Scene {
     dataset.pauseHitStopActive = String(this.effectDirector.isHitStopActive());
     dataset.pauseCount = String(this.pauseCount);
     dataset.resumeCount = String(this.resumeCount);
-    dataset.pauseObjectCount = "7";
+    dataset.pauseObjectCount = "13";
     dataset.pausePlayerX = String(Math.round(this.playerBodyZone.x));
     dataset.pausePlayerY = String(Math.round(this.playerBodyZone.y));
     dataset.pausePlayerVelocityX = String(Math.round(this.playerBody.velocity.x));
@@ -1871,6 +1882,13 @@ export default class MainScene extends Phaser.Scene {
     this.game.canvas.dataset.encounterEnemyCount = String(enemies.length);
     this.game.canvas.dataset.encounterCameraLocked = String(hasCameraLock(this.cameraLockState, "encounter"));
     this.game.canvas.dataset.cameraLockReasons = this.cameraLockState.reasons.join(",");
+  }
+
+  private updateAccessibilityDataset() {
+    if (process.env.NODE_ENV === "production") return;
+    const settings = this.accessibilitySettings.getSnapshot();
+    this.game.canvas.dataset.reducedFlash = String(settings.reducedFlash);
+    this.game.canvas.dataset.reducedShake = String(settings.reducedShake);
   }
 
   private publishGameplaySnapshot() {
