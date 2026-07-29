@@ -370,7 +370,20 @@ M6A 不加入新角色、新敵人、新招式、第二關、Audio、技能、�
 | 8.4 | Production asset packaging and memory optimization (Completed 2026-07-24) | P0 | High | 8.1 | production 只包含 runtime 必要資源且符合 delivery budget；decoded memory 未超標時不重製 atlas | build/assets/tests | 漏包間接引用素材 |
 | 8.5 | Conditional pooling (Not required by 8.1 evidence) | P2 | Medium | 8.1 | 只有 profiling 證明 GC spike 才實作 | effects/pools | YAGNI |
 | 8.6 | Flash/shake/accessibility settings | P1 | Medium | M6 UI | 可降低強度；預設手感不變 | settings/UI | 設定 scope 膨脹 |
-| 8.7 | Full QA matrix | P0 | High | 8.1–8.6 | CHECKLIST 全部有 evidence，無 Critical/High defect | tests/docs | 測試時間不足 |
+| 8.2C | Five-enemy Stage encounter integration | P0 | High | 8.6、ER.2–ER.6、TP-1–TP-3 | Soldier、Duelist、Mauler、Shield Guard、Crossbow 全部出現在正式三畫面關卡；遭遇節奏、Attack Slot、手機可讀性與 reset 通過驗收 | stage config/tests/docs | 敵人組合造成不可讀壓力或破壞既有節奏 |
+| 8.7 | Full QA matrix | P0 | High | 8.1–8.6、8.2C | CHECKLIST 全部有 evidence，五種正式敵人皆納入最終關卡驗收，無 Critical/High defect | tests/docs | 測試時間不足 |
+
+### M8 / Task 8.2C — Five-Enemy Stage Encounter Integration
+
+**Goal:** 將已完成正式素材與既有玩法原型的五種普通敵人納入正式三畫面關卡，形成最終 Release Candidate 的遭遇內容。
+
+**Scope:** 只調整正式 Stage encounter spawn/composition 與最低必要節奏參數；沿用既有 Enemy Manager、Attack Slot、AI、HP、傷害、動畫與三畫面關卡。不得新增敵人種類、招式、素材、關卡、Boss 行為或通用 Encounter Director。
+
+**Deliverables:** 可重現的正式遭遇配置；五種敵人各至少出現一次；Shield Guard 與 Crossbow 不再只存在於 development-only 測試入口；Desktop、844×390、390×844 的完整關卡證據；對應自動測試與 before/after 報告。
+
+**Acceptance Criteria:** 五種敵人都能在正式流程中生成、戰鬥、死亡與清除；任何時間最多一名主要攻擊者；遠近、正面封鎖與垂直換線壓力可讀且可避；沒有畫面外無提示攻擊、不可讀的重疊傷害或固定唯一擊殺順序；Camera、Pause、Failure/Retry、Result/Replay、Boss entry 與 Scene reset 契約維持正常；三個 viewport 均可完整通關且無 runtime error。
+
+**Dependencies:** M8.6、ER.2–ER.6、TP-1、TP-2、TP-3。必須在 M8.7 Full QA Matrix 前完成。
 
 ---
 

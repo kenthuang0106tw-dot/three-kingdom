@@ -4,10 +4,11 @@
 
 ### Why this is next
 
-M8.3 found no blocking visual defect. The remaining M8.7 full QA matrix depends
-on completing the planned accessibility control first. This task is the
-smallest eligible change that lets photosensitive or motion-sensitive players
-reduce hit flash and camera shake without changing the default arcade feel.
+M8.3 found no blocking visual defect. The planned M8.2C five-enemy formal Stage
+integration and the remaining M8.7 full QA matrix both depend on completing the
+accessibility control first. This task is the smallest eligible change that
+lets photosensitive or motion-sensitive players reduce hit flash and camera
+shake without changing the default arcade feel.
 
 ### Completion conditions
 

@@ -1098,5 +1098,11 @@ Status: completed.
   a Low M8.7 follow-up without invalidating prior reported mobile acceptance.
 
 The only next task is M8 / Task 8.6 — Flash/Shake Accessibility Settings. Do
-not begin the full QA matrix, release work, new content, or art generation in
-the same task.
+not begin five-enemy Stage integration, the full QA matrix, release work, new
+content, or art generation in the same task.
+
+After M8.6 is accepted, the next planned task is M8 / Task 8.2C — Five-Enemy
+Stage Encounter Integration. It will place Soldier, Duelist, Mauler, Shield
+Guard, and Crossbow into the formal three-screen Stage before M8.7 full QA.
+Shield Guard and Crossbow remain development-only encounter content until that
+task is implemented and accepted.
