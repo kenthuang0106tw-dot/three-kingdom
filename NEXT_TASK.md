@@ -1,50 +1,53 @@
 # NEXT_TASK
 
-## M8 / Task 8.2C — Five-Enemy Stage Encounter Integration
+## M8 / Task 8.7 — Full QA Matrix
 
 ### Why this is next
 
-All five enemy roles now have accepted gameplay prototypes and production
-presentation, but the formal three-screen Stage still uses only Soldier,
-Mauler, and Duelist. Shield Guard and Crossbow remain development-only. M8.7
-full QA must not begin until the final encounter content is actually playable.
+The formal three-screen Stage now includes all five production enemy roles and
+all planned M8 implementation tasks are complete. Before release work, the
+project needs one evidence-driven regression pass across the complete playable
+slice. This task verifies existing contracts; it does not add or retune
+features.
 
 ### Completion conditions
 
-- Place Soldier, Duelist, Mauler, Shield Guard, and Crossbow in the formal
-  three-screen Stage; every role must appear at least once.
-- Change only Stage encounter spawn/composition and the minimum necessary
-  encounter cadence. Preserve existing Enemy configs, HP, damage, animation,
-  AI contracts, Attack Slot, Player, Boss, art, Audio, and Camera ownership.
-- Keep the existing single-primary-attacker rule and readable recovery windows.
-- Shield Guard and Crossbow must create useful position/target decisions without
-  overlapping into unavoidable or off-screen damage.
-- Do not create a general Encounter Director, new Stage, new enemy, new attack,
-  new art, or new progression system.
-- Failure/Retry, Result/Replay, Boss entry, Pause, accessibility settings, and
-  Scene reset must retain deterministic ownership.
+- Execute every applicable item in `CHECKLIST.md` across Title, formal
+  five-enemy Stage, Boss, Failure/Retry, Result/Replay, Pause, mobile controls,
+  accessibility settings, Audio, Camera, combat, and reset ownership.
+- Record Desktop, 844×390, and 390×844 evidence with one Canvas, no document
+  overflow, no missing asset, and zero runtime error.
+- Confirm all five enemy roles visibly enter formal combat and cannot block
+  encounter clear, Boss entry, Failure, Result, Retry, or Replay.
+- Confirm production excludes physics/debug overlays, diagnostic datasets, and
+  development-only entrances.
+- Classify every discovered defect by severity. Fix no unrelated issue inside
+  this task; any required fix must become one explicit follow-up task.
+- Produce a final QA matrix and a release-readiness recommendation backed by
+  reproducible evidence.
 
-### Validation
+### Acceptance and validation
 
-- Focused StageConfig/encounter tests for all five roles, deterministic spawn,
-  Attack Slot exclusivity, cleanup, clear progression, and reset.
-- Before/after encounter composition and pressure report.
-- `pnpm test`, `pnpm typecheck`, `pnpm lint`, `pnpm build`, and
-  `pnpm build:github-pages`.
-- Complete the formal Stage on Desktop, 844×390, and 390×844 with one Canvas,
-  no overflow, no asset 404, and zero runtime errors.
-- Verify each role visibly enters combat, can be defeated, and cannot block
-  Boss entry or terminal flow.
+- `pnpm test`
+- `pnpm typecheck`
+- `pnpm lint`
+- `pnpm build`
+- `pnpm build:github-pages`
+- Development and production browser matrix on Desktop, 844×390, and 390×844.
+- At least one deterministic full-stage success path, Failure/Retry path,
+  Result/Replay path, Pause/resume path, and accessibility-toggle path.
+- No Critical or High defect may remain open for a release-readiness pass.
 
 ### Expected files
 
-- Existing Stage encounter configuration/composition.
-- Minimum necessary encounter tests and acceptance report.
-- Roadmap, Sprint, Checklist, and NEXT_TASK closeout updates.
+- Focused regression tests only if an acceptance contract lacks coverage.
+- `docs/quality/m8-7-full-qa-matrix.md`.
+- `GAME_ROADMAP.md`, `SPRINT.md`, `CHECKLIST.md`, `TECH_DEBT.md`, and
+  `NEXT_TASK.md` closeout updates.
 
 ### Risks
 
-- Five roles may create unreadable simultaneous pressure.
-- Adding enemies may extend combat duration without adding decisions.
-- Shield Guard or Crossbow may become a fixed first target.
-- Scope may drift into AI retuning, a new director, or another Stage.
+- The matrix can become unbounded if testing is mixed with feature work.
+- Automated smoke paths may hide physical touch or audio-unlock defects.
+- A late Critical/High defect may require stopping QA and creating one separate
+  corrective task rather than claiming release readiness.

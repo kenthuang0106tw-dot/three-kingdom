@@ -982,3 +982,20 @@ cannot alter damage, Hit Stop, animation, spark, knockback, Camera ownership,
 or any timer duration. Scene restart reuses the Scene-owned instance for the
 current page session; React, DOM state, persistence services, and global
 mutable settings are outside this boundary.
+
+## Five-Enemy Formal Stage Composition
+
+M8 / Task 8.2C keeps encounter composition declarative in `StageConfig`.
+`forest-entry` owns Soldier + Shield Guard; `forest-ambush` owns Mauler +
+Duelist + Crossbow. The Stage does not own enemy AI or combat state.
+
+`MainScene` resolves the configured spawn IDs and passes each encounter's
+immutable spawn descriptors to the single Scene-owned `EnemyManager`.
+`EnemyManager` remains the only owner of enemy instances, per-enemy lifecycle,
+and the single-primary-attacker slot. Encounter completion observes removals;
+it must not infer completion from enemy role or special-case Shield Guard or
+Crossbow. Boss eligibility remains downstream of clearing both configured
+encounters.
+
+Development may publish the active role list as read-only Canvas dataset
+evidence. Production must not expose that diagnostic surface.

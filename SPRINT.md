@@ -1131,3 +1131,23 @@ Status: completed.
 The only next task is M8 / Task 8.2C — Five-Enemy Stage Encounter Integration.
 Do not begin M8.7 full QA, release work, a new Stage, enemy art, or new gameplay
 systems in the same task.
+
+## M8 / Task 8.2C — Five-Enemy Stage Encounter Integration — 2026-07-30
+
+Status: completed.
+
+- [x] Integrated Soldier, Shield Guard, Mauler, Duelist, and Crossbow into the
+  formal three-screen Stage exactly once.
+- [x] Kept the deterministic two-encounter sequence: two enemies at
+  `forest-entry`, then three enemies at `forest-ambush`.
+- [x] Preserved all existing Player, enemy config, HP, damage, AI, Attack Slot,
+  Boss, Camera, Audio, animation, and art contracts.
+- [x] Added focused tests for role coverage, spawn bounds/spacing, ordered
+  cleanup, reset, one EnemyManager, and one Attack Slot.
+- [x] Desktop, 844×390, and 390×844 smoke reached Result after both encounters
+  and Boss with one Canvas, no overflow, and zero captured errors.
+- [x] Full test, typecheck, lint, production build, and GitHub Pages build gates
+  passed.
+
+The only next task is M8 / Task 8.7 — Full QA Matrix. Do not add content,
+retune combat, or begin release changes in the same task.

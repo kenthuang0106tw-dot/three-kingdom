@@ -7,6 +7,7 @@ import {
   SOLDIER_ENEMY_CONFIG,
 } from "../app/game/enemy/EnemyConfig.ts";
 import { CROSSBOW_ATTACK_SLOT_RANGE, CROSSBOW_TIMING, isCrossbowReadyToFire, isCrossbowTracking, isTargetOnCrossbowLine, nextAimLineY } from "../app/game/enemy/CrossbowLine.ts";
+import { BAMBOO_COMBAT_ROOM } from "../app/game/stage/StageConfig.ts";
 
 test("Crossbow timing tracks before Lock and preserves the locked shot line", () => {
   assert.equal(CROSSBOW_TIMING.aimMs, 900);
@@ -98,8 +99,9 @@ test("Crossbow projectile hits only the Player on its locked line and cleans up"
   assert.match(source, /enemy\.aimLine\?\.clear\(\);\s*this\.destroyProjectile\(enemy\);/);
 });
 
-test("Crossbow test entrances stay out of the formal Stage", async () => {
+test("Crossbow formal integration keeps development test entrances isolated", async () => {
   const source = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
+  assert.ok(BAMBOO_COMBAT_ROOM.spawnPoints.some(point => point.enemyType === "crossbow"));
   assert.match(source, /query\.get\("crossbowTest"\)/);
   assert.match(source, /spawnCrossbowPrototype\(mode: "A" \| "B"\)/);
   assert.match(source, /enemyType: "crossbow" as const/);

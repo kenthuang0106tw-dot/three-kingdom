@@ -1880,6 +1880,7 @@ export default class MainScene extends Phaser.Scene {
     this.game.canvas.dataset.encounterActiveId = this.encounterSequence.activeEncounterId ?? "";
     this.game.canvas.dataset.encounterClearedIds = this.encounterSequence.clearedEncounterIds.join(",");
     this.game.canvas.dataset.encounterEnemyCount = String(enemies.length);
+    this.game.canvas.dataset.encounterEnemyTypes = enemies.map(enemy => enemy.config.id).join(",");
     this.game.canvas.dataset.encounterCameraLocked = String(hasCameraLock(this.cameraLockState, "encounter"));
     this.game.canvas.dataset.cameraLockReasons = this.cameraLockState.reasons.join(",");
   }

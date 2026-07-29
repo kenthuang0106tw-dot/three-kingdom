@@ -75,12 +75,12 @@ test("Phaser registry survives 20 mount and destroy cycles without duplicates", 
   assert.deepEqual(games.map(game => game.destroyCalls), Array(20).fill(1));
 });
 
-test("Enemy and combat source retain the current three-enemy contracts", async () => {
+test("Enemy and combat source retain the formal five-enemy contracts", async () => {
   const [manager, scene] = await Promise.all([
     readFile(new URL("../app/game/EnemyManager.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8"),
   ]);
-  assert.equal(BAMBOO_COMBAT_ROOM.spawnPoints.length, 3);
+  assert.equal(BAMBOO_COMBAT_ROOM.spawnPoints.length, 5);
   assert.match(manager, /get currentAttackerId\(\)/);
   assert.match(scene, /this\.physics\.overlap\(this\.attackZone, enemy\.bodyZone\)/);
   assert.match(scene, /playerBodyZone\.y - 48/, "player attack hitbox must overlap feet-based enemy bodies when Y-aligned");
@@ -744,7 +744,7 @@ test("M5 full-stage acceptance preserves ordering, exactly-once completion, and 
   const boss = new BossLifecycle(8);
   boss.activate();
 
-  for (const enemyId of [1, 2, 3]) encounter = recordEnemyRemoved(encounter, enemyId);
+  for (const enemyId of [1, 2, 3, 4, 5]) encounter = recordEnemyRemoved(encounter, enemyId);
   assert.equal(isEncounterCleared(encounter), true);
   camera = unlockCamera(camera, "encounter");
   assert.equal(hasCameraLock(camera, "boss"), true);
@@ -824,8 +824,8 @@ test("Combat room acceptance covers formation, attack director, alignment, and s
     readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8"),
   ]);
   const spawnCoordinates = BAMBOO_COMBAT_ROOM.spawnPoints.map(({ x, y }) => [x, y]);
-  assert.equal(spawnCoordinates.length, 3);
-  assert.equal(new Set(spawnCoordinates.map(([, y]) => y)).size, 3);
+  assert.equal(spawnCoordinates.length, 5);
+  assert.equal(new Set(spawnCoordinates.map(([, y]) => y)).size, 5);
   assert.match(manager, /ENEMY_CONFIGS/);
   assert.equal(SOLDIER_ENEMY_CONFIG.combat.attackXRange, 110);
   assert.equal(SOLDIER_ENEMY_CONFIG.combat.attackYRange, 45);
@@ -849,10 +849,10 @@ test("StageConfig remains Phaser-free and validates the bamboo combat room", asy
   assert.deepEqual(BAMBOO_COMBAT_ROOM.walkBounds, { x: 70, y: 390, width: 3700, height: 245 });
   assert.deepEqual(BAMBOO_COMBAT_ROOM.backgroundSections.map(section => section.bounds.x), [0, 1280, 2560]);
   assert.ok(BAMBOO_COMBAT_ROOM.backgroundSections.every(section => section.bounds.width === 1280 && section.bounds.height === 720));
-  assert.equal(BAMBOO_COMBAT_ROOM.spawnPoints.length, 3);
+  assert.equal(BAMBOO_COMBAT_ROOM.spawnPoints.length, 5);
   assert.equal(BAMBOO_COMBAT_ROOM.encounters.length, 2);
   assert.deepEqual(BAMBOO_COMBAT_ROOM.encounters.map(encounter => encounter.trigger.x), [900, 2000]);
-  assert.deepEqual(BAMBOO_COMBAT_ROOM.encounters.map(encounter => encounter.spawnPointIds.length), [1, 2]);
+  assert.deepEqual(BAMBOO_COMBAT_ROOM.encounters.map(encounter => encounter.spawnPointIds.length), [2, 3]);
   assert.equal(validateStageConfig(BAMBOO_COMBAT_ROOM), BAMBOO_COMBAT_ROOM);
   assert.throws(() => validateStageConfig({
     ...BAMBOO_COMBAT_ROOM,
@@ -925,7 +925,13 @@ test("M6A bamboo stage art defines three distinct layered sections without chang
   assert.deepEqual(BAMBOO_COMBAT_ROOM.worldBounds, { x: 0, y: 0, width: 3840, height: 720 });
   assert.deepEqual(BAMBOO_COMBAT_ROOM.walkBounds, { x: 70, y: 390, width: 3700, height: 245 });
   assert.deepEqual(BAMBOO_COMBAT_ROOM.encounters.map(encounter => encounter.trigger.x), [900, 2000]);
-  assert.deepEqual(BAMBOO_COMBAT_ROOM.spawnPoints.map(point => [point.x, point.y]), [[1300, 560], [2320, 455], [2420, 625]]);
+  assert.deepEqual(BAMBOO_COMBAT_ROOM.spawnPoints.map(point => [point.x, point.y]), [
+    [1300, 560],
+    [1430, 470],
+    [2320, 455],
+    [2420, 625],
+    [2520, 530],
+  ]);
   assert.deepEqual(BAMBOO_BOSS_ARENA.entryTrigger, { x: 2630, y: 390, width: 120, height: 245 });
   assert.deepEqual(BAMBOO_BOSS_ARENA.spawn, { x: 3420, y: 560 });
 });
@@ -1198,19 +1204,24 @@ test("EnemyManager consumes the soldier config instead of owning tuning literals
   assert.doesNotMatch(source, /const WALK_SPEED = 70/);
 });
 
-test("Mixed encounter composition assigns three archetypes with one attack director", async () => {
+test("Formal encounter composition assigns five archetypes with one attack director", async () => {
   const [stage, manager, scene] = await Promise.all([
     readFile(new URL("../app/game/stage/StageConfig.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/game/EnemyManager.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8"),
   ]);
-  assert.deepEqual(BAMBOO_COMBAT_ROOM.spawnPoints.map(point => point.enemyType), ["soldier", "mauler", "duelist"]);
+  assert.deepEqual(
+    BAMBOO_COMBAT_ROOM.spawnPoints.map(point => point.enemyType),
+    ["soldier", "shield-guard", "mauler", "duelist", "crossbow"],
+  );
   assert.match(manager, /ENEMY_CONFIGS\[spawn\.enemyType \?\? "soldier"\]/);
   assert.match(manager, /if \(this\.currentAttacker \|\| this\.clock\.now\(\) < this\.directorReadyAt\) return/);
   assert.match(manager, /Math\.max\(enemy\.config\.combat\.minSpacing, other\.config\.combat\.minSpacing\)/);
   assert.match(scene, /for \(const config of \[SOLDIER_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, DUELIST_ENEMY_CONFIG, SHIELD_GUARD_ENEMY_CONFIG, CROSSBOW_ENEMY_CONFIG\]\)/);
   assert.match(stage, /enemyType: "mauler"/);
   assert.match(stage, /enemyType: "duelist"/);
+  assert.match(stage, /enemyType: "shield-guard"/);
+  assert.match(stage, /enemyType: "crossbow"/);
 });
 
 test("Mixed encounter tuning stays readable, dodgeable, and within the duration budget", async () => {
@@ -1271,26 +1282,24 @@ test("Attack-slot selection cannot starve an eligible archetype", () => {
 
 test("Every mixed archetype shares attack-slot release, death cleanup, and survivor flow", async () => {
   const manager = await readFile(new URL("../app/game/EnemyManager.ts", import.meta.url), "utf8");
-  const spawns = BAMBOO_COMBAT_ROOM.spawnPoints;
-  const permutations = [
-    [0, 1, 2], [0, 2, 1], [1, 0, 2],
-    [1, 2, 0], [2, 0, 1], [2, 1, 0],
-  ];
+  const spawnById = new Map(BAMBOO_COMBAT_ROOM.spawnPoints.map(spawn => [spawn.id, spawn]));
 
-  assert.deepEqual(new Set(spawns.map(spawn => spawn.enemyType)), new Set(["soldier", "mauler", "duelist"]));
-  for (const order of permutations) {
-    let flow = beginEncounter(createEncounterFlow(), spawns.length);
-    const firstId = order[0] + 1;
-    flow = recordEnemyRemoved(flow, firstId);
-    assert.equal(isEncounterCleared(flow), false);
-    assert.deepEqual(
-      spawns.filter((_, index) => !flow.removedEnemyIds.includes(index + 1)).map(spawn => spawn.enemyType).sort(),
-      order.slice(1).map(index => spawns[index].enemyType).sort(),
-    );
-    flow = recordEnemyRemoved(flow, order[1] + 1);
-    assert.equal(isEncounterCleared(flow), false);
-    flow = recordEnemyRemoved(flow, order[2] + 1);
-    assert.equal(isEncounterCleared(flow), true);
+  assert.deepEqual(
+    new Set(BAMBOO_COMBAT_ROOM.spawnPoints.map(spawn => spawn.enemyType)),
+    new Set(["soldier", "shield-guard", "mauler", "duelist", "crossbow"]),
+  );
+  for (const encounter of BAMBOO_COMBAT_ROOM.encounters) {
+    const spawns = encounter.spawnPointIds.map(id => spawnById.get(id));
+    for (const order of [
+      spawns.map((_, index) => index),
+      spawns.map((_, index) => spawns.length - index - 1),
+    ]) {
+      let flow = beginEncounter(createEncounterFlow(), spawns.length);
+      order.forEach((index, removalIndex) => {
+        flow = recordEnemyRemoved(flow, index + 1);
+        assert.equal(isEncounterCleared(flow), removalIndex === order.length - 1);
+      });
+    }
   }
 
   const damagePath = manager.slice(manager.indexOf("  damage(enemy:"), manager.indexOf("  private setState"));
@@ -1884,10 +1893,11 @@ test("enemy redesign tasks retain the approved prototype lock after all five pro
   assert.match(prototypeContract, /Crossbow \| Go \(ER\.6\)/);
 });
 
-test("the release visual audit and accessibility closeout advance only to five-enemy Stage integration", async () => {
-  const [visualReport, accessibilityReport, nextTask] = await Promise.all([
+test("the five-enemy Stage closeout advances only to the full QA matrix", async () => {
+  const [visualReport, accessibilityReport, stageReport, nextTask] = await Promise.all([
     readFile(new URL("../docs/quality/m8-3-release-visual-defect-pass.md", import.meta.url), "utf8"),
     readFile(new URL("../docs/quality/m8-6-accessibility-settings.md", import.meta.url), "utf8"),
+    readFile(new URL("../docs/quality/m8-2c-five-enemy-stage.md", import.meta.url), "utf8"),
     readFile(new URL("../NEXT_TASK.md", import.meta.url), "utf8"),
   ]);
 
@@ -1896,7 +1906,10 @@ test("the release visual audit and accessibility closeout advance only to five-e
   assert.match(accessibilityReport, /0x9fb3a0/);
   assert.match(accessibilityReport, /0\.0008/);
   assert.match(accessibilityReport, /143\/143/);
-  assert.match(nextTask, /M8 \/ Task 8\.2C — Five-Enemy Stage Encounter Integration/);
+  assert.match(stageReport, /Soldier \+ Shield Guard/);
+  assert.match(stageReport, /Mauler \+ Duelist \+ Crossbow/);
+  assert.match(stageReport, /M8 \/ Task 8\.7 — Full QA/);
+  assert.match(nextTask, /M8 \/ Task 8\.7 — Full QA Matrix/);
   assert.match(nextTask, /formal three-screen Stage/);
-  assert.match(nextTask, /M8\.7\s+full QA must not begin/);
+  assert.match(nextTask, /does not add or retune\s+features/);
 });

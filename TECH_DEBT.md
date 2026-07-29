@@ -665,3 +665,14 @@ fail.
 - **Remaining:** None for reference ownership. GX.1 completed with the
   repository-owned references and a reproducible four-pose pipeline. Shield
   Guard and Crossbow production presentation are now complete.
+
+## TD-M8C — Shield Guard and Crossbow formal Stage isolation
+
+- **Resolved:** 2026-07-30 during M8 / Task 8.2C.
+- **Evidence:** Shield Guard now appears with Soldier in `forest-entry`;
+  Crossbow now appears with Mauler and Duelist in `forest-ambush`. All five
+  accepted roles are covered exactly once by the formal Stage.
+- **Resolution:** Stage composition changed without enemy retuning or a new
+  encounter director. Existing cleanup, one Attack Slot, Boss entry, terminal
+  flow, and reset contracts passed focused and end-to-end validation.
+- **Remaining:** Full cross-feature evidence belongs to M8 / Task 8.7.

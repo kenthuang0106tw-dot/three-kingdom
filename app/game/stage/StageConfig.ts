@@ -194,19 +194,21 @@ export const BAMBOO_COMBAT_ROOM: StageConfig = validateStageConfig({
   playerSpawn: { id: "player-start", x: 180, y: 602 },
   spawnPoints: [
     { id: "enemy-front", x: 1300, y: 560, enemyType: "soldier" },
+    { id: "enemy-entry-guard", x: 1430, y: 470, enemyType: "shield-guard" },
     { id: "enemy-upper-rear", x: 2320, y: 455, enemyType: "mauler" },
     { id: "enemy-lower-front", x: 2420, y: 625, enemyType: "duelist" },
+    { id: "enemy-ambush-crossbow", x: 2520, y: 530, enemyType: "crossbow" },
   ],
   encounters: [
     {
       id: "forest-entry",
       trigger: { x: 900, y: 390, width: 120, height: 245 },
-      spawnPointIds: ["enemy-front"],
+      spawnPointIds: ["enemy-front", "enemy-entry-guard"],
     },
     {
       id: "forest-ambush",
       trigger: { x: 2000, y: 390, width: 120, height: 245 },
-      spawnPointIds: ["enemy-upper-rear", "enemy-lower-front"],
+      spawnPointIds: ["enemy-upper-rear", "enemy-lower-front", "enemy-ambush-crossbow"],
     },
   ],
   exits: [{

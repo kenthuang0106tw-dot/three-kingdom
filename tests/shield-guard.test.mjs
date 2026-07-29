@@ -7,6 +7,7 @@ import {
   SOLDIER_ENEMY_CONFIG,
 } from "../app/game/enemy/EnemyConfig.ts";
 import { SHIELD_GUARD_PARAMS, SHIELD_GUARD_TIMING, isAttackBlockedByGuard } from "../app/game/enemy/ShieldGuard.ts";
+import { BAMBOO_COMBAT_ROOM } from "../app/game/stage/StageConfig.ts";
 
 test("Shield Guard blocks only its locked forward cone", () => {
   assert.equal(isAttackBlockedByGuard(1, 500, 560, 600, 560), true);
@@ -102,8 +103,9 @@ test("Shield Guard block excludes damage and combo confirmation once per attack 
   assert.match(source, /if \(hitLanded\) \{\s*this\.hitConfirmed = true/);
 });
 
-test("Shield Guard development tests are isolated from formal stage encounters", async () => {
+test("Shield Guard formal integration keeps development test entrances isolated", async () => {
   const source = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
+  assert.ok(BAMBOO_COMBAT_ROOM.spawnPoints.some(point => point.enemyType === "shield-guard"));
   assert.match(source, /query\.get\("shieldGuardTest"\)/);
   assert.match(source, /this\.enemyManager\.spawnPrototype\(spawns\)/);
   assert.match(source, /if \(!this\.shieldGuardTestMode && !this\.crossbowTestMode && !this\.shieldCrossbowTestMode && !this\.duelistLeapTestMode && !this\.bossSmokeMode/);

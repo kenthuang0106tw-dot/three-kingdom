@@ -1318,3 +1318,20 @@
 | Production | Pass | One Canvas, empty development dataset, no overflow, zero captured browser errors |
 | Scope | Pass | No art, damage, Hit Stop, animation, AI, Stage, Camera flow, Audio, or React-state change |
 | Next task | Selected | M8 / Task 8.2C — Five-Enemy Stage Encounter Integration |
+
+## M8 / Task 8.2C — Five-Enemy Stage Encounter Integration — 2026-07-30
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Five-role coverage | Pass | Soldier, Shield Guard, Mauler, Duelist, and Crossbow each appear exactly once |
+| Encounter cadence | Pass | `forest-entry` has 2 roles; `forest-ambush` has 3 roles; both clear in order |
+| Spawn safety | Pass | Every spawn is in walk bounds and starts at least 72px from encounter peers |
+| Attack Slot | Pass | One `EnemyManager` and one `currentAttacker` owner remain |
+| Cleanup/reset | Pass | Each removal releases ownership; a fresh sequence has no retained encounter state |
+| Boss/terminal flow | Pass | Both encounters clear, Boss becomes available, Result enters exactly once |
+| Automated gates | Pass | 147/147 tests before closeout, typecheck, lint, and both builds |
+| Desktop | Pass | One Canvas, full Stage completion, no overflow, zero captured errors |
+| 844×390 | Pass | Intrinsic 1280×720 Canvas, full Stage completion, no overflow, zero captured errors |
+| 390×844 | Pass | Intrinsic 1280×720 Canvas, full Stage completion, no overflow, zero captured errors |
+| Scope | Pass | No enemy tuning, Player, Boss, Camera, Audio, art, animation, or new director |
+| Next task | Selected | M8 / Task 8.7 — Full QA Matrix |

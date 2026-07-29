@@ -373,7 +373,7 @@ M6A 不加入新角色、新敵人、新招式、第二關、Audio、技能、�
 | 8.2C | Five-enemy Stage encounter integration | P0 | High | 8.6、ER.2–ER.6、TP-1–TP-3 | Soldier、Duelist、Mauler、Shield Guard、Crossbow 全部出現在正式三畫面關卡；遭遇節奏、Attack Slot、手機可讀性與 reset 通過驗收 | stage config/tests/docs | 敵人組合造成不可讀壓力或破壞既有節奏 |
 | 8.7 | Full QA matrix | P0 | High | 8.1–8.6、8.2C | CHECKLIST 全部有 evidence，五種正式敵人皆納入最終關卡驗收，無 Critical/High defect | tests/docs | 測試時間不足 |
 
-### M8 / Task 8.2C — Five-Enemy Stage Encounter Integration
+### M8 / Task 8.2C — Five-Enemy Stage Encounter Integration (Completed 2026-07-30)
 
 **Goal:** 將已完成正式素材與既有玩法原型的五種普通敵人納入正式三畫面關卡，形成最終 Release Candidate 的遭遇內容。
 
@@ -384,6 +384,18 @@ M6A 不加入新角色、新敵人、新招式、第二關、Audio、技能、�
 **Acceptance Criteria:** 五種敵人都能在正式流程中生成、戰鬥、死亡與清除；任何時間最多一名主要攻擊者；遠近、正面封鎖與垂直換線壓力可讀且可避；沒有畫面外無提示攻擊、不可讀的重疊傷害或固定唯一擊殺順序；Camera、Pause、Failure/Retry、Result/Replay、Boss entry 與 Scene reset 契約維持正常；三個 viewport 均可完整通關且無 runtime error。
 
 **Dependencies:** M8.6、ER.2–ER.6、TP-1、TP-2、TP-3。必須在 M8.7 Full QA Matrix 前完成。
+
+**Status:** Completed.
+
+**Evidence:** The formal three-screen Stage now contains all five accepted
+roles exactly once: Soldier + Shield Guard in `forest-entry`, then Mauler +
+Duelist + Crossbow in `forest-ambush`. Existing enemy configs, Attack Slot,
+Player, Boss, Camera, Audio, animation, and art remain unchanged. Focused
+encounter tests, the full automated/build gates, and Desktop/844×390/390×844
+end-to-end smoke reached Result with one Canvas, no overflow, and zero captured
+runtime errors.
+
+**Next:** M8 / Task 8.7 — Full QA Matrix.
 
 ### M8 / Task 8.6 — Flash/Shake Accessibility Settings (Completed 2026-07-30)
 
