@@ -2,7 +2,7 @@ import * as Phaser from "phaser";
 import { PhaserGameplayClock, SeededRandom, type GameplayClock, type RandomSource } from "./time/GameplayTime";
 import { BAMBOO_COMBAT_ROOM, clampStageX, clampStageY, type StageSpawnPoint } from "./stage/StageConfig";
 import { beginEncounter, createEncounterFlow, isEncounterCleared, recordEnemyRemoved, type EncounterFlowState } from "./stage/EncounterFlow";
-import { CROSSBOW_ENEMY_CONFIG, DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SHIELD_GUARD_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, enemyAnimationKey, enemyAttackSpriteShouldFlip, enemySpriteShouldFlip, shieldGuardAnimationKey, type EnemyConfig } from "./enemy/EnemyConfig";
+import { CROSSBOW_ENEMY_CONFIG, DUELIST_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, SHIELD_GUARD_ENEMY_CONFIG, SOLDIER_ENEMY_CONFIG, crossbowAnimationKey, enemyAnimationKey, enemyAttackSpriteShouldFlip, enemySpriteShouldFlip, shieldGuardAnimationKey, type EnemyConfig } from "./enemy/EnemyConfig";
 import { selectFairAttackCandidate } from "./enemy/AttackSlotPolicy";
 import { createAttackCommitment, isWithinAttackLine, type AttackCommitment } from "./enemy/AttackCommitment";
 import { SHIELD_GUARD_PARAMS, SHIELD_GUARD_TIMING, type ShieldGuardState, isAttackBlockedByGuard } from "./enemy/ShieldGuard";
@@ -508,9 +508,10 @@ export class EnemyManager {
     else if (next === "aim") {
       enemy.aimStartedAt = this.clock.now();
       enemy.aimLineY = this.playerBodyZone.y;
-      enemy.sprite.play(enemyAnimationKey(enemy.config, "idle"), true);
+      enemy.sprite.play(crossbowAnimationKey("aim"), true);
     } else if (next === "locked") {
       enemy.lockedLineY = this.playerBodyZone.y;
+      enemy.sprite.play(crossbowAnimationKey("locked"), true);
       this.callbacks.onCrossbowLocked?.(enemy);
     } else if (next === "fire") {
       enemy.aimLine?.clear();
@@ -521,7 +522,9 @@ export class EnemyManager {
     } else if (next === "reload") {
       enemy.aimLine?.clear();
       this.releaseAttackSlot(enemy);
-      enemy.sprite.play(enemyAnimationKey(enemy.config, "idle"), true);
+      if (enemy.sprite.anims.currentAnim?.key !== enemyAnimationKey(enemy.config, "attack")) {
+        enemy.sprite.play(crossbowAnimationKey("reload"), true);
+      }
       const timer = this.scene.time.delayedCall(CROSSBOW_TIMING.reloadMs, () => {
         this.stateTimers.delete(enemy);
         if (enemy.sprite.active && enemy.state === "reload") this.setState(enemy, "position");
@@ -558,6 +561,8 @@ export class EnemyManager {
         enemy.cooldownUntil = this.clock.now() + this.random.between(enemy.config.timing.recoveryMin, enemy.config.timing.recoveryMax);
         this.setState(enemy, "idle");
       }
+    } else if (animation.key === enemyAnimationKey(enemy.config, "attack") && enemy.isCrossbow && enemy.state === "reload") {
+      enemy.sprite.play(crossbowAnimationKey("reload"), true);
     } else if (animation.key === enemyAnimationKey(enemy.config, "dead") && enemy.state === "dead") {
       enemy.sprite.setFrame(enemy.config.animations.dead.at(-1)!);
       this.scene.tweens.add({ targets: [enemy.sprite, enemy.shadow], alpha: 0, duration: 500, onComplete: () => this.remove(enemy) });

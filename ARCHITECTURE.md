@@ -930,13 +930,13 @@ separate roadmap task.
 
 ## Production Public Asset Packaging Contract
 
-`tools/package-production-assets.mjs` derives the 47 Phaser request files from
+`tools/package-production-assets.mjs` derives the 49 Phaser request files from
 the runtime manifest and adds the three unique React/GitHub Pages side-art
 files. After either production build, it removes only copied `public/` files
 outside that inventory from `dist/client` or `dist-github`.
 
 The helper refuses unsupported output paths and verifies SHA-256 equality for
-all 50 preserved files. Source, metadata, debug, onion-skin, silhouette, and QA
+all 52 preserved files. Source, metadata, debug, onion-skin, silhouette, and QA
 assets remain repository-owned under `public/`; packaging never regenerates or
 deletes them. Build-generated HTML, JavaScript, CSS, fonts, and server output
 are outside this pruning boundary.
@@ -954,3 +954,18 @@ Art pixels never define collision or defense. The independent ground body,
 attack hitbox, forward guard cone, facing lock, timers, and Attack Slot remain
 gameplay-owned. All 21 frames share one `(144,265)` feet anchor and one display
 scale, so animation changes do not move the world feet position.
+
+## Crossbow Production Presentation
+
+ER.6 gives Crossbow a dedicated `enemy-crossbow` atlas while retaining
+`EnemyManager` as the TP-2 gameplay owner. `EnemyConfig` owns the basic
+idle/walk/fire/hurt/dead frame selection and the Crossbow-only
+aim/locked/reload presentation mapping. `MainScene` creates those Phaser
+animations once. `EnemyManager` selects them from the existing ranged states;
+the fire animation completes into the reload loop without changing when the
+3000ms gameplay reload begins.
+
+The aiming line, projectile, Player-only target rule, 550ms tracking phase,
+350ms locked phase, Attack Slot, physics body, and Stage isolation remain
+gameplay-owned and independent from the 20 art frames. All frames share the
+same `(144,265)` feet anchor and `1.025` display scale.

@@ -600,13 +600,13 @@ fail.
 
 ## TD-M10 — Temporary Crossbow presentation
 
-- **Evidence:** ER.5 resolved the Shield Guard substitute with 21 genuine
-  project-owned frames while preserving TP-1. TP-2 Crossbow still deliberately
-  reuses Soldier presentation and development aiming markers.
-- **Impact:** Crossbow gameplay is readable, but its repeating-crossbow
-  silhouette and aim/locked/reload poses are still temporary.
-- **Resolution:** Execute ER.6 as one isolated production-art task. Do not
-  retune TP-2 or reintroduce rejected friendly fire.
+- **Resolved:** 2026-07-29, ER.6.
+- **Evidence:** Crossbow now uses 20 genuine project-owned frames with a
+  dedicated repeating-crossbow silhouette and aim/locked/reload presentation.
+  The atlas has measured rectangles, one feet anchor and scale, complete QA,
+  builds, and three-viewport runtime evidence.
+- **Resolution:** ER.6 replaced presentation only; TP-2/TP-3 timing, projectile,
+  Player-only targeting, Attack Slot, and Stage isolation remain unchanged.
 - **Target:** ER.6 Crossbow Production-Art Replacement.
 
 ## TD-M11 — pnpm build dependency-approval blocker
@@ -638,7 +638,11 @@ fail.
   rectangles, a 288×288 atlas, common `(144,265)` feet anchor, one `1.025`
   scale, dedicated guard/block/recovery animation paths, and accepted
   three-viewport smoke.
-- **Remaining:** Crossbow remains intentionally temporary under TD-M10.
+- **ER.6 update:** Crossbow now has 20 project-owned poses, measured rectangles,
+  a 288×288 atlas, common `(144,265)` feet anchor, one `1.025` scale,
+  dedicated aim/locked/reload animation paths, and accepted three-viewport
+  smoke. No temporary enemy presentation remains in the approved five-role
+  cast.
 
 ## TD-ER1 — Approved prototype references were not repository-owned
 
@@ -658,6 +662,4 @@ fail.
   measured metadata, QA sheets, hashes, builds, and three-viewport smoke passed.
 - **Remaining:** None for reference ownership. GX.1 completed with the
   repository-owned references and a reproducible four-pose pipeline. Shield
-  Guard production presentation is now complete. Crossbow production
-  presentation remains planned work, not hidden debt in the accepted melee
-  assets.
+  Guard and Crossbow production presentation are now complete.

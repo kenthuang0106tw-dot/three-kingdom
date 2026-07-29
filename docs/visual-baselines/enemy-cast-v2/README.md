@@ -80,3 +80,13 @@ shield, readable rim/weave/central boss, and small secondary weapon pass both
 approved references. Desktop, 844×390, and 390×844 runtime captures are stored
 beside the review evidence. These files are QA evidence and excluded from
 production packaging.
+
+## ER.6 Crossbow approved-prototype replacement
+
+`crossbow-er6-idle-gate.png` records the neutral identity gate.
+`crossbow-er6-review.png` records all 20 measured frames and the 25%
+silhouette check. Light blue-grey armor, tied cloth headwear, the large
+horizontal repeating crossbow, and rear bolt pack pass both approved
+references. Desktop, 844×390, and 390×844 runtime captures are stored beside
+the review evidence. These files are QA evidence and excluded from production
+packaging.

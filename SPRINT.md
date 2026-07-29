@@ -1047,3 +1047,31 @@ Status: completed.
 
 The only next task is ER.6 — Crossbow Production-Art Replacement. Do not alter
 TP-2 gameplay or begin another enemy, Stage, Player, Camera, UI, or Audio task.
+
+## ER.6 — Crossbow Production-Art Replacement — 2026-07-29
+
+Status: completed.
+
+- [x] Passed a neutral-idle identity gate against both repository-owned
+  references before full-sheet integration.
+- [x] Replaced the Soldier substitute with 20 genuine poses: idle 2, walk 4,
+  fire 3, hurt 2, dead 4, aim 2, locked 1, and reload 2.
+- [x] Preserved one 288×288 cell contract, `(144,265)` feet anchor, `1.025`
+  scale, 210.12px logical idle height, and 20 distinct pixel hashes.
+- [x] Added dedicated aim, locked, fire, and reload presentation without
+  changing TP-2/TP-3 timing, projectile, targeting, slot, or Stage contracts.
+- [x] Added measured metadata, source/transparent derivatives, debug, onion,
+  25% silhouette, identity gate, review sheet, and reproducible build tool.
+- [x] Runtime inventory is 49 requests / 14,810,812 encoded bytes /
+  142,933,504 decoded RGBA bytes; production inventory is 52 files /
+  18,587,432 bytes; GitHub Pages output is 20,108,383 bytes.
+- [x] Desktop, 844×390, and 390×844 smoke passed with readable aim/locked/
+  reload states and zero captured browser errors.
+- [x] Direct suite passed 133/133; typecheck passed; lint has zero errors and
+  eight existing `<img>` warnings; Vinext/Vite builds and packaging passed.
+- [ ] Package-manager wrappers remain affected by TD-M11; equivalent direct
+  project gates are the acceptance evidence.
+
+The only next task is M8 / Task 8.3 — Release Visual Defect Pass. Do not reopen
+the approved enemy identities or begin accessibility, full QA, or release work
+in the same task.

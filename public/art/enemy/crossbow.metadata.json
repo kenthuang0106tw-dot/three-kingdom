@@ -1,0 +1,787 @@
+{
+  "actor": "crossbow",
+  "cell": {
+    "width": 288,
+    "height": 288
+  },
+  "feetAnchor": {
+    "x": 144,
+    "y": 265
+  },
+  "displayScale": 1.025,
+  "sourceFacing": 1,
+  "targetLogicalIdleHeight": 210,
+  "logicalIdleHeight": 210.12,
+  "animations": {
+    "idle": [
+      "idle-0",
+      "idle-1"
+    ],
+    "walk": [
+      "walk-0",
+      "walk-1",
+      "walk-2",
+      "walk-3"
+    ],
+    "fire": [
+      "fire-0",
+      "fire-1",
+      "fire-2"
+    ],
+    "hurt": [
+      "hurt-0",
+      "hurt-1"
+    ],
+    "dead": [
+      "dead-0",
+      "dead-1",
+      "dead-2",
+      "dead-3"
+    ],
+    "aim": [
+      "aim-0",
+      "aim-1"
+    ],
+    "locked": [
+      "locked-0"
+    ],
+    "reload": [
+      "reload-0",
+      "reload-1"
+    ]
+  },
+  "provenance": {
+    "original": true,
+    "identityGate": "crossbow-idle-gate-source.png",
+    "sources": [
+      "crossbow-source.png",
+      "crossbow-extra-source.png"
+    ],
+    "sourceLayout": "measured-five-by-three-plus-five-by-one",
+    "processingTool": "tools/build_crossbow_art.py",
+    "processingRevision": "1.0",
+    "generatedBy": "built-in image generation, ER.6 Crossbow Production-Art Replacement"
+  },
+  "frames": [
+    {
+      "name": "idle-0",
+      "animation": "idle",
+      "phase": null,
+      "sourceImage": "crossbow-source-transparent.png",
+      "sourceRect": {
+        "x": 68,
+        "y": 32,
+        "width": 247,
+        "height": 297,
+        "alphaX": 4,
+        "alphaY": 4,
+        "alphaWidth": 239,
+        "alphaHeight": 289,
+        "processingScale": 0.71
+      },
+      "runtimeAlphaBounds": {
+        "x": 59,
+        "y": 60,
+        "width": 170,
+        "height": 205
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 59,
+      "displayOffsetY": 60,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "6261838471ffc6e3da914e315ad74dd86315c0ae6cefebcf8dd3678ec3fecba5"
+    },
+    {
+      "name": "idle-1",
+      "animation": "idle",
+      "phase": null,
+      "sourceImage": "crossbow-source-transparent.png",
+      "sourceRect": {
+        "x": 357,
+        "y": 32,
+        "width": 235,
+        "height": 297,
+        "alphaX": 4,
+        "alphaY": 4,
+        "alphaWidth": 227,
+        "alphaHeight": 289,
+        "processingScale": 0.71
+      },
+      "runtimeAlphaBounds": {
+        "x": 63,
+        "y": 60,
+        "width": 161,
+        "height": 205
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 63,
+      "displayOffsetY": 60,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "d144c58c92c96f98396c9d21d0d2be265e430ede8cd94ac6afb65678f270a433"
+    },
+    {
+      "name": "walk-0",
+      "animation": "walk",
+      "phase": null,
+      "sourceImage": "crossbow-source-transparent.png",
+      "sourceRect": {
+        "x": 647,
+        "y": 37,
+        "width": 239,
+        "height": 292,
+        "alphaX": 4,
+        "alphaY": 4,
+        "alphaWidth": 231,
+        "alphaHeight": 284,
+        "processingScale": 0.71
+      },
+      "runtimeAlphaBounds": {
+        "x": 62,
+        "y": 63,
+        "width": 164,
+        "height": 202
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 62,
+      "displayOffsetY": 63,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "c9b94be5e96a8e7702b642df76d5ec4025328654e5d4504d9a3d4ba95824fb6f"
+    },
+    {
+      "name": "walk-1",
+      "animation": "walk",
+      "phase": null,
+      "sourceImage": "crossbow-source-transparent.png",
+      "sourceRect": {
+        "x": 932,
+        "y": 37,
+        "width": 246,
+        "height": 292,
+        "alphaX": 4,
+        "alphaY": 4,
+        "alphaWidth": 238,
+        "alphaHeight": 284,
+        "processingScale": 0.71
+      },
+      "runtimeAlphaBounds": {
+        "x": 59,
+        "y": 63,
+        "width": 169,
+        "height": 202
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 59,
+      "displayOffsetY": 63,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "4cc15b4c4922302fa1a00c653a7a8bc3cb1e229f6601f38e04857906381c32e6"
+    },
+    {
+      "name": "walk-2",
+      "animation": "walk",
+      "phase": null,
+      "sourceImage": "crossbow-source-transparent.png",
+      "sourceRect": {
+        "x": 1218,
+        "y": 43,
+        "width": 260,
+        "height": 287,
+        "alphaX": 4,
+        "alphaY": 4,
+        "alphaWidth": 252,
+        "alphaHeight": 279,
+        "processingScale": 0.71
+      },
+      "runtimeAlphaBounds": {
+        "x": 54,
+        "y": 67,
+        "width": 179,
+        "height": 198
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 54,
+      "displayOffsetY": 67,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "05372c35019ede54d42c0f0306b86710d5a6f7c4a695b3da384783d0144a4e52"
+    },
+    {
+      "name": "walk-3",
+      "animation": "walk",
+      "phase": null,
+      "sourceImage": "crossbow-source-transparent.png",
+      "sourceRect": {
+        "x": 51,
+        "y": 373,
+        "width": 245,
+        "height": 285,
+        "alphaX": 4,
+        "alphaY": 4,
+        "alphaWidth": 237,
+        "alphaHeight": 277,
+        "processingScale": 0.71
+      },
+      "runtimeAlphaBounds": {
+        "x": 60,
+        "y": 68,
+        "width": 168,
+        "height": 197
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 60,
+      "displayOffsetY": 68,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "344ea02b3dfad01b46ed9203e821d6fb48427a795cc9aa4fb01d4a683444621f"
+    },
+    {
+      "name": "fire-0",
+      "animation": "fire",
+      "phase": "startup",
+      "sourceImage": "crossbow-source-transparent.png",
+      "sourceRect": {
+        "x": 344,
+        "y": 365,
+        "width": 258,
+        "height": 292,
+        "alphaX": 4,
+        "alphaY": 4,
+        "alphaWidth": 250,
+        "alphaHeight": 284,
+        "processingScale": 0.71
+      },
+      "runtimeAlphaBounds": {
+        "x": 55,
+        "y": 63,
+        "width": 178,
+        "height": 202
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 55,
+      "displayOffsetY": 63,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "7dbd31991310663bf1a45e8ef7c863d057962a80cb631affd8f556335d321b84"
+    },
+    {
+      "name": "fire-1",
+      "animation": "fire",
+      "phase": "active",
+      "sourceImage": "crossbow-source-transparent.png",
+      "sourceRect": {
+        "x": 621,
+        "y": 368,
+        "width": 275,
+        "height": 289,
+        "alphaX": 4,
+        "alphaY": 4,
+        "alphaWidth": 267,
+        "alphaHeight": 281,
+        "processingScale": 0.71
+      },
+      "runtimeAlphaBounds": {
+        "x": 49,
+        "y": 65,
+        "width": 190,
+        "height": 200
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 49,
+      "displayOffsetY": 65,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "fe75cf082edbbd2badbe421b71e6b2cc0f37d36749949dcd2bb6171411a8fd15"
+    },
+    {
+      "name": "fire-2",
+      "animation": "fire",
+      "phase": "recovery",
+      "sourceImage": "crossbow-source-transparent.png",
+      "sourceRect": {
+        "x": 927,
+        "y": 370,
+        "width": 235,
+        "height": 287,
+        "alphaX": 4,
+        "alphaY": 4,
+        "alphaWidth": 227,
+        "alphaHeight": 279,
+        "processingScale": 0.71
+      },
+      "runtimeAlphaBounds": {
+        "x": 63,
+        "y": 67,
+        "width": 161,
+        "height": 198
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 63,
+      "displayOffsetY": 67,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "91c53b34f435ee78eda93af80a99004be64084af560d5cca99b86a98c7f902d8"
+    },
+    {
+      "name": "hurt-0",
+      "animation": "hurt",
+      "phase": null,
+      "sourceImage": "crossbow-source-transparent.png",
+      "sourceRect": {
+        "x": 1216,
+        "y": 388,
+        "width": 209,
+        "height": 269,
+        "alphaX": 4,
+        "alphaY": 4,
+        "alphaWidth": 201,
+        "alphaHeight": 261,
+        "processingScale": 0.71
+      },
+      "runtimeAlphaBounds": {
+        "x": 72,
+        "y": 80,
+        "width": 143,
+        "height": 185
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 72,
+      "displayOffsetY": 80,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "f95edcae01e19febdc27ac15046fecf718cbc845aabcce75bbc835f0eb5e080e"
+    },
+    {
+      "name": "hurt-1",
+      "animation": "hurt",
+      "phase": null,
+      "sourceImage": "crossbow-source-transparent.png",
+      "sourceRect": {
+        "x": 49,
+        "y": 701,
+        "width": 218,
+        "height": 267,
+        "alphaX": 4,
+        "alphaY": 4,
+        "alphaWidth": 210,
+        "alphaHeight": 259,
+        "processingScale": 0.71
+      },
+      "runtimeAlphaBounds": {
+        "x": 69,
+        "y": 81,
+        "width": 149,
+        "height": 184
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 69,
+      "displayOffsetY": 81,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "b87345f74552057c42741c678f1c5e3b2c1218c23c75c0046bfa70bb9c4bb7c5"
+    },
+    {
+      "name": "dead-0",
+      "animation": "dead",
+      "phase": null,
+      "sourceImage": "crossbow-source-transparent.png",
+      "sourceRect": {
+        "x": 332,
+        "y": 720,
+        "width": 241,
+        "height": 248,
+        "alphaX": 4,
+        "alphaY": 4,
+        "alphaWidth": 233,
+        "alphaHeight": 240,
+        "processingScale": 0.71
+      },
+      "runtimeAlphaBounds": {
+        "x": 61,
+        "y": 95,
+        "width": 165,
+        "height": 170
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 61,
+      "displayOffsetY": 95,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "0c9b9d4ce00ee108387cb2f01002b88c2d0e1230ab6872dc10335a2346b24c65"
+    },
+    {
+      "name": "dead-1",
+      "animation": "dead",
+      "phase": null,
+      "sourceImage": "crossbow-source-transparent.png",
+      "sourceRect": {
+        "x": 592,
+        "y": 754,
+        "width": 254,
+        "height": 214,
+        "alphaX": 4,
+        "alphaY": 4,
+        "alphaWidth": 246,
+        "alphaHeight": 206,
+        "processingScale": 0.71
+      },
+      "runtimeAlphaBounds": {
+        "x": 56,
+        "y": 119,
+        "width": 175,
+        "height": 146
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 56,
+      "displayOffsetY": 119,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "e88fc99f765eb27ff8db24d402bbac488a1812b5fc46c4a016845a30395f0c52"
+    },
+    {
+      "name": "dead-2",
+      "animation": "dead",
+      "phase": null,
+      "sourceImage": "crossbow-source-transparent.png",
+      "sourceRect": {
+        "x": 884,
+        "y": 719,
+        "width": 270,
+        "height": 249,
+        "alphaX": 4,
+        "alphaY": 4,
+        "alphaWidth": 262,
+        "alphaHeight": 241,
+        "processingScale": 0.71
+      },
+      "runtimeAlphaBounds": {
+        "x": 51,
+        "y": 94,
+        "width": 186,
+        "height": 171
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 51,
+      "displayOffsetY": 94,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "487866d2686f26f5391811af09c941c6b30135a9a8a113ee94d32fe351672b90"
+    },
+    {
+      "name": "dead-3",
+      "animation": "dead",
+      "phase": null,
+      "sourceImage": "crossbow-source-transparent.png",
+      "sourceRect": {
+        "x": 1188,
+        "y": 863,
+        "width": 321,
+        "height": 125,
+        "alphaX": 4,
+        "alphaY": 4,
+        "alphaWidth": 313,
+        "alphaHeight": 117,
+        "processingScale": 0.71
+      },
+      "runtimeAlphaBounds": {
+        "x": 33,
+        "y": 182,
+        "width": 222,
+        "height": 83
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 33,
+      "displayOffsetY": 182,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "9d02e5d6693d216a25b96ebae71c45f93395a49b8070328aebc3bee9c527fe8f"
+    },
+    {
+      "name": "aim-0",
+      "animation": "aim",
+      "phase": null,
+      "sourceImage": "crossbow-extra-source-transparent.png",
+      "sourceRect": {
+        "x": 36,
+        "y": 137,
+        "width": 396,
+        "height": 475,
+        "alphaX": 4,
+        "alphaY": 4,
+        "alphaWidth": 388,
+        "alphaHeight": 467,
+        "processingScale": 0.44
+      },
+      "runtimeAlphaBounds": {
+        "x": 58,
+        "y": 60,
+        "width": 171,
+        "height": 205
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 58,
+      "displayOffsetY": 60,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "94bf66d7c9d218d88942cb4526caed4ffa159aa6a454a8492261f53ad45ecb82"
+    },
+    {
+      "name": "aim-1",
+      "animation": "aim",
+      "phase": null,
+      "sourceImage": "crossbow-extra-source-transparent.png",
+      "sourceRect": {
+        "x": 454,
+        "y": 147,
+        "width": 448,
+        "height": 465,
+        "alphaX": 4,
+        "alphaY": 4,
+        "alphaWidth": 440,
+        "alphaHeight": 457,
+        "processingScale": 0.44
+      },
+      "runtimeAlphaBounds": {
+        "x": 47,
+        "y": 64,
+        "width": 194,
+        "height": 201
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 47,
+      "displayOffsetY": 64,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "b53c20cc3f2d23d4e20778e0fc79b86fa5f343719d7b74d54c6ce72cb63f8f77"
+    },
+    {
+      "name": "locked-0",
+      "animation": "locked",
+      "phase": null,
+      "sourceImage": "crossbow-extra-source-transparent.png",
+      "sourceRect": {
+        "x": 898,
+        "y": 153,
+        "width": 476,
+        "height": 459,
+        "alphaX": 4,
+        "alphaY": 4,
+        "alphaWidth": 468,
+        "alphaHeight": 451,
+        "processingScale": 0.44
+      },
+      "runtimeAlphaBounds": {
+        "x": 41,
+        "y": 67,
+        "width": 206,
+        "height": 198
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 41,
+      "displayOffsetY": 67,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "45835445b1f071a46b12b5b55415ae2dc6a74883f52f0356be141aba356ecc3f"
+    },
+    {
+      "name": "reload-0",
+      "animation": "reload",
+      "phase": null,
+      "sourceImage": "crossbow-extra-source-transparent.png",
+      "sourceRect": {
+        "x": 1380,
+        "y": 149,
+        "width": 375,
+        "height": 463,
+        "alphaX": 4,
+        "alphaY": 4,
+        "alphaWidth": 367,
+        "alphaHeight": 455,
+        "processingScale": 0.44
+      },
+      "runtimeAlphaBounds": {
+        "x": 63,
+        "y": 65,
+        "width": 161,
+        "height": 200
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 63,
+      "displayOffsetY": 65,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "d892409280f7aedb8b09ae9040f819456ca500f7f041f0e54dafc364d01c089c"
+    },
+    {
+      "name": "reload-1",
+      "animation": "reload",
+      "phase": null,
+      "sourceImage": "crossbow-extra-source-transparent.png",
+      "sourceRect": {
+        "x": 1761,
+        "y": 144,
+        "width": 405,
+        "height": 468,
+        "alphaX": 4,
+        "alphaY": 4,
+        "alphaWidth": 397,
+        "alphaHeight": 460,
+        "processingScale": 0.44
+      },
+      "runtimeAlphaBounds": {
+        "x": 56,
+        "y": 63,
+        "width": 175,
+        "height": 202
+      },
+      "originX": 0.5,
+      "originY": 0.9201388888888888,
+      "displayOffsetX": 56,
+      "displayOffsetY": 63,
+      "feetAnchor": {
+        "x": 144,
+        "y": 265
+      },
+      "displayScale": 1.025,
+      "sourceFacing": 1,
+      "accepted": true,
+      "rejectionReason": null,
+      "pixelHash": "e08f4dac6492935fda19bebcda1b90bf6d3bd8cf7c0f3c8bd86f1a2ea7a995bc"
+    }
+  ]
+}

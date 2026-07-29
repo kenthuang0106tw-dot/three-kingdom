@@ -92,6 +92,18 @@ export function shieldGuardAnimationKey(state: ShieldGuardPresentationState): st
   return `enemy-shield-guard-${state}`;
 }
 
+export type CrossbowPresentationState = "aim" | "locked" | "reload";
+
+export const CROSSBOW_EXTRA_ANIMATIONS: Record<CrossbowPresentationState, readonly string[]> = {
+  aim: ["aim-0", "aim-1"],
+  locked: ["locked-0"],
+  reload: ["reload-0", "reload-1"],
+};
+
+export function crossbowAnimationKey(state: CrossbowPresentationState): string {
+  return `enemy-crossbow-${state}`;
+}
+
 export const SOLDIER_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
   id: "soldier",
   assetKey: "enemy-soldier",
@@ -128,10 +140,21 @@ export const SHIELD_GUARD_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
   combat: { ...SOLDIER_ENEMY_CONFIG.combat, attackYRange: 28 },
 });
 
-/** Development-only TP-2 substitute: Soldier art with Crossbow line-control behavior. */
+/** Development-only TP-2 behavior with dedicated ER.6 production presentation. */
 export const CROSSBOW_ENEMY_CONFIG: EnemyConfig = validateEnemyConfig({
   ...SOLDIER_ENEMY_CONFIG,
   id: "crossbow",
+  assetKey: "enemy-crossbow",
+  animations: {
+    idle: ["idle-0", "idle-1"], walk: ["walk-0", "walk-1", "walk-2", "walk-3"],
+    attack: ["fire-0", "fire-1", "fire-2"], hurt: ["hurt-0", "hurt-1"],
+    dead: ["dead-0", "dead-1", "dead-2", "dead-3"],
+  },
+  sourceFacing: 1,
+  attackSourceFacing: 1,
+  displayScale: 1.025,
+  frameSize: 288,
+  feetY: 265,
   movement: { ...SOLDIER_ENEMY_CONFIG.movement, walkSpeed: 56 },
 });
 

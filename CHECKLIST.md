@@ -1272,3 +1272,18 @@
 | Browser | Pass | Desktop, 844×390, 390×844: readable runtime guard pose, one logical Canvas, zero captured errors |
 | Scope | Pass | Shield Guard presentation only; no TP-1 retuning, Player, Stage, Camera, UI, Audio, or other enemy art change |
 | Next task | Selected | ER.6 — Crossbow Production-Art Replacement |
+
+## ER.6 — Crossbow Production-Art Replacement — 2026-07-29
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Identity gate | Pass | Light blue-grey armor, tied cloth headwear, large horizontal repeating crossbow, and rear bolt pack |
+| Frame contract | Pass | 20 distinct hashes: idle 2, walk 4, fire 3, hurt 2, dead 4, aim 2, locked 1, reload 2 |
+| Atlas/alignment | Pass | 288×288 cells, feet `(144,265)` in every frame, one `1.025` scale, 210.12px logical idle height |
+| Gameplay freeze | Pass | 550ms tracking, 350ms lock, 900ms aim, 3000ms reload, projectile, Player-only target, slot, HP, speed, body, and Stage isolation unchanged |
+| QA/provenance | Pass | Built-in image generation source, transparent derivatives, measured metadata, debug, onion, 25% silhouette, idle gate, review sheet, hashes, reproducible tool |
+| Delivery | Pass | 49 requests; 14,810,812 encoded bytes; 142,933,504 decoded RGBA; 52 production files; 20,108,383-byte GitHub Pages artifact |
+| Automated gates | Pass with TD-M11 noted | 133/133 direct tests, typecheck, lint 0 errors/8 existing warnings, direct Vinext/Vite builds and packaging |
+| Browser | Pass | Desktop, 844×390, 390×844: readable runtime aim/locked/reload states, one logical Canvas, zero captured errors |
+| Scope | Pass | Crossbow presentation only; no TP-2/TP-3 retuning, friendly fire, Player, Stage, Camera, UI, Audio, or other enemy art change |
+| Next task | Selected | M8 / Task 8.3 — Release Visual Defect Pass |

@@ -662,7 +662,7 @@ guard/block/recovery animation keys, identity/debug/onion/25% silhouette QA,
 desktop/844×390/390×844 browser smoke with zero captured errors. Accepted TP-1
 gameplay values were not changed.
 
-### ER.6 — Crossbow Production-Art Replacement
+### ER.6 — Crossbow Production-Art Replacement (Completed 2026-07-29)
 
 **Goal:** Replace the TP-2 Soldier-art substitute with the approved light
 repeating-crossbow identity without changing locked-lane ranged gameplay.
@@ -683,7 +683,17 @@ pass.
 **Dependencies:** TP-2 and TP-3 accepted; ER.1 production contract; ER.5
 completed.
 
-**Status:** Planned. This is the current NEXT_TASK.
+**Status:** Completed.
+
+**Evidence:** Twenty genuine project-owned poses, one 288×288 atlas, measured
+non-equal source rectangles, common `(144,265)` feet anchor, one `1.025`
+display scale, 210.12px logical idle height, and dedicated aim/locked/reload
+presentation keys passed identity/debug/onion/25% silhouette QA. TP-2 and TP-3
+gameplay values and Player-only projectile targeting are unchanged. Direct
+tests passed 133/133; typecheck, lint, both builds, packaging, and
+desktop/844×390/390×844 browser smoke passed with zero captured errors.
+
+**Next:** M8 / Task 8.3 — Release Visual Defect Pass.
 
 ## 4. Global Acceptance Rules
 

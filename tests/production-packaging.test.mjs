@@ -18,7 +18,7 @@ test("production inventory includes every manifest request and shell asset", asy
     readFile(new URL("../github-pages/main.tsx", import.meta.url), "utf8"),
   ]);
 
-  assert.equal(paths.length, 50);
+  assert.equal(paths.length, 52);
   for (const path of SHELL_PUBLIC_ASSETS) {
     assert.ok(paths.includes(path));
     assert.match(appShell, new RegExp(path.replaceAll("/", "\\/")));
@@ -28,7 +28,7 @@ test("production inventory includes every manifest request and shell asset", asy
 
 test("production packaging excludes source and QA files without changing runtime bytes", async () => {
   const inventory = await classifyProductionPublicAssets(root);
-  assert.equal(inventory.preserved.length, 50);
+  assert.equal(inventory.preserved.length, 52);
   assert.ok(inventory.excluded.length > 46);
   assert.ok(inventory.excluded.includes("art/guanyu/guanyu-v2-debug.png"));
   assert.ok(inventory.excluded.includes("scene/bamboo-stage/bamboo-stage-overview.png"));
@@ -36,7 +36,7 @@ test("production packaging excludes source and QA files without changing runtime
   assert.ok(!inventory.preserved.some(path => /(?:source|debug|onion|silhouette|overview)/i.test(path)));
 
   const sourceHashes = await hashFiles(fileURLToPath(new URL("../public", import.meta.url)), inventory.preserved);
-  assert.equal(Object.keys(sourceHashes).length, 50);
+  assert.equal(Object.keys(sourceHashes).length, 52);
   assert.ok(Object.values(sourceHashes).every(hash => /^[a-f0-9]{64}$/.test(hash)));
 });
 

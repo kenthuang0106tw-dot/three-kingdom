@@ -1,56 +1,52 @@
 # NEXT_TASK
 
-## ER.6 — Crossbow Production-Art Replacement
+## M8 / Task 8.3 — Release Visual Defect Pass
 
 ### Why this is next
 
-ER.5 completes the approved Shield Guard presentation without changing TP-1.
-Crossbow is now the only approved five-enemy role still using Soldier
-substitute art. Its TP-2 locked-lane gameplay and TP-3 composition decision are
-already accepted, so presentation can be replaced in isolation.
+ER.2 through ER.6 now give all five approved enemy roles project-owned
+production presentation. Before accessibility settings, the full QA matrix, or
+release work, the accepted Player, enemies, Boss, Stage, effects, and responsive
+layouts need one bounded visual-defect pass. This is the earliest remaining
+task that can find clipping, seams, readability regressions, and platform
+differences without reopening the frozen art direction.
 
 ### Completion conditions
 
-- Read both repository-owned approved references and the ER.1 production
-  contract before generation.
-- Pass a neutral-idle identity gate: standard-light blue-grey armor, tied cloth
-  headwear, one large horizontal repeating crossbow with readable stock, arms,
-  and mechanism, plus a rear bolt/quiver pack.
-- Produce 20 genuine frames: idle 2, walk 4, fire 3, hurt 2, dead 4, aim 2,
-  locked 1, and reload 2.
-- Use one 288×288 cell contract, one feet anchor, one display scale, measured
-  non-equal source rectangles, and at least 8 logical pixels of weapon padding.
-- Replace only Crossbow presentation. Preserve HP, movement, Aim tracking,
-  locked line, Fire, Reload, projectile ownership/range, Player-only targeting,
-  Attack Slot, body, hitbox, Stage isolation, and rejected friendly-fire
-  decision.
-- Do not change Shield Guard, other enemies, Player, Boss, Stage, Camera, UI,
-  Audio, or combat balance.
+- Inspect the existing accepted assets and runtime presentation only; do not
+  generate a new character set or change gameplay balance.
+- Check Player, five enemy roles, Boss, Stage transitions, hit effects, HUD,
+  touch controls, and camera presentation for clipping, visible seams,
+  incorrect stacking, unreadable state changes, and viewport-specific defects.
+- Fix only defects that are reproducible and directly evidenced.
+- Preserve all current animation timing, hitboxes, HP, AI, Encounter, Camera,
+  Audio, and control contracts unless a visual defect is caused by an incorrect
+  presentation mapping.
+- Record every inspected defect as fixed, deferred with severity, or not
+  reproducible.
 
 ### Validation
 
-- Neutral identity gate against both approved references.
-- Measured atlas metadata, 20 distinct pose hashes, debug sheet, onion skin,
-  25% silhouette, feet alignment, and crossbow/quiver padding checks.
-- Focused tests proving all TP-2/TP-3 gameplay constants and target rules remain
-  unchanged.
+- Focused regression tests for each changed presentation path.
 - `pnpm test`, `pnpm typecheck`, `pnpm lint`, `pnpm build`, and
-  `pnpm build:github-pages`, with TD-M11 reported honestly if wrappers stop
-  before project scripts.
-- Desktop, 844×390, and 390×844 aim/locked/fire/reload/hurt/dead readability
-  smoke tests.
+  `pnpm build:github-pages`, with TD-M11 reported honestly if package-manager
+  wrappers stop before project scripts.
+- Desktop, 844×390, and 390×844 full vertical-slice smoke, including every
+  enemy role and Boss.
+- No new console errors, Canvas duplication, overflow, asset 404, or production
+  debug leak.
 
 ### Expected files
 
-- Crossbow source/runtime art, atlas, metadata, QA, and review evidence.
-- Minimum Crossbow asset/config integration and focused tests.
-- ER.6 report and corresponding roadmap, sprint, checklist, architecture,
-  asset-pipeline, and technical-debt updates.
+- Existing presentation assets or mappings only when a defect is proven.
+- Focused tests and visual evidence.
+- M8.3 report and corresponding roadmap, sprint, checklist, architecture,
+  asset-pipeline, and technical-debt updates where applicable.
 
 ### Risks
 
-- The weapon may read as a bow or tiny hand crossbow instead of the approved
-  large horizontal repeating mechanism.
-- Weapon arms, rear quiver, or bolts may clip or contaminate adjacent frames.
-- Presentation work could accidentally retime Aim/Lock/Fire/Reload or alter
-  the explicitly Player-only projectile contract.
+- A broad “polish” pass could silently reopen accepted art direction.
+- Visual fixes could accidentally alter gameplay anchors, hitboxes, camera
+  behavior, or responsive input.
+- Device-only defects may require explicit reviewer evidence rather than local
+  browser emulation.

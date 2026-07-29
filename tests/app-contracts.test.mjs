@@ -214,7 +214,7 @@ test("Runtime asset manifest preserves keys and reports missing required assets"
     "ui-hud-frame", "ui-modal-frame", "ui-button-frame",
     "ui-joystick-base", "ui-joystick-knob", "ui-attack-frame",
     "dragon-pixel",
-    "guanyu-v2", "enemy-soldier", "enemy-mauler", "enemy-duelist", "enemy-duelist-leap", "enemy-shield-guard", "boss-warlord-attacks", "boss-warlord-lifecycle",
+    "guanyu-v2", "enemy-soldier", "enemy-mauler", "enemy-duelist", "enemy-duelist-leap", "enemy-shield-guard", "enemy-crossbow", "boss-warlord-attacks", "boss-warlord-lifecycle",
     "sfx-player-attack", "sfx-hit-confirmed", "sfx-player-hurt", "sfx-enemy-death",
     "sfx-ui-start", "sfx-ui-pause", "sfx-ui-resume", "sfx-ui-failure", "sfx-ui-result", "sfx-ui-confirm",
     "bgm-stage", "bgm-boss",
@@ -1863,7 +1863,7 @@ test("M6A visual freeze has reproducible captures, assets, and runtime metrics",
   assert.equal(metrics.productionDebugLeak, false);
 });
 
-test("enemy redesign tasks retain the approved prototype lock and advance to Crossbow production", async () => {
+test("enemy redesign tasks retain the approved prototype lock and advance to the visual defect pass", async () => {
   const [color, silhouette, prototypeContract, nextTask] = await Promise.all([
     readFile(new URL("../docs/visual-baselines/enemy-cast-v2/approved-five-enemy-color.png", import.meta.url)),
     readFile(new URL("../docs/visual-baselines/enemy-cast-v2/approved-five-enemy-silhouette.png", import.meta.url)),
@@ -1882,8 +1882,8 @@ test("enemy redesign tasks retain the approved prototype lock and advance to Cro
   assert.match(prototypeContract, /Exactly two long inward-curved hand hooks/);
   assert.match(prototypeContract, /GX\.1/);
   assert.match(prototypeContract, /genuine startup, airborne, descent, and landing/);
-  assert.match(nextTask, /ER\.6 — Crossbow Production-Art Replacement/);
-  assert.match(nextTask, /large horizontal repeating crossbow/);
-  assert.match(nextTask, /Preserve HP, movement, Aim tracking/);
-  assert.match(nextTask, /Player-only targeting/);
+  assert.match(prototypeContract, /Crossbow \| Go \(ER\.6\)/);
+  assert.match(nextTask, /M8 \/ Task 8\.3 — Release Visual Defect Pass/);
+  assert.match(nextTask, /do not\s+generate a new character set/);
+  assert.match(nextTask, /Desktop, 844×390, and 390×844/);
 });
