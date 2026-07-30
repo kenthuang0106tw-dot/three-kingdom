@@ -1,12 +1,13 @@
 import { createHash } from "node:crypto";
 import { execFile } from "node:child_process";
-import { mkdir, readFile, readdir, stat, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import { join, relative, resolve, sep } from "node:path";
 import { promisify } from "node:util";
 import { pathToFileURL } from "node:url";
 import {
   collectProductionPublicAssetPaths,
   hashFiles,
+  normalizeProductionAsset,
 } from "./package-production-assets.mjs";
 
 const execFileAsync = promisify(execFile);
@@ -115,7 +116,8 @@ export async function createReleaseManifest({
 
   const packageJson = JSON.parse(await readFile(resolve(rootDirectory, "package.json"), "utf8"));
   const runtimePaths = await collectProductionPublicAssetPaths(rootDirectory);
-  const sourceHashes = await hashFiles(resolve(rootDirectory, "public"), runtimePaths);
+  const sourceDirectory = resolve(rootDirectory, "public");
+  const sourceHashes = await hashFiles(sourceDirectory, runtimePaths, { normalize: true });
   const [vinextHashes, githubHashes] = await Promise.all([
     hashFiles(resolve(rootDirectory, "dist/client"), runtimePaths),
     hashFiles(resolve(rootDirectory, "dist-github"), runtimePaths),
@@ -125,11 +127,14 @@ export async function createReleaseManifest({
     throw new Error("Release outputs do not preserve the production runtime inventory");
   }
 
-  const runtimeInventory = await Promise.all(runtimePaths.map(async path => Object.freeze({
-    path,
-    bytes: (await stat(resolve(rootDirectory, "public", path))).size,
-    sha256: sourceHashes[path],
-  })));
+  const runtimeInventory = await Promise.all(runtimePaths.map(async path => {
+    const source = await readFile(resolve(sourceDirectory, path));
+    return Object.freeze({
+      path,
+      bytes: normalizeProductionAsset(path, source).byteLength,
+      sha256: sourceHashes[path],
+    });
+  }));
 
   return Object.freeze({
     schemaVersion: 1,

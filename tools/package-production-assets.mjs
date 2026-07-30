@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { readdir, readFile, rm, stat } from "node:fs/promises";
+import { readdir, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { join, relative, resolve, sep } from "node:path";
 import { pathToFileURL } from "node:url";
 
@@ -50,9 +50,15 @@ export async function classifyProductionPublicAssets(root = process.cwd()) {
   });
 }
 
-export async function hashFiles(directory, paths) {
+export function normalizeProductionAsset(path, bytes) {
+  if (!/\.(?:json|xml)$/.test(path)) return bytes;
+  return Buffer.from(bytes.toString("utf8").replaceAll("\r\n", "\n"));
+}
+
+export async function hashFiles(directory, paths, { normalize = false } = {}) {
   return Object.freeze(Object.fromEntries(await Promise.all(paths.map(async path => {
-    const bytes = await readFile(resolve(directory, path));
+    const source = await readFile(resolve(directory, path));
+    const bytes = normalize ? normalizeProductionAsset(path, source) : source;
     return [path, createHash("sha256").update(bytes).digest("hex")];
   }))));
 }
@@ -67,7 +73,8 @@ export async function packageProductionAssets(output, root = process.cwd()) {
   await stat(outputDirectory);
 
   const inventory = await classifyProductionPublicAssets(rootDirectory);
-  const beforeHashes = await hashFiles(resolve(rootDirectory, "public"), inventory.preserved);
+  const publicDirectory = resolve(rootDirectory, "public");
+  const beforeHashes = await hashFiles(publicDirectory, inventory.preserved, { normalize: true });
   let removedBytes = 0;
   for (const path of inventory.excluded) {
     const target = resolve(outputDirectory, path);
@@ -87,6 +94,12 @@ export async function packageProductionAssets(output, root = process.cwd()) {
     } catch (error) {
       if (error?.code !== "ENOENT") throw error;
     }
+  }
+
+  for (const path of inventory.preserved) {
+    if (!/\.(?:json|xml)$/.test(path)) continue;
+    const source = await readFile(resolve(publicDirectory, path));
+    await writeFile(resolve(outputDirectory, path), normalizeProductionAsset(path, source));
   }
 
   const afterHashes = await hashFiles(outputDirectory, inventory.preserved);

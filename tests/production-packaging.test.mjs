@@ -42,11 +42,17 @@ test("production packaging excludes source and QA files without changing runtime
 
 test("both production outputs preserve the exact inventory and omit QA routes", async () => {
   const inventory = await classifyProductionPublicAssets(root);
-  const sourceHashes = await hashFiles(fileURLToPath(new URL("../public", import.meta.url)), inventory.preserved);
+  const sourceHashes = await hashFiles(
+    fileURLToPath(new URL("../public", import.meta.url)),
+    inventory.preserved,
+    { normalize: true },
+  );
 
   for (const output of ["dist/client", "dist-github"]) {
     const outputDirectory = fileURLToPath(new URL(`../${output}/`, import.meta.url));
     assert.deepEqual(await hashFiles(outputDirectory, inventory.preserved), sourceHashes, output);
+    const atlas = await readFile(new URL(`../${output}/art/guanyu/guanyu-v2.atlas.json`, import.meta.url), "utf8");
+    assert.ok(!atlas.includes("\r\n"), `${output} must package text runtime assets with LF`);
     for (const path of [
       "art/guanyu/guanyu-v2-debug.png",
       "scene/bamboo-stage/bamboo-stage-overview.png",
