@@ -138,7 +138,8 @@ test("Player composition consumes one definition without adding Zhang Fei runtim
   assert.match(scene, /new PlayerAttackController\(this\.playerDefinition\.attacks\)/);
   assert.match(actor, /private readonly definition: PlayerDefinition/);
   assert.match(controller, /private readonly attacks: Readonly<Record<AttackStep, PlayerAttackMetadata>>/);
-  assert.doesNotMatch(`${scene}\n${actor}\n${controller}`, /zhangfei|zhang-fei|ZhangFei/i);
+  assert.doesNotMatch(`${actor}\n${controller}`, /zhangfei|zhang-fei|ZhangFei/i);
+  assert.doesNotMatch(scene, /private readonly playerDefinition = (?!GUANYU_PLAYER_DEFINITION)/);
 
   const attackController = new PlayerAttackController(GUANYU_PLAYER_DEFINITION.attacks);
   assert.equal(attackController.begin(2), GUANYU_PLAYER_DEFINITION.attacks[2]);

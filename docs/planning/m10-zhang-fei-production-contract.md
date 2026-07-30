@@ -60,8 +60,10 @@ warrior:
 - stern, explosive expression; no comic drunkenness or caricature;
 - deep oxblood-red cloth, charcoal/black lamellar armor, aged bronze fittings,
   warm skin light, and cool forest shadow;
-- one long **serpent spear** with a visibly sinuous steel blade, dark shaft, and
-  compact red binding; the weapon must remain readable at 25% zoom;
+- one long **Zhangba serpent spear (丈八蛇矛)** with a visibly sinuous,
+  symmetric double-edged steel spearhead, dark shaft, and compact red binding;
+  it must never drift into a guandao or ordinary straight spear and must remain
+  readable at 25% zoom;
 - heavy width and planted stance distinguish him more than height. He remains
   visibly smaller than the Boss and must not read as a Mauler enemy.
 

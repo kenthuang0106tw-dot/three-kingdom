@@ -1,0 +1,2167 @@
+{
+  "schemaVersion": 1,
+  "character": "zhang-fei",
+  "status": "development-preview-only",
+  "frameCount": 47,
+  "cell": {
+    "width": 672,
+    "height": 448,
+    "columns": 6,
+    "rows": 8
+  },
+  "feetAnchor": {
+    "x": 336,
+    "y": 420
+  },
+  "origin": {
+    "x": 0.5,
+    "y": 0.9375
+  },
+  "displayScale": 0.64,
+  "globalScale": 1.2,
+  "animations": {
+    "idle": {
+      "frameCount": 4,
+      "phases": [
+        "loop",
+        "loop",
+        "loop",
+        "loop",
+        "loop",
+        "loop"
+      ]
+    },
+    "walk": {
+      "frameCount": 4,
+      "phases": [
+        "loop",
+        "loop",
+        "loop",
+        "loop",
+        "loop",
+        "loop",
+        "loop",
+        "loop"
+      ]
+    },
+    "attack1": {
+      "frameCount": 4,
+      "phases": [
+        "startup",
+        "startup",
+        "active",
+        "active",
+        "recovery",
+        "recovery"
+      ]
+    },
+    "attack2": {
+      "frameCount": 4,
+      "phases": [
+        "startup",
+        "startup",
+        "startup",
+        "active",
+        "active",
+        "recovery",
+        "recovery"
+      ]
+    },
+    "attack3": {
+      "frameCount": 4,
+      "phases": [
+        "startup",
+        "startup",
+        "startup",
+        "startup",
+        "active",
+        "active",
+        "active",
+        "recovery",
+        "recovery",
+        "recovery"
+      ]
+    },
+    "hurt": {
+      "frameCount": 4,
+      "phases": [
+        "hurt",
+        "hurt",
+        "hurt",
+        "hurt"
+      ]
+    },
+    "dead": {
+      "frameCount": 4,
+      "phases": [
+        "death",
+        "death",
+        "death",
+        "death",
+        "death",
+        "death"
+      ]
+    }
+  },
+  "provenance": {
+    "tool": "OpenAI built-in imagegen",
+    "mode": "project-bound chroma-key generation",
+    "prompts": {
+      "idle": "Japanese 1990s arcade-realistic Zhang Fei, heavy warrior, dark beard, oxblood and aged bronze armor, six grounded idle poses, complete Zhangba serpent spear (丈八蛇矛): long shaft and symmetric snake-shaped double-edged spearhead, never a guandao, chroma green background.",
+      "walk": "Same Zhang Fei identity, eight genuine right-facing walk poses, stable feet and complete Zhangba serpent spear (丈八蛇矛), never a guandao, chroma green background.",
+      "attack1": "Same Zhang Fei identity, six isolated right-facing compact thrust poses with complete Zhangba serpent spear (丈八蛇矛), three columns by two rows, chroma green background.",
+      "attack12": "Same Zhang Fei identity, distinct attack1 thrust and attack2 sweep sequences with startup, active and recovery poses, chroma green background.",
+      "attack3": "Same Zhang Fei identity, ten-frame high-commitment finishing attack sequence, continuous complete Zhangba serpent spear (丈八蛇矛) arc, chroma green background.",
+      "hurt_dead": "Same Zhang Fei identity, four grounded hurt poses and six progressive grounded death poses, chroma green background."
+    },
+    "sourceFiles": [
+      {
+        "path": "source/zhangfei-attack1-source.png",
+        "sha256": "a63f52bd08106f9b99b5318952c8cef42bf2ba9b5d6bc69b793c5986ec319a6d"
+      },
+      {
+        "path": "source/zhangfei-attack12-source.png",
+        "sha256": "10a8eeaef45d66be4e791f1f6f3bd4f2c10840229a2991bf569c02692581eaa4"
+      },
+      {
+        "path": "source/zhangfei-attack3-source.png",
+        "sha256": "6c4b82f16c8ab3be372391240ff6c8ef90a7b16025190a0b03415547c9a20e06"
+      },
+      {
+        "path": "source/zhangfei-hurt-dead-source.png",
+        "sha256": "6964cdd17fb7fb51c3a5b2ad60b77b1f28387e29989a629500d2b6a93d4f375e"
+      },
+      {
+        "path": "source/zhangfei-idle-source.png",
+        "sha256": "ed15945012f66805c3aa1393ae7eb11719dd6bce9c84c5794338029f68a0187f"
+      },
+      {
+        "path": "source/zhangfei-walk-source.png",
+        "sha256": "f16013d4f09a7771d00555b1a354a23d487f14bdc9212436c77af549c419cec4"
+      }
+    ]
+  },
+  "frames": [
+    {
+      "index": 0,
+      "name": "idle-0",
+      "animation": "idle",
+      "animationFrame": 0,
+      "phase": "loop",
+      "facing": "right",
+      "source": "source/zhangfei-idle-transparent.png",
+      "sourceIndex": 0,
+      "sourceRect": {
+        "x": 94,
+        "y": 104,
+        "width": 413,
+        "height": 306
+      },
+      "alphaBounds": {
+        "x": 88,
+        "y": 53,
+        "width": 496,
+        "height": 367
+      },
+      "outputRect": {
+        "x": 0,
+        "y": 0,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 88,
+        "y": 53
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "9d6283a79518535c23c29a2b20be83f580f1b9e785d0e3d50a84aef34a0ce108"
+    },
+    {
+      "index": 1,
+      "name": "idle-1",
+      "animation": "idle",
+      "animationFrame": 1,
+      "phase": "loop",
+      "facing": "right",
+      "source": "source/zhangfei-idle-transparent.png",
+      "sourceIndex": 1,
+      "sourceRect": {
+        "x": 561,
+        "y": 113,
+        "width": 434,
+        "height": 301
+      },
+      "alphaBounds": {
+        "x": 76,
+        "y": 59,
+        "width": 521,
+        "height": 361
+      },
+      "outputRect": {
+        "x": 672,
+        "y": 0,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 76,
+        "y": 59
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "efffb98d03e2df01218366f94df9de50649cc8023f75fcbc9b56adc93394476f"
+    },
+    {
+      "index": 2,
+      "name": "idle-2",
+      "animation": "idle",
+      "animationFrame": 2,
+      "phase": "loop",
+      "facing": "right",
+      "source": "source/zhangfei-idle-transparent.png",
+      "sourceIndex": 2,
+      "sourceRect": {
+        "x": 1020,
+        "y": 115,
+        "width": 438,
+        "height": 299
+      },
+      "alphaBounds": {
+        "x": 73,
+        "y": 61,
+        "width": 526,
+        "height": 359
+      },
+      "outputRect": {
+        "x": 1344,
+        "y": 0,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 73,
+        "y": 61
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "7439b82fc1bf211d6ad3b988ebe3e1f23fada2cdf1495ef2a3ffc6ffc682227d"
+    },
+    {
+      "index": 3,
+      "name": "idle-3",
+      "animation": "idle",
+      "animationFrame": 3,
+      "phase": "loop",
+      "facing": "right",
+      "source": "source/zhangfei-idle-transparent.png",
+      "sourceIndex": 3,
+      "sourceRect": {
+        "x": 88,
+        "y": 560,
+        "width": 439,
+        "height": 306
+      },
+      "alphaBounds": {
+        "x": 73,
+        "y": 53,
+        "width": 527,
+        "height": 367
+      },
+      "outputRect": {
+        "x": 2016,
+        "y": 0,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 73,
+        "y": 53
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "d308da8f11c1783981e1e59e25296643d00a0ad6d1e19ead469e6b9270f177fc"
+    },
+    {
+      "index": 4,
+      "name": "idle-4",
+      "animation": "idle",
+      "animationFrame": 4,
+      "phase": "loop",
+      "facing": "right",
+      "source": "source/zhangfei-idle-transparent.png",
+      "sourceIndex": 4,
+      "sourceRect": {
+        "x": 554,
+        "y": 559,
+        "width": 437,
+        "height": 307
+      },
+      "alphaBounds": {
+        "x": 74,
+        "y": 52,
+        "width": 524,
+        "height": 368
+      },
+      "outputRect": {
+        "x": 2688,
+        "y": 0,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 74,
+        "y": 52
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "c9dba1d080785ba527d37a2bd23429bb042d932ff603270233f5bdfa2b01704a"
+    },
+    {
+      "index": 5,
+      "name": "idle-5",
+      "animation": "idle",
+      "animationFrame": 5,
+      "phase": "loop",
+      "facing": "right",
+      "source": "source/zhangfei-idle-transparent.png",
+      "sourceIndex": 5,
+      "sourceRect": {
+        "x": 1028,
+        "y": 564,
+        "width": 423,
+        "height": 306
+      },
+      "alphaBounds": {
+        "x": 82,
+        "y": 53,
+        "width": 508,
+        "height": 367
+      },
+      "outputRect": {
+        "x": 3360,
+        "y": 0,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 82,
+        "y": 53
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "5419701c76209c458ce6cd5eaea68ddfab06ba677f029144940ee5133aa890f4"
+    },
+    {
+      "index": 6,
+      "name": "walk-0",
+      "animation": "walk",
+      "animationFrame": 0,
+      "phase": "loop",
+      "facing": "right",
+      "source": "source/zhangfei-walk-transparent.png",
+      "sourceIndex": 0,
+      "sourceRect": {
+        "x": 22,
+        "y": 70,
+        "width": 344,
+        "height": 258
+      },
+      "alphaBounds": {
+        "x": 130,
+        "y": 110,
+        "width": 413,
+        "height": 310
+      },
+      "outputRect": {
+        "x": 0,
+        "y": 448,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 130,
+        "y": 110
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "fe2b72d3eda9ac0dcb326aa230bed2b8d7f94760b522e6a1f2efd90433a45a8f"
+    },
+    {
+      "index": 7,
+      "name": "walk-1",
+      "animation": "walk",
+      "animationFrame": 1,
+      "phase": "loop",
+      "facing": "right",
+      "source": "source/zhangfei-walk-transparent.png",
+      "sourceIndex": 1,
+      "sourceRect": {
+        "x": 415,
+        "y": 79,
+        "width": 370,
+        "height": 251
+      },
+      "alphaBounds": {
+        "x": 114,
+        "y": 119,
+        "width": 444,
+        "height": 301
+      },
+      "outputRect": {
+        "x": 672,
+        "y": 448,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 114,
+        "y": 119
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "d9d8385b36793e4b32650bdfb3e6c1a2bf50772048969037685af00479327472"
+    },
+    {
+      "index": 8,
+      "name": "walk-2",
+      "animation": "walk",
+      "animationFrame": 2,
+      "phase": "loop",
+      "facing": "right",
+      "source": "source/zhangfei-walk-transparent.png",
+      "sourceIndex": 2,
+      "sourceRect": {
+        "x": 816,
+        "y": 80,
+        "width": 385,
+        "height": 255
+      },
+      "alphaBounds": {
+        "x": 105,
+        "y": 114,
+        "width": 462,
+        "height": 306
+      },
+      "outputRect": {
+        "x": 1344,
+        "y": 448,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 105,
+        "y": 114
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "c924e90a9fe2baa1334d52bdd9ef65f057b5364b7375217a931b4abf1f9a6612"
+    },
+    {
+      "index": 9,
+      "name": "walk-3",
+      "animation": "walk",
+      "animationFrame": 3,
+      "phase": "loop",
+      "facing": "right",
+      "source": "source/zhangfei-walk-transparent.png",
+      "sourceIndex": 3,
+      "sourceRect": {
+        "x": 26,
+        "y": 459,
+        "width": 383,
+        "height": 257
+      },
+      "alphaBounds": {
+        "x": 106,
+        "y": 112,
+        "width": 460,
+        "height": 308
+      },
+      "outputRect": {
+        "x": 2016,
+        "y": 448,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 106,
+        "y": 112
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "e0d96b3f57f252d8f649cb2ed878ab5ee84a726353b43321e479095981cf33d8"
+    },
+    {
+      "index": 10,
+      "name": "walk-4",
+      "animation": "walk",
+      "animationFrame": 4,
+      "phase": "loop",
+      "facing": "right",
+      "source": "source/zhangfei-walk-transparent.png",
+      "sourceIndex": 4,
+      "sourceRect": {
+        "x": 414,
+        "y": 461,
+        "width": 382,
+        "height": 250
+      },
+      "alphaBounds": {
+        "x": 107,
+        "y": 120,
+        "width": 458,
+        "height": 300
+      },
+      "outputRect": {
+        "x": 2688,
+        "y": 448,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 107,
+        "y": 120
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "e58d3ed1653064b88a1afb28bb1436e3e5ac4b77122b85a016ef02a57aa12506"
+    },
+    {
+      "index": 11,
+      "name": "walk-5",
+      "animation": "walk",
+      "animationFrame": 5,
+      "phase": "loop",
+      "facing": "right",
+      "source": "source/zhangfei-walk-transparent.png",
+      "sourceIndex": 5,
+      "sourceRect": {
+        "x": 818,
+        "y": 463,
+        "width": 383,
+        "height": 253
+      },
+      "alphaBounds": {
+        "x": 106,
+        "y": 116,
+        "width": 460,
+        "height": 304
+      },
+      "outputRect": {
+        "x": 3360,
+        "y": 448,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 106,
+        "y": 116
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "803c73a873b1ebe38327e169bf27ac497733f2deceee352d1fda1dfc2de80d97"
+    },
+    {
+      "index": 12,
+      "name": "walk-6",
+      "animation": "walk",
+      "animationFrame": 6,
+      "phase": "loop",
+      "facing": "right",
+      "source": "source/zhangfei-walk-transparent.png",
+      "sourceIndex": 6,
+      "sourceRect": {
+        "x": 28,
+        "y": 866,
+        "width": 388,
+        "height": 253
+      },
+      "alphaBounds": {
+        "x": 103,
+        "y": 116,
+        "width": 466,
+        "height": 304
+      },
+      "outputRect": {
+        "x": 0,
+        "y": 896,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 103,
+        "y": 116
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "c15d9fcf599e80fc48b8d87aec775bad2ad2095cc6581aa76effc82712a080bc"
+    },
+    {
+      "index": 13,
+      "name": "walk-7",
+      "animation": "walk",
+      "animationFrame": 7,
+      "phase": "loop",
+      "facing": "right",
+      "source": "source/zhangfei-walk-transparent.png",
+      "sourceIndex": 7,
+      "sourceRect": {
+        "x": 421,
+        "y": 866,
+        "width": 394,
+        "height": 254
+      },
+      "alphaBounds": {
+        "x": 100,
+        "y": 115,
+        "width": 473,
+        "height": 305
+      },
+      "outputRect": {
+        "x": 672,
+        "y": 896,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 100,
+        "y": 115
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "ba526d5149b8cae66e7c4315bebd84c258f806abb53e34cd646aa6681e8433ac"
+    },
+    {
+      "index": 14,
+      "name": "attack1-0",
+      "animation": "attack1",
+      "animationFrame": 0,
+      "phase": "startup",
+      "facing": "right",
+      "source": "source/zhangfei-attack1-transparent.png",
+      "sourceIndex": 0,
+      "sourceRect": {
+        "x": 22,
+        "y": 150,
+        "width": 388,
+        "height": 289
+      },
+      "alphaBounds": {
+        "x": 103,
+        "y": 73,
+        "width": 466,
+        "height": 347
+      },
+      "outputRect": {
+        "x": 1344,
+        "y": 896,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 103,
+        "y": 73
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "8bf6352c39456321342c2be59a79b58f9e20a573add0e6e3e27b8bd2909c16f1"
+    },
+    {
+      "index": 15,
+      "name": "attack1-1",
+      "animation": "attack1",
+      "animationFrame": 1,
+      "phase": "startup",
+      "facing": "right",
+      "source": "source/zhangfei-attack1-transparent.png",
+      "sourceIndex": 1,
+      "sourceRect": {
+        "x": 547,
+        "y": 173,
+        "width": 349,
+        "height": 266
+      },
+      "alphaBounds": {
+        "x": 127,
+        "y": 101,
+        "width": 419,
+        "height": 319
+      },
+      "outputRect": {
+        "x": 2016,
+        "y": 896,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 127,
+        "y": 101
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "058a50835ad30f7ee5914b1993e5e7b312b087100ddb97c985de70c8223f110e"
+    },
+    {
+      "index": 16,
+      "name": "attack1-2",
+      "animation": "attack1",
+      "animationFrame": 2,
+      "phase": "active",
+      "facing": "right",
+      "source": "source/zhangfei-attack1-transparent.png",
+      "sourceIndex": 2,
+      "sourceRect": {
+        "x": 962,
+        "y": 180,
+        "width": 501,
+        "height": 261
+      },
+      "alphaBounds": {
+        "x": 36,
+        "y": 107,
+        "width": 601,
+        "height": 313
+      },
+      "outputRect": {
+        "x": 2688,
+        "y": 896,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 36,
+        "y": 107
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "eb7abb1faaa87594713e2551422865c144e95f4a9f250cd46243769dfdeef08f"
+    },
+    {
+      "index": 17,
+      "name": "attack1-3",
+      "animation": "attack1",
+      "animationFrame": 3,
+      "phase": "active",
+      "facing": "right",
+      "source": "source/zhangfei-attack1-transparent.png",
+      "sourceIndex": 3,
+      "sourceRect": {
+        "x": 55,
+        "y": 591,
+        "width": 488,
+        "height": 265
+      },
+      "alphaBounds": {
+        "x": 43,
+        "y": 102,
+        "width": 586,
+        "height": 318
+      },
+      "outputRect": {
+        "x": 3360,
+        "y": 896,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 43,
+        "y": 102
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "ee5e62d60bf6343b040d35808dc243a71a5b1745f09bd758206386ea123011a5"
+    },
+    {
+      "index": 18,
+      "name": "attack1-4",
+      "animation": "attack1",
+      "animationFrame": 4,
+      "phase": "recovery",
+      "facing": "right",
+      "source": "source/zhangfei-attack1-transparent.png",
+      "sourceIndex": 4,
+      "sourceRect": {
+        "x": 576,
+        "y": 586,
+        "width": 396,
+        "height": 276
+      },
+      "alphaBounds": {
+        "x": 99,
+        "y": 89,
+        "width": 475,
+        "height": 331
+      },
+      "outputRect": {
+        "x": 0,
+        "y": 1344,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 99,
+        "y": 89
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "08e43309989d7f3848383eb62eb539cc7df154f1a6c15ea5f947502c70234362"
+    },
+    {
+      "index": 19,
+      "name": "attack1-5",
+      "animation": "attack1",
+      "animationFrame": 5,
+      "phase": "recovery",
+      "facing": "right",
+      "source": "source/zhangfei-attack1-transparent.png",
+      "sourceIndex": 5,
+      "sourceRect": {
+        "x": 1058,
+        "y": 575,
+        "width": 387,
+        "height": 289
+      },
+      "alphaBounds": {
+        "x": 104,
+        "y": 73,
+        "width": 464,
+        "height": 347
+      },
+      "outputRect": {
+        "x": 672,
+        "y": 1344,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 104,
+        "y": 73
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "0299b0a31d05079032b18d5571e2c4b3c83b5b29c2854b709548e020fb75ea00"
+    },
+    {
+      "index": 20,
+      "name": "attack2-0",
+      "animation": "attack2",
+      "animationFrame": 0,
+      "phase": "startup",
+      "facing": "right",
+      "source": "source/zhangfei-attack12-transparent.png",
+      "sourceIndex": 7,
+      "sourceRect": {
+        "x": 8,
+        "y": 575,
+        "width": 203,
+        "height": 239
+      },
+      "alphaBounds": {
+        "x": 214,
+        "y": 133,
+        "width": 244,
+        "height": 287
+      },
+      "outputRect": {
+        "x": 1344,
+        "y": 1344,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 214,
+        "y": 133
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "870d1f0441713d62349d38250278624268b19fd1585a33fa5f3b135c6f26a06a"
+    },
+    {
+      "index": 21,
+      "name": "attack2-1",
+      "animation": "attack2",
+      "animationFrame": 1,
+      "phase": "startup",
+      "facing": "right",
+      "source": "source/zhangfei-attack12-transparent.png",
+      "sourceIndex": 8,
+      "sourceRect": {
+        "x": 235,
+        "y": 578,
+        "width": 196,
+        "height": 235
+      },
+      "alphaBounds": {
+        "x": 219,
+        "y": 138,
+        "width": 235,
+        "height": 282
+      },
+      "outputRect": {
+        "x": 2016,
+        "y": 1344,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 219,
+        "y": 138
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "824acbbed785c636f49fd85b0b21a05d617c194b3e127c94cc88129e7174057b"
+    },
+    {
+      "index": 22,
+      "name": "attack2-2",
+      "animation": "attack2",
+      "animationFrame": 2,
+      "phase": "startup",
+      "facing": "right",
+      "source": "source/zhangfei-attack12-transparent.png",
+      "sourceIndex": 9,
+      "sourceRect": {
+        "x": 426,
+        "y": 574,
+        "width": 263,
+        "height": 239
+      },
+      "alphaBounds": {
+        "x": 178,
+        "y": 133,
+        "width": 316,
+        "height": 287
+      },
+      "outputRect": {
+        "x": 2688,
+        "y": 1344,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 178,
+        "y": 133
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "f775646b8ff90e296391170269b72a13befd0eefeccfa64c236ca4847d483f63"
+    },
+    {
+      "index": 23,
+      "name": "attack2-3",
+      "animation": "attack2",
+      "animationFrame": 3,
+      "phase": "active",
+      "facing": "right",
+      "source": "source/zhangfei-attack12-transparent.png",
+      "sourceIndex": 10,
+      "sourceRect": {
+        "x": 736,
+        "y": 571,
+        "width": 298,
+        "height": 243
+      },
+      "alphaBounds": {
+        "x": 157,
+        "y": 128,
+        "width": 358,
+        "height": 292
+      },
+      "outputRect": {
+        "x": 3360,
+        "y": 1344,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 157,
+        "y": 128
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "31ed0133a4a2f0ffed341163b6999cf88e3d0d990636579236d4909fff27a0c9"
+    },
+    {
+      "index": 24,
+      "name": "attack2-4",
+      "animation": "attack2",
+      "animationFrame": 4,
+      "phase": "active",
+      "facing": "right",
+      "source": "source/zhangfei-attack12-transparent.png",
+      "sourceIndex": 11,
+      "sourceRect": {
+        "x": 979,
+        "y": 587,
+        "width": 300,
+        "height": 227
+      },
+      "alphaBounds": {
+        "x": 156,
+        "y": 148,
+        "width": 360,
+        "height": 272
+      },
+      "outputRect": {
+        "x": 0,
+        "y": 1792,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 156,
+        "y": 148
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "65e325906b69d8da2f6cfb0aa5997a915d4d4cdcc48b7eba726ef93ff5f6e4ba"
+    },
+    {
+      "index": 25,
+      "name": "attack2-5",
+      "animation": "attack2",
+      "animationFrame": 5,
+      "phase": "recovery",
+      "facing": "right",
+      "source": "source/zhangfei-attack12-transparent.png",
+      "sourceIndex": 12,
+      "sourceRect": {
+        "x": 1226,
+        "y": 577,
+        "width": 183,
+        "height": 236
+      },
+      "alphaBounds": {
+        "x": 226,
+        "y": 137,
+        "width": 220,
+        "height": 283
+      },
+      "outputRect": {
+        "x": 672,
+        "y": 1792,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 226,
+        "y": 137
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "a834b1e8727dca3d15838d333f63437e5af3e54f023cd6a12d0efe6a76182336"
+    },
+    {
+      "index": 26,
+      "name": "attack2-6",
+      "animation": "attack2",
+      "animationFrame": 6,
+      "phase": "recovery",
+      "facing": "right",
+      "source": "source/zhangfei-attack12-transparent.png",
+      "sourceIndex": 13,
+      "sourceRect": {
+        "x": 1422,
+        "y": 576,
+        "width": 228,
+        "height": 238
+      },
+      "alphaBounds": {
+        "x": 199,
+        "y": 134,
+        "width": 274,
+        "height": 286
+      },
+      "outputRect": {
+        "x": 1344,
+        "y": 1792,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 199,
+        "y": 134
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "3a19892db859af93e7078458a850f1c41aeeb2f66b18a9b1df269b8d58f1816e"
+    },
+    {
+      "index": 27,
+      "name": "attack3-0",
+      "animation": "attack3",
+      "animationFrame": 0,
+      "phase": "startup",
+      "facing": "right",
+      "source": "source/zhangfei-attack3-transparent.png",
+      "sourceIndex": 0,
+      "sourceRect": {
+        "x": 69,
+        "y": 119,
+        "width": 292,
+        "height": 292
+      },
+      "alphaBounds": {
+        "x": 161,
+        "y": 70,
+        "width": 350,
+        "height": 350
+      },
+      "outputRect": {
+        "x": 2016,
+        "y": 1792,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 161,
+        "y": 70
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "f09a5bbeec2c40b0f5c486d5b29b22149c235dde3e15565c248aa61475bcce60"
+    },
+    {
+      "index": 28,
+      "name": "attack3-1",
+      "animation": "attack3",
+      "animationFrame": 1,
+      "phase": "startup",
+      "facing": "right",
+      "source": "source/zhangfei-attack3-transparent.png",
+      "sourceIndex": 1,
+      "sourceRect": {
+        "x": 391,
+        "y": 74,
+        "width": 288,
+        "height": 337
+      },
+      "alphaBounds": {
+        "x": 163,
+        "y": 16,
+        "width": 346,
+        "height": 404
+      },
+      "outputRect": {
+        "x": 2688,
+        "y": 1792,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 163,
+        "y": 16
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "3b254fed251412cce6d71efc3c6fae69c5048a6804a523f9c4c659f488f7d43a"
+    },
+    {
+      "index": 29,
+      "name": "attack3-2",
+      "animation": "attack3",
+      "animationFrame": 2,
+      "phase": "startup",
+      "facing": "right",
+      "source": "source/zhangfei-attack3-transparent.png",
+      "sourceIndex": 2,
+      "sourceRect": {
+        "x": 705,
+        "y": 113,
+        "width": 253,
+        "height": 298
+      },
+      "alphaBounds": {
+        "x": 184,
+        "y": 62,
+        "width": 304,
+        "height": 358
+      },
+      "outputRect": {
+        "x": 3360,
+        "y": 1792,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 184,
+        "y": 62
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "4b94934acc36ca4ca95dc8f7aedd29a1aa493dd49a4197561256712b49afbb7d"
+    },
+    {
+      "index": 30,
+      "name": "attack3-3",
+      "animation": "attack3",
+      "animationFrame": 3,
+      "phase": "startup",
+      "facing": "right",
+      "source": "source/zhangfei-attack3-transparent.png",
+      "sourceIndex": 3,
+      "sourceRect": {
+        "x": 1032,
+        "y": 84,
+        "width": 252,
+        "height": 327
+      },
+      "alphaBounds": {
+        "x": 185,
+        "y": 28,
+        "width": 302,
+        "height": 392
+      },
+      "outputRect": {
+        "x": 0,
+        "y": 2240,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 185,
+        "y": 28
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "e3f8d5d872e7415a0c422fc3b90d4c234608abc0e2e34cacf6467c878516e41b"
+    },
+    {
+      "index": 31,
+      "name": "attack3-4",
+      "animation": "attack3",
+      "animationFrame": 4,
+      "phase": "active",
+      "facing": "right",
+      "source": "source/zhangfei-attack3-transparent.png",
+      "sourceIndex": 4,
+      "sourceRect": {
+        "x": 1313,
+        "y": 168,
+        "width": 336,
+        "height": 243
+      },
+      "alphaBounds": {
+        "x": 135,
+        "y": 128,
+        "width": 403,
+        "height": 292
+      },
+      "outputRect": {
+        "x": 672,
+        "y": 2240,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 135,
+        "y": 128
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "bd122ac8d0700f909dbfdd0c736afca1b46010ac85d1407e6f6b8a099f59e220"
+    },
+    {
+      "index": 32,
+      "name": "attack3-5",
+      "animation": "attack3",
+      "animationFrame": 5,
+      "phase": "active",
+      "facing": "right",
+      "source": "source/zhangfei-attack3-transparent.png",
+      "sourceIndex": 5,
+      "sourceRect": {
+        "x": 47,
+        "y": 553,
+        "width": 332,
+        "height": 249
+      },
+      "alphaBounds": {
+        "x": 137,
+        "y": 121,
+        "width": 398,
+        "height": 299
+      },
+      "outputRect": {
+        "x": 1344,
+        "y": 2240,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 137,
+        "y": 121
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "c56705c7b128229a62bdd5d187a2618a9bbdc0b1961113312aa58923670790a4"
+    },
+    {
+      "index": 33,
+      "name": "attack3-6",
+      "animation": "attack3",
+      "animationFrame": 6,
+      "phase": "active",
+      "facing": "right",
+      "source": "source/zhangfei-attack3-transparent.png",
+      "sourceIndex": 6,
+      "sourceRect": {
+        "x": 391,
+        "y": 550,
+        "width": 385,
+        "height": 250
+      },
+      "alphaBounds": {
+        "x": 105,
+        "y": 120,
+        "width": 462,
+        "height": 300
+      },
+      "outputRect": {
+        "x": 2016,
+        "y": 2240,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 105,
+        "y": 120
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "faa838c0f3fe3391119dc4fd26c383b6acbba62b3921ee9daf8672e1780d90f7"
+    },
+    {
+      "index": 34,
+      "name": "attack3-7",
+      "animation": "attack3",
+      "animationFrame": 7,
+      "phase": "recovery",
+      "facing": "right",
+      "source": "source/zhangfei-attack3-transparent.png",
+      "sourceIndex": 7,
+      "sourceRect": {
+        "x": 793,
+        "y": 531,
+        "width": 231,
+        "height": 273
+      },
+      "alphaBounds": {
+        "x": 198,
+        "y": 92,
+        "width": 277,
+        "height": 328
+      },
+      "outputRect": {
+        "x": 2688,
+        "y": 2240,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 198,
+        "y": 92
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "6e4d1876d925c0cc7ff7a76cacdd69ac9dd0755c20f11411afa05ebae5560ee1"
+    },
+    {
+      "index": 35,
+      "name": "attack3-8",
+      "animation": "attack3",
+      "animationFrame": 8,
+      "phase": "recovery",
+      "facing": "right",
+      "source": "source/zhangfei-attack3-transparent.png",
+      "sourceIndex": 8,
+      "sourceRect": {
+        "x": 1087,
+        "y": 529,
+        "width": 239,
+        "height": 276
+      },
+      "alphaBounds": {
+        "x": 193,
+        "y": 89,
+        "width": 287,
+        "height": 331
+      },
+      "outputRect": {
+        "x": 3360,
+        "y": 2240,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 193,
+        "y": 89
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "2d709455c9850ba66c194457a03c346a0759c1433a730ebe68a4457cd7148c83"
+    },
+    {
+      "index": 36,
+      "name": "attack3-9",
+      "animation": "attack3",
+      "animationFrame": 9,
+      "phase": "recovery",
+      "facing": "right",
+      "source": "source/zhangfei-attack3-transparent.png",
+      "sourceIndex": 9,
+      "sourceRect": {
+        "x": 1415,
+        "y": 509,
+        "width": 268,
+        "height": 291
+      },
+      "alphaBounds": {
+        "x": 175,
+        "y": 71,
+        "width": 322,
+        "height": 349
+      },
+      "outputRect": {
+        "x": 0,
+        "y": 2688,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 175,
+        "y": 71
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "814b05069ee49a70327601d631c15f94be51c82abb315b4fa3245c734a5b927a"
+    },
+    {
+      "index": 37,
+      "name": "hurt-0",
+      "animation": "hurt",
+      "animationFrame": 0,
+      "phase": "hurt",
+      "facing": "right",
+      "source": "source/zhangfei-hurt-dead-transparent.png",
+      "sourceIndex": 0,
+      "sourceRect": {
+        "x": 57,
+        "y": 55,
+        "width": 216,
+        "height": 321
+      },
+      "alphaBounds": {
+        "x": 207,
+        "y": 35,
+        "width": 259,
+        "height": 385
+      },
+      "outputRect": {
+        "x": 672,
+        "y": 2688,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 207,
+        "y": 35
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "fb34a56b5b8b3ccb0c43bd182e33b67adb7394e5af42860d291ce2643653c87c"
+    },
+    {
+      "index": 38,
+      "name": "hurt-1",
+      "animation": "hurt",
+      "animationFrame": 1,
+      "phase": "hurt",
+      "facing": "right",
+      "source": "source/zhangfei-hurt-dead-transparent.png",
+      "sourceIndex": 1,
+      "sourceRect": {
+        "x": 353,
+        "y": 59,
+        "width": 187,
+        "height": 320
+      },
+      "alphaBounds": {
+        "x": 224,
+        "y": 36,
+        "width": 224,
+        "height": 384
+      },
+      "outputRect": {
+        "x": 1344,
+        "y": 2688,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 224,
+        "y": 36
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "c98a3da8f08f7f562a81098ad5a5f0aa6dd621e246d6e04c024c5468af053660"
+    },
+    {
+      "index": 39,
+      "name": "hurt-2",
+      "animation": "hurt",
+      "animationFrame": 2,
+      "phase": "hurt",
+      "facing": "right",
+      "source": "source/zhangfei-hurt-dead-transparent.png",
+      "sourceIndex": 2,
+      "sourceRect": {
+        "x": 649,
+        "y": 92,
+        "width": 200,
+        "height": 287
+      },
+      "alphaBounds": {
+        "x": 216,
+        "y": 76,
+        "width": 240,
+        "height": 344
+      },
+      "outputRect": {
+        "x": 2016,
+        "y": 2688,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 216,
+        "y": 76
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "2a0a075d69df6dc04c1f3eaed2d0b96fab149bc22ee4df20a890de317c68b891"
+    },
+    {
+      "index": 40,
+      "name": "hurt-3",
+      "animation": "hurt",
+      "animationFrame": 3,
+      "phase": "hurt",
+      "facing": "right",
+      "source": "source/zhangfei-hurt-dead-transparent.png",
+      "sourceIndex": 3,
+      "sourceRect": {
+        "x": 928,
+        "y": 148,
+        "width": 227,
+        "height": 231
+      },
+      "alphaBounds": {
+        "x": 200,
+        "y": 143,
+        "width": 272,
+        "height": 277
+      },
+      "outputRect": {
+        "x": 2688,
+        "y": 2688,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 200,
+        "y": 143
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "b6904e3c02258728082ca64c41b40d15e458c475d1fb8166b40026da5ecb0878"
+    },
+    {
+      "index": 41,
+      "name": "dead-0",
+      "animation": "dead",
+      "animationFrame": 0,
+      "phase": "death",
+      "facing": "right",
+      "source": "source/zhangfei-hurt-dead-transparent.png",
+      "sourceIndex": 6,
+      "sourceRect": {
+        "x": 8,
+        "y": 505,
+        "width": 264,
+        "height": 259
+      },
+      "alphaBounds": {
+        "x": 178,
+        "y": 109,
+        "width": 317,
+        "height": 311
+      },
+      "outputRect": {
+        "x": 3360,
+        "y": 2688,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 178,
+        "y": 109
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "1f2c435504cf8f4a3e6cd2328a1c8f68ee82da8fff2791632b7821d11ecfff43"
+    },
+    {
+      "index": 42,
+      "name": "dead-1",
+      "animation": "dead",
+      "animationFrame": 1,
+      "phase": "death",
+      "facing": "right",
+      "source": "source/zhangfei-hurt-dead-transparent.png",
+      "sourceIndex": 7,
+      "sourceRect": {
+        "x": 286,
+        "y": 535,
+        "width": 251,
+        "height": 244
+      },
+      "alphaBounds": {
+        "x": 186,
+        "y": 127,
+        "width": 301,
+        "height": 293
+      },
+      "outputRect": {
+        "x": 0,
+        "y": 3136,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 186,
+        "y": 127
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "522348511ae2dd9d842d3d1a32f5f689f9c2f0b1b9c52ef027895c9fa3488a79"
+    },
+    {
+      "index": 43,
+      "name": "dead-2",
+      "animation": "dead",
+      "animationFrame": 2,
+      "phase": "death",
+      "facing": "right",
+      "source": "source/zhangfei-hurt-dead-transparent.png",
+      "sourceIndex": 8,
+      "sourceRect": {
+        "x": 562,
+        "y": 595,
+        "width": 239,
+        "height": 213
+      },
+      "alphaBounds": {
+        "x": 193,
+        "y": 164,
+        "width": 287,
+        "height": 256
+      },
+      "outputRect": {
+        "x": 672,
+        "y": 3136,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 193,
+        "y": 164
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "ca3f840db31798c44adc322a74c01e09448f12ef69666c6aca3c726f2ce6a88f"
+    },
+    {
+      "index": 44,
+      "name": "dead-3",
+      "animation": "dead",
+      "animationFrame": 3,
+      "phase": "death",
+      "facing": "right",
+      "source": "source/zhangfei-hurt-dead-transparent.png",
+      "sourceIndex": 9,
+      "sourceRect": {
+        "x": 837,
+        "y": 654,
+        "width": 327,
+        "height": 138
+      },
+      "alphaBounds": {
+        "x": 140,
+        "y": 254,
+        "width": 392,
+        "height": 166
+      },
+      "outputRect": {
+        "x": 1344,
+        "y": 3136,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 140,
+        "y": 254
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "c16778891533f94730901bb7018e53dfd41943d5eb4597274a5219650064e7e1"
+    },
+    {
+      "index": 45,
+      "name": "dead-4",
+      "animation": "dead",
+      "animationFrame": 4,
+      "phase": "death",
+      "facing": "right",
+      "source": "source/zhangfei-hurt-dead-transparent.png",
+      "sourceIndex": 10,
+      "sourceRect": {
+        "x": 1127,
+        "y": 685,
+        "width": 281,
+        "height": 126
+      },
+      "alphaBounds": {
+        "x": 168,
+        "y": 269,
+        "width": 337,
+        "height": 151
+      },
+      "outputRect": {
+        "x": 2016,
+        "y": 3136,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 168,
+        "y": 269
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "c5ae5a5316ffeb19bc8dc243fa3d64e3819b638e9f2e75b6732304dd586aa37d"
+    },
+    {
+      "index": 46,
+      "name": "dead-5",
+      "animation": "dead",
+      "animationFrame": 5,
+      "phase": "death",
+      "facing": "right",
+      "source": "source/zhangfei-hurt-dead-transparent.png",
+      "sourceIndex": 11,
+      "sourceRect": {
+        "x": 1421,
+        "y": 702,
+        "width": 337,
+        "height": 111
+      },
+      "alphaBounds": {
+        "x": 134,
+        "y": 287,
+        "width": 404,
+        "height": 133
+      },
+      "outputRect": {
+        "x": 2688,
+        "y": 3136,
+        "width": 672,
+        "height": 448
+      },
+      "displayOffset": {
+        "x": 134,
+        "y": 287
+      },
+      "feetAnchor": {
+        "x": 336,
+        "y": 420
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.9375
+      },
+      "globalScale": 1.2,
+      "displayScale": 0.64,
+      "pixelHash": "0e8a0bc15d2063eed3059487357bf36d84bc7930c9aa122b4f94ee9753b3bc97"
+    }
+  ]
+}

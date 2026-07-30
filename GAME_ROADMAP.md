@@ -561,7 +561,7 @@ gameplay, art, balance, Stage, Camera, Audio, input, or UI behavior changed.
 | 10.1 | Second Vertical Slice scope lock — Completed 2026-07-30 | P1 | Medium | M9 | One player-visible goal, strict exclusions, dependency order, acceptance matrix, and one implementation NEXT_TASK are approved | roadmap/backlog/sprint/planning | Scope expansion immediately after release |
 | 10.2 | Player Definition boundary and Guan Yu freeze — Completed 2026-07-30 | P0 | High | 10.1 | Two-known-player data seam exists; Guan Yu runtime values/behavior remain exact; no Zhang Fei runtime or selection yet | player definition/actor/attack/MainScene/tests | Generic framework or Guan Yu regression |
 | 10.3 | Zhang Fei gameplay and production contract — Completed 2026-07-30 | P0 | Medium | 10.2 | Heavy-warrior goal, comparison plan, approved identity, frame budget, feet/scale/atlas rules are accepted before production | character production docs/asset plan | Art precedes gameplay decision |
-| 10.4 | Zhang Fei atlas and animation preview | P0 | High | 10.3 | Genuine idle/walk/attack1–3/hurt/dead frames; measured metadata; preview feet stable; no formal Stage integration | player assets/tool/preview/tests | Source frames incomplete or identity drift |
+| 10.4 | Zhang Fei atlas and animation preview — Completed 2026-07-30 | P0 | High | 10.3 | Genuine idle/walk/attack1–3/hurt/dead frames; measured metadata; preview feet stable; no formal Stage integration | player assets/tool/preview/tests | Source frames incomplete or identity drift |
 | 10.5 | Zhang Fei combat prototype | P0 | High | 10.4 | Development-only comparison proves distinct commitment/reward without becoming dominant; existing combat contracts pass | player config/prototype/tests/report | Balance is only HP/damage |
 | 10.6 | Phaser character select and formal integration | P0 | High | 10.5 | Title selects exactly Guan Yu/Zhang Fei; either completes/fails/retries/replays existing Stage; React owns no selection | Title/player/MainScene/tests | Selection lifecycle or stale actor |
 | 10.7 | Second Vertical Slice acceptance | P0 | High | 10.6 | Two-character full QA at three viewports; 10 reset paths; performance/packaging/routes pass; no Critical/High defect | QA/release docs/tests | Asset memory or mobile readability |
@@ -633,7 +633,26 @@ runtime Player, Enemy, Boss, Stage, Camera, UI, Audio, selection, and packaging
 remain unchanged. Validation passed 155/155 tests, typecheck, and lint with zero
 errors/eight existing warnings.
 
-**Next:** M10 / Task 10.4 — Zhang Fei Atlas and Animation Preview.
+### M10 / Task 10.4 — Zhang Fei Atlas and Animation Preview (Completed 2026-07-30)
+
+**Result:** Produced 47 distinct right-facing poses for the approved heavy,
+planted Zhang Fei identity with the Zhangba serpent spear (丈八蛇矛): idle 6,
+walk 8, attack1/2/3 6/7/10, hurt 4, and dead 6. No transform interpolation or
+duplicated-frame substitute is used.
+
+**Geometry and QA:** One reproducible tool builds a 4032×3584 atlas from
+non-uniform source rows into 672×448 cells with feet `(336,420)`, origin
+`(0.5,0.9375)`, one source scale, and display scale `0.64`. Metadata records
+source rectangles, alpha bounds, offsets, phases, facing, hashes, and
+ImageGen/chroma provenance. Red-box/feet-line, per-state onion, lineup,
+25%-silhouette, palette, and identity outputs are committed.
+
+**Preview boundary:** `?previewZhangFei=1` is development-only and provides
+state/frame stepping, 2/4/6/8/10 FPS, once/loop, onion skin, fixed feet line,
+and the required metadata readout. Zhang Fei v2 is not in the production
+manifest, formal Title selection, Stage runtime, or production package.
+
+**Next:** M10 / Task 10.5 — Zhang Fei Combat Prototype.
 
 ## Task Status Update — 2026-07-12
 

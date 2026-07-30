@@ -1382,3 +1382,29 @@ The only next task is M10 / Task 10.4 — Zhang Fei Atlas and Animation Preview.
 It may produce the contracted source derivatives, atlas, metadata, QA sheets,
 and development-only preview, but may not formally integrate Zhang Fei into
 the Stage or Title selection.
+
+## M10 / Task 10.4 — Zhang Fei Atlas and Animation Preview — 2026-07-30
+
+Status: completed.
+
+- [x] Produced 47 genuine right-facing poses with the approved heavy Zhang Fei
+  identity and Zhangba serpent spear (丈八蛇矛).
+- [x] Built one 4032×3584 atlas with 672×448 cells, feet `(336,420)`, origin
+  `(0.5,0.9375)`, one source scale, and display scale `0.64`.
+- [x] Recorded non-uniform source rectangles, alpha bounds, offsets, phases,
+  facing, unique pixel hashes, prompts, source hashes, and chroma provenance.
+- [x] Produced red-box/feet-line, per-state onion, lineup, 25% silhouette,
+  palette, and identity QA outputs.
+- [x] Added the isolated `?previewZhangFei=1` development preview with state and
+  frame stepping, 2/4/6/8/10 FPS, once/loop, onion skin, and metadata readout.
+- [x] Kept the production manifest, formal selection, Stage, gameplay tuning,
+  Enemy, Boss, Camera, UI, and Audio unchanged.
+- [x] Passed 159/159 tests, typecheck, lint with zero errors/eight existing
+  warnings, both production builds, and unchanged 52-file packaged inventory.
+- [x] Desktop browser preview passed with one Canvas, fixed feet metadata,
+  readable controls, no overflow, and zero captured runtime errors; responsive
+  FIT contracts for 844×390 and 390×844 remain green.
+
+The only next task is M10 / Task 10.5 — Zhang Fei Combat Prototype. It may
+compare the accepted heavy-warrior hypothesis in development, but it may not
+formally integrate Zhang Fei into Title selection or the production Stage.

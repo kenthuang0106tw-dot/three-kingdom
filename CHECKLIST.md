@@ -1503,3 +1503,19 @@
 | Automated gates | Pass | 155/155 tests, typecheck, lint 0 errors/8 existing warnings |
 | Runtime scope | Pass | Documentation/tests only; no generated/edited art, runtime asset, animation, selection, or gameplay change |
 | Next task | Selected | M10 / Task 10.4 — Zhang Fei Atlas and Animation Preview |
+
+## M10 / Task 10.4 — Zhang Fei Atlas and Animation Preview — 2026-07-30
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Frame budget | Pass | 47 unique frames: 6/8/6/7/10/4/6 |
+| Weapon | Pass | Zhangba serpent spear (丈八蛇矛), complete long shaft and sinuous spearhead |
+| Geometry | Pass | 672×448, feet `(336,420)`, origin `(0.5,0.9375)`, display scale `0.64` |
+| Metadata | Pass | Source rectangles, alpha bounds, offsets, phases, facing, hashes, provenance |
+| QA | Pass | Red-box/feet-line, onion, lineup, silhouette, palette, identity outputs |
+| Preview | Pass | Dev-only state/frame/FPS/loop/onion controls and metadata readout |
+| Production isolation | Pass | No v2 manifest, formal selection, Stage actor, or packaged runtime asset |
+| Automated gates | Pass | 159/159, typecheck, lint 0 errors/8 existing warnings, both builds |
+| Packaging | Pass | Existing 52-file runtime inventory; Zhang Fei v2 source/QA excluded |
+| Browser | Pass | Desktop one Canvas/no overflow/no error; mobile FIT contract unchanged |
+| Next task | Selected | M10 / Task 10.5 — Zhang Fei Combat Prototype |

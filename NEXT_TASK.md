@@ -1,74 +1,67 @@
-# NEXT_TASK
+# NEXT TASK
 
-## M10 / Task 10.4 — Zhang Fei Atlas and Animation Preview
+## M10 / Task 10.5 — Zhang Fei Combat Prototype
 
-### Why this is next
+### Why this task
 
-Task 10.3 accepted Zhang Fei's gameplay hypothesis, immutable visual identity,
-47-frame production budget, and atlas/feet/scale contract. The next risk is
-whether genuine serpent-spear poses can meet that contract without crop,
-identity, continuity, or mobile-readability failure. This must be proven in an
-isolated preview before any gameplay comparison or formal character selection.
+Task 10.4 now provides the approved 47-frame Zhang Fei atlas, measured metadata,
+fixed feet/origin/scale contract, reproducible QA outputs, and an isolated
+development preview. The next unresolved risk is gameplay: whether the accepted
+heavy spear-controller hypothesis creates a real decision beside Guan Yu
+without becoming the universally safer or stronger answer.
 
 ### Completion conditions
 
-- Follow `docs/planning/m10-zhang-fei-production-contract.md` exactly; open the
-  approved concept reference and written identity lock before production.
-- Produce 47 genuine poses only: idle 6, walk 8, attack1 6, attack2 7,
-  attack3 10, hurt 4, and dead 6.
-- Give every attack its contracted startup/active/recovery pose count and a
-  continuous serpent-spear arc, hand placement, weight transfer, and facing.
-- Build a reproducible 672×448-cell atlas with 6 columns, feet `(336,420)`,
-  origin `(0.5,0.9375)`, single scale target `0.64`, measured alpha bounds,
-  source rectangles, offsets, phase/facing data, provenance, and unique frame
-  hashes.
-- Produce red-box, common feet-line, 2 FPS onion-skin, native-size lineup,
-  25% silhouette, palette/identity, and atlas metadata QA outputs.
-- Add a development-only Zhang Fei animation preview with previous/next frame,
-  play/pause, 2/4/6/8/10 FPS, once/loop, onion skin, state selection, fixed
-  feet line, and the required metadata readout.
-- Verify the preview at Desktop, 844×390, and 390×844.
-- Keep the existing Guan Yu runtime and production manifest unchanged.
-- Update Asset Pipeline, Roadmap, Sprint, Checklist, Technical Debt, and
-  focused tests only as required by the accepted output.
-- Do not implement Zhang Fei gameplay values, character selection, formal
-  Stage integration, Enemy/Boss changes, or any new system.
+- Add a development-only Zhang Fei player definition and comparison entrance.
+- Use only the accepted Task 10.3 values: speed `200`, HP `10`, body `96×58`,
+  longer actor-level attack hitbox, and the documented phase/impact values.
+- Map the approved Task 10.4 poses to genuine Phaser animations without
+  transforms, duplicated frames, per-state scale, or feet correction.
+- Preserve one-button, one-stage-per-input, hit-confirm-only combo progression,
+  per-target hit-once, independent hitbox, Hurt/Dead, Pause, Hit Stop, reset,
+  Enemy/Boss, Camera, Stage, UI, and Audio contracts.
+- Run five paired Guan Yu/Zhang Fei trials in Forest Entry, Forest Ambush, and
+  the Boss arena using the fixed scenarios and metrics in the production
+  contract.
+- Produce raw results, medians, and an explicit Accept / Adjust / Reject
+  decision. Subjective feel alone cannot pass.
+- Keep Zhang Fei out of formal Title selection and the production asset
+  manifest until Task 10.5 is accepted.
+- Pass focused tests, the full suite, typecheck, lint, both builds, production
+  packaging isolation, and Desktop/844×390/390×844 comparison smoke.
 
-### Acceptance and validation
+### Acceptance
 
-- All 47 frames are distinct genuine poses and preserve one approved identity.
-- No body, beard, cloth, spear shaft, or spear tip is clipped or contaminated
-  by a neighboring frame.
-- Feet stay on the contracted ground line; dead remains grounded; hurt has no
-  fake launch; adjacent idle/walk body-top variation stays within tolerance.
-- At 25% zoom, Zhang Fei is distinguishable from Guan Yu, Mauler, and Boss by
-  silhouette rather than color alone.
-- Every attack reads startup, active, and recovery and has a continuous weapon
-  path at 2 FPS without transform interpolation.
-- Preview metadata matches the generated atlas exactly and survives all three
-  viewport checks without overflow or unreadable controls.
-- Contract tests prove no Zhang Fei production registration, actor
-  instantiation, selection, or gameplay tuning was added.
-- `pnpm test`, `pnpm typecheck`, `pnpm lint`, `pnpm build`, and
-  `pnpm build:github-pages` pass.
+- Zhang Fei reads as a committed space controller, not a Guan Yu recolor.
+- Neither general has both lower median damage taken and lower median clear
+  time in all three contexts.
+- Zhang Fei's reach/displacement creates useful spacing decisions but does not
+  produce permanent safety, passive waiting, or unconditional dominance.
+- His longer startup/recovery remains readable and punishable on all three
+  viewports.
+- Guan Yu's frozen presentation and gameplay values remain exact.
+- No Enemy, Boss, Stage, Camera, UI, Audio, encounter, or input tuning changes.
+- Reset leaves one Player actor, one input owner, no stale definition, no
+  listener/timer leak, and one Canvas.
 
 ### Expected files
 
-- `public/art/zhangfei-v2/` source, atlas, metadata, and QA outputs.
-- One reproducible Zhang Fei art/atlas build tool.
-- Development-only preview wiring in the existing Phaser preview surface.
-- `ASSET_PIPELINE.md`
-- `GAME_ROADMAP.md`
-- `SPRINT.md`
-- `CHECKLIST.md`
-- `TECH_DEBT.md`
-- Focused asset/preview contract tests.
+- A Zhang Fei development-only `PlayerDefinition` and animation metadata.
+- Minimum comparison selection/entrance wiring isolated from formal Title flow.
+- Focused prototype and regression tests.
+- One M10.5 comparison report with raw trials, medians, and decision.
+- `GAME_ROADMAP.md`, `SPRINT.md`, `CHECKLIST.md`, `TECH_DEBT.md`, and
+  `NEXT_TASK.md` at closeout.
 
 ### Risks
 
-- Generated poses drift from the approved heavy-warrior identity.
-- The serpent spear is cropped, changes length, or jumps between frames.
-- Feet alignment is achieved by state-specific scale instead of metadata.
-- Sparse source motion is disguised with transforms or duplicated frames.
-- The 4032×3584 atlas or preview is unreadable on mobile.
-- Preview work leaks into formal runtime registration or Task 10.5 balance.
+- Weapon reach makes Zhang Fei unconditionally safer rather than more committed.
+- Longer animation frames do not map cleanly to the frozen timing hypothesis.
+- Development comparison wiring leaks into production selection or packaging.
+- Balance is explained only by damage/HP instead of spacing and commitment.
+- Guan Yu or shared combat lifecycle regresses while adding the second
+  definition.
+
+Do not implement formal character selection, Stage integration, Zhao Yun,
+second Stage content, new enemies/Boss, skills, progression, new input, or
+Audio in this task.

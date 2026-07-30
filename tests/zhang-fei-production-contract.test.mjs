@@ -13,7 +13,7 @@ test("Zhang Fei production contract freezes identity, frames, geometry, and prot
 
   assert.match(contract, /Japanese arcade-realistic Three Kingdoms heavy\s+warrior/);
   assert.match(contract, /thick dark beard/);
-  assert.match(contract, /serpent spear/);
+  assert.match(contract, /Zhangba serpent spear \(丈八蛇矛\)/);
   assert.match(contract, /no Guan Yu recolor/);
   assert.match(contract, /exactly 47 distinct approved poses/);
   assert.match(contract, /idle \| 6/);
@@ -46,13 +46,10 @@ test("legacy Zhang Fei inputs remain exact feasibility references", async () => 
     ["public/art/zhangfei/zhangfei-combo.png", "EE22EF7D5D75F976BDFB6E12B94B4F48CD8C939DFF4B4DC072362280C0AAB124"],
     ["public/art/zhangfei/zhangfei-combo-source.png", "229239B7944C3F4C3825C052583DFC7DB5DBC1EBFE09FDFECA4B384D8A651D5E"],
   ]);
-
-  for (const [path, hash] of expected) {
-    assert.equal(await sha256(path), hash, path);
-  }
+  for (const [path, hash] of expected) assert.equal(await sha256(path), hash, path);
 });
 
-test("Task 10.3 remains planning-only and selects only Task 10.4", async () => {
+test("Task 10.4 keeps production runtime frozen and selects only Task 10.5", async () => {
   const [nextTask, manifest, mainScene, playerDefinition, roadmap] = await Promise.all([
     readText("NEXT_TASK.md"),
     readText("app/game/assets/AssetManifest.ts"),
@@ -61,11 +58,12 @@ test("Task 10.3 remains planning-only and selects only Task 10.4", async () => {
     readText("GAME_ROADMAP.md"),
   ]);
 
-  assert.match(nextTask, /M10 \/ Task 10\.4 — Zhang Fei Atlas and Animation Preview/);
-  assert.match(nextTask, /Do not implement Zhang Fei gameplay values, character selection, formal\s+Stage integration/);
+  assert.match(nextTask, /M10 \/ Task 10\.5 — Zhang Fei Combat Prototype/);
+  assert.match(nextTask, /Do not implement formal character selection, Stage integration/);
   assert.doesNotMatch(manifest, /zhang[-_]?fei|zhangfei/i);
-  assert.doesNotMatch(mainScene, /zhang[-_]?fei|zhangfei/i);
+  assert.match(mainScene, /previewZhangFei/);
+  assert.match(mainScene, /process\.env\.NODE_ENV !== "production"/);
   assert.doesNotMatch(playerDefinition, /zhang[-_]?fei|zhangfei/i);
-  assert.match(roadmap, /10\.3 \| Zhang Fei gameplay and production contract — Completed 2026-07-30/);
-  assert.match(roadmap, /\*\*Next:\*\* M10 \/ Task 10\.4 — Zhang Fei Atlas and Animation Preview/);
+  assert.match(roadmap, /10\.4 \| Zhang Fei atlas and animation preview — Completed 2026-07-30/);
+  assert.match(roadmap, /\*\*Next:\*\* M10 \/ Task 10\.5 — Zhang Fei Combat Prototype/);
 });

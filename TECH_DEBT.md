@@ -789,7 +789,7 @@ fail.
   contract, but must not grow this seam into a skill, equipment, progression,
   or arbitrary-character framework.
 
-## TD-M10.3 — Legacy Zhang Fei art is incomplete and provenance-limited
+## TD-M10.3 Resolved — Legacy Zhang Fei art is incomplete and provenance-limited
 
 - **Severity:** High for Task 10.4 production; no current runtime defect.
 - **Evidence:** The six legacy files contain one master pose, four walk-like
@@ -803,7 +803,10 @@ fail.
   the assets only as concept/feasibility input, and forbids runtime promotion.
   Task 10.4 must create a provenance-tracked 47-frame atlas and pass preview QA
   before any gameplay comparison.
-- **Resolution condition:** Genuine serpent-spear frames, reproducible atlas
-  metadata, unique frame hashes, red-box/feet-line/onion/silhouette evidence,
-  and all three viewport previews pass. Formal runtime integration remains a
-  later task.
+- **Resolved:** 2026-07-30, M10 / Task 10.4.
+- **Resolution:** A provenance-tracked 47-frame Zhang Fei v2 atlas now uses the
+  explicit Zhangba serpent spear (丈八蛇矛), measured non-uniform source
+  rectangles, one feet/origin/scale contract, unique hashes, reproducible
+  builder, and complete visual QA. It remains development-preview-only.
+- **Remaining boundary:** Task 10.5 must prove the gameplay hypothesis before
+  formal runtime integration; the production manifest remains unchanged.

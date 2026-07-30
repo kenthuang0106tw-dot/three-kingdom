@@ -113,6 +113,29 @@ startup／active／recovery，active index 與 gameplay timing 未更動。
 - Source／metadata／QA：`public/art/effects/source/combat-effects-source.png`、`combat-effects.atlas.json`、`combat-effects-debug.png`；由 `tools/build_effects_ui_art.py` 重建。
 - 尚缺 slash trail、death impact、environment break effects；這些不屬於 6A.5。
 
+### Player — Zhang Fei v2 (M10 / Task 10.4, development preview)
+
+| Item | Value |
+|---|---|
+| Runtime status | Development preview only; absent from production manifest |
+| Atlas | `public/art/zhangfei-v2/zhangfei-v2.png` |
+| Frames | 47: idle 6, walk 8, attack1 6, attack2 7, attack3 10, hurt 4, dead 6 |
+| Cell / layout | 672×448, 6×8, atlas 4032×3584 |
+| Feet / origin | `(336,420)` / `(0.5,0.9375)` |
+| Display scale | `0.64` |
+| Weapon | Zhangba serpent spear (丈八蛇矛); long shaft, sinuous symmetric spearhead |
+| Metadata | `zhangfei-v2.atlas.json`, `zhangfei-v2.metadata.json` |
+| QA | debug/feet-line, per-state onion, native lineup, 25% silhouette, palette, identity |
+| Rebuild tool | `tools/build_zhangfei_v2_art.py` |
+| Preview | `?previewZhangFei=1` in development only |
+
+Source images are project-bound OpenAI built-in ImageGen outputs generated on a
+chroma background, extracted with the bundled `remove_chroma_key.py`, and kept
+under `public/art/zhangfei-v2/source/`. Metadata records prompts, source hashes,
+non-uniform source rectangles, global source scale, offsets, phases, facing,
+and per-frame pixel hashes. Task 10.5 may consume the preview atlas only for an
+isolated comparison; production registration waits for Task 10.6.
+
 ### Boss — Indigo Warlord Attacks (M5 / Task 5.2)
 
 | Item | Value |

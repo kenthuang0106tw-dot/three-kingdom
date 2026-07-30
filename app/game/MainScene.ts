@@ -6,7 +6,7 @@ import { LifecycleClock } from "./time/LifecycleClock";
 import { PhaserGameplayClock, SeededRandom } from "./time/GameplayTime";
 import { GameplayEventHub, type GameplaySnapshot } from "./events/GameplayEvents";
 import { StageCompletionGate } from "./events/StageCompletion";
-import { createAssetFailureReporter, queueRuntimeAssets } from "./assets/AssetManifest";
+import { createAssetFailureReporter, queueRuntimeAssets, resolveRuntimeAssetUrl } from "./assets/AssetManifest";
 import { PlayerStateMachine, type PlayerState } from "./player/PlayerStateMachine";
 import { PlayerLifecycle } from "./player/PlayerLifecycle";
 import { PlayerActor } from "./player/PlayerActor";
@@ -42,6 +42,16 @@ type PreviewFrame = {
   name: string; x: number; y: number; width: number; height: number;
   originY: number; offsetX: number; offsetY: number; classification: string;
 };
+type ZhangFeiPreviewFrame = {
+  name: string; animation: string; animationFrame: number; phase: string;
+  sourceRect: { x: number; y: number; width: number; height: number };
+  alphaBounds: { x: number; y: number; width: number; height: number };
+  displayOffset: { x: number; y: number };
+  feetAnchor: { x: number; y: number };
+  origin: { x: number; y: number };
+  displayScale: number; pixelHash: string;
+};
+type ZhangFeiPreviewMetadata = { frames: ZhangFeiPreviewFrame[] };
 
 const VIEWPORT_WIDTH = 1280;
 const VIEWPORT_HEIGHT = 720;
@@ -188,6 +198,7 @@ export default class MainScene extends Phaser.Scene {
   private performanceProfileStarted = false;
   private performanceSampler?: PerformanceSampler;
   private previewMode = false;
+  private zhangFeiPreviewMode = false;
   private shieldGuardTestMode?: "A" | "B";
   private crossbowTestMode?: "A" | "B";
   private shieldCrossbowTestMode = false;
@@ -234,6 +245,7 @@ export default class MainScene extends Phaser.Scene {
   private onionSprite?: Phaser.GameObjects.Sprite;
   private previewText?: Phaser.GameObjects.Text;
   private previewKeys?: Record<"left" | "right" | "play" | "slower" | "faster" | "loop" | "onion", Phaser.Input.Keyboard.Key>;
+  private zhangFeiPreviewKeys?: Record<"left" | "right" | "statePrevious" | "stateNext" | "play" | "slower" | "faster" | "loop" | "onion", Phaser.Input.Keyboard.Key>;
   private previewIndex = 0;
   private previewFpsIndex = 3;
   private readonly previewSpeeds = [2, 4, 6, 8, 10];
@@ -241,6 +253,8 @@ export default class MainScene extends Phaser.Scene {
   private previewLoop = false;
   private onionEnabled = false;
   private nextPreviewFrameAt = 0;
+  private zhangFeiPreviewStateIndex = 0;
+  private readonly zhangFeiPreviewStates = ["idle", "walk", "attack1", "attack2", "attack3", "hurt", "dead"];
   private enemyPreviewSprite?: Phaser.GameObjects.Sprite;
   private enemyPreviewText?: Phaser.GameObjects.Text;
   private enemyPreviewKeys?: Record<"left" | "right" | "up" | "down", Phaser.Input.Keyboard.Key>;
@@ -263,6 +277,17 @@ export default class MainScene extends Phaser.Scene {
   preload() {
     queueRuntimeAssets(this.load);
     if (process.env.NODE_ENV !== "production") {
+      if (new URLSearchParams(window.location.search).get("previewZhangFei") === "1") {
+        this.load.atlas(
+          "zhangfei-v2-preview",
+          resolveRuntimeAssetUrl("/art/zhangfei-v2/zhangfei-v2.png"),
+          resolveRuntimeAssetUrl("/art/zhangfei-v2/zhangfei-v2.atlas.json"),
+        );
+        this.load.json(
+          "zhangfei-v2-preview-metadata",
+          resolveRuntimeAssetUrl("/art/zhangfei-v2/zhangfei-v2.metadata.json"),
+        );
+      }
       const reportFailure = createAssetFailureReporter();
       this.assetFailureListener = (file: Phaser.Loader.File) => reportFailure(file.key);
       this.load.on("loaderror", this.assetFailureListener);
@@ -287,6 +312,7 @@ export default class MainScene extends Phaser.Scene {
       this.enemyPreviewIndex = frameIndex < 0 ? 0 : frameIndex;
     }
     this.previewMode = development && query.get("previewAttack") === "1";
+    this.zhangFeiPreviewMode = development && query.get("previewZhangFei") === "1";
     const shieldGuardTest = query.get("shieldGuardTest")?.toUpperCase();
     this.shieldGuardTestMode = development && (shieldGuardTest === "A" || shieldGuardTest === "B") ? shieldGuardTest : undefined;
     const crossbowTest = query.get("crossbowTest")?.toUpperCase();
@@ -378,6 +404,7 @@ export default class MainScene extends Phaser.Scene {
     this.previousBossEntryPosition = { x: START_X, y: START_FOOT_Y };
     this.bossActor = undefined;
     this.defeatedText = undefined;
+    if (this.zhangFeiPreviewMode) { this.createZhangFeiPreviewMode(); return; }
     if (this.enemyPreviewMode) { this.createEnemyAlignmentPreview(); return; }
     if (this.previewMode) { this.createPreviewMode(); return; }
 
@@ -551,6 +578,7 @@ export default class MainScene extends Phaser.Scene {
 
   update() {
     this.updatePerformanceProfileMetrics();
+    if (this.zhangFeiPreviewMode) { this.updateZhangFeiPreviewMode(); return; }
     if (this.enemyPreviewMode) { this.updateEnemyAlignmentPreview(); return; }
     if (this.previewMode) { this.updatePreviewMode(); return; }
     this.updateVisualFreezeMetrics();
@@ -1714,6 +1742,109 @@ export default class MainScene extends Phaser.Scene {
     else if (next === "walk") this.playerActor.playWalk();
     else if (next === "hurt") this.playerActor.playHurt();
     else if (next === "dead") this.playerActor.playDead();
+  }
+
+  private get zhangFeiPreviewFrames() {
+    const metadata = this.cache.json.get("zhangfei-v2-preview-metadata") as ZhangFeiPreviewMetadata | undefined;
+    if (!metadata || metadata.frames.length !== 47) throw new Error("Zhang Fei preview metadata is unavailable or incomplete");
+    return metadata.frames;
+  }
+
+  private get selectedZhangFeiFrames() {
+    const state = this.zhangFeiPreviewStates[this.zhangFeiPreviewStateIndex];
+    return this.zhangFeiPreviewFrames.filter(frame => frame.animation === state);
+  }
+
+  private createZhangFeiPreviewMode() {
+    this.cameras.main.setBackgroundColor("#101512");
+    const keyboard = this.input.keyboard;
+    if (!keyboard) throw new Error("Keyboard input is unavailable");
+    this.zhangFeiPreviewKeys = keyboard.addKeys({
+      left: "LEFT", right: "RIGHT", statePrevious: "A", stateNext: "D", play: "SPACE",
+      slower: "DOWN", faster: "UP", loop: "L", onion: "O",
+    }) as typeof this.zhangFeiPreviewKeys;
+    const groundY = 600;
+    const guide = this.add.graphics().setDepth(20);
+    guide.lineStyle(2, 0x00ffff, 1).lineBetween(80, groundY, VIEWPORT_WIDTH - 80, groundY);
+    guide.fillStyle(0xffff00, 1).fillCircle(VIEWPORT_WIDTH / 2, groundY, 5);
+    this.onionSprite = this.add.sprite(VIEWPORT_WIDTH / 2, groundY, "zhangfei-v2-preview", "idle-0")
+      .setOrigin(0.5, 0.9375).setScale(0.64).setAlpha(0.3).setTint(0x69cfff).setVisible(false);
+    this.previewSprite = this.add.sprite(VIEWPORT_WIDTH / 2, groundY, "zhangfei-v2-preview", "idle-0")
+      .setOrigin(0.5, 0.9375).setScale(0.64);
+    this.previewText = this.add.text(24, 22, "", {
+      fontFamily: "Consolas, monospace", fontSize: "17px", color: "#fff",
+      backgroundColor: "rgba(0,0,0,.82)", padding: { x: 12, y: 10 }, lineSpacing: 2,
+    }).setDepth(100);
+    this.previewIndex = 0;
+    this.showZhangFeiPreviewFrame(0);
+  }
+
+  private updateZhangFeiPreviewMode() {
+    const keys = this.zhangFeiPreviewKeys!;
+    if (Phaser.Input.Keyboard.JustDown(keys.left)) { this.previewPlaying = false; this.showZhangFeiPreviewFrame(this.previewIndex - 1); }
+    if (Phaser.Input.Keyboard.JustDown(keys.right)) { this.previewPlaying = false; this.showZhangFeiPreviewFrame(this.previewIndex + 1); }
+    if (Phaser.Input.Keyboard.JustDown(keys.statePrevious)) this.changeZhangFeiPreviewState(-1);
+    if (Phaser.Input.Keyboard.JustDown(keys.stateNext)) this.changeZhangFeiPreviewState(1);
+    if (Phaser.Input.Keyboard.JustDown(keys.slower)) { this.previewFpsIndex = Math.max(0, this.previewFpsIndex - 1); this.refreshZhangFeiPreviewText(); }
+    if (Phaser.Input.Keyboard.JustDown(keys.faster)) { this.previewFpsIndex = Math.min(this.previewSpeeds.length - 1, this.previewFpsIndex + 1); this.refreshZhangFeiPreviewText(); }
+    if (Phaser.Input.Keyboard.JustDown(keys.loop)) { this.previewLoop = !this.previewLoop; this.refreshZhangFeiPreviewText(); }
+    if (Phaser.Input.Keyboard.JustDown(keys.onion)) { this.onionEnabled = !this.onionEnabled; this.showZhangFeiPreviewFrame(this.previewIndex); }
+    if (Phaser.Input.Keyboard.JustDown(keys.play)) {
+      this.previewPlaying = !this.previewPlaying;
+      this.nextPreviewFrameAt = this.time.now + 1000 / this.previewSpeeds[this.previewFpsIndex];
+      this.refreshZhangFeiPreviewText();
+    }
+    if (this.previewPlaying && this.time.now >= this.nextPreviewFrameAt) {
+      const frames = this.selectedZhangFeiFrames;
+      if (this.previewIndex === frames.length - 1 && !this.previewLoop) {
+        this.previewPlaying = false;
+        this.refreshZhangFeiPreviewText();
+      } else {
+        this.showZhangFeiPreviewFrame((this.previewIndex + 1) % frames.length);
+        this.nextPreviewFrameAt += 1000 / this.previewSpeeds[this.previewFpsIndex];
+      }
+    }
+  }
+
+  private changeZhangFeiPreviewState(direction: number) {
+    this.zhangFeiPreviewStateIndex = Phaser.Math.Wrap(
+      this.zhangFeiPreviewStateIndex + direction, 0, this.zhangFeiPreviewStates.length,
+    );
+    this.previewPlaying = false;
+    this.showZhangFeiPreviewFrame(0);
+  }
+
+  private showZhangFeiPreviewFrame(index: number) {
+    const frames = this.selectedZhangFeiFrames;
+    this.previewIndex = Phaser.Math.Wrap(index, 0, frames.length);
+    const frame = frames[this.previewIndex];
+    const previous = frames[Phaser.Math.Wrap(this.previewIndex - 1, 0, frames.length)];
+    this.previewSprite!.setFrame(frame.name).setPosition(VIEWPORT_WIDTH / 2, 600);
+    this.onionSprite!.setFrame(previous.name).setPosition(VIEWPORT_WIDTH / 2, 600).setVisible(this.onionEnabled);
+    this.game.canvas.dataset.zhangFeiPreviewState = frame.animation;
+    this.game.canvas.dataset.zhangFeiPreviewFrame = frame.name;
+    this.game.canvas.dataset.zhangFeiPreviewFps = String(this.previewSpeeds[this.previewFpsIndex]);
+    this.game.canvas.dataset.zhangFeiPreviewFeetY = String(frame.feetAnchor.y);
+    this.refreshZhangFeiPreviewText();
+  }
+
+  private refreshZhangFeiPreviewText() {
+    const frames = this.selectedZhangFeiFrames;
+    const frame = frames[this.previewIndex];
+    this.previewText!.setText([
+      "ZHANG FEI ANIMATION PREVIEW (DEV ONLY)",
+      `state: ${frame.animation}  frame: ${frame.animationFrame} / ${frames.length - 1}`,
+      `name: ${frame.name}  phase: ${frame.phase}`,
+      `source: ${frame.sourceRect.x}, ${frame.sourceRect.y}, ${frame.sourceRect.width}, ${frame.sourceRect.height}`,
+      `alpha: ${frame.alphaBounds.x}, ${frame.alphaBounds.y}, ${frame.alphaBounds.width}, ${frame.alphaBounds.height}`,
+      `origin: ${frame.origin.x}, ${frame.origin.y}`,
+      `offset: ${frame.displayOffset.x}, ${frame.displayOffset.y}  scale: ${frame.displayScale}`,
+      `feet: ${frame.feetAnchor.x}, ${frame.feetAnchor.y}  hash: ${frame.pixelHash.slice(0, 12)}`,
+      `speed: ${this.previewSpeeds[this.previewFpsIndex]} FPS  play: ${this.previewPlaying}  loop: ${this.previewLoop}  onion: ${this.onionEnabled}`,
+      "",
+      "A/D state | Left/Right frame | Space play/pause",
+      "Up/Down FPS | L once/loop | O onion-skin",
+    ]);
   }
 
   private createEnemyAlignmentPreview() {
