@@ -440,7 +440,7 @@ assets remain 200 and unaffected.
 |---|---|---:|---:|---|---|---|---|
 | 9.1 | Production route/hosting verification — Completed 2026-07-30 | P0 | High | M8 | HTML/JS/atlas/PNG/audio 全為 200 | hosting tests/config | Vinext asset path |
 | 9.2 | Release candidate/versioning — Completed 2026-07-30 | P0 | Medium | 9.1 | immutable build、version、changelog | release files | build 不可重現 |
-| 9.3 | Platform acceptance | P0 | High | 9.2 | Desktop Chrome/Edge、Android Chrome、iOS Safari 各完整通關三次 | checklist | 裝置差異 |
+| 9.3 | Platform acceptance — Completed 2026-07-30 with owner metadata waiver | P0 | High | 9.2 | Desktop Chrome/Edge、Android Chrome、iOS Safari 各完整通關三次 | checklist | 裝置差異 |
 | 9.4 | Rollback drill | P0 | Low | 9.2 | 可在 15 分鐘內回退上一版 | release docs | artifact retention |
 | 9.5 | Release and defect triage | P0 | Medium | 9.3, 9.4 | 無 Critical/High defect；問題進 Backlog | release/backlog | 發布後 scope 膨脹 |
 
@@ -486,6 +486,25 @@ runtime JSON/XML only. Gameplay, asset content, balance, art, Stage, Camera,
 Audio, control, and UI behavior did not change.
 
 **Next:** M9 / Task 9.3 — Platform Acceptance.
+
+### M9 / Task 9.3 — Platform Acceptance (Completed 2026-07-30)
+
+**Status:** Accepted by the project owner against `v0.1.0-rc.2`.
+
+**Evidence:** The project owner reported successful acceptance after receiving
+the Android Chrome and iOS Safari completion flow. RC2 packaging/routes,
+149/149 tests, typecheck, lint, both production builds, public byte comparison,
+and one-Canvas production smoke had already passed. M8.7 also completed the
+full Stage and Boss flow in all three target viewports without captured runtime
+errors. No Critical or High defect was reported.
+
+**Owner waiver:** Exact device model, OS version, browser version, and
+individual nine-run records were requested but not supplied. The owner
+explicitly instructed the Technical Lead to finish without them. These values
+remain unavailable and are not inferred. The waiver applies only to evidence
+metadata, not to runtime, build, route, rollback, or severity gates.
+
+**Next:** M9 / Task 9.4 — Rollback Drill.
 
 ## Task Status Update — 2026-07-12
 

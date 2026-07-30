@@ -1238,3 +1238,20 @@ rollback, final release, deployment, or gameplay changes in the same task.
 
 The only next task remains M9 / Task 9.3 — Platform Acceptance, now against
 `v0.1.0-rc.2`.
+
+## M9 / Task 9.3 — Platform Acceptance — 2026-07-30
+
+Status: completed with project-owner metadata waiver.
+
+- [x] Project owner reported successful acceptance against the immutable RC2.
+- [x] No Critical or High defect was reported.
+- [x] RC2 automated, route, build, public-byte, and production-smoke evidence
+  remains valid.
+- [x] Exact device/OS/browser versions and individual run logs were not
+  supplied and were not fabricated.
+- [x] Project owner explicitly waived the missing metadata for this release.
+- [x] Gameplay, art, balance, Stage, Camera, Audio, input, and UI were not
+  changed.
+
+The only next task is M9 / Task 9.4 — Rollback Drill. Do not begin final release
+or gameplay work in the same task.

@@ -734,3 +734,15 @@ fail.
   regression asserts LF output, and the corrected Windows Pages output matched
   the public deployment 57/57 files.
 - **Disposition:** RC1 superseded; RC2 is the only platform-acceptance target.
+
+## TD-M9.3 — Physical device metadata evidence
+
+- **Severity:** Low evidence-quality gap; owner-waived for `0.1.0`.
+- **Evidence:** The project owner reported successful platform acceptance but
+  did not supply physical device model, OS version, browser version, or the
+  individual nine-run matrix.
+- **Disposition:** The owner explicitly instructed release completion without
+  those values. No values were inferred or fabricated. The waiver does not
+  apply to automated gates, public route checks, rollback, or defect severity.
+- **Future:** Capture exact device and browser metadata for the next release
+  candidate.

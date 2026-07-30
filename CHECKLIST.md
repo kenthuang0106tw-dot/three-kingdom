@@ -1404,3 +1404,16 @@
 | RC2 identity | Pass | `v0.1.0-rc.2` at `72bb680932f8ce95057e06f8e207f4ad4665e7bb` |
 | Scope | Pass | No gameplay, tuning, art content, Audio, Camera, Stage, input, or UI change |
 | Next task | Selected | M9 / Task 9.3 — Platform Acceptance against RC2 |
+
+## M9 / Task 9.3 — Platform Acceptance — 2026-07-30
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Candidate identity | Pass | `v0.1.0-rc.2` at `72bb680932f8ce95057e06f8e207f4ad4665e7bb` |
+| Owner acceptance | Pass | Project owner reported acceptance completed successfully |
+| Critical/High defects | Pass | 0 Critical; 0 High reported |
+| Automated support | Pass | 149/149, typecheck, lint, both builds, route checks, public-byte comparison, production smoke |
+| Three-viewport support | Pass | M8.7 completed the formal Stage/Boss flow at desktop, 844×390, and 390×844 |
+| Device metadata | Owner waiver | Exact model/OS/browser versions and individual nine-run records were not supplied and were not inferred |
+| Scope | Pass | Documentation only; no production or gameplay change |
+| Next task | Selected | M9 / Task 9.4 — Rollback Drill |

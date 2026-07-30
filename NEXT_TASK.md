@@ -1,47 +1,41 @@
 # NEXT_TASK
 
-## M9 / Task 9.3 — Platform Acceptance
+## M9 / Task 9.4 — Rollback Drill
 
 ### Why this is next
 
-M9.2 fixed one immutable `0.1.0-rc.2` source, build identity, runtime inventory,
-and reproducible output evidence. The remaining release risk is physical
-browser/device behavior; it must be measured against this exact RC before any
-rollback drill or final release.
+M9.3 is accepted against the immutable RC2. Before final release, the deployed
+site must prove that a previous tagged version can replace the current version
+and that RC2 can then be restored without changing source.
 
 ### Completion conditions
 
-- Test the exact `v0.1.0-rc.2` source without production changes.
-- Record device model, OS version, browser name/version, viewport/orientation,
-  and RC identity for every run.
-- Complete three full Title → two encounters → Boss → Result clears on:
-  - Desktop Chrome or Edge.
-  - Android Chrome.
-  - iOS Safari.
-- Verify touch/keyboard input as applicable, Audio unlock, Pause/resume,
-  visibility recovery, orientation/resize, Failure/Retry, and Result/Replay.
-- Record defects and evidence; any RC-changing fix invalidates the candidate and
-  returns work to M9.2.
-- Do not begin rollback, deployment, final release, or gameplay work.
+- Push the immutable RC1 and RC2 tags to the release remote.
+- Deploy the previous `v0.1.0-rc.1` tag through the production Pages workflow.
+- Confirm the public route is healthy after rollback.
+- Restore `v0.1.0-rc.2` through the same workflow.
+- Confirm required public routes and the one-Canvas production surface.
+- Record workflow IDs, timestamps, elapsed rollback time, and restoration.
+- Complete the rollback within 15 minutes.
+- Do not change gameplay, art, balance, Stage, Camera, Audio, input, or UI.
 
 ### Acceptance and validation
 
-- All nine complete clears use the exact documented RC.
-- No Critical or High defect and no runtime error.
-- One intrinsic 1280×720 Canvas; no debug presentation or page overflow.
-- Required assets/routes continue to load from the accepted production target.
-- Evidence names real device/OS/browser versions; do not infer missing data.
+- The previous tag deploys successfully.
+- The public target remains reachable and required routes return 200.
+- Rollback completes within 15 minutes.
+- RC2 restore deploys successfully and becomes the final public target.
+- No retained workflow, artifact, or source ambiguity remains.
 
 ### Expected files
 
-- Platform acceptance report and device/run matrix.
+- Rollback drill report.
 - Checklist, Sprint, Technical Debt, Roadmap, and NEXT_TASK closeout updates.
-- No production code, gameplay, art, configuration, or runtime asset changes.
+- No production code or asset changes.
 
 ### Risks
 
-- Physical iOS/Android devices or exact browser versions may be unavailable.
-- Mobile Audio, visibility, safe-area, and orientation behavior can differ from
-  emulation.
-- A discovered defect may invalidate `0.1.0-rc.2`; do not patch it inside this
-  acceptance-only task.
+- GitHub Pages deployment queue time could exceed the 15-minute budget.
+- A remote tag or workflow permission problem could block dispatch.
+- A successful workflow without public propagation must not be counted as a
+  completed rollback.
