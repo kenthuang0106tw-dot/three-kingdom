@@ -1896,7 +1896,7 @@ test("enemy redesign tasks retain the approved prototype lock after all five pro
 test("the release closeouts identify one accepted runtime and one post-release task", async () => {
   const [visualReport, accessibilityReport, stageReport, qaReport, hostingReport,
     rcReport, rcNotes, rcManifest, platformReport, rollbackReport, releaseNotes,
-    releaseManifest, nextTask] = await Promise.all([
+    releaseManifest, m10Scope, nextTask] = await Promise.all([
     readFile(new URL("../docs/quality/m8-3-release-visual-defect-pass.md", import.meta.url), "utf8"),
     readFile(new URL("../docs/quality/m8-6-accessibility-settings.md", import.meta.url), "utf8"),
     readFile(new URL("../docs/quality/m8-2c-five-enemy-stage.md", import.meta.url), "utf8"),
@@ -1909,6 +1909,7 @@ test("the release closeouts identify one accepted runtime and one post-release t
     readFile(new URL("../docs/release/m9-4-rollback-drill.md", import.meta.url), "utf8"),
     readFile(new URL("../release/0.1.0.md", import.meta.url), "utf8"),
     readFile(new URL("../release/0.1.0.manifest.json", import.meta.url), "utf8"),
+    readFile(new URL("../docs/planning/m10-second-vertical-slice-scope.md", import.meta.url), "utf8"),
     readFile(new URL("../NEXT_TASK.md", import.meta.url), "utf8"),
   ]);
 
@@ -1947,6 +1948,11 @@ test("the release closeouts identify one accepted runtime and one post-release t
   assert.match(releaseManifest, /"version": "0\.1\.0"/);
   assert.match(releaseManifest, /"tag": "v0\.1\.0"/);
   assert.match(releaseManifest, /72bb680932f8ce95057e06f8e207f4ad4665e7bb/);
-  assert.match(nextTask, /M10 \/ Task 10\.1 — Second Vertical Slice Scope Lock/);
-  assert.match(nextTask, /Do not implement gameplay, content, art, Audio, UI, Stage, or infrastructure/);
+  assert.match(m10Scope, /Zhang Fei a second playable general/);
+  assert.match(m10Scope, /Zhao Yun/);
+  assert.match(m10Scope, /A second Stage/);
+  assert.match(m10Scope, /Player Definition Boundary and Guan Yu Freeze/);
+  assert.match(nextTask, /M10 \/ Task 10\.2 — Player Definition Boundary and Guan Yu Freeze/);
+  assert.match(nextTask, /Keep Guan Yu as the only registered and instantiated runtime player/);
+  assert.match(nextTask, /Do not add Zhang Fei assets, animation keys, selection UI/);
 });

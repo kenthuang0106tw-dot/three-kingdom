@@ -1,19 +1,32 @@
-# Current Sprint — Game-Feel Timing
+# Current Sprint — Zhang Fei Second Playable Foundation
 
 ## Sprint Goal
 
-M8 / Task 8.4 已修正 production asset packaging，且未改動 frozen runtime 素材。下一步只規劃 M8 / Task 8.2，對既有完整 Vertical Slice 做有 before/after evidence 的 game-feel timing pass；不新增招式、敵人、素材或系統。
-
-Roadmap decision（2026-07-18）：6A.3 必須以 6A.2 已接受的 Guan Yu 比例、palette、feet anchor、capture 與 provenance contract 對齊；不可重新解釋 Art Bible 或更改 gameplay timing。
+完成第一個 `0.1.0` Vertical Slice 後，M10 只新增張飛作為第二名可玩
+武將，沿用現有三畫面關卡、五種敵人與 Boss。Sprint 先固定雙角色資料
+邊界與關羽 regression，再接受張飛 gameplay／identity contract；不可同時
+開第二關、趙雲、新敵人或成長系統。
 
 ## Cadence
 
-- Duration：2 weeks
-- Capacity：1 developer + AI，約 40–55 hours
-- Milestone：M8 — Content Polish and Performance
-- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M8 / 8.2 game-feel timing pass
+- Duration：3–4 weeks
+- Capacity：1 developer + AI，約 70–105 hours
+- Milestone：M10 — Zhang Fei Second Playable Vertical Slice
+- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M10 / 10.2
 
-## Task List
+## M10 Task List
+
+| Order | Task | Estimate | Deliverable | Verification |
+|---:|---|---:|---|---|
+| 1 | ✅ 10.1 — Second Vertical Slice scope lock | 4–6h | 張飛單一目標、排除範圍、依賴與驗收矩陣 | documents + release baseline revalidation |
+| 2 | 10.2 — Player Definition boundary and Guan Yu freeze | 8–12h | 最小雙角色 seam；runtime 仍只有關羽 | contracts + full Guan Yu regression |
+| 3 | 10.3 — Zhang Fei gameplay and production contract | 6–10h | 重型定位、identity、frame/atlas 與比較規格 | document/identity acceptance |
+| 4 | 10.4 — Zhang Fei atlas and animation preview | 24–36h | genuine frames、atlas、metadata、QA preview | asset/tests/three-viewport preview |
+| 5 | 10.5 — Zhang Fei combat prototype | 12–18h | development-only heavy-warrior prototype | before/after playtest + combat regression |
+| 6 | 10.6 — Character select and formal integration | 12–18h | Phaser Title 雙角色選擇與完整關卡 | two-character full flows |
+| 7 | 10.7 — Second Vertical Slice acceptance | 8–12h | QA、performance、packaging、release evidence | full gates + three viewports + resets |
+
+## Historical Task List
 
 | Order | Task | Estimate | Deliverable | Verification |
 |---:|---|---:|---|---|
@@ -1289,3 +1302,27 @@ Status: completed. Milestone 9 and the first Vertical Slice are released.
 
 The only next task is M10 / Task 10.1 — Second Vertical Slice Scope Lock. It is
 planning-only and must not implement a new character, Stage, enemy, or system.
+
+## M10 / Task 10.1 — Second Vertical Slice Scope Lock — 2026-07-30
+
+Status: completed.
+
+- [x] Selected one player-visible goal: Zhang Fei as the second playable
+  general in the existing released Stage.
+- [x] Preserved Guan Yu, five enemies, Boss, Stage, Camera, input, combat,
+  Audio, UI flow, mobile, performance, packaging, and rollback contracts.
+- [x] Excluded Zhao Yun, second Stage, new enemies/Boss, new input/skills,
+  progression, Audio production, backend, and multiplayer.
+- [x] Ordered 10.2–10.7 so the Player seam and gameplay/identity contract
+  precede production art and formal integration.
+- [x] Added a measurable desktop/mobile/reset/performance/production acceptance
+  matrix and rejection conditions.
+- [x] Revalidated the `0.1.0` baseline: 149/149, typecheck, lint 0 errors/eight
+  existing warnings, both builds, manifest, 54 public routes, and one
+  1280×720 Canvas with zero captured errors.
+- [x] Changed planning documents and their contract test only; no runtime,
+  gameplay, art, Audio, UI, Stage, or infrastructure change.
+
+The only next task is M10 / Task 10.2 — Player Definition Boundary and Guan Yu
+Freeze. Do not add Zhang Fei art, selection, prototype tuning, or formal Stage
+integration in that task.

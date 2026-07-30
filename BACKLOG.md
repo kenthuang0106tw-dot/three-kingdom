@@ -22,8 +22,8 @@
 
 ## P1 — Vertical Slice Quality
 
-- M10 / Task 10.1 — lock the second Vertical Slice scope before implementing
-  another playable character, Stage, enemy set, or gameplay system.
+- M10 / Tasks 10.2–10.7 — Zhang Fei second playable Vertical Slice in the
+  existing released Stage; scope is locked by Task 10.1.
 - Release operations follow-up: decide whether signed release tags should be
   permitted by the GitHub Pages environment.
 - Capture exact physical device/OS/browser metadata for the next release
@@ -40,9 +40,7 @@
 
 ## P2 — Post Vertical Slice
 
-- 張飛 playable integration。
 - 趙雲 playable integration。
-- Character select。
 - 第二關與新場景主題。
 - 更多近戰敵人。
 - 第二名 Boss。

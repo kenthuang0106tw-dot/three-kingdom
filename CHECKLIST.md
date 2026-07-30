@@ -1447,3 +1447,19 @@
 | Release | Pass | GitHub Release and final Pages deployment published |
 | Scope | Pass | Release/tests/docs only; production behavior unchanged |
 | Next task | Selected | M10 / Task 10.1 — Second Vertical Slice Scope Lock |
+
+## M10 / Task 10.1 — Second Vertical Slice Scope Lock — 2026-07-30
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Previous release | Pass | 149/149, typecheck, lint 0 errors/8 warnings, both builds, manifest, 54 routes |
+| Production smoke | Pass | One 1280×720 Canvas, no debug dataset, overflow, or captured error |
+| Single goal | Pass | Zhang Fei becomes the second playable general in the existing Stage |
+| Visible difference | Pass | Heavy serpent-spear identity and distinct commitment/reward are mandatory |
+| Strict exclusions | Pass | No Zhao Yun, Stage, enemy, Boss, skill/input, progression, Audio, backend, or multiplayer expansion |
+| Dependency order | Pass | Player seam → gameplay/identity contract → art preview → prototype → integration → QA |
+| Guan Yu freeze | Pass | Existing runtime is the regression oracle; 10.2 may not change accepted behavior |
+| Architecture | Pass | Phaser owns selection/gameplay; React remains lifecycle-only |
+| Acceptance matrix | Pass | Desktop/mobile/reset/performance/packaging/production gates defined |
+| Runtime scope | Pass | Planning docs and contract test only; no production behavior or asset change |
+| Next task | Selected | M10 / Task 10.2 — Player Definition Boundary and Guan Yu Freeze |

@@ -768,3 +768,17 @@ fail.
   GitHub Pages main-only deployment policy.
 - Disposition: none block `0.1.0`; all are documented and must not be hidden by
   unrelated post-release feature work.
+
+## TD-M10.1 — Guan Yu identity is hard-coded across Player composition
+
+- **Severity:** High for a second playable actor; no `0.1.0` runtime defect.
+- **Evidence:** `MainScene`, `PlayerActor`, `PlayerAttackController`,
+  `GuanYuAnimationMetadata`, asset registration, animation keys, and focused
+  tests directly name Guan Yu.
+- **Risk:** Adding Zhang Fei with conditionals would create parallel animation,
+  combat, and lifecycle paths and make Guan Yu regressions difficult to detect.
+- **Resolution boundary:** Task 10.2 introduces the minimum definition seam for
+  the two known players and routes Guan Yu through it with exact behavior
+  regression. It must not register Zhang Fei, add selection, or build a generic
+  skill/character framework.
+- **Target:** M10 / Task 10.2.

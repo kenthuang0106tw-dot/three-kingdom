@@ -1,47 +1,56 @@
 # NEXT_TASK
 
-## M10 / Task 10.1 — Second Vertical Slice Scope Lock
+## M10 / Task 10.2 — Player Definition Boundary and Guan Yu Freeze
 
 ### Why this is next
 
-Version `0.1.0` completes the first public Vertical Slice. The backlog now
-contains several large, competing directions: another playable general, a
-second Stage, more content, and release-operations improvements. Implementing
-one without first fixing the next playable goal would recreate cross-milestone
-scope drift and expensive rework.
+The accepted runtime directly names Guan Yu across `MainScene`, `PlayerActor`,
+`PlayerAttackController`, animation metadata, asset loading, and tests. Adding
+Zhang Fei on top of those hard-coded paths would duplicate state/combat logic
+or scatter identity conditionals. One second real consumer now justifies a
+small definition seam before any Zhang Fei art or gameplay is integrated.
 
 ### Completion conditions
 
-- Review owner feedback from `0.1.0` and the existing P1/P2 backlog.
-- Select exactly one player-visible goal for the second Vertical Slice.
-- Define strict included and excluded scope.
-- Order its minimum dependencies and tasks.
-- Give every task measurable acceptance criteria and expected files.
-- Identify which existing contracts must remain unchanged.
-- Select exactly one implementation task as the next NEXT_TASK.
-- Do not implement gameplay, content, art, Audio, UI, Stage, or infrastructure.
+- Record Guan Yu's current texture, animation keys/frames, feet/origin/scale,
+  body, movement, lifecycle, attack timing, damage, knockback, and Hit Stop as
+  focused regression expectations.
+- Add one typed `PlayerDefinition` shape containing only differences required
+  by the two known players.
+- Express Guan Yu as one immutable definition.
+- Make `PlayerActor`, `PlayerAttackController`, animation registration, and
+  Scene player construction consume that definition.
+- Keep Guan Yu as the only registered and instantiated runtime player.
+- Preserve all Guan Yu pixels, animation frame order, timing, movement, HP,
+  combo, hitbox, damage, effects, Audio events, and full Stage behavior.
+- Do not add Zhang Fei assets, animation keys, selection UI, prototype tuning,
+  or runtime branches.
+- Do not change Enemy, Boss, Stage, Camera, flow, input, Audio, React, or UI.
 
 ### Acceptance and validation
 
-- The selected increment is playable and demonstrably different from `0.1.0`.
-- It can be delivered without simultaneously adding a new character, Stage,
-  enemy family, and progression system.
-- Dependencies prevent art from preceding accepted gameplay contracts.
-- Mobile, reset, Pause, performance, production, and rollback regressions have
-  explicit acceptance coverage.
-- The project owner can accept or reject the scope before implementation.
+- Focused tests prove every accepted Guan Yu gameplay and presentation value is
+  unchanged through the definition.
+- No production source outside the minimum Player/MainScene composition path
+  changes.
+- `pnpm test`, `pnpm typecheck`, `pnpm lint`, `pnpm build`, and
+  `pnpm build:github-pages` pass.
+- Desktop, 844×390, and 390×844 retain one 1280×720 Canvas, Guan Yu movement,
+  all three attacks, Pause, and no captured runtime error.
+- Production runtime inventory and GitHub Pages routes remain valid.
 
 ### Expected files
 
-- `GAME_ROADMAP.md`
-- `BACKLOG.md`
-- `SPRINT.md`
-- `NEXT_TASK.md`
-- Planning/checklist documents only.
+- `app/game/player/PlayerDefinition.ts`
+- `app/game/player/GuanYuAnimationMetadata.ts`
+- `app/game/player/PlayerActor.ts`
+- `app/game/player/PlayerAttackController.ts`
+- `app/game/MainScene.ts`
+- Focused contract tests and closeout documents.
 
 ### Risks
 
-- Choosing several visible features instead of one coherent slice.
-- Starting production art before gameplay acceptance.
-- Treating release-operation debt as a gameplay blocker.
-- Expanding the first post-release task into implementation.
+- Moving values changes Guan Yu timing or feet alignment.
+- The definition grows into a speculative skill/equipment framework.
+- Global Phaser animation registration accidentally duplicates keys.
+- Zhang Fei scope leaks into a behavior-preserving foundation task.

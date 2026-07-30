@@ -20,7 +20,7 @@
 | React boundary | Correct | `PhaserGame.tsx` 建立／銷毀唯一 instance |
 | Player | Playable prototype | 關羽移動、idle、walk、attack1–3、hurt |
 | Combat | Playable prototype | Combo、獨立 hitbox、multi-hit、Hit Stop、Flash、Spark、Knockback、Shake |
-| Enemy | Playable prototype | 三種近戰小兵、混合 Formation、Attack Slot、hurt/dead/cleanup |
+| Enemy | Released vertical slice | 五種正式敵人、混合 Formation、單一 Attack Slot、hurt/dead/cleanup |
 | Boss | Playable prototype | locomotion、對線、attack hitbox、player damage、death cleanup 與 arena lifecycle 已接入 |
 | Stage | Playable vertical slice | 3840×720 三畫面世界、兩場 encounter、Boss 進場與 terminal flow 已完成 |
 | Camera | Stable vertical slice | bounded integer follow、encounter/Boss locks 與 encounter-clear 連續 handoff 已接入 |
@@ -63,7 +63,7 @@
 - 不因只有一個 Scene 就先拆完整 BootScene／UIScene 架構；第二個真實 lifecycle 出現時才拆。
 - Object pooling 只在 profiling 證明 GC spike 後實作。
 - 通用 Enemy archetype framework 等第二種敵人開始接入時再抽。
-- 張飛、趙雲、裝備、成長、多人維持 Post-Vertical-Slice backlog。
+- M10 只提升張飛為第二名可玩角色；趙雲、裝備、成長、多人維持後續 backlog。
 
 ### Coupling risks to control
 
@@ -546,19 +546,44 @@ gameplay, art, balance, Stage, Camera, Audio, input, or UI behavior changed.
 
 ---
 
-## Milestone 10 — Second Vertical Slice Scope
+## Milestone 10 — Zhang Fei Second Playable Vertical Slice
 
-**Playable Result:** Not yet scheduled. M10 begins with a scope decision, not
-implementation.
+**Playable Result:** 玩家可在 Phaser Title 選擇關羽或張飛，並以任一武將完成
+既有三畫面竹林、兩場 encounter、Boss、Failure/Retry 與 Result/Replay。
 
-**Goal:** Select one coherent post-release playable increment without mixing a
-new character, Stage, enemies, and systems into the same milestone.
+**Goal:** 增加一名戰術與視覺都不同的可玩張飛；沿用已發布的關卡與系統，
+不混入第二關、新敵人、新 Boss 或成長系統。
 
 **Dependencies:** M9 accepted.
 
 | ID | Description | Priority | Difficulty | Dependencies | Acceptance Criteria | Expected Files | Risk |
 |---|---|---:|---:|---|---|---|---|
-| 10.1 | Second Vertical Slice scope lock | P1 | Medium | M9 | One player-visible goal, strict exclusions, dependency order, acceptance matrix, and one implementation NEXT_TASK are approved | roadmap/backlog/sprint | Scope expansion immediately after release |
+| 10.1 | Second Vertical Slice scope lock — Completed 2026-07-30 | P1 | Medium | M9 | One player-visible goal, strict exclusions, dependency order, acceptance matrix, and one implementation NEXT_TASK are approved | roadmap/backlog/sprint/planning | Scope expansion immediately after release |
+| 10.2 | Player Definition boundary and Guan Yu freeze | P0 | High | 10.1 | Two-known-player data seam exists; Guan Yu runtime values/behavior remain exact; no Zhang Fei runtime or selection yet | player definition/actor/attack/MainScene/tests | Generic framework or Guan Yu regression |
+| 10.3 | Zhang Fei gameplay and production contract | P0 | Medium | 10.2 | Heavy-warrior goal, comparison plan, approved identity, frame budget, feet/scale/atlas rules are accepted before production | character production docs/asset plan | Art precedes gameplay decision |
+| 10.4 | Zhang Fei atlas and animation preview | P0 | High | 10.3 | Genuine idle/walk/attack1–3/hurt/dead frames; measured metadata; preview feet stable; no formal Stage integration | player assets/tool/preview/tests | Source frames incomplete or identity drift |
+| 10.5 | Zhang Fei combat prototype | P0 | High | 10.4 | Development-only comparison proves distinct commitment/reward without becoming dominant; existing combat contracts pass | player config/prototype/tests/report | Balance is only HP/damage |
+| 10.6 | Phaser character select and formal integration | P0 | High | 10.5 | Title selects exactly Guan Yu/Zhang Fei; either completes/fails/retries/replays existing Stage; React owns no selection | Title/player/MainScene/tests | Selection lifecycle or stale actor |
+| 10.7 | Second Vertical Slice acceptance | P0 | High | 10.6 | Two-character full QA at three viewports; 10 reset paths; performance/packaging/routes pass; no Critical/High defect | QA/release docs/tests | Asset memory or mobile readability |
+
+### M10 / Task 10.1 — Second Vertical Slice Scope Lock (Completed 2026-07-30)
+
+**Decision:** The second Vertical Slice adds Zhang Fei as the second playable
+general in the existing released Stage. This advances the original three-general
+product requirement while reusing the accepted enemies, Boss, Stage, Camera,
+flow, mobile, Audio, and release contracts.
+
+**Boundary:** M10 includes one minimal two-player definition seam, Zhang Fei's
+heavy-warrior gameplay/visual production contract, genuine animation pipeline,
+an isolated combat prototype, Phaser Title selection, formal integration, and
+full QA. Zhao Yun, a second Stage, new enemies/Boss, new inputs/skills, Audio,
+progression, backend, and multiplayer remain excluded.
+
+**Dependency rule:** 10.2 freezes Guan Yu behind the minimum second-player seam;
+10.3 accepts gameplay and identity contracts before 10.4 art production; only
+an accepted 10.5 prototype may enter the formal Stage in 10.6.
+
+**Next:** M10 / Task 10.2 — Player Definition Boundary and Guan Yu Freeze.
 
 ## Task Status Update — 2026-07-12
 
@@ -892,6 +917,6 @@ coarse-pointer evidence remains a Low M8.7 follow-up rather than a claimed pass.
 
 ## 5. Required Development Order
 
-`M0 Baseline → M1 Runtime Contracts → M2 Combat Room → M3 Stage Contracts → M4 Enemy Variety → M5 Boss Contracts → M5R Vertical Slice Recovery → M6 Product Flow (complete) → M6A Visual Upgrade (complete/frozen) → M7 Audio → M8 Polish → M9 Release`
+`M0 Baseline → M1 Runtime Contracts → M2 Combat Room → M3 Stage Contracts → M4 Enemy Variety → M5 Boss Contracts → M5R Vertical Slice Recovery → M6 Product Flow (complete) → M6A Visual Upgrade (complete/frozen) → M7 Audio → M8 Polish → M9 Release → M10 Zhang Fei Second Playable`
 
 不得跳過 M3 先擴敵人內容；不得跳過 M1/M2 直接加入 Stage 或 Boss。
