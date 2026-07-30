@@ -1893,13 +1893,17 @@ test("enemy redesign tasks retain the approved prototype lock after all five pro
   assert.match(prototypeContract, /Crossbow \| Go \(ER\.6\)/);
 });
 
-test("the release QA and hosting closeouts advance only to versioning", async () => {
-  const [visualReport, accessibilityReport, stageReport, qaReport, hostingReport, nextTask] = await Promise.all([
+test("the release closeouts identify one RC and advance only to platform acceptance", async () => {
+  const [visualReport, accessibilityReport, stageReport, qaReport, hostingReport,
+    rcReport, rcNotes, rcManifest, nextTask] = await Promise.all([
     readFile(new URL("../docs/quality/m8-3-release-visual-defect-pass.md", import.meta.url), "utf8"),
     readFile(new URL("../docs/quality/m8-6-accessibility-settings.md", import.meta.url), "utf8"),
     readFile(new URL("../docs/quality/m8-2c-five-enemy-stage.md", import.meta.url), "utf8"),
     readFile(new URL("../docs/quality/m8-7-full-qa-matrix.md", import.meta.url), "utf8"),
     readFile(new URL("../docs/quality/m9-1-production-hosting.md", import.meta.url), "utf8"),
+    readFile(new URL("../docs/quality/m9-2-release-candidate.md", import.meta.url), "utf8"),
+    readFile(new URL("../release/0.1.0-rc.1.md", import.meta.url), "utf8"),
+    readFile(new URL("../release/0.1.0-rc.1.manifest.json", import.meta.url), "utf8"),
     readFile(new URL("../NEXT_TASK.md", import.meta.url), "utf8"),
   ]);
 
@@ -1922,7 +1926,14 @@ test("the release QA and hosting closeouts advance only to versioning", async ()
   assert.match(hostingReport, /54\/54 deployed routes passed/);
   assert.match(hostingReport, /b07bd03ae9a4061f6bd1124bee0d5aad3a161c15/);
   assert.match(hostingReport, /explicitly waived/);
-  assert.match(nextTask, /M9 \/ Task 9\.2 — Release Candidate and Versioning/);
-  assert.match(nextTask, /immutable build identity and version/);
-  assert.match(nextTask, /Do not begin platform acceptance, rollback, or final release/);
+  assert.match(rcReport, /Status: Accepted/);
+  assert.match(rcReport, /0\.1\.0-rc\.1/);
+  assert.match(rcReport, /149\/149/);
+  assert.match(rcNotes, /not the final release/);
+  assert.match(rcNotes, /not claimed as deployed/);
+  assert.match(rcManifest, /b16c7398f37f78d1493cebbb1fbaf38a4e43a805/);
+  assert.match(rcManifest, /reproducibleTreeSha256/);
+  assert.match(nextTask, /M9 \/ Task 9\.3 — Platform Acceptance/);
+  assert.match(nextTask, /three full Title → two encounters → Boss → Result clears/);
+  assert.match(nextTask, /Do not begin rollback, deployment, final release, or gameplay work/);
 });

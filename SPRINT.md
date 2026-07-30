@@ -1205,3 +1205,22 @@ Status: completed.
 The only next task is M9 / Task 9.2 — Release Candidate and Versioning. Do not
 start platform acceptance, rollback, release, or gameplay work in the same
 task.
+
+## M9 / Task 9.2 — Release Candidate and Versioning — 2026-07-30
+
+Status: completed.
+
+- [x] Selected `0.1.0-rc.1` / `v0.1.0-rc.1` at immutable source
+  `b16c7398f37f78d1493cebbb1fbaf38a4e43a805`.
+- [x] Recorded exact environment, build commands, both output hashes, and the
+  complete 52-file production runtime inventory.
+- [x] Verified two consecutive builds using declared reproducible hashes;
+  GitHub Pages raw output also matched exactly.
+- [x] Preserved Vinext's exact artifact hash while declaring normalization of
+  only generated build UUIDs and prerender secret.
+- [x] Passed 149/149 tests, typecheck, lint, both builds, route verification,
+  and one-Canvas production smoke with zero captured errors.
+- [x] Changed no production input or gameplay/runtime behavior.
+
+The only next task is M9 / Task 9.3 — Platform Acceptance. Do not begin
+rollback, final release, deployment, or gameplay changes in the same task.

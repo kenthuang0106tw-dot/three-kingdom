@@ -1376,3 +1376,19 @@
 | Favicon | Waived — Low | Optional user-site root is outside repository base and required inventory |
 | Scope | Pass | Tests/tooling/docs only; no runtime asset or gameplay change |
 | Next task | Selected | M9 / Task 9.2 — Release Candidate and Versioning |
+
+## M9 / Task 9.2 — Release Candidate and Versioning — 2026-07-30
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Previous task | Pass | M9.1 focused route tests 2/2; public routes 54/54 |
+| Immutable identity | Pass | `0.1.0-rc.1`, `v0.1.0-rc.1`, source `b16c7398f37f78d1493cebbb1fbaf38a4e43a805` |
+| Runtime inventory | Pass | Both outputs preserve the same 52 required files |
+| Rebuild | Pass | Two consecutive builds match reproducible hashes |
+| Vinext generated entropy | Declared | Raw artifact retained; only UUIDs and prerender secret normalized for comparison |
+| GitHub Pages reproducibility | Pass | Raw and reproducible hash `6d2f37d2cffd7bc1f4e2373190a1cde278392090714a330ed2b66589a2a4096a` |
+| Automated gates | Pass | 149/149, typecheck, lint 0 errors/8 existing warnings, both builds |
+| Production smoke | Pass | One 1280×720 Canvas, no overflow/debug dataset/runtime error |
+| Known issue | Waived — Low | Optional root `/favicon.ico`; required routes pass |
+| Scope | Pass | Release tooling/tests/docs only; production inputs unchanged |
+| Next task | Selected | M9 / Task 9.3 — Platform Acceptance |

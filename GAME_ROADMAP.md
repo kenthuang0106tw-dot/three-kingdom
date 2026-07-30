@@ -439,7 +439,7 @@ assets remain 200 and unaffected.
 | ID | Description | Priority | Difficulty | Dependencies | Acceptance Criteria | Expected Files | Risk |
 |---|---|---:|---:|---|---|---|---|
 | 9.1 | Production route/hosting verification — Completed 2026-07-30 | P0 | High | M8 | HTML/JS/atlas/PNG/audio 全為 200 | hosting tests/config | Vinext asset path |
-| 9.2 | Release candidate/versioning | P0 | Medium | 9.1 | immutable build、version、changelog | release files | build 不可重現 |
+| 9.2 | Release candidate/versioning — Completed 2026-07-30 | P0 | Medium | 9.1 | immutable build、version、changelog | release files | build 不可重現 |
 | 9.3 | Platform acceptance | P0 | High | 9.2 | Desktop Chrome/Edge、Android Chrome、iOS Safari 各完整通關三次 | checklist | 裝置差異 |
 | 9.4 | Rollback drill | P0 | Low | 9.2 | 可在 15 分鐘內回退上一版 | release docs | artifact retention |
 | 9.5 | Release and defect triage | P0 | Medium | 9.3, 9.4 | 無 Critical/High defect；問題進 Backlog | release/backlog | 發布後 scope 膨脹 |
@@ -464,6 +464,25 @@ repository deployment owns `/three-kingdom/`; it is outside the required
 runtime inventory and has no gameplay or loading impact.
 
 **Next:** M9 / Task 9.2 — Release Candidate and Versioning.
+
+### M9 / Task 9.2 — Release Candidate and Versioning (Completed 2026-07-30)
+
+**Status:** Completed.
+
+**Evidence:** Version `0.1.0-rc.1`, tag `v0.1.0-rc.1`, and immutable source
+commit `b16c7398f37f78d1493cebbb1fbaf38a4e43a805` identify one RC. Both Vinext and
+GitHub Pages outputs preserve the same 52-file runtime inventory. Two
+consecutive builds matched reproducible tree hashes; the GitHub Pages raw tree
+also matched exactly. Vinext's generated build UUIDs and prerender secret are
+retained in the exact artifact hash and explicitly normalized only for the
+rebuild comparison. Full tests, typecheck, lint, both builds, M9.1 route
+verification, and a production one-Canvas/no-error smoke passed.
+
+**Scope:** Release tooling, manifest, notes, tests, and planning documents only.
+No production input, runtime asset, gameplay, balance, art, Stage, Camera,
+Audio, control, or UI behavior changed.
+
+**Next:** M9 / Task 9.3 — Platform Acceptance.
 
 ## Task Status Update — 2026-07-12
 

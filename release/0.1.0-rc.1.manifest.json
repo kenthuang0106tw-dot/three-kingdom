@@ -1,0 +1,302 @@
+{
+  "schemaVersion": 1,
+  "version": "0.1.0-rc.1",
+  "source": {
+    "commit": "b16c7398f37f78d1493cebbb1fbaf38a4e43a805",
+    "tag": "v0.1.0-rc.1",
+    "productionInputsMatch": true
+  },
+  "environment": {
+    "node": "v24.14.0",
+    "packageManager": "pnpm@11.7.0"
+  },
+  "buildCommands": [
+    "pnpm install --frozen-lockfile --ignore-scripts",
+    "pnpm build",
+    "pnpm build:github-pages"
+  ],
+  "reproducibility": {
+    "requiredMatchingBuilds": 2,
+    "comparison": "reproducibleTreeSha256",
+    "normalization": [
+      "vinext generated build UUIDs in dist/server/index.js",
+      "vinext generated prerenderSecret in dist/server/**/vinext-server.json"
+    ]
+  },
+  "outputs": {
+    "vinext": {
+      "fileCount": 92,
+      "totalBytes": 28192974,
+      "treeSha256": "0dc45dc52a1029ff1f68f820cb0e3ede48daa298960e22333e89c9cb68b47516",
+      "reproducibleTreeSha256": "15ff99b525f0205b5e3d65a5e25343b1c9186e62766170154e6bb7f7682c8f31"
+    },
+    "githubPages": {
+      "fileCount": 57,
+      "totalBytes": 20110980,
+      "treeSha256": "6d2f37d2cffd7bc1f4e2373190a1cde278392090714a330ed2b66589a2a4096a",
+      "reproducibleTreeSha256": "6d2f37d2cffd7bc1f4e2373190a1cde278392090714a330ed2b66589a2a4096a"
+    }
+  },
+  "runtimeInventory": [
+    {
+      "path": "art/boss/warlord-attacks.atlas.json",
+      "bytes": 4137,
+      "sha256": "2729515523f0abc992398418a43319464bfda7451a1f7b2028ca0128ece10f22"
+    },
+    {
+      "path": "art/boss/warlord-attacks.png",
+      "bytes": 772816,
+      "sha256": "0f4c91dfbd82635127afbe45a05a21dc6722042d976ade0c80fbd335c9a0b787"
+    },
+    {
+      "path": "art/boss/warlord-lifecycle.atlas.json",
+      "bytes": 6623,
+      "sha256": "3a5981408dfb4062ac2f036fac98869234e8ed1cc3032ddd66debb2f7db4bce8"
+    },
+    {
+      "path": "art/boss/warlord-lifecycle.png",
+      "bytes": 1108243,
+      "sha256": "3b8fbb10f89c8936f4de75e7bb004d6dbcc226a3ed6723f13f829196c97013ee"
+    },
+    {
+      "path": "art/effects/combat-effects.atlas.json",
+      "bytes": 5394,
+      "sha256": "9c66e2a817e0410966ef17d6aee26175d771b11b421062f65e2df6398b2ea2df"
+    },
+    {
+      "path": "art/effects/combat-effects.png",
+      "bytes": 70924,
+      "sha256": "333de3a8e15aa630394e33865cb57642a2386dc836deeefcf006b6bf11563406"
+    },
+    {
+      "path": "art/enemy/crossbow.atlas.json",
+      "bytes": 8985,
+      "sha256": "45be7209d88f9e1d9dab79abdb21253823983d6296774dfb9667849576da961e"
+    },
+    {
+      "path": "art/enemy/crossbow.png",
+      "bytes": 919858,
+      "sha256": "1b42b00ed4eca46dce7d8d0003796f09fbc2b77deff3622ecf5f9eec2e1e058f"
+    },
+    {
+      "path": "art/enemy/duelist-leap.atlas.json",
+      "bytes": 2019,
+      "sha256": "254a3e4d777dbbb722865b13cea09699502ac0980e05046b3b2a92ed5ef24b73"
+    },
+    {
+      "path": "art/enemy/duelist-leap.png",
+      "bytes": 212682,
+      "sha256": "a17fe8d2f7402ddeed0ac491aa4583784b2fb1bbe90c8e4443d2fefb57ff1407"
+    },
+    {
+      "path": "art/enemy/duelist.atlas.json",
+      "bytes": 6798,
+      "sha256": "2d74cc1f4cfe48eaff8ca10e42d0ff81a98b8e5634ebf70c5fd9f2b29180b16e"
+    },
+    {
+      "path": "art/enemy/duelist.png",
+      "bytes": 596977,
+      "sha256": "bb6e9a4d32b88f8ab9cf85b85137a8898e37720fcb704397fa6fcd2d1758a800"
+    },
+    {
+      "path": "art/enemy/enemy-soldier.atlas.json",
+      "bytes": 6804,
+      "sha256": "8b7f7329d29b43872a4b38848d24fd5790c2ceff9f6098d672f8411cce0ed6f6"
+    },
+    {
+      "path": "art/enemy/enemy-soldier.png",
+      "bytes": 494610,
+      "sha256": "def903d7eba85092eace7b2bdfd319dd9ff7c5aa18b13a60e688b0aa6b1f4762"
+    },
+    {
+      "path": "art/enemy/mauler.atlas.json",
+      "bytes": 7674,
+      "sha256": "2fcc17fdc62fa7deb756a599a9785710241bf59524bc404fead4b12a5db07800"
+    },
+    {
+      "path": "art/enemy/mauler.png",
+      "bytes": 782065,
+      "sha256": "a0d33e9240b10630db282a5fb9779551d4d7aab3c949d7636740d8e9a386618a"
+    },
+    {
+      "path": "art/enemy/shield-guard.atlas.json",
+      "bytes": 9443,
+      "sha256": "52a52125f7599e69ab732829c9ac86354ba7565ff09fe5bc0083333055efe7a1"
+    },
+    {
+      "path": "art/enemy/shield-guard.png",
+      "bytes": 1036202,
+      "sha256": "da8e5429b3bd0b5046c59b1824906e8d6ff8df9b0bfe2dcb89a284e8661b2118"
+    },
+    {
+      "path": "art/guanyu/guanyu-master.png",
+      "bytes": 1299009,
+      "sha256": "8ab5dad5e35b66ef50378cb9321d957507e02f867f8fb1fae8f28deb5508f6e4"
+    },
+    {
+      "path": "art/guanyu/guanyu-v2.atlas.json",
+      "bytes": 18597,
+      "sha256": "b60d4b67fcd4e315b613fdf8bceb4889302b05b038a094e87d44791dc98788f5"
+    },
+    {
+      "path": "art/guanyu/guanyu-v2.png",
+      "bytes": 2650371,
+      "sha256": "1aa1282ef112175e8ab09f0e7ceb6793b4236eaa775f6cc3d72f52d02786a136"
+    },
+    {
+      "path": "art/ui/dragon-pixel.png",
+      "bytes": 805,
+      "sha256": "537c18039ed73bd36abc4d61c578b14ead0251f1482748dfd7700974dedfcf20"
+    },
+    {
+      "path": "art/ui/dragon-pixel.xml",
+      "bytes": 4872,
+      "sha256": "82d81da65b833e503bd1d814c87da65a3c8c00ca7d38f3e10a718e11d8f457bc"
+    },
+    {
+      "path": "art/ui/ui-attack-frame.png",
+      "bytes": 15034,
+      "sha256": "548b898a8ab3940d88751a90e5852e6291c700be53b03d1beb5e7141ee96045d"
+    },
+    {
+      "path": "art/ui/ui-button-frame.png",
+      "bytes": 7143,
+      "sha256": "ee5eeac2359015f815a5c6540f660b30dcaa58fd15475f942d3c5cd58e62bb78"
+    },
+    {
+      "path": "art/ui/ui-hud-frame.png",
+      "bytes": 37051,
+      "sha256": "bc2e4f75c82fb224f9b8262acb7f5f26e1130f0c4464c59709799dd5624f1769"
+    },
+    {
+      "path": "art/ui/ui-joystick-base.png",
+      "bytes": 36019,
+      "sha256": "d8916b8840fe2edf303a142e6fde298b0129758dd3b6e1161e31edf3ab24d00d"
+    },
+    {
+      "path": "art/ui/ui-joystick-knob.png",
+      "bytes": 6364,
+      "sha256": "6424f0eddeaf1e128e7b4a57b95ba156401d89f2000db00efc28590325b4ec51"
+    },
+    {
+      "path": "art/ui/ui-modal-frame.png",
+      "bytes": 134877,
+      "sha256": "f65d8575ecef2dd71e4ae772ceab808d16daebfce42ac12444c05a66f05deb00"
+    },
+    {
+      "path": "art/zhangfei/zhangfei-master.png",
+      "bytes": 1237483,
+      "sha256": "6c713e121e2e777d0e049789ae6bd1b086c8b0e029fc3e5387a1a315c2f8fd58"
+    },
+    {
+      "path": "art/zhaoyun/zhaoyun-master.png",
+      "bytes": 1240128,
+      "sha256": "ffb69053d3a51ac8a7d2efcac270b03c116eb44c5636c85cb5b88e4e63703302"
+    },
+    {
+      "path": "audio/music/boss-warlord.wav",
+      "bytes": 588044,
+      "sha256": "23630fb4b5dac06aa46b602e03a6cde3d5e843000fbeb4d8a2410f1d06b00ba6"
+    },
+    {
+      "path": "audio/music/stage-bamboo.wav",
+      "bytes": 756044,
+      "sha256": "0d096d9c5d2ee2419ab7090079f9e192b4fbbe6d4b198d6158c036fb525ecc1b"
+    },
+    {
+      "path": "audio/sfx/enemy-death.wav",
+      "bytes": 18566,
+      "sha256": "793f38f34e7300ac5633f6ee7402f6892336e47e0d6d6d019c855d4caaadc347"
+    },
+    {
+      "path": "audio/sfx/hit-confirmed.wav",
+      "bytes": 6660,
+      "sha256": "adf6ffa05f8db038201fedf904f0d6cdefda323ec4252192aae4b4b80afb552c"
+    },
+    {
+      "path": "audio/sfx/player-attack.wav",
+      "bytes": 8424,
+      "sha256": "c2ed9a44c3eb4029444f11d91ef110d0ce1ca382f156638c3ef7149591ede931"
+    },
+    {
+      "path": "audio/sfx/player-hurt.wav",
+      "bytes": 10628,
+      "sha256": "b530ab8aeeaff984d3ecf0810ca5c3f1e5d86be4827f36cfe36bdfe9ed66f9a3"
+    },
+    {
+      "path": "audio/sfx/ui-confirm.wav",
+      "bytes": 4896,
+      "sha256": "64166ac5b306bc20d0506f8b0ba8b687e8b7e8f99d257a2494455cbb3cab9624"
+    },
+    {
+      "path": "audio/sfx/ui-failure.wav",
+      "bytes": 24300,
+      "sha256": "66588718664c9236b1f21ee7ec5c63f98eabec761d553f40be7e56f70e179056"
+    },
+    {
+      "path": "audio/sfx/ui-pause.wav",
+      "bytes": 7100,
+      "sha256": "b10b99317189d026355410a68b64b408363381db52f21bddddbd2cd3aa11c68d"
+    },
+    {
+      "path": "audio/sfx/ui-result.wav",
+      "bytes": 27386,
+      "sha256": "4393589b417cb88fcb777c96e6ded0dbb0aa46074725ddd1e338ba21c964ad16"
+    },
+    {
+      "path": "audio/sfx/ui-resume.wav",
+      "bytes": 7100,
+      "sha256": "64fc5ff34b9f750ed8bc2f4f180490c1b9a1fa3f3190bed1f8f7501955bb2b98"
+    },
+    {
+      "path": "audio/sfx/ui-start.wav",
+      "bytes": 11070,
+      "sha256": "db5f47628190ced8cf9ef1a7bb7609b33e81dfe7a46bca46bf4ca08d5343bacb"
+    },
+    {
+      "path": "scene/bamboo-stage/bamboo-boss-arena-background.png",
+      "bytes": 711773,
+      "sha256": "b6716e8d81e047326b8f88a69bcbcde6477503f9031075499af6dcbfc49ae388"
+    },
+    {
+      "path": "scene/bamboo-stage/bamboo-boss-arena-foreground.png",
+      "bytes": 68922,
+      "sha256": "f3d31b39f3a40e76e51893d62d061498d4c966b3003a1aec3c1904518f6b025a"
+    },
+    {
+      "path": "scene/bamboo-stage/bamboo-boss-arena-ground.png",
+      "bytes": 667998,
+      "sha256": "11f8f286d1c9c54ed5b6fa3675b87b4a8dc2d0a4bf58187f66ba7a8210975249"
+    },
+    {
+      "path": "scene/bamboo-stage/bamboo-forest-ambush-background.png",
+      "bytes": 717856,
+      "sha256": "b28e5f97194bc81d2cc121b07500ee5eb914ed10e23f830932cb9861e1cc50c4"
+    },
+    {
+      "path": "scene/bamboo-stage/bamboo-forest-ambush-foreground.png",
+      "bytes": 78889,
+      "sha256": "1fd5e06be5c9ea8ddfbda669b79679f543a5ebf9a071c71221af1e8fbdbe4d87"
+    },
+    {
+      "path": "scene/bamboo-stage/bamboo-forest-ambush-ground.png",
+      "bytes": 678603,
+      "sha256": "8c65eb6dfd27709d151393d19c5177a72d704d74ec6369000239a41e4f3c6eed"
+    },
+    {
+      "path": "scene/bamboo-stage/bamboo-forest-entry-background.png",
+      "bytes": 743234,
+      "sha256": "74f88d828e01569c7b558e8734074e62efa2c94c808b7c0c7edc2a02cfdd97f2"
+    },
+    {
+      "path": "scene/bamboo-stage/bamboo-forest-entry-foreground.png",
+      "bytes": 63378,
+      "sha256": "e554c958f60bd26aa41203cb8249534761748188aaa4c515cfff21e2de13f236"
+    },
+    {
+      "path": "scene/bamboo-stage/bamboo-forest-entry-ground.png",
+      "bytes": 646554,
+      "sha256": "1bbaa2c266626b4fa87e188acd9d10da0c76db3beb6abbee36ce70fcd00df1dd"
+    }
+  ]
+}

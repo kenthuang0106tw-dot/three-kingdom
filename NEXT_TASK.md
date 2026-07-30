@@ -1,46 +1,47 @@
 # NEXT_TASK
 
-## M9 / Task 9.2 — Release Candidate and Versioning
+## M9 / Task 9.3 — Platform Acceptance
 
 ### Why this is next
 
-M9.1 accepted the production route and hosting contract, identified the exact
-deployed commit, and verified the public repository base path. The project now
-needs one immutable, identifiable Release Candidate before platform acceptance
-or rollback testing can produce trustworthy evidence.
+M9.2 fixed one immutable `0.1.0-rc.1` source, build identity, runtime inventory,
+and reproducible output evidence. The remaining release risk is physical
+browser/device behavior; it must be measured against this exact RC before any
+rollback drill or final release.
 
 ### Completion conditions
 
-- Select one exact commit as the Release Candidate source.
-- Produce a reproducible immutable build identity and version.
-- Record the Release Candidate's source commit, build commands, artifact hashes,
-  production file inventory, and release notes.
-- Ensure the Vinext and GitHub Pages outputs correspond to the same source
-  revision and required runtime inventory.
-- Do not change gameplay, balance, art, animation, Stage, Camera, Audio, input,
-  or UI behavior.
-- Do not begin platform acceptance, rollback, or final release.
+- Test the exact `v0.1.0-rc.1` source without production changes.
+- Record device model, OS version, browser name/version, viewport/orientation,
+  and RC identity for every run.
+- Complete three full Title → two encounters → Boss → Result clears on:
+  - Desktop Chrome or Edge.
+  - Android Chrome.
+  - iOS Safari.
+- Verify touch/keyboard input as applicable, Audio unlock, Pause/resume,
+  visibility recovery, orientation/resize, Failure/Retry, and Result/Replay.
+- Record defects and evidence; any RC-changing fix invalidates the candidate and
+  returns work to M9.2.
+- Do not begin rollback, deployment, final release, or gameplay work.
 
 ### Acceptance and validation
 
-- `pnpm test`
-- `pnpm typecheck`
-- `pnpm lint`
-- `pnpm build`
-- `pnpm build:github-pages`
-- Rebuild comparison for the documented Release Candidate outputs.
-- Route/status/MIME verification retained from M9.1.
-- One-Canvas production smoke with no development presentation or runtime error.
+- All nine complete clears use the exact documented RC.
+- No Critical or High defect and no runtime error.
+- One intrinsic 1280×720 Canvas; no debug presentation or page overflow.
+- Required assets/routes continue to load from the accepted production target.
+- Evidence names real device/OS/browser versions; do not infer missing data.
 
 ### Expected files
 
-- Minimum version/build identity files.
-- Release Candidate manifest, hashes, and release notes.
-- Roadmap, Sprint, Checklist, Technical Debt, and NEXT_TASK closeout updates.
+- Platform acceptance report and device/run matrix.
+- Checklist, Sprint, Technical Debt, Roadmap, and NEXT_TASK closeout updates.
+- No production code, gameplay, art, configuration, or runtime asset changes.
 
 ### Risks
 
-- Generated filenames or timestamps may make the build non-reproducible.
-- Version metadata can diverge between Vinext and GitHub Pages outputs.
-- Scope can drift into platform acceptance, rollback, deployment, or final
-  release; those remain Tasks 9.3–9.5.
+- Physical iOS/Android devices or exact browser versions may be unavailable.
+- Mobile Audio, visibility, safe-area, and orientation behavior can differ from
+  emulation.
+- A discovered defect may invalidate `0.1.0-rc.1`; do not patch it inside this
+  acceptance-only task.

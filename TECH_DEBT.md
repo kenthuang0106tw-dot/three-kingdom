@@ -708,3 +708,17 @@ fail.
   shell inventory and does not affect gameplay or loading.
 - **Remaining:** Physical device/browser version evidence remains assigned to
   M9 / Task 9.3 Platform Acceptance.
+
+## TD-M9.2 — Vinext generated release entropy
+
+- **Severity:** Low and documented.
+- **Evidence:** Consecutive Vinext builds differ only in generated build UUIDs
+  embedded in `dist/server/index.js` and one generated prerender secret copied
+  to two `vinext-server.json` files. GitHub Pages reproduces byte-for-byte.
+- **Resolution:** The RC manifest preserves each exact artifact hash and uses a
+  second reproducible tree hash that normalizes only those declared generated
+  values. File count, byte count, production-input identity, and the full
+  52-file runtime inventory remain strict.
+- **Remaining:** Track upstream Vinext support for deterministic injected build
+  identity. This does not block M9.3 because the RC source and first artifact
+  hash are immutable and the normalization is explicit.
