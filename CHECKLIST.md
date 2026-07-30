@@ -1431,3 +1431,19 @@
 | Restored public routes | Pass | Document 200; 2 generated + 52 public routes |
 | Scope | Pass | Operations/docs only; no production source or asset change |
 | Next task | Selected | M9 / Task 9.5 — Release and Defect Triage |
+
+## M9 / Task 9.5 — Release and Defect Triage — 2026-07-30
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Dependencies | Pass | M9.3 accepted; M9.4 rollback/restore passed |
+| Final identity | Pass | `0.1.0`, `v0.1.0`, runtime source `72bb680932f8ce95057e06f8e207f4ad4665e7bb` |
+| Automated suite | Pass | 149/149 |
+| Type/lint/build | Pass | Typecheck; lint 0 errors/8 existing warnings; both builds |
+| Manifest | Pass | 52 runtime files; Pages hash `a8a1c63666bd7fd16c77d8ef6f50948d0d8ba705e1e8112091524d8be45ded75` |
+| Public routes | Pass | Document plus 2 generated + 52 public routes |
+| Production smoke | Pass | One intrinsic 1280×720 Canvas; no debug dataset, overflow, or captured error |
+| Defects | Pass | Critical 0; High 0; Low findings documented |
+| Release | Pass | GitHub Release and final Pages deployment published |
+| Scope | Pass | Release/tests/docs only; production behavior unchanged |
+| Next task | Selected | M10 / Task 10.1 — Second Vertical Slice Scope Lock |

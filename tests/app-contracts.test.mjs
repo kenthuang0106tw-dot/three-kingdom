@@ -1893,9 +1893,10 @@ test("enemy redesign tasks retain the approved prototype lock after all five pro
   assert.match(prototypeContract, /Crossbow \| Go \(ER\.6\)/);
 });
 
-test("the release closeouts identify one RC and advance only to platform acceptance", async () => {
+test("the release closeouts identify one accepted runtime and one post-release task", async () => {
   const [visualReport, accessibilityReport, stageReport, qaReport, hostingReport,
-    rcReport, rcNotes, rcManifest, nextTask] = await Promise.all([
+    rcReport, rcNotes, rcManifest, platformReport, rollbackReport, releaseNotes,
+    releaseManifest, nextTask] = await Promise.all([
     readFile(new URL("../docs/quality/m8-3-release-visual-defect-pass.md", import.meta.url), "utf8"),
     readFile(new URL("../docs/quality/m8-6-accessibility-settings.md", import.meta.url), "utf8"),
     readFile(new URL("../docs/quality/m8-2c-five-enemy-stage.md", import.meta.url), "utf8"),
@@ -1904,6 +1905,10 @@ test("the release closeouts identify one RC and advance only to platform accepta
     readFile(new URL("../docs/quality/m9-2-release-candidate.md", import.meta.url), "utf8"),
     readFile(new URL("../release/0.1.0-rc.2.md", import.meta.url), "utf8"),
     readFile(new URL("../release/0.1.0-rc.2.manifest.json", import.meta.url), "utf8"),
+    readFile(new URL("../docs/quality/m9-3-platform-acceptance.md", import.meta.url), "utf8"),
+    readFile(new URL("../docs/release/m9-4-rollback-drill.md", import.meta.url), "utf8"),
+    readFile(new URL("../release/0.1.0.md", import.meta.url), "utf8"),
+    readFile(new URL("../release/0.1.0.manifest.json", import.meta.url), "utf8"),
     readFile(new URL("../NEXT_TASK.md", import.meta.url), "utf8"),
   ]);
 
@@ -1933,7 +1938,15 @@ test("the release closeouts identify one RC and advance only to platform accepta
   assert.match(rcNotes, /not claimed as a new deployment/);
   assert.match(rcManifest, /72bb680932f8ce95057e06f8e207f4ad4665e7bb/);
   assert.match(rcManifest, /reproducibleTreeSha256/);
-  assert.match(nextTask, /M9 \/ Task 9\.3 — Platform Acceptance/);
-  assert.match(nextTask, /three full Title → two encounters → Boss → Result clears/);
-  assert.match(nextTask, /Do not begin rollback, deployment, final release, or gameplay work/);
+  assert.match(platformReport, /explicitly waived the missing metadata/);
+  assert.match(platformReport, /No Critical or High defect was reported/);
+  assert.match(rollbackReport, /approximately 1 minute 50 seconds/);
+  assert.match(rollbackReport, /30512329569/);
+  assert.match(releaseNotes, /First public Vertical Slice release/);
+  assert.match(releaseNotes, /Critical defects: 0/);
+  assert.match(releaseManifest, /"version": "0\.1\.0"/);
+  assert.match(releaseManifest, /"tag": "v0\.1\.0"/);
+  assert.match(releaseManifest, /72bb680932f8ce95057e06f8e207f4ad4665e7bb/);
+  assert.match(nextTask, /M10 \/ Task 10\.1 — Second Vertical Slice Scope Lock/);
+  assert.match(nextTask, /Do not implement gameplay, content, art, Audio, UI, Stage, or infrastructure/);
 });

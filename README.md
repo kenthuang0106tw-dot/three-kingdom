@@ -9,10 +9,11 @@
 - **Rendering:** 1280×720、16:9、nearest-neighbor、腳底 Y depth sorting。
 - **Current player:** 關羽。
 - **Current combat:** 八方向移動、三段 Combo、Hurt、Hit Stop、Flash、Spark、Knockback、Camera Shake。
-- **Current enemies:** 三種近戰小兵、Formation Slot、單一 Attack Slot、獨立 HP/state/death cleanup。
+- **Current enemies:** 五種正式敵人、Formation Slot、單一 Attack Slot、獨立 HP/state/death cleanup。
 - **Current stage:** 3840×720 三畫面竹林、兩場依序 encounter、Boss arena、failed/retry 與 cleared/replay。
-- **Release target:** Desktop Web + Mobile landscape Web。
-- **First Vertical Slice:** 關羽、一完整關卡、2–3 種近戰小兵、一名 Boss。
+- **Released:** `0.1.0` First Vertical Slice。
+- **Public game:** [GitHub Pages](https://kenthuang0106tw-dot.github.io/three-kingdom/)。
+- **First Vertical Slice:** 關羽、一完整關卡、五種敵人、一名 Boss。
 
 ## Architecture
 
@@ -36,7 +37,7 @@ React 不管理 gameplay state。所有角色、輸入、動畫、碰撞、AI、
 - pnpm
 - Windows 可使用 repository 根目錄的 `啟動遊戲.cmd`
 
-目前 repository 已完成 M6 Product Flow and UI 與 M6A Visual Upgrade/freeze：可從 Title 完成整個 Vertical Slice，並通過 desktop、landscape touch、portrait FIT、production 與 60 FPS 視覺驗收。第一次接手請先閱讀 [SPRINT.md](SPRINT.md) 與 [NEXT_TASK.md](NEXT_TASK.md)，不要直接新增功能。
+目前 repository 已發布 `0.1.0`：可從 Title 完成整個 Vertical Slice，並通過 desktop、landscape touch、portrait FIT、production、rollback 與 release gates。第一次接手請先閱讀 [SPRINT.md](SPRINT.md) 與 [NEXT_TASK.md](NEXT_TASK.md)，不要直接新增功能。
 
 ## Run
 

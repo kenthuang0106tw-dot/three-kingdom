@@ -442,7 +442,7 @@ assets remain 200 and unaffected.
 | 9.2 | Release candidate/versioning — Completed 2026-07-30 | P0 | Medium | 9.1 | immutable build、version、changelog | release files | build 不可重現 |
 | 9.3 | Platform acceptance — Completed 2026-07-30 with owner metadata waiver | P0 | High | 9.2 | Desktop Chrome/Edge、Android Chrome、iOS Safari 各完整通關三次 | checklist | 裝置差異 |
 | 9.4 | Rollback drill — Completed 2026-07-30 | P0 | Low | 9.2 | 可在 15 分鐘內回退上一版 | release docs | artifact retention |
-| 9.5 | Release and defect triage | P0 | Medium | 9.3, 9.4 | 無 Critical/High defect；問題進 Backlog | release/backlog | 發布後 scope 膨脹 |
+| 9.5 | Release and defect triage — Completed 2026-07-30 | P0 | Medium | 9.3, 9.4 | 無 Critical/High defect；問題進 Backlog | release/backlog | 發布後 scope 膨脹 |
 
 ### M9 / Task 9.1 — Production Route and Hosting Verification (Completed 2026-07-30)
 
@@ -524,6 +524,41 @@ lease-checked `main` update unless the Pages environment branch policy is
 changed in a separately reviewed operations task.
 
 **Next:** M9 / Task 9.5 — Release and Defect Triage.
+
+### M9 / Task 9.5 — Release and Defect Triage (Completed 2026-07-30)
+
+**Status:** `0.1.0` released. Milestone 9 and the first Vertical Slice are
+complete.
+
+**Evidence:** The accepted RC2 runtime is identified by final tag `v0.1.0` at
+`72bb680932f8ce95057e06f8e207f4ad4665e7bb`. Final gates passed 149/149 tests,
+typecheck, lint with zero errors/eight existing warnings, Vinext build, GitHub
+Pages build, release-manifest verification, public route verification, and a
+one-Canvas production smoke. The GitHub Release and public Pages deployment
+use the accepted runtime. Critical defects are 0 and High defects are 0.
+
+**Known Low findings:** Optional root favicon, owner-waived physical device
+metadata, and the documented Pages main-only deployment policy remain tracked
+without blocking the release.
+
+**Scope:** Release artifacts, tests, operations, and documentation only. No
+gameplay, art, balance, Stage, Camera, Audio, input, or UI behavior changed.
+
+---
+
+## Milestone 10 — Second Vertical Slice Scope
+
+**Playable Result:** Not yet scheduled. M10 begins with a scope decision, not
+implementation.
+
+**Goal:** Select one coherent post-release playable increment without mixing a
+new character, Stage, enemies, and systems into the same milestone.
+
+**Dependencies:** M9 accepted.
+
+| ID | Description | Priority | Difficulty | Dependencies | Acceptance Criteria | Expected Files | Risk |
+|---|---|---:|---:|---|---|---|---|
+| 10.1 | Second Vertical Slice scope lock | P1 | Medium | M9 | One player-visible goal, strict exclusions, dependency order, acceptance matrix, and one implementation NEXT_TASK are approved | roadmap/backlog/sprint | Scope expansion immediately after release |
 
 ## Task Status Update — 2026-07-12
 

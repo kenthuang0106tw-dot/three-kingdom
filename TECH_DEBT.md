@@ -758,3 +758,13 @@ fail.
   the recorded release SHA. The drill completed well within 15 minutes.
 - **Future:** Decide separately whether environment policy should permit signed
   release tags. Do not weaken deployment protection as an incidental change.
+
+## M9.5 Release Triage
+
+- Critical: 0.
+- High: 0.
+- Medium: 0.
+- Low: optional user-site root favicon; owner-waived physical device metadata;
+  GitHub Pages main-only deployment policy.
+- Disposition: none block `0.1.0`; all are documented and must not be hidden by
+  unrelated post-release feature work.

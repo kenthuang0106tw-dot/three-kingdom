@@ -1271,3 +1271,21 @@ Status: completed.
 
 The only next task is M9 / Task 9.5 — Release and Defect Triage. Do not begin
 post-release gameplay or content work in the same task.
+
+## M9 / Task 9.5 — Release and Defect Triage — 2026-07-30
+
+Status: completed. Milestone 9 and the first Vertical Slice are released.
+
+- [x] Passed 149/149 tests, typecheck, lint with zero errors/eight existing
+  warnings, Vinext build, and GitHub Pages build.
+- [x] Generated and verified the immutable `0.1.0` release manifest from the
+  accepted RC2 runtime source.
+- [x] Confirmed Critical 0 and High 0.
+- [x] Retained three Low findings in Technical Debt/Backlog.
+- [x] Created final tag `v0.1.0`, GitHub Release, and public deployment.
+- [x] Verified required public routes and one-Canvas production presentation.
+- [x] Changed no gameplay, content, art, balance, Stage, Camera, Audio, input,
+  or UI behavior.
+
+The only next task is M10 / Task 10.1 — Second Vertical Slice Scope Lock. It is
+planning-only and must not implement a new character, Stage, enemy, or system.

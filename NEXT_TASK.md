@@ -1,44 +1,47 @@
 # NEXT_TASK
 
-## M9 / Task 9.5 — Release and Defect Triage
+## M10 / Task 10.1 — Second Vertical Slice Scope Lock
 
 ### Why this is next
 
-RC2 has passed owner platform acceptance and a real rollback/restore drill.
-The remaining work is to run final immutable gates, classify defects, publish
-the `0.1.0` release identity, and leave one explicit post-release planning task.
+Version `0.1.0` completes the first public Vertical Slice. The backlog now
+contains several large, competing directions: another playable general, a
+second Stage, more content, and release-operations improvements. Implementing
+one without first fixing the next playable goal would recreate cross-milestone
+scope drift and expensive rework.
 
 ### Completion conditions
 
-- Run tests, typecheck, lint, Vinext build, and GitHub Pages build.
-- Verify required production routes and one-Canvas public presentation.
-- Confirm Critical 0 and High 0; place remaining issues in Technical Debt or
-  Backlog without expanding scope.
-- Create final `0.1.0` release notes and manifest from the accepted RC2 source.
-- Create and push immutable tag `v0.1.0`.
-- Publish the GitHub Release and deploy the final accepted source.
-- Update Roadmap, Sprint, Checklist, README, and NEXT_TASK.
-- Do not add gameplay, content, art, balance, Stage, Camera, Audio, input, or UI
-  changes.
+- Review owner feedback from `0.1.0` and the existing P1/P2 backlog.
+- Select exactly one player-visible goal for the second Vertical Slice.
+- Define strict included and excluded scope.
+- Order its minimum dependencies and tasks.
+- Give every task measurable acceptance criteria and expected files.
+- Identify which existing contracts must remain unchanged.
+- Select exactly one implementation task as the next NEXT_TASK.
+- Do not implement gameplay, content, art, Audio, UI, Stage, or infrastructure.
 
 ### Acceptance and validation
 
-- All final automated gates pass.
-- Final public deployment serves the document and all required routes.
-- One intrinsic 1280×720 Canvas and no production debug/runtime error.
-- No Critical or High defect remains.
-- Tag, release notes, manifest, GitHub Release, and deployed source identify the
-  same accepted runtime.
+- The selected increment is playable and demonstrably different from `0.1.0`.
+- It can be delivered without simultaneously adding a new character, Stage,
+  enemy family, and progression system.
+- Dependencies prevent art from preceding accepted gameplay contracts.
+- Mobile, reset, Pause, performance, production, and rollback regressions have
+  explicit acceptance coverage.
+- The project owner can accept or reject the scope before implementation.
 
 ### Expected files
 
-- `release/0.1.0.md`
-- `release/0.1.0.manifest.json`
-- Roadmap, Sprint, Checklist, Technical Debt, Backlog, README, NEXT_TASK
-- No runtime source or asset changes.
+- `GAME_ROADMAP.md`
+- `BACKLOG.md`
+- `SPRINT.md`
+- `NEXT_TASK.md`
+- Planning/checklist documents only.
 
 ### Risks
 
-- Final rebuild could expose reproducibility or route regressions.
-- Tag/release identity can diverge if created before final verification.
-- Post-release ideas must not expand this release task.
+- Choosing several visible features instead of one coherent slice.
+- Starting production art before gameplay acceptance.
+- Treating release-operation debt as a gameplay blocker.
+- Expanding the first post-release task into implementation.

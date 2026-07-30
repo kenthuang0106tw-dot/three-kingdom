@@ -22,6 +22,12 @@
 
 ## P1 — Vertical Slice Quality
 
+- M10 / Task 10.1 — lock the second Vertical Slice scope before implementing
+  another playable character, Stage, enemy set, or gameplay system.
+- Release operations follow-up: decide whether signed release tags should be
+  permitted by the GitHub Pages environment.
+- Capture exact physical device/OS/browser metadata for the next release
+  candidate.
 - 第二與第三種近戰小兵。
 - `GX.1 Duelist Leap Mobility Prototype`：讓兜帽雙鉤刺客以可讀的起跳、
   空中、落地與 recovery 改變站位；必須使用真正逐幀動畫，禁止單張
