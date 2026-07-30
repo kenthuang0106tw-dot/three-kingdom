@@ -438,11 +438,32 @@ assets remain 200 and unaffected.
 
 | ID | Description | Priority | Difficulty | Dependencies | Acceptance Criteria | Expected Files | Risk |
 |---|---|---:|---:|---|---|---|---|
-| 9.1 | Production route/hosting verification | P0 | High | M8 | HTML/JS/atlas/PNG/audio 全為 200 | hosting tests/config | Vinext asset path |
+| 9.1 | Production route/hosting verification — Completed 2026-07-30 | P0 | High | M8 | HTML/JS/atlas/PNG/audio 全為 200 | hosting tests/config | Vinext asset path |
 | 9.2 | Release candidate/versioning | P0 | Medium | 9.1 | immutable build、version、changelog | release files | build 不可重現 |
 | 9.3 | Platform acceptance | P0 | High | 9.2 | Desktop Chrome/Edge、Android Chrome、iOS Safari 各完整通關三次 | checklist | 裝置差異 |
 | 9.4 | Rollback drill | P0 | Low | 9.2 | 可在 15 分鐘內回退上一版 | release docs | artifact retention |
 | 9.5 | Release and defect triage | P0 | Medium | 9.3, 9.4 | 無 Critical/High defect；問題進 Backlog | release/backlog | 發布後 scope 膨脹 |
+
+### M9 / Task 9.1 — Production Route and Hosting Verification (Completed 2026-07-30)
+
+**Status:** Completed.
+
+**Evidence:** Vinext production, GitHub Pages preview, and the public
+`/three-kingdom/` deployment serve every generated route and all 52 required
+public assets with 200 and an accepted MIME type. The deployed scan passed
+54/54 non-document routes. Desktop, 844×390, and 390×844 each retained one
+intrinsic 1280×720 Canvas, zero debug dataset keys, no overflow, and zero
+captured browser errors on all three hosting targets. Direct public navigation
+and reload passed. The exact successful deployed commit is
+`b07bd03ae9a4061f6bd1124bee0d5aad3a161c15`.
+Final gates passed 148/148 tests, typecheck, lint with zero errors/eight
+existing warnings, and both production builds.
+
+**Waiver:** Optional user-site root `/favicon.ico` remains 404 because the
+repository deployment owns `/three-kingdom/`; it is outside the required
+runtime inventory and has no gameplay or loading impact.
+
+**Next:** M9 / Task 9.2 — Release Candidate and Versioning.
 
 ## Task Status Update — 2026-07-12
 

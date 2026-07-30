@@ -1178,3 +1178,30 @@ Status: completed. Milestone 8 accepted.
 The only next task is M9 / Task 9.1 — Production route/hosting verification.
 Do not start versioning, platform acceptance, rollback, release, or gameplay
 work in the same task.
+
+## M9 / Task 9.1 — Production Route and Hosting Verification — 2026-07-30
+
+Status: completed.
+
+- [x] Added a reproducible verifier for generated HTML routes and the 52-file
+  runtime/shell inventory.
+- [x] Added GitHub Pages HTTP status, MIME, repository base-path, reload,
+  excluded-route, and wrong-base regression coverage.
+- [x] Verified 54/54 required non-document routes on the public deployment.
+- [x] Identified the exact deployed commit
+  `b07bd03ae9a4061f6bd1124bee0d5aad3a161c15` and successful workflow run
+  `30481481187`.
+- [x] Passed Desktop, 844×390, and 390×844 browser smoke on Vinext production,
+  Pages preview, and the deployed URL with one Canvas, zero debug dataset keys,
+  no overflow, and zero captured errors.
+- [x] Verified direct public navigation and reload.
+- [x] Explicitly waived optional user-site root `/favicon.ico` 404; repository
+  Pages owns `/three-kingdom/`, and every required route passes.
+- [x] Passed 148/148 tests, typecheck, lint with zero errors/eight existing
+  warnings, Vinext build, and GitHub Pages build.
+- [x] Preserved gameplay, art, animation, balance, Stage, Camera, Audio, input,
+  UI flow, and production asset bytes.
+
+The only next task is M9 / Task 9.2 — Release Candidate and Versioning. Do not
+start platform acceptance, rollback, release, or gameplay work in the same
+task.

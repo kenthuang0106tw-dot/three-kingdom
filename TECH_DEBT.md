@@ -691,3 +691,20 @@ fail.
 - **Evidence gap:** No new physical device/browser versions were supplied.
   Earlier user-accepted iOS Safari and Android Chrome evidence remains recorded
   without inferred version numbers.
+
+## TD-M9.1 — Production route and hosting verification
+
+- **Resolved:** 2026-07-30.
+- **Evidence:** Vinext production and GitHub Pages preview route contracts pass;
+  the public deployment serves 54/54 generated and required runtime routes.
+  Direct navigation, reload, and nine target/viewport browser combinations pass
+  with one Canvas, no debug dataset, no overflow, and zero captured errors.
+- **Automated gates:** 148/148 tests, typecheck, lint with zero errors/eight
+  existing warnings, Vinext build, and GitHub Pages build passed.
+- **Deployment:** GitHub Pages workflow run `30481481187` successfully deployed
+  commit `b07bd03ae9a4061f6bd1124bee0d5aad3a161c15`.
+- **Accepted Low waiver:** Optional user-site root `/favicon.ico` returns 404.
+  Repository Pages owns `/three-kingdom/`; the route is outside the runtime and
+  shell inventory and does not affect gameplay or loading.
+- **Remaining:** Physical device/browser version evidence remains assigned to
+  M9 / Task 9.3 Platform Acceptance.

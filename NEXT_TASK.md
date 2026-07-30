@@ -1,28 +1,25 @@
 # NEXT_TASK
 
-## M9 / Task 9.1 — Production Route and Hosting Verification
+## M9 / Task 9.2 — Release Candidate and Versioning
 
 ### Why this is next
 
-M8 Full QA is accepted with no Critical, High, or Medium defect. Release
-engineering must now prove that the actual production and GitHub Pages hosting
-contracts serve every required route correctly before versioning or platform
-sign-off. M8.7 also found one Low route issue: the optional root favicon
-request returns 404 in the GitHub Pages preview.
+M9.1 accepted the production route and hosting contract, identified the exact
+deployed commit, and verified the public repository base path. The project now
+needs one immutable, identifiable Release Candidate before platform acceptance
+or rollback testing can produce trustworthy evidence.
 
 ### Completion conditions
 
-- Inventory every production HTML, JavaScript, CSS, image, Atlas, font, and
-  Audio route required by the Vinext and GitHub Pages builds.
-- Verify the local production server, GitHub Pages preview, and deployed
-  GitHub Pages URL use the correct base path, status code, and MIME type.
-- Resolve or explicitly waive the optional `/favicon.ico` 404 without changing
-  gameplay, art direction, or asset packaging ownership.
-- Confirm direct navigation and reload work at the public repository base path.
-- Confirm production still exposes one Canvas, no development dataset/debug
-  presentation, no overflow, and zero runtime error at Desktop, 844×390, and
-  390×844.
-- Record a reproducible hosting matrix and identify the exact deployed commit.
+- Select one exact commit as the Release Candidate source.
+- Produce a reproducible immutable build identity and version.
+- Record the Release Candidate's source commit, build commands, artifact hashes,
+  production file inventory, and release notes.
+- Ensure the Vinext and GitHub Pages outputs correspond to the same source
+  revision and required runtime inventory.
+- Do not change gameplay, balance, art, animation, Stage, Camera, Audio, input,
+  or UI behavior.
+- Do not begin platform acceptance, rollback, or final release.
 
 ### Acceptance and validation
 
@@ -31,21 +28,19 @@ request returns 404 in the GitHub Pages preview.
 - `pnpm lint`
 - `pnpm build`
 - `pnpm build:github-pages`
-- Automated route/status/MIME checks for both local production outputs.
-- Browser smoke on local production, GitHub Pages preview, and the deployed
-  public URL.
-- No required production route may return 404 or an incorrect MIME type.
+- Rebuild comparison for the documented Release Candidate outputs.
+- Route/status/MIME verification retained from M9.1.
+- One-Canvas production smoke with no development presentation or runtime error.
 
 ### Expected files
 
-- Hosting/route tests or scripts only where existing coverage is insufficient.
-- Minimum favicon or shell metadata change if the Low finding is fixed.
-- `docs/quality/m9-1-production-hosting.md`.
+- Minimum version/build identity files.
+- Release Candidate manifest, hashes, and release notes.
 - Roadmap, Sprint, Checklist, Technical Debt, and NEXT_TASK closeout updates.
 
 ### Risks
 
-- Local preview may pass while the deployed repository base path is wrong.
-- Cache propagation can make a newly deployed commit appear stale.
-- Scope can drift into release versioning, platform QA, or unrelated asset
-  optimization; those remain later M9 tasks.
+- Generated filenames or timestamps may make the build non-reproducible.
+- Version metadata can diverge between Vinext and GitHub Pages outputs.
+- Scope can drift into platform acceptance, rollback, deployment, or final
+  release; those remain Tasks 9.3–9.5.

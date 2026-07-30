@@ -1358,3 +1358,21 @@
 | Physical device metadata | Deferred — Low evidence gap | Prior iOS/Android user acceptance exists; versions unavailable |
 | Scope | Pass | QA/tests/docs only; no gameplay, art, balance, Stage, Camera, Audio, or UI change |
 | Next task | Selected | M9 / Task 9.1 — Production route/hosting verification |
+
+## M9 / Task 9.1 — Production Route and Hosting Verification — 2026-07-30
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Previous task | Pass | M8.7 baseline revalidated: 147/147, typecheck, lint, both builds |
+| Vinext routes | Pass | Generated routes and 52/52 runtime/shell files return 200 with accepted MIME |
+| Pages preview routes | Pass | `/three-kingdom/`, 2 generated routes, and 52/52 public files pass |
+| Public routes | Pass | 54/54 deployed non-document routes return 200 with accepted MIME |
+| Automated gates | Pass | 148/148, typecheck, lint 0 errors/8 existing warnings, both builds |
+| Deployment identity | Pass | Workflow `30481481187`; commit `b07bd03ae9a4061f6bd1124bee0d5aad3a161c15` |
+| Direct navigation/reload | Pass | Public base path recreates one Canvas with zero errors |
+| Desktop | Pass | All three hosts: 1067×600 fitted Canvas, no overflow, no debug dataset, 0 errors |
+| 844×390 | Pass | All three hosts: 693×390 fitted Canvas, no overflow, no debug dataset, 0 errors |
+| 390×844 | Pass | All three hosts: 325×183 fitted Canvas, no overflow, no debug dataset, 0 errors |
+| Favicon | Waived — Low | Optional user-site root is outside repository base and required inventory |
+| Scope | Pass | Tests/tooling/docs only; no runtime asset or gameplay change |
+| Next task | Selected | M9 / Task 9.2 — Release Candidate and Versioning |

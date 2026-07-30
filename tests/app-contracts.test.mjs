@@ -1893,12 +1893,13 @@ test("enemy redesign tasks retain the approved prototype lock after all five pro
   assert.match(prototypeContract, /Crossbow \| Go \(ER\.6\)/);
 });
 
-test("the full QA closeout advances only to production route verification", async () => {
-  const [visualReport, accessibilityReport, stageReport, qaReport, nextTask] = await Promise.all([
+test("the release QA and hosting closeouts advance only to versioning", async () => {
+  const [visualReport, accessibilityReport, stageReport, qaReport, hostingReport, nextTask] = await Promise.all([
     readFile(new URL("../docs/quality/m8-3-release-visual-defect-pass.md", import.meta.url), "utf8"),
     readFile(new URL("../docs/quality/m8-6-accessibility-settings.md", import.meta.url), "utf8"),
     readFile(new URL("../docs/quality/m8-2c-five-enemy-stage.md", import.meta.url), "utf8"),
     readFile(new URL("../docs/quality/m8-7-full-qa-matrix.md", import.meta.url), "utf8"),
+    readFile(new URL("../docs/quality/m9-1-production-hosting.md", import.meta.url), "utf8"),
     readFile(new URL("../NEXT_TASK.md", import.meta.url), "utf8"),
   ]);
 
@@ -1916,7 +1917,12 @@ test("the full QA closeout advances only to production route verification", asyn
   assert.match(qaReport, /Medium \| 0/);
   assert.match(qaReport, /Low \| 1/);
   assert.match(qaReport, /M9 \/ Task 9\.1 production-route verification/);
-  assert.match(nextTask, /M9 \/ Task 9\.1 — Production Route and Hosting Verification/);
-  assert.match(nextTask, /optional `\/favicon\.ico` 404/);
-  assert.match(nextTask, /deployed\s+GitHub Pages URL/);
+  assert.match(hostingReport, /Status: Accepted/);
+  assert.match(hostingReport, /148\/148/);
+  assert.match(hostingReport, /54\/54 deployed routes passed/);
+  assert.match(hostingReport, /b07bd03ae9a4061f6bd1124bee0d5aad3a161c15/);
+  assert.match(hostingReport, /explicitly waived/);
+  assert.match(nextTask, /M9 \/ Task 9\.2 — Release Candidate and Versioning/);
+  assert.match(nextTask, /immutable build identity and version/);
+  assert.match(nextTask, /Do not begin platform acceptance, rollback, or final release/);
 });
