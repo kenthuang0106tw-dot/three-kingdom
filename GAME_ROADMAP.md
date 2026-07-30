@@ -562,7 +562,7 @@ gameplay, art, balance, Stage, Camera, Audio, input, or UI behavior changed.
 | 10.2 | Player Definition boundary and Guan Yu freeze — Completed 2026-07-30 | P0 | High | 10.1 | Two-known-player data seam exists; Guan Yu runtime values/behavior remain exact; no Zhang Fei runtime or selection yet | player definition/actor/attack/MainScene/tests | Generic framework or Guan Yu regression |
 | 10.3 | Zhang Fei gameplay and production contract — Completed 2026-07-30 | P0 | Medium | 10.2 | Heavy-warrior goal, comparison plan, approved identity, frame budget, feet/scale/atlas rules are accepted before production | character production docs/asset plan | Art precedes gameplay decision |
 | 10.4 | Zhang Fei atlas and animation preview — Completed 2026-07-30 | P0 | High | 10.3 | Genuine idle/walk/attack1–3/hurt/dead frames; measured metadata; preview feet stable; no formal Stage integration | player assets/tool/preview/tests | Source frames incomplete or identity drift |
-| 10.5 | Zhang Fei combat prototype | P0 | High | 10.4 | Development-only comparison proves distinct commitment/reward without becoming dominant; existing combat contracts pass | player config/prototype/tests/report | Balance is only HP/damage |
+| 10.5 | Zhang Fei combat prototype — In progress 2026-07-31 | P0 | High | 10.4 | Development-only comparison proves distinct commitment/reward without becoming dominant; existing combat contracts pass | player config/prototype/tests/report | Balance is only HP/damage |
 | 10.6 | Phaser character select and formal integration | P0 | High | 10.5 | Title selects exactly Guan Yu/Zhang Fei; either completes/fails/retries/replays existing Stage; React owns no selection | Title/player/MainScene/tests | Selection lifecycle or stale actor |
 | 10.7 | Second Vertical Slice acceptance | P0 | High | 10.6 | Two-character full QA at three viewports; 10 reset paths; performance/packaging/routes pass; no Critical/High defect | QA/release docs/tests | Asset memory or mobile readability |
 
@@ -653,6 +653,20 @@ and the required metadata readout. Zhang Fei v2 is not in the production
 manifest, formal Title selection, Stage runtime, or production package.
 
 **Next:** M10 / Task 10.5 — Zhang Fei Combat Prototype.
+
+### M10 / Task 10.5 — Zhang Fei Combat Prototype (In progress 2026-07-31)
+
+**Implementation:** Added the development-only Guan Yu/Zhang Fei comparison
+entrance and three fixed contexts. Zhang Fei uses all approved poses and the
+frozen 200 px/s, 96×58 body, 176×88 spear hitbox, attack phase, damage,
+displacement, and Hit Stop hypotheses. His weapon remains the Zhangba serpent
+spear (丈八蛇矛). Guan Yu and all shared combat owners remain unchanged.
+
+**Gate:** Automated definition, animation, composition, production isolation,
+and Desktop runtime evidence are complete. The required five paired tactical
+runs in Entry, Ambush, and Boss plus interactive mobile comparison are still
+unrecorded. No balance metrics were fabricated, no Accept/Adjust/Reject decision
+has been made, and Task 10.6 remains blocked.
 
 ## Task Status Update — 2026-07-12
 

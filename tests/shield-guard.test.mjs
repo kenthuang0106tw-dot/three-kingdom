@@ -108,6 +108,6 @@ test("Shield Guard formal integration keeps development test entrances isolated"
   assert.ok(BAMBOO_COMBAT_ROOM.spawnPoints.some(point => point.enemyType === "shield-guard"));
   assert.match(source, /query\.get\("shieldGuardTest"\)/);
   assert.match(source, /this\.enemyManager\.spawnPrototype\(spawns\)/);
-  assert.match(source, /if \(!this\.shieldGuardTestMode && !this\.crossbowTestMode && !this\.shieldCrossbowTestMode && !this\.duelistLeapTestMode && !this\.bossSmokeMode/);
+  assert.match(source, /if \(!this\.playerPrototypeMode && !this\.shieldGuardTestMode && !this\.crossbowTestMode && !this\.shieldCrossbowTestMode && !this\.duelistLeapTestMode && !this\.bossSmokeMode/);
   assert.match(source, /enemyType: "shield-guard" as const/);
 });

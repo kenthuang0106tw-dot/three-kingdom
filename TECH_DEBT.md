@@ -810,3 +810,15 @@ fail.
   builder, and complete visual QA. It remains development-preview-only.
 - **Remaining boundary:** Task 10.5 must prove the gameplay hypothesis before
   formal runtime integration; the production manifest remains unchanged.
+
+## TD-M10.5 — Zhang Fei paired-play evidence gap
+
+- **Severity:** P0 acceptance evidence; not a production defect.
+- **Evidence:** The development actor, fixed Entry/Ambush/Boss entrances,
+  definition tests, Desktop load, and production isolation exist, but the
+  required five paired tactical runs per player/context and interactive mobile
+  comparison have not been recorded.
+- **Containment:** Task 10.5 remains in progress. No raw values or medians are
+  inferred, and Task 10.6 formal selection is blocked.
+- **Resolution:** Complete the documented paired protocol, record raw data and
+  medians, then make one explicit Accept/Adjust/Reject decision.

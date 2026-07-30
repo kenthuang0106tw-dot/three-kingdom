@@ -12,7 +12,8 @@ import { PlayerLifecycle } from "./player/PlayerLifecycle";
 import { PlayerActor } from "./player/PlayerActor";
 import { PlayerAttackController } from "./player/PlayerAttackController";
 import { GUANYU_ANIMATION_FRAMES, GUANYU_ATTACK_PHASES, GUANYU_PLAYER_DEFINITION } from "./player/GuanYuAnimationMetadata.ts";
-import type { AttackStep, PlayerAnimationDefinition } from "./player/PlayerDefinition.ts";
+import { ZHANGFEI_PLAYER_DEFINITION } from "./player/ZhangFeiAnimationMetadata.ts";
+import type { AttackStep, PlayerAnimationDefinition, PlayerDefinition } from "./player/PlayerDefinition.ts";
 import { resolveAttack } from "./combat/CombatResolver";
 import { EffectDirector, EFFECT_PARAMS } from "./combat/EffectDirector";
 import { BAMBOO_BOSS_ARENA, BAMBOO_COMBAT_ROOM, clampStageX } from "./stage/StageConfig";
@@ -38,6 +39,7 @@ type AttackState = "attack1" | "attack2" | "attack3";
 type TitleStartSource = "keyboard" | "pointer" | "smoke";
 type FailureRestartSource = ExplicitFailureRestartSource | "smoke";
 type ResultReplaySource = ExplicitResultReplaySource | "smoke";
+type PlayerPrototypeScenario = "entry" | "ambush" | "boss";
 type PreviewFrame = {
   name: string; x: number; y: number; width: number; height: number;
   originY: number; offsetX: number; offsetY: number; classification: string;
@@ -136,7 +138,7 @@ class PlayerInputController {
 }
 
 export default class MainScene extends Phaser.Scene {
-  private readonly playerDefinition = GUANYU_PLAYER_DEFINITION;
+  private playerDefinition: PlayerDefinition = GUANYU_PLAYER_DEFINITION;
   private playerActor!: PlayerActor;
   private attackZone!: Phaser.GameObjects.Zone;
   private get playerSprite() { return this.playerActor.sprite; }
@@ -155,8 +157,8 @@ export default class MainScene extends Phaser.Scene {
   private enemyManager!: EnemyManager;
   private bossActor?: BossActor;
   private readonly playerStateMachine = new PlayerStateMachine();
-  private readonly playerLifecycle = new PlayerLifecycle(this.playerDefinition.lifecycle.maxHp);
-  private readonly attackController = new PlayerAttackController(this.playerDefinition.attacks);
+  private playerLifecycle = new PlayerLifecycle(this.playerDefinition.lifecycle.maxHp);
+  private attackController = new PlayerAttackController(this.playerDefinition.attacks);
   private readonly gameFlow = new GameFlowStateMachine();
   private readonly titleStartController = new TitleStartController(this.gameFlow);
   private titleOverlay?: Phaser.GameObjects.Container;
@@ -199,6 +201,8 @@ export default class MainScene extends Phaser.Scene {
   private performanceSampler?: PerformanceSampler;
   private previewMode = false;
   private zhangFeiPreviewMode = false;
+  private playerPrototypeMode = false;
+  private playerPrototypeScenario?: PlayerPrototypeScenario;
   private shieldGuardTestMode?: "A" | "B";
   private crossbowTestMode?: "A" | "B";
   private shieldCrossbowTestMode = false;
@@ -277,7 +281,21 @@ export default class MainScene extends Phaser.Scene {
   preload() {
     queueRuntimeAssets(this.load);
     if (process.env.NODE_ENV !== "production") {
-      if (new URLSearchParams(window.location.search).get("previewZhangFei") === "1") {
+      const query = new URLSearchParams(window.location.search);
+      const prototypePlayer = query.get("playerPrototype");
+      this.playerDefinition = prototypePlayer === "zhangfei"
+        ? ZHANGFEI_PLAYER_DEFINITION
+        : GUANYU_PLAYER_DEFINITION;
+      this.playerLifecycle = new PlayerLifecycle(this.playerDefinition.lifecycle.maxHp);
+      this.attackController = new PlayerAttackController(this.playerDefinition.attacks);
+      if (prototypePlayer === "zhangfei") {
+        this.load.atlas(
+          ZHANGFEI_PLAYER_DEFINITION.textureKey,
+          resolveRuntimeAssetUrl("/art/zhangfei-v2/zhangfei-v2.png"),
+          resolveRuntimeAssetUrl("/art/zhangfei-v2/zhangfei-v2.atlas.json"),
+        );
+      }
+      if (query.get("previewZhangFei") === "1") {
         this.load.atlas(
           "zhangfei-v2-preview",
           resolveRuntimeAssetUrl("/art/zhangfei-v2/zhangfei-v2.png"),
@@ -313,6 +331,15 @@ export default class MainScene extends Phaser.Scene {
     }
     this.previewMode = development && query.get("previewAttack") === "1";
     this.zhangFeiPreviewMode = development && query.get("previewZhangFei") === "1";
+    const prototypeScenario = query.get("prototypeScenario");
+    this.playerPrototypeMode = development
+      && (query.get("playerPrototype") === "guanyu" || query.get("playerPrototype") === "zhangfei")
+      && (prototypeScenario === "entry" || prototypeScenario === "ambush" || prototypeScenario === "boss");
+    this.playerPrototypeScenario = this.playerPrototypeMode ? prototypeScenario as PlayerPrototypeScenario : undefined;
+    if (this.playerPrototypeMode) {
+      this.game.canvas.tabIndex = 0;
+      this.game.canvas.focus();
+    }
     const shieldGuardTest = query.get("shieldGuardTest")?.toUpperCase();
     this.shieldGuardTestMode = development && (shieldGuardTest === "A" || shieldGuardTest === "B") ? shieldGuardTest : undefined;
     const crossbowTest = query.get("crossbowTest")?.toUpperCase();
@@ -378,6 +405,9 @@ export default class MainScene extends Phaser.Scene {
       delete this.game.canvas.dataset.resultSmokeComplete;
       delete this.game.canvas.dataset.resultReplaySource;
       delete this.game.canvas.dataset.cameraHandoffSmokeComplete;
+      this.game.canvas.dataset.playerDefinitionId = this.playerDefinition.id;
+      this.game.canvas.dataset.playerPrototypeMode = String(this.playerPrototypeMode);
+      this.game.canvas.dataset.playerPrototypeScenario = this.playerPrototypeScenario ?? "";
       this.game.canvas.dataset.clearedEntryCount = "0";
       this.game.canvas.dataset.failureEntryCount = "0";
       this.game.canvas.dataset.failureTotalEntryCount = String(this.failureTotalEntryCount);
@@ -533,6 +563,7 @@ export default class MainScene extends Phaser.Scene {
     this.updateAudioDataset();
     this.updateHud();
     if (this.bossClearedSmokeMode) this.startGame("smoke");
+    if (this.playerPrototypeMode) this.startGame("smoke");
     this.prepareFailureSmokeCycle();
     this.prepareResultSmokeCycle();
 
@@ -607,7 +638,7 @@ export default class MainScene extends Phaser.Scene {
     if (this.lifecycleClock.isPaused()) { this.updateDebugText(); return; }
     this.playerBody.setVelocity(0, 0);
     this.currentInput = this.touchInputController.readSnapshot(this.inputController.readSnapshot());
-    if (!this.shieldGuardTestMode && !this.crossbowTestMode && !this.shieldCrossbowTestMode && !this.duelistLeapTestMode && !this.bossSmokeMode && !this.bossCombatSmokeMode && !this.failureSmokeCycleActive) {
+    if (!this.playerPrototypeMode && !this.shieldGuardTestMode && !this.crossbowTestMode && !this.shieldCrossbowTestMode && !this.duelistLeapTestMode && !this.bossSmokeMode && !this.bossCombatSmokeMode && !this.failureSmokeCycleActive) {
       this.updateEncounterSmoke();
       this.updateEncounterProgress();
       this.constrainPlayerToEncounterCamera();
@@ -1338,10 +1369,32 @@ export default class MainScene extends Phaser.Scene {
     else if (this.crossbowTestMode) this.spawnCrossbowPrototype(this.crossbowTestMode);
     else if (this.shieldCrossbowTestMode) this.spawnShieldCrossbowPrototype();
     else if (this.duelistLeapTestMode) this.spawnDuelistLeapPrototype();
+    else if (this.playerPrototypeScenario) this.spawnPlayerPrototypeScenario(this.playerPrototypeScenario);
     this.updateTitleDataset(source);
     this.updatePauseDataset();
     this.updateAudioDataset();
     this.updateHud();
+  }
+
+  private spawnPlayerPrototypeScenario(scenario: PlayerPrototypeScenario) {
+    if (scenario === "entry") {
+      this.enemyManager.spawnPrototype([
+        { id: "prototype-entry-soldier", x: 520, y: 560, enemyType: "soldier" },
+        { id: "prototype-entry-guard", x: 700, y: 470, enemyType: "shield-guard" },
+      ]);
+    } else if (scenario === "ambush") {
+      this.enemyManager.spawnPrototype([
+        { id: "prototype-ambush-mauler", x: 560, y: 455, enemyType: "mauler" },
+        { id: "prototype-ambush-duelist", x: 700, y: 625, enemyType: "duelist" },
+        { id: "prototype-ambush-crossbow", x: 840, y: 530, enemyType: "crossbow" },
+      ]);
+    } else {
+      this.playerBody.reset(BAMBOO_BOSS_ARENA.bounds.x + 260, 560);
+      this.bossEntryState = "active";
+      this.createBossActor(true);
+      this.activateBossArena(true);
+    }
+    this.game.canvas.dataset.playerPrototypeScenarioReady = scenario;
   }
 
   private spawnShieldGuardPrototype(mode: "A" | "B") {

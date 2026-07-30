@@ -1037,7 +1037,7 @@ test("Recovery traversal starts unlocked while preserving explicit diagnostic lo
   const source = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
   assert.match(source, /if \(this\.bossSmokeMode \|\| this\.bossCombatSmokeMode \|\| this\.failureSmokeCycleActive\) \{/);
   assert.match(source, /this\.cameraLockState = lockCamera\(this\.cameraLockState, "encounter"\)/);
-  assert.match(source, /if \(!this\.shieldGuardTestMode && !this\.crossbowTestMode && !this\.shieldCrossbowTestMode && !this\.duelistLeapTestMode && !this\.bossSmokeMode && !this\.bossCombatSmokeMode && !this\.failureSmokeCycleActive\) \{\s+this\.updateEncounterSmoke\(\)/);
+  assert.match(source, /if \(!this\.playerPrototypeMode && !this\.shieldGuardTestMode && !this\.crossbowTestMode && !this\.shieldCrossbowTestMode && !this\.duelistLeapTestMode && !this\.bossSmokeMode && !this\.bossCombatSmokeMode && !this\.failureSmokeCycleActive\) \{\s+this\.updateEncounterSmoke\(\)/);
   assert.match(source, /unlockCamera\(this\.cameraLockState, "encounter"\)/);
   assert.match(source, /if \(!isCameraLocked\(this\.cameraLockState\)\)/);
   assert.match(source, /dataset\.cameraScrollX/);

@@ -1519,3 +1519,18 @@
 | Packaging | Pass | Existing 52-file runtime inventory; Zhang Fei v2 source/QA excluded |
 | Browser | Pass | Desktop one Canvas/no overflow/no error; mobile FIT contract unchanged |
 | Next task | Selected | M10 / Task 10.5 — Zhang Fei Combat Prototype |
+
+## M10 / Task 10.5 — Zhang Fei Combat Prototype — 2026-07-31 checkpoint
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Weapon identity | Pass | All runtime frames retain the Zhangba serpent spear (丈八蛇矛) |
+| Definition | Pass | 200 speed, 10 HP, 96×58 body, 176×88 hitbox, frozen phase/impact values |
+| Animation | Pass | 47 genuine frames; unique keys; no transform, duplication, per-state scale, or feet correction |
+| Guan Yu freeze | Pass | 235 speed, 86×54 body, 142×86 hitbox, 375/375/650ms and 1/1/2 damage unchanged |
+| Development entrance | Pass | `playerPrototype` + `prototypeScenario=entry/ambush/boss`; formal Title unchanged |
+| Desktop smoke | Pass | One 1280×720 Canvas, Zhang Fei + Entry composition, no overflow |
+| Production isolation | Pass | No manifest registration or formal selection; v2 assets remain excluded |
+| Paired trials | Pending | Five runs per player/context and medians not yet recorded |
+| Mobile interaction | Pending | 844×390 and 390×844 comparison interaction not yet recorded |
+| Decision | Pending | Task remains open; Task 10.6 blocked |

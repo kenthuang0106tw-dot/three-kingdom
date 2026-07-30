@@ -1408,3 +1408,24 @@ Status: completed.
 The only next task is M10 / Task 10.5 — Zhang Fei Combat Prototype. It may
 compare the accepted heavy-warrior hypothesis in development, but it may not
 formally integrate Zhang Fei into Title selection or the production Stage.
+
+## M10 / Task 10.5 — Zhang Fei Combat Prototype — 2026-07-31
+
+Status: implementation complete; paired combat acceptance pending.
+
+- [x] Added a development-only player/scenario query entrance for Guan Yu and
+  Zhang Fei across Entry, Ambush, and Boss.
+- [x] Mapped all 47 approved Zhang Fei poses to real Phaser animations using
+  one feet origin, one scale, and the丈八蛇矛 identity.
+- [x] Applied only the frozen Task 10.3 speed, body, hitbox, phase, damage,
+  knockback, and Hit Stop hypotheses.
+- [x] Preserved Guan Yu and the shared combo, hit-once, lifecycle, Enemy, Boss,
+  Stage, Camera, UI, Audio, and formal Title contracts.
+- [x] Added focused definition, animation, composition, and development-gate
+  regression coverage.
+- [ ] Record five paired runs per player in Entry, Ambush, and Boss.
+- [ ] Record raw results, medians, three-viewport interactive evidence, and an
+  explicit Accept/Adjust/Reject decision.
+
+Task 10.6 remains blocked. The only next work is completion of Task 10.5's
+paired combat acceptance; do not begin formal character selection.
