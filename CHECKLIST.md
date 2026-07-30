@@ -1417,3 +1417,17 @@
 | Device metadata | Owner waiver | Exact model/OS/browser versions and individual nine-run records were not supplied and were not inferred |
 | Scope | Pass | Documentation only; no production or gameplay change |
 | Next task | Selected | M9 / Task 9.4 — Rollback Drill |
+
+## M9 / Task 9.4 — Rollback Drill — 2026-07-30
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Previous version | Pass | RC1 source `b16c7398f37f78d1493cebbb1fbaf38a4e43a805` |
+| Tag dispatch safety | Pass with finding | Build passed; Pages environment safely rejected non-main deploy |
+| Actual rollback | Pass | Lease-checked main rollback; workflow `30512239021` |
+| Rollback public routes | Pass | Document 200; 2 generated + 52 public routes |
+| Rollback budget | Pass | Effective 1m50s; 3m12s including tag-policy discovery; budget 15m |
+| Restore | Pass | Workflow `30512329569`; remote main restored to `db0d77b` |
+| Restored public routes | Pass | Document 200; 2 generated + 52 public routes |
+| Scope | Pass | Operations/docs only; no production source or asset change |
+| Next task | Selected | M9 / Task 9.5 — Release and Defect Triage |

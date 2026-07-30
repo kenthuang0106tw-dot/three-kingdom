@@ -1255,3 +1255,19 @@ Status: completed with project-owner metadata waiver.
 
 The only next task is M9 / Task 9.4 — Rollback Drill. Do not begin final release
 or gameplay work in the same task.
+
+## M9 / Task 9.4 — Rollback Drill — 2026-07-30
+
+Status: completed.
+
+- [x] Pushed immutable RC1 and RC2 tags.
+- [x] Recorded the GitHub Pages tag-deployment policy restriction.
+- [x] Deployed RC1 through a lease-checked remote-main rollback.
+- [x] Verified the public document and all 54 generated/runtime routes.
+- [x] Completed effective rollback in approximately 1 minute 50 seconds,
+  within the 15-minute budget.
+- [x] Restored current main/RC2 and reverified all 54 routes.
+- [x] Changed no production source, gameplay, art, balance, or assets.
+
+The only next task is M9 / Task 9.5 — Release and Defect Triage. Do not begin
+post-release gameplay or content work in the same task.

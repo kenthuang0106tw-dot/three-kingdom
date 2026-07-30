@@ -746,3 +746,15 @@ fail.
   apply to automated gates, public route checks, rollback, or defect severity.
 - **Future:** Capture exact device and browser metadata for the next release
   candidate.
+
+## TD-M9.4 — GitHub Pages tag deployment restriction
+
+- **Severity:** Low operational constraint; rollback passed.
+- **Evidence:** Workflow dispatch from `v0.1.0-rc.1` built successfully, but the
+  `github-pages` environment rejected the deploy because only `main` is
+  permitted.
+- **Resolution for 0.1.0:** Use exact lease-checked updates of remote `main` to
+  the immutable rollback commit, verify the public deployment, then restore
+  the recorded release SHA. The drill completed well within 15 minutes.
+- **Future:** Decide separately whether environment policy should permit signed
+  release tags. Do not weaken deployment protection as an incidental change.

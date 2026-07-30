@@ -441,7 +441,7 @@ assets remain 200 and unaffected.
 | 9.1 | Production route/hosting verification — Completed 2026-07-30 | P0 | High | M8 | HTML/JS/atlas/PNG/audio 全為 200 | hosting tests/config | Vinext asset path |
 | 9.2 | Release candidate/versioning — Completed 2026-07-30 | P0 | Medium | 9.1 | immutable build、version、changelog | release files | build 不可重現 |
 | 9.3 | Platform acceptance — Completed 2026-07-30 with owner metadata waiver | P0 | High | 9.2 | Desktop Chrome/Edge、Android Chrome、iOS Safari 各完整通關三次 | checklist | 裝置差異 |
-| 9.4 | Rollback drill | P0 | Low | 9.2 | 可在 15 分鐘內回退上一版 | release docs | artifact retention |
+| 9.4 | Rollback drill — Completed 2026-07-30 | P0 | Low | 9.2 | 可在 15 分鐘內回退上一版 | release docs | artifact retention |
 | 9.5 | Release and defect triage | P0 | Medium | 9.3, 9.4 | 無 Critical/High defect；問題進 Backlog | release/backlog | 發布後 scope 膨脹 |
 
 ### M9 / Task 9.1 — Production Route and Hosting Verification (Completed 2026-07-30)
@@ -505,6 +505,25 @@ remain unavailable and are not inferred. The waiver applies only to evidence
 metadata, not to runtime, build, route, rollback, or severity gates.
 
 **Next:** M9 / Task 9.4 — Rollback Drill.
+
+### M9 / Task 9.4 — Rollback Drill (Completed 2026-07-30)
+
+**Status:** Completed against the public GitHub Pages deployment.
+
+**Evidence:** A direct tag dispatch exposed that the `github-pages` environment
+permits only `main`; its build passed and deploy was safely rejected. The
+verified procedure then used an exact `--force-with-lease` update of remote
+`main` to RC1. Workflow `30512239021` deployed RC1, and the public document plus
+54 generated/runtime routes passed. Effective rollback took approximately 1
+minute 50 seconds; including discovery of the tag-policy restriction, verified
+rollback took approximately 3 minutes 12 seconds. Workflow `30512329569` then
+restored RC2/current main, and all 54 routes passed again.
+
+**Operational contract:** Rollback must use the immutable tag commit through a
+lease-checked `main` update unless the Pages environment branch policy is
+changed in a separately reviewed operations task.
+
+**Next:** M9 / Task 9.5 — Release and Defect Triage.
 
 ## Task Status Update — 2026-07-12
 
