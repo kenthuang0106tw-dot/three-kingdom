@@ -12,14 +12,14 @@
 - Duration：3–4 weeks
 - Capacity：1 developer + AI，約 70–105 hours
 - Milestone：M10 — Zhang Fei Second Playable Vertical Slice
-- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M10 / 10.2
+- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M10 / 10.3
 
 ## M10 Task List
 
 | Order | Task | Estimate | Deliverable | Verification |
 |---:|---|---:|---|---|
 | 1 | ✅ 10.1 — Second Vertical Slice scope lock | 4–6h | 張飛單一目標、排除範圍、依賴與驗收矩陣 | documents + release baseline revalidation |
-| 2 | 10.2 — Player Definition boundary and Guan Yu freeze | 8–12h | 最小雙角色 seam；runtime 仍只有關羽 | contracts + full Guan Yu regression |
+| 2 | ✅ 10.2 — Player Definition boundary and Guan Yu freeze | 8–12h | 最小雙角色 seam；runtime 仍只有關羽 | contracts + full Guan Yu regression |
 | 3 | 10.3 — Zhang Fei gameplay and production contract | 6–10h | 重型定位、identity、frame/atlas 與比較規格 | document/identity acceptance |
 | 4 | 10.4 — Zhang Fei atlas and animation preview | 24–36h | genuine frames、atlas、metadata、QA preview | asset/tests/three-viewport preview |
 | 5 | 10.5 — Zhang Fei combat prototype | 12–18h | development-only heavy-warrior prototype | before/after playtest + combat regression |
@@ -1326,3 +1326,31 @@ Status: completed.
 The only next task is M10 / Task 10.2 — Player Definition Boundary and Guan Yu
 Freeze. Do not add Zhang Fei art, selection, prototype tuning, or formal Stage
 integration in that task.
+
+## M10 / Task 10.2 — Player Definition Boundary and Guan Yu Freeze — 2026-07-30
+
+Status: completed.
+
+- [x] Added one typed `PlayerDefinition` containing only identity,
+  presentation/atlas, body, movement, lifecycle, animation, hitbox, and
+  three-stage attack differences required by the two known players.
+- [x] Expressed every accepted Guan Yu value through one immutable definition.
+- [x] Routed `PlayerActor`, `PlayerAttackController`, animation registration,
+  Scene construction, preview, HP, movement, hurt, and attack hitbox through
+  that definition.
+- [x] Kept Guan Yu as the only registered and instantiated runtime player; no
+  Zhang Fei asset, animation, selection, tuning, or runtime branch was added.
+- [x] Added focused regression coverage for Guan Yu pixels/frames, feet,
+  origin/scale, body, speed, HP/hurt, animation rates, attack phase/timing,
+  damage, knockback, Hit Stop, and hitbox.
+- [x] Passed 152/152 tests, typecheck, lint with zero errors/eight existing
+  warnings, Vinext build, GitHub Pages build, and 52-file packaging.
+- [x] Passed Desktop, 844×390, and 390×844 production smoke: one intrinsic
+  1280×720 Canvas, movement/attack/Pause intact, no overflow/debug dataset, and
+  zero captured runtime errors.
+- [x] Preserved Enemy, Boss, Stage, Camera, flow, input, Audio, React, UI, and
+  production asset contracts.
+
+The only next task is M10 / Task 10.3 — Zhang Fei Gameplay and Production
+Contract. It is a contract task only: do not produce or integrate Zhang Fei
+runtime art, selection, or gameplay yet.

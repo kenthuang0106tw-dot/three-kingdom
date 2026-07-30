@@ -34,8 +34,12 @@ import { TitleStartController } from "../app/game/flow/TitleStartController.ts";
 import { createHudViewModel } from "../app/game/ui/HudViewModel.ts";
 import { FailureRestartGate } from "../app/game/flow/FailureRestartGate.ts";
 import { ResultReplayGate } from "../app/game/flow/ResultReplayGate.ts";
-import { PLAYER_ATTACKS } from "../app/game/player/PlayerAttackController.ts";
-import { GUANYU_ANIMATION_FRAMES, GUANYU_DISPLAY_SCALE, GUANYU_ORIGIN_Y } from "../app/game/player/GuanYuAnimationMetadata.ts";
+import {
+  GUANYU_ANIMATION_FRAMES,
+  GUANYU_DISPLAY_SCALE,
+  GUANYU_ORIGIN_Y,
+  GUANYU_PLAYER_DEFINITION,
+} from "../app/game/player/GuanYuAnimationMetadata.ts";
 
 test("Production builds compile Phaser development presentation out", async () => {
   const [viteConfig, githubConfig, host, scene] = await Promise.all([
@@ -83,7 +87,13 @@ test("Enemy and combat source retain the formal five-enemy contracts", async () 
   assert.equal(BAMBOO_COMBAT_ROOM.spawnPoints.length, 5);
   assert.match(manager, /get currentAttackerId\(\)/);
   assert.match(scene, /this\.physics\.overlap\(this\.attackZone, enemy\.bodyZone\)/);
-  assert.match(scene, /playerBodyZone\.y - 48/, "player attack hitbox must overlap feet-based enemy bodies when Y-aligned");
+  assert.deepEqual(GUANYU_PLAYER_DEFINITION.attackHitbox, {
+    width: 142,
+    height: 86,
+    offsetX: 104,
+    offsetY: -48,
+  }, "player attack hitbox must preserve the feet-aligned combat contract");
+  assert.match(scene, /this\.playerBodyZone\.y \+ hitbox\.offsetY/);
   assert.match(scene, /resolveAttack\(\{/);
 });
 
@@ -169,7 +179,7 @@ test("Touch input shares the action snapshot and releases pointer state", async 
   assert.doesNotMatch(source, /BUTTON_LAYOUT/);
   assert.match(scene, /new TouchInputController\(this\)/);
   assert.match(scene, /readSnapshot\(this\.inputController\.readSnapshot\(\)\)/);
-  assert.match(scene, /new Phaser\.Math\.Vector2\(moveX, moveY\)\.scale\(WALK_SPEED\)/);
+  assert.match(scene, /new Phaser\.Math\.Vector2\(moveX, moveY\)\.scale\(this\.playerDefinition\.movement\.speed\)/);
 });
 
 test("Mobile landscape keeps the Phaser canvas in a safe-area fitted contract", async () => {
@@ -198,7 +208,7 @@ test("MainScene exposes a development-only reset smoke path with shutdown cleanu
   assert.match(source, /touchInputController\.destroy\(\)/);
   assert.match(source, /lifecycleClock\.destroy\(\)/);
   assert.match(source, /enemyManager\.destroy\(\)/);
-  assert.match(source, /this\.anims\.exists\("guanyu-walk"\)/);
+  assert.match(source, /this\.anims\.exists\(this\.playerDefinition\.animations\.walk\.key\)/);
 });
 
 test("Runtime asset manifest preserves keys and reports missing required assets", async () => {
@@ -267,7 +277,7 @@ test("M6A Effects and product UI art use original runtime assets without changin
   assert.match(hudSource, /addUiText/);
   assert.match(touchSource, /"ui-joystick-base"/);
   assert.match(touchSource, /"ui-attack-frame"/);
-  assert.match(playerSource, /"combat-effects", "actor-shadow"/);
+  assert.match(playerSource, /"combat-effects",\s+"actor-shadow"/);
   assert.match(enemySource, /"combat-effects", "actor-shadow"/);
   assert.match(bossSource, /"combat-effects", "actor-shadow"/);
   assert.match(toolSource, /GLYPHS =/);
@@ -491,7 +501,7 @@ test("MainScene owns failed combat suspension and explicit Phaser restart", asyn
 test("PlayerActor owns sprite, feet anchor, and Arcade body responsibilities", async () => {
   const source = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
   const actor = await readFile(new URL("../app/game/player/PlayerActor.ts", import.meta.url), "utf8");
-  assert.match(source, /new PlayerActor\(this, START_X, START_FOOT_Y\)/);
+  assert.match(source, /new PlayerActor\(this, START_X, START_FOOT_Y, this\.playerDefinition\)/);
   assert.match(source, /this\.playerActor\.syncVisuals\(\)/);
   assert.match(source, /this\.playerActor\.destroy\(\)/);
   assert.match(actor, /readonly bodyZone/);
@@ -503,20 +513,19 @@ test("PlayerActor owns sprite, feet anchor, and Arcade body responsibilities", a
 
 test("PlayerAttackController defines independent three-stage timing metadata", async () => {
   const source = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
-  const controller = await readFile(new URL("../app/game/player/PlayerAttackController.ts", import.meta.url), "utf8");
-  assert.match(source, /new PlayerAttackController\(\)/);
+  const metadata = await readFile(new URL("../app/game/player/GuanYuAnimationMetadata.ts", import.meta.url), "utf8");
+  assert.match(source, /new PlayerAttackController\(this\.playerDefinition\.attacks\)/);
   assert.match(source, /this\.attackController\.begin/);
   assert.match(source, /this\.attackController\.isActiveFrame/);
   assert.match(source, /this\.attackController\.finish\(\)/);
-  assert.match(controller, /guanyu-attack1/);
-  assert.match(controller, /guanyu-attack2/);
-  assert.match(controller, /guanyu-attack3/);
-  assert.match(controller, /startupFrames/);
-  assert.match(controller, /activeFrames/);
-  assert.match(controller, /recoveryFrames/);
-  assert.deepEqual(Object.values(PLAYER_ATTACKS).map(attack => attack.frames.length), [5, 6, 8]);
-  assert.deepEqual(GUANYU_ANIMATION_FRAMES.attack1, PLAYER_ATTACKS[1].frames);
-  for (const attack of Object.values(PLAYER_ATTACKS)) {
+  assert.match(source, /GUANYU_PLAYER_DEFINITION/);
+  assert.match(metadata, /startupFrames/);
+  assert.match(metadata, /activeFrames/);
+  assert.match(metadata, /recoveryFrames/);
+  const attacks = GUANYU_PLAYER_DEFINITION.attacks;
+  assert.deepEqual(Object.values(attacks).map(attack => attack.frames.length), [5, 6, 8]);
+  assert.deepEqual(GUANYU_ANIMATION_FRAMES.attack1, attacks[1].frames);
+  for (const attack of Object.values(attacks)) {
     const baseFrameMs = 1000 / attack.frameRate;
     const phaseDuration = indexes => indexes.reduce(
       (total, frameIndex) => total + baseFrameMs + attack.extraFrameDurationsMs[frameIndex - 1], 0,
@@ -1952,7 +1961,8 @@ test("the release closeouts identify one accepted runtime and one post-release t
   assert.match(m10Scope, /Zhao Yun/);
   assert.match(m10Scope, /A second Stage/);
   assert.match(m10Scope, /Player Definition Boundary and Guan Yu Freeze/);
-  assert.match(nextTask, /M10 \/ Task 10\.2 — Player Definition Boundary and Guan Yu Freeze/);
-  assert.match(nextTask, /Keep Guan Yu as the only registered and instantiated runtime player/);
-  assert.match(nextTask, /Do not add Zhang Fei assets, animation keys, selection UI/);
+  assert.match(nextTask, /M10 \/ Task 10\.3 — Zhang Fei Gameplay and Production Contract/);
+  assert.match(nextTask, /do not promote them to runtime/);
+  assert.match(nextTask, /Do not generate or edit art, add runtime assets\/animations/);
+  assert.match(nextTask, /Task 10\.4 is the\s+sole eligible implementation task/);
 });

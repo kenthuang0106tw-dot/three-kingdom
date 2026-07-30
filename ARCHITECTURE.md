@@ -1000,7 +1000,7 @@ encounters.
 Development may publish the active role list as read-only Canvas dataset
 evidence. Production must not expose that diagnostic surface.
 
-## Second Playable Player Boundary (M10 Planning)
+## Second Playable Player Boundary (M10)
 
 M10 adds one real second consumer, Zhang Fei, so a minimal data boundary is now
 justified. `PlayerDefinition` may describe only actor-owned differences already
@@ -1009,10 +1009,17 @@ feet/origin/scale, ground body, movement, lifecycle values, and attack
 metadata. It must not become a generic skill, equipment, progression, or
 arbitrary-character framework.
 
-Task 10.2 must route the existing Guan Yu runtime through that boundary while
-registering no Zhang Fei asset, animation, selection, or gameplay. Guan Yu's
-accepted values and behavior are the regression oracle. Only after that freeze
-may the Zhang Fei production and prototype tasks consume the same boundary.
+Task 10.2 routes the existing Guan Yu runtime through
+`player/PlayerDefinition.ts` and `GUANYU_PLAYER_DEFINITION`. `MainScene` owns
+the selected definition, and passes it to `PlayerActor`,
+`PlayerAttackController`, animation registration, preview, lifecycle, movement,
+and attack-hitbox composition. The controller consumes attack metadata and does
+not branch on identity.
+
+The current runtime still registers no Zhang Fei asset, animation, selection,
+or gameplay. Guan Yu's focused definition tests are the regression oracle.
+Only after that freeze may Zhang Fei production and prototype tasks consume the
+same boundary.
 
 Character choice remains Phaser-owned on the Title surface. React continues to
 own only the host lifecycle. EnemyManager, Stage, Camera, CombatResolver,

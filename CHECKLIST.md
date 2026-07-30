@@ -1463,3 +1463,24 @@
 | Acceptance matrix | Pass | Desktop/mobile/reset/performance/packaging/production gates defined |
 | Runtime scope | Pass | Planning docs and contract test only; no production behavior or asset change |
 | Next task | Selected | M10 / Task 10.2 — Player Definition Boundary and Guan Yu Freeze |
+
+## M10 / Task 10.2 — Player Definition Boundary and Guan Yu Freeze — 2026-07-30
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Previous task | Pass | M10.1 revalidated: 149/149, typecheck, lint, both builds |
+| Definition seam | Pass | Typed `PlayerDefinition`; one immutable Guan Yu definition |
+| Actor composition | Pass | Actor body/sprite/shadow/animation consume the definition |
+| Attack composition | Pass | Controller and Scene consume definition-owned timing, phases, impact, and hitbox |
+| Guan Yu presentation | Pass | Texture, 43 frames, feet `(320,420)`, origin, `0.64` scale unchanged |
+| Guan Yu gameplay | Pass | Speed 235, HP 10, hurt 300ms, attack durations 375/375/650ms unchanged |
+| Combat | Pass | Damage 1/1/2, knockback 26/26/60px, Hit Stop 4/4/6 frames unchanged |
+| Runtime scope | Pass | Guan Yu only; no Zhang Fei asset, animation, selection, tuning, or branch |
+| Automated gates | Pass | 152/152, typecheck, lint 0 errors/8 existing warnings, both builds |
+| Packaging | Pass | Both outputs preserve the existing 52-file runtime inventory |
+| Desktop | Pass | One 1280×720 Canvas; movement, attack, Pause; no overflow/error |
+| 844×390 | Pass | One intrinsic 1280×720 Canvas, fitted 693×390; no overflow/error |
+| 390×844 | Pass | One intrinsic 1280×720 Canvas, fitted 325×183; no overflow/error |
+| Production isolation | Pass | Empty Canvas dataset and zero captured browser errors |
+| Release record | Pass | Published `0.1.0` manifest remains immutable after development resumes |
+| Next task | Selected | M10 / Task 10.3 — Zhang Fei Gameplay and Production Contract |

@@ -42,7 +42,7 @@ M6A.2 runtime contract：idle 6、walk 8、attack1 5、attack2 6、attack3 8、h
 - 驗證 idle/walk/attack 動作連續性。
 - 接入 Phaser state machine。
 
-M10 已將張飛提升為第二個 Vertical Slice 的唯一新可玩角色。10.2 先建立
+M10 已將張飛提升為第二個 Vertical Slice 的唯一新可玩角色。10.2 已建立
 最小 Player Definition seam 並凍結關羽；10.3 接受張飛 gameplay、identity、
 frame budget 與 atlas contract；10.4 才能建立正式 atlas/metadata/QA。現有
 張飛 source 只能作 feasibility input，未完成邊界、連續性與 identity 審核前

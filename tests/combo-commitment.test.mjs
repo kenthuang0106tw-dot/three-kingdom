@@ -2,7 +2,10 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { resolveAttack } from "../app/game/combat/CombatResolver.ts";
-import { attackDurationMs, PLAYER_ATTACKS } from "../app/game/player/PlayerAttackController.ts";
+import { GUANYU_PLAYER_DEFINITION } from "../app/game/player/GuanYuAnimationMetadata.ts";
+import { attackDurationMs } from "../app/game/player/PlayerAttackController.ts";
+
+const PLAYER_ATTACKS = GUANYU_PLAYER_DEFINITION.attacks;
 
 const baselineImpact = { damage: 1, knockbackDistance: 26, hitStopMs: (1000 / 60) * 4 };
 

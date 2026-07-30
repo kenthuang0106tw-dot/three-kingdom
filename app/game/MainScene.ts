@@ -10,8 +10,9 @@ import { createAssetFailureReporter, queueRuntimeAssets } from "./assets/AssetMa
 import { PlayerStateMachine, type PlayerState } from "./player/PlayerStateMachine";
 import { PlayerLifecycle } from "./player/PlayerLifecycle";
 import { PlayerActor } from "./player/PlayerActor";
-import { PLAYER_ATTACKS, PlayerAttackController, type AttackStep } from "./player/PlayerAttackController";
-import { GUANYU_ANIMATION_FRAMES, GUANYU_ATTACK_PHASES, GUANYU_DISPLAY_SCALE, GUANYU_ORIGIN_Y, GUANYU_TEXTURE_KEY } from "./player/GuanYuAnimationMetadata.ts";
+import { PlayerAttackController } from "./player/PlayerAttackController";
+import { GUANYU_ANIMATION_FRAMES, GUANYU_ATTACK_PHASES, GUANYU_PLAYER_DEFINITION } from "./player/GuanYuAnimationMetadata.ts";
+import type { AttackStep, PlayerAnimationDefinition } from "./player/PlayerDefinition.ts";
 import { resolveAttack } from "./combat/CombatResolver";
 import { EffectDirector, EFFECT_PARAMS } from "./combat/EffectDirector";
 import { BAMBOO_BOSS_ARENA, BAMBOO_COMBAT_ROOM, clampStageX } from "./stage/StageConfig";
@@ -46,19 +47,13 @@ const VIEWPORT_WIDTH = 1280;
 const VIEWPORT_HEIGHT = 720;
 const START_X = BAMBOO_COMBAT_ROOM.playerSpawn.x;
 const START_FOOT_Y = BAMBOO_COMBAT_ROOM.playerSpawn.y;
-const WALK_SPEED = 235;
-const PLAYER_MAX_HP = 10;
 const ENEMY_FRAME_SIZE = 384;
 const ENEMY_FEET_Y = 354;
-const HURT_MS = 300;
 const COMBO_WINDOW_MS = 360;
 const FAILURE_SMOKE_RESTART_MS = 500;
 const RESULT_SMOKE_REPLAY_MS = 500;
 const RESULT_SMOKE_BOSS_HIT_MS = 35;
 const ATTACK_STATES: AttackState[] = ["attack1", "attack2", "attack3"];
-const GUANYU_CELL_WIDTH = 640;
-const GUANYU_CELL_HEIGHT = 448;
-const GUANYU_ATLAS_COLUMNS = 8;
 const GUANYU_ATTACK_FRAME_OFFSET = GUANYU_ANIMATION_FRAMES.idle.length + GUANYU_ANIMATION_FRAMES.walk.length;
 const PREVIEW_FRAMES: PreviewFrame[] = (["attack1", "attack2", "attack3"] as const).flatMap(animation =>
   GUANYU_ANIMATION_FRAMES[animation].map((name, localIndex) => {
@@ -66,13 +61,14 @@ const PREVIEW_FRAMES: PreviewFrame[] = (["attack1", "attack2", "attack3"] as con
       ? GUANYU_ANIMATION_FRAMES.attack1.length
       : GUANYU_ANIMATION_FRAMES.attack1.length + GUANYU_ANIMATION_FRAMES.attack2.length;
     const atlasIndex = GUANYU_ATTACK_FRAME_OFFSET + previousCount + localIndex;
+    const { cellWidth, cellHeight, columns } = GUANYU_PLAYER_DEFINITION.atlas;
     return {
       name,
-      x: (atlasIndex % GUANYU_ATLAS_COLUMNS) * GUANYU_CELL_WIDTH,
-      y: Math.floor(atlasIndex / GUANYU_ATLAS_COLUMNS) * GUANYU_CELL_HEIGHT,
-      width: GUANYU_CELL_WIDTH,
-      height: GUANYU_CELL_HEIGHT,
-      originY: GUANYU_ORIGIN_Y,
+      x: (atlasIndex % columns) * cellWidth,
+      y: Math.floor(atlasIndex / columns) * cellHeight,
+      width: cellWidth,
+      height: cellHeight,
+      originY: GUANYU_PLAYER_DEFINITION.presentation.originY,
       offsetX: 0,
       offsetY: 0,
       classification: `${animation} ${GUANYU_ATTACK_PHASES[animation][localIndex]}`,
@@ -130,6 +126,7 @@ class PlayerInputController {
 }
 
 export default class MainScene extends Phaser.Scene {
+  private readonly playerDefinition = GUANYU_PLAYER_DEFINITION;
   private playerActor!: PlayerActor;
   private attackZone!: Phaser.GameObjects.Zone;
   private get playerSprite() { return this.playerActor.sprite; }
@@ -148,8 +145,8 @@ export default class MainScene extends Phaser.Scene {
   private enemyManager!: EnemyManager;
   private bossActor?: BossActor;
   private readonly playerStateMachine = new PlayerStateMachine();
-  private readonly playerLifecycle = new PlayerLifecycle(PLAYER_MAX_HP);
-  private readonly attackController = new PlayerAttackController();
+  private readonly playerLifecycle = new PlayerLifecycle(this.playerDefinition.lifecycle.maxHp);
+  private readonly attackController = new PlayerAttackController(this.playerDefinition.attacks);
   private readonly gameFlow = new GameFlowStateMachine();
   private readonly titleStartController = new TitleStartController(this.gameFlow);
   private titleOverlay?: Phaser.GameObjects.Container;
@@ -431,10 +428,16 @@ export default class MainScene extends Phaser.Scene {
       }
     }
 
-    this.playerActor = new PlayerActor(this, START_X, START_FOOT_Y);
+    this.playerActor = new PlayerActor(this, START_X, START_FOOT_Y, this.playerDefinition);
     this.showIdleFrame();
 
-    this.attackZone = this.add.zone(START_X, START_FOOT_Y - 48, 142, 86).setOrigin(0.5);
+    const attackHitbox = this.playerDefinition.attackHitbox;
+    this.attackZone = this.add.zone(
+      START_X,
+      START_FOOT_Y + attackHitbox.offsetY,
+      attackHitbox.width,
+      attackHitbox.height,
+    ).setOrigin(0.5);
     this.physics.add.existing(this.attackZone);
     this.attackBody = this.attackZone.body as Phaser.Physics.Arcade.Body;
     this.attackBody.setAllowGravity(false);
@@ -631,7 +634,7 @@ export default class MainScene extends Phaser.Scene {
 
     const { moveX, moveY } = this.currentInput;
     if (moveX || moveY) {
-      const velocity = new Phaser.Math.Vector2(moveX, moveY).scale(WALK_SPEED);
+      const velocity = new Phaser.Math.Vector2(moveX, moveY).scale(this.playerDefinition.movement.speed);
       this.playerBody.setVelocity(velocity.x, velocity.y);
       if (moveX > 0) this.setFacing(1); else if (moveX < 0) this.setFacing(-1);
       this.transitionTo("walk");
@@ -773,15 +776,18 @@ export default class MainScene extends Phaser.Scene {
   }
 
   private createCombatAnimations() {
-    if (this.anims.exists("guanyu-walk")) return;
-    this.anims.create({ key: "guanyu-idle", frames: GUANYU_ANIMATION_FRAMES.idle.map(frame => ({ key: GUANYU_TEXTURE_KEY, frame })), frameRate: 4, repeat: -1 });
-    this.anims.create({ key: "guanyu-walk", frames: GUANYU_ANIMATION_FRAMES.walk.map(frame => ({ key: GUANYU_TEXTURE_KEY, frame })), frameRate: 8, repeat: -1 });
-    this.anims.create({ key: "guanyu-hurt", frames: GUANYU_ANIMATION_FRAMES.hurt.map(frame => ({ key: GUANYU_TEXTURE_KEY, frame })), duration: HURT_MS, repeat: 0 });
-    this.anims.create({ key: "guanyu-dead", frames: GUANYU_ANIMATION_FRAMES.dead.map(frame => ({ key: GUANYU_TEXTURE_KEY, frame })), frameRate: 8, repeat: 0 });
-    for (const attack of Object.values(PLAYER_ATTACKS)) {
+    if (this.anims.exists(this.playerDefinition.animations.walk.key)) return;
+    for (const animation of Object.values(this.playerDefinition.animations)) {
+      this.createPlayerAnimation(animation);
+    }
+    for (const attack of Object.values(this.playerDefinition.attacks)) {
       this.anims.create({
         key: attack.animationKey,
-        frames: attack.frames.map((frame, index) => ({ key: GUANYU_TEXTURE_KEY, frame, duration: attack.extraFrameDurationsMs[index] })),
+        frames: attack.frames.map((frame, index) => ({
+          key: this.playerDefinition.textureKey,
+          frame,
+          duration: attack.extraFrameDurationsMs[index],
+        })),
         frameRate: attack.frameRate,
         repeat: 0,
       });
@@ -833,6 +839,16 @@ export default class MainScene extends Phaser.Scene {
       });
     }
     this.effectDirector.createHitSparkAnimation();
+  }
+
+  private createPlayerAnimation(animation: PlayerAnimationDefinition) {
+    this.anims.create({
+      key: animation.key,
+      frames: animation.frames.map(frame => ({ key: this.playerDefinition.textureKey, frame })),
+      frameRate: animation.frameRate,
+      repeat: animation.repeat,
+      ...(animation.durationMs === undefined ? {} : { duration: animation.durationMs }),
+    });
   }
 
   private updateAttackState() {
@@ -948,7 +964,7 @@ export default class MainScene extends Phaser.Scene {
   }
 
   private currentAttackImpact() {
-    return this.attackController.activeAttack?.impact ?? PLAYER_ATTACKS[1].impact;
+    return this.attackController.activeAttack?.impact ?? this.playerDefinition.attacks[1].impact;
   }
 
   private applyHitToEnemy(enemy: EnemyCombatant, triggerGlobalEffects: boolean) {
@@ -1041,7 +1057,9 @@ export default class MainScene extends Phaser.Scene {
       this.transitionTo("dead");
       this.enterFailedState();
     } else {
-      this.time.delayedCall(HURT_MS, () => { if (this.state === "hurt") this.transitionTo("idle"); });
+      this.time.delayedCall(this.playerDefinition.lifecycle.hurtDurationMs, () => {
+        if (this.state === "hurt") this.transitionTo("idle");
+      });
     }
   }
 
@@ -1204,7 +1222,7 @@ export default class MainScene extends Phaser.Scene {
     if (!this.failureSmokeMode) return;
     if (!this.failureSmokeCycleActive) {
       const initialStateRestored = this.gameFlow.state === "title"
-        && this.playerHp === PLAYER_MAX_HP
+        && this.playerHp === this.playerDefinition.lifecycle.maxHp
         && this.playerBodyZone.x === START_X
         && this.encounterSequence.nextEncounterIndex === 0
         && this.bossEntryState === "locked"
@@ -1226,7 +1244,7 @@ export default class MainScene extends Phaser.Scene {
 
     const bossActor = this.bossActor;
     if (!bossActor) return;
-    this.playerLifecycle.applyDamage(PLAYER_MAX_HP - 1);
+    this.playerLifecycle.applyDamage(this.playerDefinition.lifecycle.maxHp - 1);
     this.game.canvas.dataset.playerHp = String(this.playerHp);
     this.playerBody.reset(bossActor.bodyZone.x - 145, bossActor.bodyZone.y);
     this.syncVisualsToBody();
@@ -1239,7 +1257,7 @@ export default class MainScene extends Phaser.Scene {
   private prepareResultSmokeCycle() {
     if (!this.resultSmokeMode || this.resultSmokeCycleActive) return;
     const initialStateRestored = this.gameFlow.state === "title"
-      && this.playerHp === PLAYER_MAX_HP
+      && this.playerHp === this.playerDefinition.lifecycle.maxHp
       && this.playerBodyZone.x === START_X
       && this.encounterSequence.nextEncounterIndex === 0
       && this.bossEntryState === "locked"
@@ -1767,8 +1785,14 @@ export default class MainScene extends Phaser.Scene {
     const keyboard = this.input.keyboard;
     if (!keyboard) throw new Error("Keyboard input is unavailable");
     this.previewKeys = keyboard.addKeys({ left: "LEFT", right: "RIGHT", play: "SPACE", slower: "DOWN", faster: "UP", loop: "L", onion: "O" }) as typeof this.previewKeys;
-    this.onionSprite = this.add.sprite(VIEWPORT_WIDTH / 2, 600, GUANYU_TEXTURE_KEY, PREVIEW_FRAMES[0].name).setAlpha(0.32).setTint(0x69cfff).setScale(GUANYU_DISPLAY_SCALE).setVisible(false);
-    this.previewSprite = this.add.sprite(VIEWPORT_WIDTH / 2, 600, GUANYU_TEXTURE_KEY, PREVIEW_FRAMES[0].name).setScale(GUANYU_DISPLAY_SCALE);
+    const { textureKey, presentation } = this.playerDefinition;
+    this.onionSprite = this.add.sprite(VIEWPORT_WIDTH / 2, 600, textureKey, PREVIEW_FRAMES[0].name)
+      .setAlpha(0.32)
+      .setTint(0x69cfff)
+      .setScale(presentation.displayScale)
+      .setVisible(false);
+    this.previewSprite = this.add.sprite(VIEWPORT_WIDTH / 2, 600, textureKey, PREVIEW_FRAMES[0].name)
+      .setScale(presentation.displayScale);
     this.previewText = this.add.text(24, 22, "", { fontFamily: "Consolas, monospace", fontSize: "18px", color: "#fff", backgroundColor: "rgba(0,0,0,.8)", padding: { x: 12, y: 10 }, lineSpacing: 3 }).setDepth(100);
     this.showPreviewFrame(0);
   }
@@ -1794,14 +1818,20 @@ export default class MainScene extends Phaser.Scene {
   private showPreviewFrame(index: number) {
     this.previewIndex = Phaser.Math.Wrap(index, 0, PREVIEW_FRAMES.length);
     const current = PREVIEW_FRAMES[this.previewIndex];
-    this.previewSprite!.setTexture(GUANYU_TEXTURE_KEY, current.name).setOrigin(0.5, current.originY).setPosition(VIEWPORT_WIDTH / 2, 600);
+    this.previewSprite!.setTexture(this.playerDefinition.textureKey, current.name)
+      .setOrigin(this.playerDefinition.presentation.originX, current.originY)
+      .setPosition(VIEWPORT_WIDTH / 2, 600);
     const previous = PREVIEW_FRAMES[Phaser.Math.Wrap(this.previewIndex - 1, 0, PREVIEW_FRAMES.length)];
-    this.onionSprite!.setTexture(GUANYU_TEXTURE_KEY, previous.name).setOrigin(0.5, previous.originY).setPosition(VIEWPORT_WIDTH / 2, 600).setVisible(this.onionEnabled);
+    this.onionSprite!.setTexture(this.playerDefinition.textureKey, previous.name)
+      .setOrigin(this.playerDefinition.presentation.originX, previous.originY)
+      .setPosition(VIEWPORT_WIDTH / 2, 600)
+      .setVisible(this.onionEnabled);
     this.refreshPreviewText();
   }
 
   private refreshPreviewText() {
     const frame = PREVIEW_FRAMES[this.previewIndex];
+    const { atlas, presentation } = this.playerDefinition;
     this.previewText!.setText([
       "ATTACK ANIMATION PREVIEW", `frame: ${this.previewIndex} / ${PREVIEW_FRAMES.length - 1}`, `name: ${frame.name}`,
       `x: ${frame.x}  y: ${frame.y}`, `width: ${frame.width}  height: ${frame.height}`,
@@ -1809,7 +1839,7 @@ export default class MainScene extends Phaser.Scene {
       `classification: ${frame.classification}`, `speed: ${this.previewSpeeds[this.previewFpsIndex]} FPS`,
       `playing: ${this.previewPlaying}  loop: ${this.previewLoop}  onion: ${this.onionEnabled}`, "",
       "Left/Right frame | Space play/pause | Up/Down FPS | L loop | O onion-skin",
-      "All frames use the shared 640x448 cell, feet anchor (320, 420), and display scale 0.64.",
+      `All frames use the shared ${atlas.cellWidth}x${atlas.cellHeight} cell, feet anchor (${atlas.feetX}, ${atlas.feetY}), and display scale ${presentation.displayScale}.`,
     ]);
   }
 
@@ -1817,7 +1847,13 @@ export default class MainScene extends Phaser.Scene {
   private showIdleFrame() { this.playerActor.showIdleFrame(); }
   private setFacing(direction: 1 | -1) { this.facing = direction; this.playerActor.setFacing(direction); }
   private syncVisualsToBody() { this.playerActor.syncVisuals(); if (this.attackBody.enable) this.positionAttackHitbox(); }
-  private positionAttackHitbox() { const x = Math.round(this.playerBodyZone.x + this.facing * 104), y = Math.round(this.playerBodyZone.y - 48); this.attackZone.setPosition(x, y); this.attackBody.reset(x, y); }
+  private positionAttackHitbox() {
+    const hitbox = this.playerDefinition.attackHitbox;
+    const x = Math.round(this.playerBodyZone.x + this.facing * hitbox.offsetX);
+    const y = Math.round(this.playerBodyZone.y + hitbox.offsetY);
+    this.attackZone.setPosition(x, y);
+    this.attackBody.reset(x, y);
+  }
   private enableAttackHitbox() { this.attackZone.setActive(true); this.attackBody.enable = true; this.positionAttackHitbox(); }
   private disableAttackHitbox() { if (!this.attackBody) return; this.attackBody.stop(); this.attackBody.enable = false; this.attackZone.setActive(false); }
 
@@ -1896,7 +1932,13 @@ export default class MainScene extends Phaser.Scene {
     if (!this.enemyManager || !this.playerBodyZone || !this.lifecycleClock) return;
     const snapshot: GameplaySnapshot = {
       flow: this.gameFlow.state,
-      player: { state: this.state, hp: this.playerHp, maxHp: PLAYER_MAX_HP, x: this.playerBodyZone.x, y: this.playerBodyZone.y },
+      player: {
+        state: this.state,
+        hp: this.playerHp,
+        maxHp: this.playerDefinition.lifecycle.maxHp,
+        x: this.playerBodyZone.x,
+        y: this.playerBodyZone.y,
+      },
       enemies: this.enemyManager.getAllEnemies().map(enemy => ({
         id: enemy.id, state: enemy.state, hp: enemy.hp, x: enemy.bodyZone.x, y: enemy.bodyZone.y,
       })),

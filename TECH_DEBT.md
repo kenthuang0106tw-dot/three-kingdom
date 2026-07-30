@@ -769,16 +769,22 @@ fail.
 - Disposition: none block `0.1.0`; all are documented and must not be hidden by
   unrelated post-release feature work.
 
-## TD-M10.1 — Guan Yu identity is hard-coded across Player composition
+## TD-M10.1 Resolved — Guan Yu identity was hard-coded across Player composition
 
-- **Severity:** High for a second playable actor; no `0.1.0` runtime defect.
+- **Resolved:** 2026-07-30, M10 / Task 10.2.
+- **Original severity:** High for a second playable actor; no `0.1.0` runtime
+  defect.
 - **Evidence:** `MainScene`, `PlayerActor`, `PlayerAttackController`,
   `GuanYuAnimationMetadata`, asset registration, animation keys, and focused
   tests directly name Guan Yu.
 - **Risk:** Adding Zhang Fei with conditionals would create parallel animation,
   combat, and lifecycle paths and make Guan Yu regressions difficult to detect.
-- **Resolution boundary:** Task 10.2 introduces the minimum definition seam for
-  the two known players and routes Guan Yu through it with exact behavior
-  regression. It must not register Zhang Fei, add selection, or build a generic
-  skill/character framework.
-- **Target:** M10 / Task 10.2.
+- **Resolution:** Added the minimum typed `PlayerDefinition`, expressed Guan Yu
+  as one immutable definition, and routed actor, attack, animation, preview,
+  lifecycle, movement, body, and hitbox composition through it.
+- **Evidence:** Focused tests freeze every accepted Guan Yu value and prove the
+  runtime contains no Zhang Fei branch. Full 152/152 regression and
+  three-viewport production smoke passed.
+- **Remaining boundary:** Task 10.3 may define Zhang Fei's identity/gameplay
+  contract, but must not grow this seam into a skill, equipment, progression,
+  or arbitrary-character framework.

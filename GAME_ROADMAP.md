@@ -18,7 +18,7 @@
 |---|---|---|
 | Runtime | Prototype | Phaser 3.90、Arcade Physics、1280×720、pixel rendering |
 | React boundary | Correct | `PhaserGame.tsx` 建立／銷毀唯一 instance |
-| Player | Playable prototype | 關羽移動、idle、walk、attack1–3、hurt |
+| Player | Playable prototype | 關羽移動、idle、walk、attack1–3、hurt；typed Player Definition seam 已建立 |
 | Combat | Playable prototype | Combo、獨立 hitbox、multi-hit、Hit Stop、Flash、Spark、Knockback、Shake |
 | Enemy | Released vertical slice | 五種正式敵人、混合 Formation、單一 Attack Slot、hurt/dead/cleanup |
 | Boss | Playable prototype | locomotion、對線、attack hitbox、player damage、death cleanup 與 arena lifecycle 已接入 |
@@ -559,7 +559,7 @@ gameplay, art, balance, Stage, Camera, Audio, input, or UI behavior changed.
 | ID | Description | Priority | Difficulty | Dependencies | Acceptance Criteria | Expected Files | Risk |
 |---|---|---:|---:|---|---|---|---|
 | 10.1 | Second Vertical Slice scope lock — Completed 2026-07-30 | P1 | Medium | M9 | One player-visible goal, strict exclusions, dependency order, acceptance matrix, and one implementation NEXT_TASK are approved | roadmap/backlog/sprint/planning | Scope expansion immediately after release |
-| 10.2 | Player Definition boundary and Guan Yu freeze | P0 | High | 10.1 | Two-known-player data seam exists; Guan Yu runtime values/behavior remain exact; no Zhang Fei runtime or selection yet | player definition/actor/attack/MainScene/tests | Generic framework or Guan Yu regression |
+| 10.2 | Player Definition boundary and Guan Yu freeze — Completed 2026-07-30 | P0 | High | 10.1 | Two-known-player data seam exists; Guan Yu runtime values/behavior remain exact; no Zhang Fei runtime or selection yet | player definition/actor/attack/MainScene/tests | Generic framework or Guan Yu regression |
 | 10.3 | Zhang Fei gameplay and production contract | P0 | Medium | 10.2 | Heavy-warrior goal, comparison plan, approved identity, frame budget, feet/scale/atlas rules are accepted before production | character production docs/asset plan | Art precedes gameplay decision |
 | 10.4 | Zhang Fei atlas and animation preview | P0 | High | 10.3 | Genuine idle/walk/attack1–3/hurt/dead frames; measured metadata; preview feet stable; no formal Stage integration | player assets/tool/preview/tests | Source frames incomplete or identity drift |
 | 10.5 | Zhang Fei combat prototype | P0 | High | 10.4 | Development-only comparison proves distinct commitment/reward without becoming dominant; existing combat contracts pass | player config/prototype/tests/report | Balance is only HP/damage |
@@ -583,7 +583,31 @@ progression, backend, and multiplayer remain excluded.
 10.3 accepts gameplay and identity contracts before 10.4 art production; only
 an accepted 10.5 prototype may enter the formal Stage in 10.6.
 
-**Next:** M10 / Task 10.2 — Player Definition Boundary and Guan Yu Freeze.
+### M10 / Task 10.2 — Player Definition Boundary and Guan Yu Freeze (Completed 2026-07-30)
+
+**Result:** Added one typed `PlayerDefinition` boundary and one immutable Guan Yu
+definition. `MainScene`, `PlayerActor`, `PlayerAttackController`, animation
+registration, preview metadata, body, movement, lifecycle, hitbox, and attack
+impact now consume that definition.
+
+**Guan Yu freeze:** Focused expectations preserve texture/frame order,
+feet/origin/scale, body, 235 movement speed, 10 HP, 300ms hurt, all animation
+keys/rates, three attack durations/phases, damage, knockback, Hit Stop, and
+hitbox coordinates. The runtime still registers and instantiates Guan Yu only.
+
+**Architecture boundary:** No Zhang Fei asset, animation, selection, tuning, or
+identity branch was added. Enemy, Boss, Stage, Camera, flow, input, Audio,
+React, UI, and production assets remain unchanged.
+
+**Validation:** 152/152 tests, typecheck, lint with zero errors/eight existing
+warnings, both production builds, 52-file runtime inventory, and Desktop,
+844×390, and 390×844 one-Canvas smoke with zero captured browser errors.
+
+**Release-test correction:** The published `0.1.0` manifest remains an immutable
+record. Post-release development no longer attempts to regenerate that historic
+manifest from a changed working tree.
+
+**Next:** M10 / Task 10.3 — Zhang Fei Gameplay and Production Contract.
 
 ## Task Status Update — 2026-07-12
 

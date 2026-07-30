@@ -1,56 +1,70 @@
 # NEXT_TASK
 
-## M10 / Task 10.2 — Player Definition Boundary and Guan Yu Freeze
+## M10 / Task 10.3 — Zhang Fei Gameplay and Production Contract
 
 ### Why this is next
 
-The accepted runtime directly names Guan Yu across `MainScene`, `PlayerActor`,
-`PlayerAttackController`, animation metadata, asset loading, and tests. Adding
-Zhang Fei on top of those hard-coded paths would duplicate state/combat logic
-or scatter identity conditionals. One second real consumer now justifies a
-small definition seam before any Zhang Fei art or gameplay is integrated.
+Task 10.2 proved that the accepted Guan Yu runtime can consume one minimal
+Player Definition without behavior change. Before producing or integrating
+Zhang Fei frames, the project must lock what makes him tactically and visually
+different; otherwise art production would precede gameplay decisions and cause
+expensive atlas or animation rework.
 
 ### Completion conditions
 
-- Record Guan Yu's current texture, animation keys/frames, feet/origin/scale,
-  body, movement, lifecycle, attack timing, damage, knockback, and Hit Stop as
-  focused regression expectations.
-- Add one typed `PlayerDefinition` shape containing only differences required
-  by the two known players.
-- Express Guan Yu as one immutable definition.
-- Make `PlayerActor`, `PlayerAttackController`, animation registration, and
-  Scene player construction consume that definition.
-- Keep Guan Yu as the only registered and instantiated runtime player.
-- Preserve all Guan Yu pixels, animation frame order, timing, movement, HP,
-  combo, hitbox, damage, effects, Audio events, and full Stage behavior.
-- Do not add Zhang Fei assets, animation keys, selection UI, prototype tuning,
-  or runtime branches.
-- Do not change Enemy, Boss, Stage, Camera, flow, input, Audio, React, or UI.
+- Audit the existing Zhang Fei source/master images only as feasibility inputs;
+  do not promote them to runtime.
+- Lock one approved Zhang Fei identity reference: Japanese arcade-realistic
+  Three Kingdoms pixel art, heavy warrior silhouette, dark beard, and serpent
+  spear. Record prohibited identity drift.
+- Define his tactical role relative to Guan Yu using measurable hypotheses for
+  movement, body, attack startup/active/recovery, damage, knockback, and Hit
+  Stop. Values remain prototype hypotheses, not formal balance.
+- Preserve the existing one-button, three-stage, hit-confirm combo grammar,
+  independent attack hitbox, hit-once, hurt/dead, Pause, Hit Stop, and reset
+  contracts.
+- Define genuine frame budgets for idle, walk, attack1–3, hurt, and dead,
+  including startup/active/recovery classification for every attack.
+- Define one feet anchor, origin, display-scale target, cell/atlas rules,
+  alpha-bound analysis, debug sheet, onion-skin, silhouette, provenance, and
+  preview acceptance.
+- Define a development-only before/after combat comparison for Guan Yu versus
+  Zhang Fei in the existing encounter/Boss contexts.
+- Record acceptance, adjustment, and rejection criteria before art production.
+- Update Roadmap, Sprint, Asset Pipeline, Architecture, Checklist, and Technical
+  Debt only as required by the accepted contract.
+- Do not generate or edit art, add runtime assets/animations, implement
+  selection, modify Player gameplay, or change Enemy/Boss/Stage/Camera/UI/Audio.
 
 ### Acceptance and validation
 
-- Focused tests prove every accepted Guan Yu gameplay and presentation value is
-  unchanged through the definition.
-- No production source outside the minimum Player/MainScene composition path
-  changes.
-- `pnpm test`, `pnpm typecheck`, `pnpm lint`, `pnpm build`, and
-  `pnpm build:github-pages` pass.
-- Desktop, 844×390, and 390×844 retain one 1280×720 Canvas, Guan Yu movement,
-  all three attacks, Pause, and no captured runtime error.
-- Production runtime inventory and GitHub Pages routes remain valid.
+- One signed-off contract uniquely distinguishes Zhang Fei from Guan Yu without
+  relying only on HP or damage.
+- Frame and atlas requirements are specific enough for Task 10.4 to execute
+  without guessing crop, feet, phase, facing, or continuity.
+- Prototype metrics are reproducible and cannot declare success from subjective
+  “heavier feel” alone.
+- The contract explicitly rejects dominance, excessive waiting, unreadable
+  recovery, fake transform animation, identity drift, and scope expansion.
+- Contract tests confirm Task 10.3 remains planning-only and Task 10.4 is the
+  sole eligible implementation task.
+- `pnpm test`, `pnpm typecheck`, and `pnpm lint` pass.
 
 ### Expected files
 
-- `app/game/player/PlayerDefinition.ts`
-- `app/game/player/GuanYuAnimationMetadata.ts`
-- `app/game/player/PlayerActor.ts`
-- `app/game/player/PlayerAttackController.ts`
-- `app/game/MainScene.ts`
-- Focused contract tests and closeout documents.
+- `docs/planning/m10-zhang-fei-production-contract.md`
+- `GAME_ROADMAP.md`
+- `SPRINT.md`
+- `NEXT_TASK.md`
+- `ASSET_PIPELINE.md`
+- `ARCHITECTURE.md`
+- `CHECKLIST.md`
+- Contract tests.
 
 ### Risks
 
-- Moving values changes Guan Yu timing or feet alignment.
-- The definition grows into a speculative skill/equipment framework.
-- Global Phaser animation registration accidentally duplicates keys.
-- Zhang Fei scope leaks into a behavior-preserving foundation task.
+- Existing source images are mistaken for approved production frames.
+- Zhang Fei differs only through larger numbers instead of a tactical choice.
+- Frame count is locked before required transitions are understood.
+- The contract leaks into Task 10.4 art production or Task 10.5 gameplay.
+- A speculative generic character/weapon/skill framework is introduced.
