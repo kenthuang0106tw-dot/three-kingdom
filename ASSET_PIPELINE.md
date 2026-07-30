@@ -43,10 +43,18 @@ M6A.2 runtime contract：idle 6、walk 8、attack1 5、attack2 6、attack3 8、h
 - 接入 Phaser state machine。
 
 M10 已將張飛提升為第二個 Vertical Slice 的唯一新可玩角色。10.2 已建立
-最小 Player Definition seam 並凍結關羽；10.3 接受張飛 gameplay、identity、
-frame budget 與 atlas contract；10.4 才能建立正式 atlas/metadata/QA。現有
-張飛 source 只能作 feasibility input，未完成邊界、連續性與 identity 審核前
-不得直接接入 runtime。
+最小 Player Definition seam 並凍結關羽；10.3 已接受
+`docs/planning/m10-zhang-fei-production-contract.md`。現有素材稽核只找到
+1 個 master、4 個 walk-like 與 6 個 unarmed combo-like 姿勢；沒有蛇矛、
+idle loop、hurt、dead、共同 feet metadata 或可信 phase continuity，因此只可
+作 concept/feasibility input，不得直接裁成 runtime。
+
+10.4 的製作邊界固定為 47 個 genuine poses：idle 6、walk 8、attack1 6、
+attack2 7、attack3 10、hurt 4、dead 6。所有格使用 672×448 cell、feet
+`(336,420)`、origin `(0.5,0.9375)`、單一 display scale `0.64`，並輸出
+alpha-bound metadata、red-box/feet-line、onion-skin、25% silhouette、
+provenance 與三 viewport preview。10.4 仍不可把張飛加入 production manifest、
+正式選角或 Stage。
 
 趙雲仍維持 Backlog P2；M10 不分析、產生或接入趙雲素材。
 

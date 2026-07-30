@@ -20,7 +20,7 @@
 |---:|---|---:|---|---|
 | 1 | ✅ 10.1 — Second Vertical Slice scope lock | 4–6h | 張飛單一目標、排除範圍、依賴與驗收矩陣 | documents + release baseline revalidation |
 | 2 | ✅ 10.2 — Player Definition boundary and Guan Yu freeze | 8–12h | 最小雙角色 seam；runtime 仍只有關羽 | contracts + full Guan Yu regression |
-| 3 | 10.3 — Zhang Fei gameplay and production contract | 6–10h | 重型定位、identity、frame/atlas 與比較規格 | document/identity acceptance |
+| 3 | ✅ 10.3 — Zhang Fei gameplay and production contract | 6–10h | 重型定位、identity、frame/atlas 與比較規格 | document/identity acceptance |
 | 4 | 10.4 — Zhang Fei atlas and animation preview | 24–36h | genuine frames、atlas、metadata、QA preview | asset/tests/three-viewport preview |
 | 5 | 10.5 — Zhang Fei combat prototype | 12–18h | development-only heavy-warrior prototype | before/after playtest + combat regression |
 | 6 | 10.6 — Character select and formal integration | 12–18h | Phaser Title 雙角色選擇與完整關卡 | two-character full flows |
@@ -1354,3 +1354,31 @@ Status: completed.
 The only next task is M10 / Task 10.3 — Zhang Fei Gameplay and Production
 Contract. It is a contract task only: do not produce or integrate Zhang Fei
 runtime art, selection, or gameplay yet.
+
+## M10 / Task 10.3 — Zhang Fei Gameplay and Production Contract — 2026-07-30
+
+Status: completed.
+
+- [x] Audited all six legacy Zhang Fei images by dimensions, format, content,
+  and SHA-256; retained them as concept/feasibility inputs only.
+- [x] Locked the original heavy-warrior identity, dark beard,
+  oxblood/charcoal/bronze palette, serpent spear, and prohibited drift.
+- [x] Defined measurable Guan Yu control versus Zhang Fei prototype hypotheses
+  for speed, body, hitbox, timing, damage, knockback, and Hit Stop.
+- [x] Preserved the one-button three-stage hit-confirm grammar, independent
+  hitbox/hit-once, hurt/dead, Pause, Hit Stop, and reset owners.
+- [x] Froze 47 genuine poses and phase counts, one feet/origin/scale/cell
+  contract, metadata/provenance, and all required QA outputs.
+- [x] Defined reproducible three-context comparison metrics and
+  accept/adjust/reject rules that cannot pass from subjective feel alone.
+- [x] Added contract coverage proving the task remains planning-only and 10.4
+  is the only eligible implementation task.
+- [x] Passed 155/155 tests, typecheck, and lint with zero errors/eight existing
+  `<img>` warnings.
+- [x] Changed documentation/tests only; no image, runtime registration,
+  selection, gameplay, Stage, Enemy, Boss, Camera, UI, or Audio behavior.
+
+The only next task is M10 / Task 10.4 — Zhang Fei Atlas and Animation Preview.
+It may produce the contracted source derivatives, atlas, metadata, QA sheets,
+and development-only preview, but may not formally integrate Zhang Fei into
+the Stage or Title selection.

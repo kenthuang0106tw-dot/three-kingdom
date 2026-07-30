@@ -38,6 +38,7 @@
 | Actor | Target height | Ratio to Guan Yu | Manual silhouette cue |
 |---|---:|---:|---|
 | Guan Yu | 230±10 px | 1.00 | 長鬍鬚、寬肩、長袍下擺 |
+| Zhang Fei | 240±10 px | 1.00–1.09 | 寬胸低重心、厚短黑鬍、蛇矛負空間 |
 | Soldier | 210±10 px | 0.87–0.96 | 標準長刀與直立步兵輪廓 |
 | Duelist | 205±10 px | 0.85–0.94 | 輕甲、雙刃、前傾低重心 |
 | Mauler | 240±12 px | 1.00–1.09 | 厚胸腹、重武器、寬站姿 |
@@ -87,6 +88,17 @@ palette histogram 與 25% zoom side-by-side；不得只憑 prompt 描述判定�
 - 墨綠戰袍、青黑札甲、舊金護肩護腕、暗紅腰帶、黑布靴。
 - 徒手 Combo 要靠肩髖轉動與前後腳承重，不是只移動手臂。
 - Idle／walk／attack1–3／hurt／dead 必須共享 identity、scale 與 feet anchor。
+
+### Zhang Fei
+
+- 權威製作契約為
+  `docs/planning/m10-zhang-fei-production-contract.md`；既有
+  `public/art/zhangfei/` 圖片只作概念與可行性參考，並非 runtime frames。
+- 原創日式街機寫實重戰士：寬胸、低重心、厚短黑鬍、暗紅布、黑甲與舊金配件。
+- 主武器固定為長柄蛇矛；25% silhouette 必須先讀出寬體型與蛇矛，不靠換色辨識。
+- 不得漂移成徒手拳手、Mauler、Boss、關羽換色、Q 版或既有遊戲角色複製品。
+- 全 47 格共用 672×448 cell、feet `(336,420)`、origin
+  `(0.5,0.9375)`、display scale `0.64`；正式 runtime 接入須等 10.4 預覽通過。
 
 ### Enemy trio
 

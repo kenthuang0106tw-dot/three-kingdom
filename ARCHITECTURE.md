@@ -1021,6 +1021,20 @@ or gameplay. Guan Yu's focused definition tests are the regression oracle.
 Only after that freeze may Zhang Fei production and prototype tasks consume the
 same boundary.
 
+Task 10.3 freezes that future consumer in
+`docs/planning/m10-zhang-fei-production-contract.md`. Zhang Fei remains a data
+consumer of the existing seam: one texture/atlas identity, one feet/origin/scale
+contract, one ground body, one movement value, one actor-level attack hitbox,
+and three attack metadata entries. The contract does not justify per-frame
+hitbox geometry, weapon entities, skills, equipment, inheritance, or identity
+branches in `MainScene`.
+
+Task 10.4 may create source derivatives, atlas metadata, QA sheets, and a
+development-only animation preview. It must not register Zhang Fei in
+`AssetManifest`, instantiate a second PlayerActor, or add character selection.
+Task 10.5 is the first task permitted to compare Zhang Fei gameplay hypotheses,
+and that comparison must still use the same Player composition owners.
+
 Character choice remains Phaser-owned on the Title surface. React continues to
 own only the host lifecycle. EnemyManager, Stage, Camera, CombatResolver,
 EffectDirector, Audio events, Pause, Failure, and Result consume the existing

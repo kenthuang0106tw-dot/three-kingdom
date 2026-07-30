@@ -1961,8 +1961,8 @@ test("the release closeouts identify one accepted runtime and one post-release t
   assert.match(m10Scope, /Zhao Yun/);
   assert.match(m10Scope, /A second Stage/);
   assert.match(m10Scope, /Player Definition Boundary and Guan Yu Freeze/);
-  assert.match(nextTask, /M10 \/ Task 10\.3 — Zhang Fei Gameplay and Production Contract/);
-  assert.match(nextTask, /do not promote them to runtime/);
-  assert.match(nextTask, /Do not generate or edit art, add runtime assets\/animations/);
-  assert.match(nextTask, /Task 10\.4 is the\s+sole eligible implementation task/);
+  assert.match(nextTask, /M10 \/ Task 10\.4 — Zhang Fei Atlas and Animation Preview/);
+  assert.match(nextTask, /Produce 47 genuine poses only/);
+  assert.match(nextTask, /Do not implement Zhang Fei gameplay values, character selection/);
+  assert.match(nextTask, /existing Guan Yu runtime and production manifest unchanged/);
 });

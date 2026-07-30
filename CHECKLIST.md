@@ -1484,3 +1484,22 @@
 | Production isolation | Pass | Empty Canvas dataset and zero captured browser errors |
 | Release record | Pass | Published `0.1.0` manifest remains immutable after development resumes |
 | Next task | Selected | M10 / Task 10.3 — Zhang Fei Gameplay and Production Contract |
+
+## M10 / Task 10.3 — Zhang Fei Gameplay and Production Contract — 2026-07-30
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Previous task | Pass | 152/152, typecheck, lint, both builds, Desktop/844×390/390×844 one-Canvas smoke |
+| Legacy audit | Pass | Six files recorded by size, format, content, and SHA-256; none promoted to runtime |
+| Identity | Pass | Heavy planted warrior, thick dark beard, oxblood/charcoal/bronze, serpent spear |
+| Drift rejection | Pass | No Guan Yu recolor, bare-hand brawler, Mauler/Boss, Q-version, copied established design, or fake transform |
+| Tactical hypothesis | Pass | 200 px/s, 96×58 body, longer spear reach, explicit phase/impact values, HP held at 10 |
+| Combat contracts | Pass | One-button hit-confirm, one stage per input, hit-once, independent hitbox, hurt/dead/Pause/Hit Stop/reset preserved |
+| Frame budget | Pass | 47 genuine poses: 6/8/6/7/10/4/6 with all attack phases classified |
+| Atlas | Pass | 672×448, 6×8, feet `(336,420)`, origin `(0.5,0.9375)`, scale `0.64` |
+| QA plan | Pass | Alpha bounds, provenance, red-box, feet-line, onion, silhouette, palette, preview, three viewports |
+| Comparison | Pass | Guan Yu control; five paired runs across both encounters and Boss; raw and median metrics |
+| Decision gate | Pass | Accept/adjust/reject rules explicitly reject dominance, waiting, unreadable recovery, identity drift, and scope expansion |
+| Automated gates | Pass | 155/155 tests, typecheck, lint 0 errors/8 existing warnings |
+| Runtime scope | Pass | Documentation/tests only; no generated/edited art, runtime asset, animation, selection, or gameplay change |
+| Next task | Selected | M10 / Task 10.4 — Zhang Fei Atlas and Animation Preview |

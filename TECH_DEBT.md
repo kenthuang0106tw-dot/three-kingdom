@@ -788,3 +788,22 @@ fail.
 - **Remaining boundary:** Task 10.3 may define Zhang Fei's identity/gameplay
   contract, but must not grow this seam into a skill, equipment, progression,
   or arbitrary-character framework.
+
+## TD-M10.3 — Legacy Zhang Fei art is incomplete and provenance-limited
+
+- **Severity:** High for Task 10.4 production; no current runtime defect.
+- **Evidence:** The six legacy files contain one master pose, four walk-like
+  poses, and six unarmed combo-like poses. They provide no serpent spear,
+  complete idle/hurt/dead sets, shared feet metadata, measured rectangles, or
+  trustworthy attack-phase continuity.
+- **Risk:** Direct cropping would produce identity drift, missing transitions,
+  unstable feet, and a bare-hand character that contradicts the accepted
+  tactical role.
+- **Containment:** Task 10.3 records every file dimension and SHA-256, treats
+  the assets only as concept/feasibility input, and forbids runtime promotion.
+  Task 10.4 must create a provenance-tracked 47-frame atlas and pass preview QA
+  before any gameplay comparison.
+- **Resolution condition:** Genuine serpent-spear frames, reproducible atlas
+  metadata, unique frame hashes, red-box/feet-line/onion/silhouette evidence,
+  and all three viewport previews pass. Formal runtime integration remains a
+  later task.
