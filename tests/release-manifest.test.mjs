@@ -4,19 +4,19 @@ import { fileURLToPath } from "node:url";
 import { createReleaseManifest } from "../tools/create-release-manifest.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
-const sourceCommit = "b16c7398f37f78d1493cebbb1fbaf38a4e43a805";
+const sourceCommit = "72bb680932f8ce95057e06f8e207f4ad4665e7bb";
 
 test("RC manifest identifies one immutable source and both reproducible outputs", async () => {
   const first = await createReleaseManifest({
-    version: "0.1.0-rc.1",
+    version: "0.1.0-rc.2",
     sourceCommit,
-    sourceTag: "v0.1.0-rc.1",
+    sourceTag: "v0.1.0-rc.2",
     root,
   });
   const second = await createReleaseManifest({
-    version: "0.1.0-rc.1",
+    version: "0.1.0-rc.2",
     sourceCommit,
-    sourceTag: "v0.1.0-rc.1",
+    sourceTag: "v0.1.0-rc.2",
     root,
   });
 

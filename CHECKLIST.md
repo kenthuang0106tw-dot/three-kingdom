@@ -1392,3 +1392,15 @@
 | Known issue | Waived — Low | Optional root `/favicon.ico`; required routes pass |
 | Scope | Pass | Release tooling/tests/docs only; production inputs unchanged |
 | Next task | Selected | M9 / Task 9.3 — Platform Acceptance |
+
+### M9.2 RC2 correction — 2026-07-30
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| RC1 cross-platform raw identity | Fail, superseded | 46/57 raw matches; 11 JSON/XML CRLF/LF-only mismatches |
+| Canonical text packaging | Pass | Runtime JSON/XML output is LF on Windows and CI |
+| Focused regression | Pass | Packaging/routes 5/5 |
+| Public byte comparison | Pass | Corrected GitHub Pages output matches 57/57 deployed files |
+| RC2 identity | Pass | `v0.1.0-rc.2` at `72bb680932f8ce95057e06f8e207f4ad4665e7bb` |
+| Scope | Pass | No gameplay, tuning, art content, Audio, Camera, Stage, input, or UI change |
+| Next task | Selected | M9 / Task 9.3 — Platform Acceptance against RC2 |

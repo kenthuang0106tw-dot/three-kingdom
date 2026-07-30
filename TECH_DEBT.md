@@ -722,3 +722,15 @@ fail.
 - **Remaining:** Track upstream Vinext support for deterministic injected build
   identity. This does not block M9.3 because the RC source and first artifact
   hash are immutable and the normalization is explicit.
+
+## TD-M9.2B — Cross-platform runtime text line endings
+
+- **Resolved:** 2026-07-30 before M9.3 began.
+- **Evidence:** RC1 preflight matched 46/57 public files exactly. The remaining
+  11 atlas JSON/XML files were content-identical but CRLF on Windows and LF on
+  GitHub Actions.
+- **Resolution:** Production packaging canonicalizes only runtime `.json` and
+  `.xml` line endings to LF. Binary assets remain byte-preserved. A focused
+  regression asserts LF output, and the corrected Windows Pages output matched
+  the public deployment 57/57 files.
+- **Disposition:** RC1 superseded; RC2 is the only platform-acceptance target.

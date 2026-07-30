@@ -1224,3 +1224,17 @@ Status: completed.
 
 The only next task is M9 / Task 9.3 — Platform Acceptance. Do not begin
 rollback, final release, deployment, or gameplay changes in the same task.
+
+### M9.2 RC2 correction — 2026-07-30
+
+- [x] M9.3 preflight found 11 CRLF/LF-only mismatches across 57 deployed files;
+  RC1 was not advanced.
+- [x] Production JSON/XML packaging now emits canonical LF on Windows and CI.
+- [x] Focused packaging/routes passed 5/5.
+- [x] Corrected Windows output matched the existing deployment 57/57 files.
+- [x] RC2 source is
+  `72bb680932f8ce95057e06f8e207f4ad4665e7bb`; gameplay and asset content are
+  unchanged.
+
+The only next task remains M9 / Task 9.3 — Platform Acceptance, now against
+`v0.1.0-rc.2`.

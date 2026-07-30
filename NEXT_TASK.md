@@ -4,14 +4,14 @@
 
 ### Why this is next
 
-M9.2 fixed one immutable `0.1.0-rc.1` source, build identity, runtime inventory,
+M9.2 fixed one immutable `0.1.0-rc.2` source, build identity, runtime inventory,
 and reproducible output evidence. The remaining release risk is physical
 browser/device behavior; it must be measured against this exact RC before any
 rollback drill or final release.
 
 ### Completion conditions
 
-- Test the exact `v0.1.0-rc.1` source without production changes.
+- Test the exact `v0.1.0-rc.2` source without production changes.
 - Record device model, OS version, browser name/version, viewport/orientation,
   and RC identity for every run.
 - Complete three full Title → two encounters → Boss → Result clears on:
@@ -43,5 +43,5 @@ rollback drill or final release.
 - Physical iOS/Android devices or exact browser versions may be unavailable.
 - Mobile Audio, visibility, safe-area, and orientation behavior can differ from
   emulation.
-- A discovered defect may invalidate `0.1.0-rc.1`; do not patch it inside this
+- A discovered defect may invalidate `0.1.0-rc.2`; do not patch it inside this
   acceptance-only task.

@@ -469,18 +469,21 @@ runtime inventory and has no gameplay or loading impact.
 
 **Status:** Completed.
 
-**Evidence:** Version `0.1.0-rc.1`, tag `v0.1.0-rc.1`, and immutable source
-commit `b16c7398f37f78d1493cebbb1fbaf38a4e43a805` identify one RC. Both Vinext and
+**Evidence:** RC1 exposed a Windows CRLF versus GitHub Actions LF artifact
+difference during M9.3 preflight and was superseded. Version `0.1.0-rc.2`, tag
+`v0.1.0-rc.2`, and immutable source commit
+`72bb680932f8ce95057e06f8e207f4ad4665e7bb` identify the corrected RC. Both Vinext and
 GitHub Pages outputs preserve the same 52-file runtime inventory. Two
 consecutive builds matched reproducible tree hashes; the GitHub Pages raw tree
-also matched exactly. Vinext's generated build UUIDs and prerender secret are
+also matched exactly. The corrected Windows output additionally matched the
+existing public deployment 57/57 files. Vinext's generated build UUIDs and prerender secret are
 retained in the exact artifact hash and explicitly normalized only for the
 rebuild comparison. Full tests, typecheck, lint, both builds, M9.1 route
 verification, and a production one-Canvas/no-error smoke passed.
 
-**Scope:** Release tooling, manifest, notes, tests, and planning documents only.
-No production input, runtime asset, gameplay, balance, art, Stage, Camera,
-Audio, control, or UI behavior changed.
+**Scope:** Release tooling, tests, documentation, and canonical LF packaging for
+runtime JSON/XML only. Gameplay, asset content, balance, art, Stage, Camera,
+Audio, control, and UI behavior did not change.
 
 **Next:** M9 / Task 9.3 — Platform Acceptance.
 

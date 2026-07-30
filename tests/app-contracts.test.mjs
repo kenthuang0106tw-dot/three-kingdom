@@ -1902,8 +1902,8 @@ test("the release closeouts identify one RC and advance only to platform accepta
     readFile(new URL("../docs/quality/m8-7-full-qa-matrix.md", import.meta.url), "utf8"),
     readFile(new URL("../docs/quality/m9-1-production-hosting.md", import.meta.url), "utf8"),
     readFile(new URL("../docs/quality/m9-2-release-candidate.md", import.meta.url), "utf8"),
-    readFile(new URL("../release/0.1.0-rc.1.md", import.meta.url), "utf8"),
-    readFile(new URL("../release/0.1.0-rc.1.manifest.json", import.meta.url), "utf8"),
+    readFile(new URL("../release/0.1.0-rc.2.md", import.meta.url), "utf8"),
+    readFile(new URL("../release/0.1.0-rc.2.manifest.json", import.meta.url), "utf8"),
     readFile(new URL("../NEXT_TASK.md", import.meta.url), "utf8"),
   ]);
 
@@ -1927,11 +1927,11 @@ test("the release closeouts identify one RC and advance only to platform accepta
   assert.match(hostingReport, /b07bd03ae9a4061f6bd1124bee0d5aad3a161c15/);
   assert.match(hostingReport, /explicitly waived/);
   assert.match(rcReport, /Status: Accepted/);
-  assert.match(rcReport, /0\.1\.0-rc\.1/);
+  assert.match(rcReport, /0\.1\.0-rc\.2/);
   assert.match(rcReport, /149\/149/);
   assert.match(rcNotes, /not the final release/);
-  assert.match(rcNotes, /not claimed as deployed/);
-  assert.match(rcManifest, /b16c7398f37f78d1493cebbb1fbaf38a4e43a805/);
+  assert.match(rcNotes, /not claimed as a new deployment/);
+  assert.match(rcManifest, /72bb680932f8ce95057e06f8e207f4ad4665e7bb/);
   assert.match(rcManifest, /reproducibleTreeSha256/);
   assert.match(nextTask, /M9 \/ Task 9\.3 — Platform Acceptance/);
   assert.match(nextTask, /three full Title → two encounters → Boss → Result clears/);
