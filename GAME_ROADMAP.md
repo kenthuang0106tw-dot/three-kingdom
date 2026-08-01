@@ -546,7 +546,7 @@ gameplay, art, balance, Stage, Camera, Audio, input, or UI behavior changed.
 
 ---
 
-## Milestone 10 — Zhang Fei Second Playable Vertical Slice
+## Milestone 10 — Zhang Fei Second Playable Vertical Slice (Closed / Deferred 2026-08-01)
 
 **Playable Result:** 玩家可在 Phaser Title 選擇關羽或張飛，並以任一武將完成
 既有三畫面竹林、兩場 encounter、Boss、Failure/Retry 與 Result/Replay。
@@ -568,9 +568,9 @@ gameplay, art, balance, Stage, Camera, Audio, input, or UI behavior changed.
 | 10.5D | Zhang Fei second-player direction decision — Completed 2026-08-01 | P0 | Medium | 10.5 and 10.5P rejected evidence | Select one evidence-backed path: revise the character contract, defer Zhang Fei, or stop M10; no third numeric prototype | planning/decision/tests | Sunk-cost progression into formal selection |
 | 10.5H | Zhang Fei attack-specific hitbox contract — Completed 2026-08-01 | P0 | Medium | 10.5D | Decide the minimum ownership/schema, geometry limits, cost, and acceptance protocol for one Attack 2 lane-coverage prototype; no implementation | planning/architecture/tests | A character exception leaks into Scene or becomes per-frame geometry |
 | 10.5HP | Zhang Fei Attack 2 lane-coverage prototype — Rejected 2026-08-01 | P0 | High | 10.5H | Thirty paired runs directly test the frozen geometry and either accept it or restore the prior runtime | player metadata/MainScene/tests/report | Broad hitbox lacks practical distinction |
-| 10.5F | Zhang Fei second-player feasibility closeout | P0 | Medium | rejected 10.5, 10.5P, and 10.5HP evidence | One planning decision defers Zhang Fei, revises the product/identity contract with explicit authority, or closes M10; no fourth rescue prototype | planning/decision/tests | Sunk-cost continuation without a new product decision |
-| 10.6 | Phaser character select and formal integration — Blocked | P0 | High | accepted future feasibility direction | Title selects exactly Guan Yu/Zhang Fei; either completes/fails/retries/replays existing Stage; React owns no selection | Title/player/MainScene/tests | Selection lifecycle or stale actor |
-| 10.7 | Second Vertical Slice acceptance | P0 | High | 10.6 | Two-character full QA at three viewports; 10 reset paths; performance/packaging/routes pass; no Critical/High defect | QA/release docs/tests | Asset memory or mobile readability |
+| 10.5F | Zhang Fei second-player feasibility closeout — Completed 2026-08-01 | P0 | Medium | rejected 10.5, 10.5P, and 10.5HP evidence | One planning decision defers Zhang Fei, revises the product/identity contract with explicit authority, or closes M10; no fourth rescue prototype | planning/decision/tests | Sunk-cost continuation without a new product decision |
+| 10.6 | Phaser character select and formal integration — Deferred from active sequence | P0 | High | explicitly authorized future Zhang Fei contract | Title selects exactly Guan Yu/Zhang Fei; either completes/fails/retries/replays existing Stage; React owns no selection | Title/player/MainScene/tests | Selection lifecycle or stale actor |
+| 10.7 | Second Vertical Slice acceptance — Deferred from active sequence | P0 | High | 10.6 | Two-character full QA at three viewports; 10 reset paths; performance/packaging/routes pass; no Critical/High defect | QA/release docs/tests | Asset memory or mobile readability |
 
 ### M10 / Task 10.1 — Second Vertical Slice Scope Lock (Completed 2026-07-30)
 
@@ -803,6 +803,41 @@ Guan Yu-only, and Task 10.6 remains blocked.
 
 **Next:** Planning-only M10 / Task 10.5F — Zhang Fei Second-Player Feasibility
 Closeout. It may not implement a fourth numeric or hitbox rescue.
+
+### M10 / Task 10.5F — Zhang Fei Second-Player Feasibility Closeout (Completed 2026-08-01)
+
+**Evidence:** Tasks 10.5, 10.5P, and 10.5HP completed 90 paired runs without
+weakening their acceptance thresholds. Heavy commitment created extra Recovery
+punishment only in Ambush; formation breaking reached 1.10× multi-target and
+about +0.06 displaced-target advantage; lane coverage reached 1.06× and
++0.015. Each result remained below its required cross-context distinction
+gate.
+
+**Decision:** Defer Zhang Fei to a later milestone and close M10 without a
+second playable character. The generic Player seam, 47-frame atlas, preview,
+QA, provenance, telemetry, and reports remain reusable. Longer commitment,
+knockback/repositioning, and broader Attack 2 coverage are retired as sufficient
+standalone identity hypotheses. No fourth numeric or hitbox rescue is allowed.
+
+**Authority:** Reopening Zhang Fei requires an explicit product-owner decision
+approving a revised gameplay / identity / art contract, a genuinely different
+tactical mechanic, and new acceptance criteria before implementation. Tasks
+10.6 and 10.7 are removed from the active sequence and deferred with the
+character.
+
+**Next:** Planning-only M11 / Task 11.1 — Post-M10 Product Direction Selection.
+It must select exactly one next player-visible milestone before any new feature
+work begins.
+
+## Milestone 11 — Product Direction Selection
+
+**Playable Result:** No runtime change in 11.1. The task selects the next
+player-visible milestone so later implementation has one explicit goal and
+acceptance path.
+
+| Task | Description | Priority | Difficulty | Dependencies | Acceptance Criteria | Expected Files | Risk |
+|---|---|---:|---:|---|---|---|---|
+| 11.1 | Post-M10 product direction selection | P0 | Medium | M10 closeout | Compare eligible backlog directions and select exactly one milestone goal, exclusions, dependency order, acceptance criteria, and first implementation task | planning/roadmap/backlog/tests | Silent scope drift into Zhao Yun, a second Stage, or another Zhang Fei rescue |
 
 ## Task Status Update — 2026-07-12
 

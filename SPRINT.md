@@ -1,4 +1,4 @@
-# Current Sprint — Zhang Fei Second Playable Foundation
+# Current Sprint — M10 Closeout / M11 Direction Selection
 
 ## Sprint Goal
 
@@ -11,8 +11,8 @@
 
 - Duration：3–4 weeks
 - Capacity：1 developer + AI，約 70–105 hours
-- Milestone：M10 — Zhang Fei Second Playable Vertical Slice
-- Scope rule：一次只做一個 Task；下一個唯一 Task 是 planning-only M10 / 10.5F
+- Milestone：M10 closed / Zhang Fei deferred; next planning milestone is M11
+- Scope rule：一次只做一個 Task；下一個唯一 Task 是 planning-only M11 / 11.1
 
 ## M10 Task List
 
@@ -28,9 +28,9 @@
 | 8 | ✅ 10.5D — Zhang Fei second-player direction decision | 4–6h | revise Player/art contract through one bounded geometry discovery | planning-only decision complete |
 | 9 | ✅ 10.5H — Zhang Fei attack-specific hitbox contract | 4–6h | ownership, schema, cost, geometry and future acceptance protocol | planning contract accepted |
 | 10 | ❌ 10.5HP — Zhang Fei Attack 2 lane-coverage prototype | 12–18h | one-Zone metadata migration and 30 paired runs | 30 runs complete; both distinction gates failed; runtime rolled back |
-| 11 | 10.5F — Zhang Fei second-player feasibility closeout | 4–6h | decide defer/revise/close from all rejected evidence | planning-only decision |
-| 12 | 10.6 — Character select and formal integration | 12–18h | Phaser Title 雙角色選擇與完整關卡 | blocked pending accepted future direction |
-| 12 | 10.7 — Second Vertical Slice acceptance | 8–12h | QA、performance、packaging、release evidence | full gates + three viewports + resets |
+| 11 | ✅ 10.5F — Zhang Fei second-player feasibility closeout | 4–6h | defer Zhang Fei and close M10 from all rejected evidence | planning-only decision complete |
+| 12 | ↪ 10.6 — Character select and formal integration | 12–18h | Phaser Title 雙角色選擇與完整關卡 | deferred from active sequence |
+| 13 | ↪ 10.7 — Second Vertical Slice acceptance | 8–12h | QA、performance、packaging、release evidence | deferred from active sequence |
 
 ## Historical Task List
 
@@ -1555,3 +1555,29 @@ Status: rejected after the fixed comparison; runtime migration rolled back.
 Task 10.6 remains blocked. The only next task is planning-only M10 / Task 10.5F
 — Zhang Fei Second-Player Feasibility Closeout. No fourth rescue prototype is
 authorized.
+
+## M10 / Task 10.5F — Zhang Fei Second-Player Feasibility Closeout — 2026-08-01
+
+Status: completed; Zhang Fei deferred and M10 closed without a second playable.
+
+- [x] Revalidated the committed 10.5HP rollback with 168/168 tests, typecheck,
+  lint, both production builds, three viewport input smoke, and production
+  isolation.
+- [x] Compared all 90 paired runs from 10.5, 10.5P, and 10.5HP without changing
+  historical thresholds.
+- [x] Evaluated exactly defer, authorized contract revision, and permanent M10
+  closure; selected deferral.
+- [x] Preserved the Player seam, 47-frame atlas, preview, QA, provenance,
+  telemetry, and reports.
+- [x] Retired commitment-only, knockback/reposition-only, and lane-coverage-only
+  differentiation assumptions.
+- [x] Deferred Tasks 10.6 and 10.7 from the active sequence.
+- [x] Recorded the product-owner authority required before Zhang Fei may reopen.
+- [x] Changed planning documents and documentation tests only; runtime,
+  gameplay, art, assets, build configuration, and production packaging remain
+  unchanged.
+- [x] Final closeout validation passed 169/169 tests, typecheck, lint with 0
+  errors and 8 existing warnings, and both 52-file production builds.
+
+M10 is closed as evidence-complete but product-goal-incomplete. The only next
+task is planning-only M11 / Task 11.1 — Post-M10 Product Direction Selection.

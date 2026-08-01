@@ -898,3 +898,23 @@ fail.
   actor-level hitbox. Task 10.6 remains blocked pending planning-only Task
   10.5F, which must decide whether to defer Zhang Fei, revise the product
   contract with explicit authority, or close M10.
+
+## TD-M10.5F Resolved — Zhang Fei has no accepted production gameplay direction
+
+- **Severity:** P0 M10 blocker; not a released production defect.
+- **Status:** Resolved 2026-08-01 by deferral and milestone closeout.
+- **Evidence:** Three bounded prototypes completed 90 paired Entry/Ambush/Boss
+  runs. Heavy commitment failed the two-context Recovery-punishment gate;
+  formation breaking reached only 1.10× and about +0.06; Attack 2 lane coverage
+  reached only 1.06× and +0.015 against fixed 1.5× and +0.20 gates.
+- **Decision:** Defer Zhang Fei to a later milestone and close M10 without a
+  second playable. Tasks 10.6 and 10.7 are removed from the active sequence.
+- **Containment:** Production remains Guan Yu-only with the actor-level attack
+  hitbox. The Player seam, 47-frame atlas, preview, QA, provenance, telemetry,
+  and evidence reports are preserved as optional future inputs.
+- **Retired assumptions:** Commitment/recovery, knockback/repositioning, and
+  broad Attack 2 coverage are not sufficient standalone tactical identities.
+- **Reopen rule:** Only explicit product-owner approval of a revised gameplay /
+  identity / art contract, a genuinely different mechanic, and new acceptance
+  criteria may reopen Zhang Fei. A fourth numeric or rectangular-hitbox rescue
+  is prohibited.

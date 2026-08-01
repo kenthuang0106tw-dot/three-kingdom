@@ -1961,7 +1961,7 @@ test("the release closeouts identify one accepted runtime and one post-release t
   assert.match(m10Scope, /Zhao Yun/);
   assert.match(m10Scope, /A second Stage/);
   assert.match(m10Scope, /Player Definition Boundary and Guan Yu Freeze/);
-  assert.match(nextTask, /M10 \/ Task 10\.5F — Zhang Fei Second-Player Feasibility Closeout/);
-  assert.match(nextTask, /planning closeout/);
-  assert.match(nextTask, /Do not implement character selection, another Zhang Fei prototype/);
+  assert.match(nextTask, /M11 \/ Task 11\.1 — Post-M10 Product Direction Selection/);
+  assert.match(nextTask, /planning decision/);
+  assert.match(nextTask, /Do not implement Zhang Fei, Zhao Yun, character selection, a second Stage/);
 });

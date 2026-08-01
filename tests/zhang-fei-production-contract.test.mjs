@@ -49,7 +49,7 @@ test("legacy Zhang Fei inputs remain exact feasibility references", async () => 
   for (const [path, hash] of expected) assert.equal(await sha256(path), hash, path);
 });
 
-test("Task 10.5HP rejection keeps production frozen and selects only Task 10.5F", async () => {
+test("Task 10.5F closeout keeps production frozen and selects only Task 11.1", async () => {
   const [nextTask, manifest, mainScene, playerDefinition, roadmap] = await Promise.all([
     readText("NEXT_TASK.md"),
     readText("app/game/assets/AssetManifest.ts"),
@@ -58,8 +58,8 @@ test("Task 10.5HP rejection keeps production frozen and selects only Task 10.5F"
     readText("GAME_ROADMAP.md"),
   ]);
 
-  assert.match(nextTask, /M10 \/ Task 10\.5F — Zhang Fei Second-Player Feasibility Closeout/);
-  assert.match(nextTask, /Do not implement character selection, another Zhang Fei prototype/);
+  assert.match(nextTask, /M11 \/ Task 11\.1 — Post-M10 Product Direction Selection/);
+  assert.match(nextTask, /Do not implement Zhang Fei, Zhao Yun, character selection, a second Stage/);
   assert.doesNotMatch(manifest, /zhang[-_]?fei|zhangfei/i);
   assert.match(mainScene, /previewZhangFei/);
   assert.match(mainScene, /process\.env\.NODE_ENV !== "production"/);
@@ -69,5 +69,5 @@ test("Task 10.5HP rejection keeps production frozen and selects only Task 10.5F"
   assert.match(roadmap, /10\.5R \| Zhang Fei tactical hypothesis revision — Completed 2026-08-01/);
   assert.match(roadmap, /10\.5P \| Zhang Fei formation-breaker combat prototype — Rejected 2026-08-01/);
   assert.match(roadmap, /10\.5HP \| Zhang Fei Attack 2 lane-coverage prototype — Rejected 2026-08-01/);
-  assert.match(roadmap, /\*\*Next:\*\* Planning-only M10 \/ Task 10\.5F/);
+  assert.match(roadmap, /\*\*Next:\*\* Planning-only M11 \/ Task 11\.1/);
 });

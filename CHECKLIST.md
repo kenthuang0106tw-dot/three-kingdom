@@ -1628,3 +1628,20 @@
 | Production isolation | Pass | Final runtime remains actor-hitbox/Guan-Yu production contract |
 | Decision | Reject | Task 10.6 remains blocked |
 | Next task | Selected | Planning-only M10 / Task 10.5F — Zhang Fei Second-Player Feasibility Closeout |
+
+## M10 / Task 10.5F — Zhang Fei Second-Player Feasibility Closeout — 2026-08-01
+
+| Check | Result | Evidence |
+|---|---|---|
+| Previous rollback | Pass | 168/168 tests, typecheck, lint, both builds, three viewports, and production isolation revalidated |
+| Historical thresholds | Pass | 10.5, 10.5P, and 10.5HP gates retained without reinterpretation |
+| Evidence coverage | Pass | 90 paired Entry/Ambush/Boss runs compared |
+| Three outcomes | Pass | Defer, explicitly authorized contract revision, and permanent close evaluated |
+| Decision | Defer | Zhang Fei moves to a later milestone; M10 closes without a second playable |
+| Preserved work | Pass | Player seam, 47-frame atlas, preview, QA, provenance, telemetry, and reports retained |
+| Retired assumptions | Pass | Commitment-only, knockback/reposition-only, and lane-coverage-only differentiation rejected |
+| Production isolation | Pass | Guan Yu-only manifest/runtime and actor-level hitbox unchanged |
+| Active sequence | Pass | Tasks 10.6 and 10.7 deferred; no fourth rescue prototype |
+| Reopen authority | Frozen | Explicit product-owner approval of a revised gameplay / identity / art contract required |
+| Final quality gates | Pass | 169/169 tests, typecheck, lint 0 errors/8 existing warnings, both 52-file production builds |
+| Next task | Selected | Planning-only M11 / Task 11.1 — Post-M10 Product Direction Selection |
