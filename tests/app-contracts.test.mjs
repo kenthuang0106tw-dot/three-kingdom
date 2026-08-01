@@ -208,7 +208,7 @@ test("MainScene exposes a development-only reset smoke path with shutdown cleanu
   assert.match(source, /touchInputController\.destroy\(\)/);
   assert.match(source, /lifecycleClock\.destroy\(\)/);
   assert.match(source, /enemyManager\.destroy\(\)/);
-  assert.match(source, /this\.anims\.exists\(this\.playerDefinition\.animations\.walk\.key\)/);
+  assert.match(source, /if \(!this\.anims\.exists\(animation\.key\)\) this\.createPlayerAnimation\(animation\)/);
 });
 
 test("Runtime asset manifest preserves keys and reports missing required assets", async () => {
@@ -377,15 +377,18 @@ test("Title start accepts keyboard or pointer once and re-arms only after reset"
   assert.equal(start.requestStart(), false);
 });
 
-test("MainScene owns one Phaser Title overlay without React or Scene restart", async () => {
+test("MainScene owns one Phaser Title selection overlay without React gameplay state", async () => {
   const [scene, reactHost] = await Promise.all([
     readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/game/PhaserGame.tsx", import.meta.url), "utf8"),
   ]);
   assert.match(scene, /new GameFlowStateMachine\(\)/);
   assert.match(scene, /new TitleStartController\(this\.gameFlow\)/);
-  assert.match(scene, /keyboard\.once\("keydown", this\.handleTitleKeyboardStart, this\)/);
-  assert.match(scene, /once\("pointerdown", this\.handleTitlePointerStart, this\)/);
+  assert.match(scene, /keyboard\.on\("keydown", this\.handleTitleKeyboardStart, this\)/);
+  assert.match(scene, /GUAN YU/);
+  assert.match(scene, /ZHANG FEI/);
+  assert.match(scene, /this\.confirmTitlePlayer\("pointer"\)/);
+  assert.match(scene, /this\.scene\.restart\(\{ playerId: this\.titleSelectedPlayerId, autoStartSource: source \}/);
   assert.match(scene, /if \(this\.gameFlow\.state === "title"\) return/);
   assert.match(scene, /this\.inputController\.readSnapshot\(\)/);
   assert.doesNotMatch(reactHost, /GameFlowStateMachine|TitleStartController|useState/);
@@ -1961,7 +1964,7 @@ test("the release closeouts identify one accepted runtime and one post-release t
   assert.match(m10Scope, /Zhao Yun/);
   assert.match(m10Scope, /A second Stage/);
   assert.match(m10Scope, /Player Definition Boundary and Guan Yu Freeze/);
-  assert.match(nextTask, /M11 \/ Task 11\.1 — Post-M10 Product Direction Selection/);
-  assert.match(nextTask, /planning decision/);
-  assert.match(nextTask, /Do not implement Zhang Fei, Zhao Yun, character selection, a second Stage/);
+  assert.match(nextTask, /M10 \/ Task 10\.6R — Zhang Fei Trial Play Review/);
+  assert.match(nextTask, /product owner explicitly asked to play the preserved prototype/);
+  assert.match(nextTask, /Do not implement another feature/);
 });

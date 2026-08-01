@@ -1644,4 +1644,21 @@
 | Active sequence | Pass | Tasks 10.6 and 10.7 deferred; no fourth rescue prototype |
 | Reopen authority | Frozen | Explicit product-owner approval of a revised gameplay / identity / art contract required |
 | Final quality gates | Pass | 169/169 tests, typecheck, lint 0 errors/8 existing warnings, both 52-file production builds |
+
+## M10 / Task 10.6T — Zhang Fei Trial Character Select — 2026-08-01
+
+| Check | Result | Evidence |
+|---|---|---|
+| Explicit authority | Pass | Product owner requested “先加入我看看” after the documented 10.5F deferral |
+| Fighter options | Pass | Exactly Guan Yu and Zhang Fei on the Phaser Title |
+| Desktop input | Pass | Left/Right or A/D selection; Enter/Space/J confirmation |
+| Touch input | Pass | Two large one-tap Phaser card targets |
+| Zhang Fei runtime | Pass | Approved 47-frame atlas lazy-loads into the unchanged Stage |
+| Guan Yu regression | Pass | Guan Yu selection and Attack 1 remain unchanged |
+| Lifecycle | Pass | One Canvas; selected definition survives retry and replay restarts |
+| React boundary | Pass | No React state or DOM gameplay control added |
+| Packaging | Pass | Zhang Fei runtime PNG/atlas included; source and QA remain excluded |
+| Viewports | Pass | Desktop, 844×390, and 390×844; no page overflow |
+| Product status | Trial | `TRIAL BALANCE` is shown; tactical identity remains unaccepted |
+| Next task | Selected | M10 / Task 10.6R — Zhang Fei Trial Play Review |
 | Next task | Selected | Planning-only M11 / Task 11.1 — Post-M10 Product Direction Selection |

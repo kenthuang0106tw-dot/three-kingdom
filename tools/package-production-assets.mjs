@@ -12,6 +12,11 @@ export const SHELL_PUBLIC_ASSETS = Object.freeze([
   "art/zhaoyun/zhaoyun-master.png",
 ]);
 
+export const LAZY_RUNTIME_PUBLIC_ASSETS = Object.freeze([
+  "art/zhangfei-v2/zhangfei-v2.png",
+  "art/zhangfei-v2/zhangfei-v2.atlas.json",
+]);
+
 async function directoryFiles(directory, root = directory) {
   const files = [];
   for (const entry of await readdir(directory, { withFileTypes: true })) {
@@ -34,7 +39,9 @@ export async function collectProductionPublicAssetPaths(root = process.cwd()) {
   const source = await readFile(resolve(root, "app/game/assets/AssetManifest.ts"), "utf8");
   const manifestPaths = [...source.matchAll(MANIFEST_URL_PATTERN)]
     .map(match => match[1].replace(/^\/+/, ""));
-  return Object.freeze([...new Set([...manifestPaths, ...SHELL_PUBLIC_ASSETS])].sort());
+  return Object.freeze([
+    ...new Set([...manifestPaths, ...SHELL_PUBLIC_ASSETS, ...LAZY_RUNTIME_PUBLIC_ASSETS]),
+  ].sort());
 }
 
 export async function classifyProductionPublicAssets(root = process.cwd()) {

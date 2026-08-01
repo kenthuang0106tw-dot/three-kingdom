@@ -39,7 +39,7 @@ test("Task 10.5HP retains rejected evidence and restores the actor-level runtime
   assert.match(report, /\+0\.015, failing the required \+0\.20/);
   assert.match(architecture, /failed both fixed gameplay-distinction gates/);
   assert.match(roadmap, /10\.5HP \| Zhang Fei Attack 2 lane-coverage prototype — Rejected 2026-08-01/);
-  assert.match(nextTask, /M11 \/ Task 11\.1 — Post-M10 Product Direction Selection/);
+  assert.match(nextTask, /M10 \/ Task 10\.6R — Zhang Fei Trial Play Review/);
 
   assert.match(definition, /attackHitbox: Readonly/);
   assert.doesNotMatch(definition, /hitbox: PlayerAttackHitbox/);

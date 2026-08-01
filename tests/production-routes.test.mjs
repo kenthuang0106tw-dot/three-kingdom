@@ -90,7 +90,7 @@ test("GitHub Pages serves every generated and runtime route below the repository
   assert.equal(report.document.status, 200);
   assert.match(report.document.contentType, /^text\/html/);
   assert.ok(report.generatedRouteCount >= 2);
-  assert.equal(report.publicRouteCount, 52);
+  assert.equal(report.publicRouteCount, 54);
   assert.ok(report.routes.every(result => result.status === 200));
 
   const reloadResponse = await fetch(`${pageUrl}?reload=1`);

@@ -49,7 +49,7 @@ test("legacy Zhang Fei inputs remain exact feasibility references", async () => 
   for (const [path, hash] of expected) assert.equal(await sha256(path), hash, path);
 });
 
-test("Task 10.5F closeout keeps production frozen and selects only Task 11.1", async () => {
+test("Task 10.5F evidence remains frozen while the Zhang Fei trial awaits review", async () => {
   const [nextTask, manifest, mainScene, playerDefinition, roadmap] = await Promise.all([
     readText("NEXT_TASK.md"),
     readText("app/game/assets/AssetManifest.ts"),
@@ -58,8 +58,8 @@ test("Task 10.5F closeout keeps production frozen and selects only Task 11.1", a
     readText("GAME_ROADMAP.md"),
   ]);
 
-  assert.match(nextTask, /M11 \/ Task 11\.1 — Post-M10 Product Direction Selection/);
-  assert.match(nextTask, /Do not implement Zhang Fei, Zhao Yun, character selection, a second Stage/);
+  assert.match(nextTask, /M10 \/ Task 10\.6R — Zhang Fei Trial Play Review/);
+  assert.match(nextTask, /No code, balance, art, Enemy, Boss, Stage, Camera, Combo, or UI change/);
   assert.doesNotMatch(manifest, /zhang[-_]?fei|zhangfei/i);
   assert.match(mainScene, /previewZhangFei/);
   assert.match(mainScene, /process\.env\.NODE_ENV !== "production"/);

@@ -79,6 +79,8 @@ export default function PhaserGame() {
               Phaser.Input.Keyboard.KeyCodes.S,
               Phaser.Input.Keyboard.KeyCodes.D,
               Phaser.Input.Keyboard.KeyCodes.J,
+              Phaser.Input.Keyboard.KeyCodes.ENTER,
+              Phaser.Input.Keyboard.KeyCodes.SPACE,
             ],
           },
         },

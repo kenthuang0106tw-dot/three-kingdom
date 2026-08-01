@@ -1,4 +1,4 @@
-# Current Sprint — M10 Closeout / M11 Direction Selection
+# Current Sprint — M10 Zhang Fei Trial Review
 
 ## Sprint Goal
 
@@ -1578,6 +1578,21 @@ Status: completed; Zhang Fei deferred and M10 closed without a second playable.
   unchanged.
 - [x] Final closeout validation passed 169/169 tests, typecheck, lint with 0
   errors and 8 existing warnings, and both 52-file production builds.
+
+## M10 / Task 10.6T — Zhang Fei Trial Character Select — 2026-08-01
+
+Status: completed as an explicitly authorized trial; balance remains unaccepted.
+
+- [x] Added exactly Guan Yu and Zhang Fei to the Phaser-owned Title.
+- [x] Added keyboard selection/confirmation and large one-tap touch cards.
+- [x] Loaded Zhang Fei through the existing generic `PlayerDefinition` seam.
+- [x] Lazy-packaged the approved 47-frame runtime atlas without source/QA files.
+- [x] Preserved one Canvas, Scene-owned listeners, and retry/replay selection.
+- [x] Kept Guan Yu gameplay, Stage, Enemy, Boss, Camera, Combo, art, and React unchanged.
+- [x] Labelled Zhang Fei as `TRIAL BALANCE`; no tactical acceptance is claimed.
+
+The only next task is M10 / Task 10.6R — Zhang Fei Trial Play Review. It waits
+for the product owner's hands-on decision and does not authorize new code.
 
 M10 is closed as evidence-complete but product-goal-incomplete. The only next
 task is planning-only M11 / Task 11.1 — Post-M10 Product Direction Selection.

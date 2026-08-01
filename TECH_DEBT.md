@@ -918,3 +918,17 @@ fail.
   identity / art contract, a genuinely different mechanic, and new acceptance
   criteria may reopen Zhang Fei. A fourth numeric or rectangular-hitbox rescue
   is prohibited.
+
+## TD-M10.6T — Zhang Fei trial is exposed without accepted tactical distinction
+
+- **Severity:** Medium product debt; intentional trial, not a runtime defect.
+- **Status:** Open after explicit product-owner authorization on 2026-08-01.
+- **Evidence:** Tasks 10.5, 10.5P, and 10.5HP rejected commitment,
+  formation-breaker, and lane-coverage distinction. Task 10.6T exposes the
+  preserved 47-frame implementation only so the product owner can judge it in
+  the released Stage.
+- **Containment:** The Title labels Zhang Fei `TRIAL BALANCE`; no Enemy, Boss,
+  Stage, Camera, Combo, Guan Yu, or art value was changed. The atlas is lazy
+  packaged and the selection remains behind the generic PlayerDefinition seam.
+- **Exit:** Task 10.6R records one explicit decision: keep the trial, authorize
+  one bounded revision with measurable acceptance, or remove the trial.

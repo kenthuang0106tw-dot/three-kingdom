@@ -51,7 +51,7 @@ test("Zhang Fei animation budgets and attack phases match the approved contract"
   assert.match(JSON.stringify(metadata.provenance), /丈八蛇矛/);
 });
 
-test("Zhang Fei remains a development preview and does not enter production runtime", async () => {
+test("Zhang Fei preview QA remains development-only while approved runtime art is lazy-packaged", async () => {
   const [scene, manifest, playerDefinition, packageTool] = await Promise.all([
     readText("app/game/MainScene.ts"),
     readText("app/game/assets/AssetManifest.ts"),
@@ -65,7 +65,8 @@ test("Zhang Fei remains a development preview and does not enter production runt
   assert.match(scene, /Up\/Down FPS \| L once\/loop \| O onion-skin/);
   assert.doesNotMatch(manifest, /zhang[-_]?fei|zhangfei/i);
   assert.doesNotMatch(playerDefinition, /zhang[-_]?fei|zhangfei/i);
-  assert.doesNotMatch(packageTool, /art\/zhangfei-v2/);
+  assert.match(packageTool, /art\/zhangfei-v2\/zhangfei-v2\.png/);
+  assert.match(packageTool, /LAZY_RUNTIME_PUBLIC_ASSETS/);
 });
 
 test("Zhang Fei visual QA outputs are present and non-empty", async () => {

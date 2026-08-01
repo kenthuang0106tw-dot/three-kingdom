@@ -29,8 +29,8 @@ test("Task 10.5F defers Zhang Fei, closes M10, and selects planning-only M11.1",
   assert.match(sprint, /M10 is closed as evidence-complete but product-goal-incomplete/);
   assert.match(checklist, /Planning-only M11 \/ Task 11\.1 — Post-M10 Product Direction Selection/);
   assert.match(debt, /TD-M10\.5F Resolved/);
-  assert.match(nextTask, /M11 \/ Task 11\.1 — Post-M10 Product Direction Selection/);
-  assert.match(nextTask, /Do not implement Zhang Fei, Zhao Yun, character selection, a second Stage/);
+  assert.match(nextTask, /M10 \/ Task 10\.6R — Zhang Fei Trial Play Review/);
+  assert.match(nextTask, /product owner explicitly asked to play the preserved prototype/);
 
   assert.match(definition, /attackHitbox: Readonly/);
   assert.doesNotMatch(definition, /hitbox: PlayerAttackHitbox/);

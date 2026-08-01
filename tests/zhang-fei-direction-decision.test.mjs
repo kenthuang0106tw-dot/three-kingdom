@@ -21,9 +21,9 @@ test("Task 10.5D selects contract discovery without implementing attack geometry
   assert.match(decision, /Do not defer Zhang Fei and close M10 yet/);
   assert.match(decision, /Do not stop pending product-owner direction/);
   assert.match(decision, /not authorized for implementation/);
-  assert.match(nextTask, /M11 \/ Task 11\.1 — Post-M10 Product Direction Selection/);
-  assert.match(nextTask, /M10 is closed without a second playable character/i);
-  assert.match(nextTask, /Do not implement Zhang Fei, Zhao Yun, character selection, a second Stage/);
+  assert.match(nextTask, /M10 \/ Task 10\.6R — Zhang Fei Trial Play Review/);
+  assert.match(nextTask, /product owner explicitly asked to play the preserved prototype/i);
+  assert.match(nextTask, /Do not implement another feature/);
   assert.match(roadmap, /10\.5D \| Zhang Fei second-player direction decision — Completed 2026-08-01/);
   assert.match(roadmap, /10\.5H \| Zhang Fei attack-specific hitbox contract/);
   assert.match(roadmap, /10\.6 \| Phaser character select and formal integration — Deferred from active sequence/);

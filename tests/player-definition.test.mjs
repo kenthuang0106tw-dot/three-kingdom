@@ -139,7 +139,8 @@ test("Player composition consumes one selected definition without changing actor
   assert.match(actor, /private readonly definition: PlayerDefinition/);
   assert.match(controller, /private readonly attacks: Readonly<Record<AttackStep, PlayerAttackMetadata>>/);
   assert.doesNotMatch(`${actor}\n${controller}`, /zhangfei|zhang-fei|ZhangFei/i);
-  assert.match(scene, /prototypePlayer === "zhangfei"\s*\?\s*ZHANGFEI_PLAYER_DEFINITION\s*:\s*GUANYU_PLAYER_DEFINITION/);
+  assert.match(scene, /if \(isPlayerId\(prototypePlayer\)\) this\.configurePlayer\(prototypePlayer\)/);
+  assert.match(scene, /getPlayerDefinition\(id\)/);
 
   const attackController = new PlayerAttackController(GUANYU_PLAYER_DEFINITION.attacks);
   assert.equal(attackController.begin(2), GUANYU_PLAYER_DEFINITION.attacks[2]);

@@ -826,6 +826,28 @@ tactical mechanic, and new acceptance criteria before implementation. Tasks
 character.
 
 **Next:** Planning-only M11 / Task 11.1 — Post-M10 Product Direction Selection.
+
+### M10 / Task 10.6T — Zhang Fei Trial Character Select (Completed 2026-08-01)
+
+**Authority:** After the 10.5F deferral, the product owner explicitly requested
+that the preserved Zhang Fei prototype be added for direct play review. This is
+a bounded trial exposure, not a reversal of the rejected tactical-distinction
+evidence and not formal balance acceptance.
+
+**Delivered:** The Phaser Title now selects Guan Yu or Zhang Fei by keyboard or
+large touch targets. The selected `PlayerDefinition` owns runtime animation,
+geometry, audio routing, and Stage play; retry and replay keep that definition.
+Zhang Fei's approved 47-frame runtime atlas is packaged as a lazy asset while
+source and QA artifacts remain excluded. React owns no selection state.
+
+**Acceptance:** Both fighters start the unchanged three-screen Stage, retain
+one Canvas and Phaser-owned input, and pass Desktop, 844×390, and 390×844
+selection smoke. Guan Yu remains unchanged. Zhang Fei is visibly labelled
+`TRIAL BALANCE` because tactical identity and balance remain unresolved.
+
+**Next:** M10 / Task 10.6R — Zhang Fei Trial Play Review. This is a manual
+product decision only: keep the trial, request one bounded revision, or remove
+it. No further gameplay implementation is authorized before that review.
 It must select exactly one next player-visible milestone before any new feature
 work begins.
 

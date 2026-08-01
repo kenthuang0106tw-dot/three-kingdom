@@ -14,6 +14,7 @@ import { PlayerAttackController } from "./player/PlayerAttackController";
 import { GUANYU_ANIMATION_FRAMES, GUANYU_ATTACK_PHASES, GUANYU_PLAYER_DEFINITION } from "./player/GuanYuAnimationMetadata.ts";
 import { ZHANGFEI_PLAYER_DEFINITION } from "./player/ZhangFeiAnimationMetadata.ts";
 import type { AttackStep, PlayerAnimationDefinition, PlayerDefinition } from "./player/PlayerDefinition.ts";
+import { getPlayerDefinition, isPlayerId, type PlayerId } from "./player/PlayerSelection.ts";
 import { resolveAttack } from "./combat/CombatResolver";
 import { EffectDirector, EFFECT_PARAMS } from "./combat/EffectDirector";
 import { BAMBOO_BOSS_ARENA, BAMBOO_COMBAT_ROOM, clampStageX } from "./stage/StageConfig";
@@ -42,6 +43,7 @@ type ResultReplaySource = ExplicitResultReplaySource | "smoke";
 type PlayerPrototypeScenario = "entry" | "ambush" | "boss";
 type PlayerPrototypeStrategy = "baseline" | "aware";
 type PrototypeAttackPhase = "idle" | "startup" | "active" | "recovery";
+type MainSceneInitData = { playerId?: PlayerId; autoStartSource?: TitleStartSource };
 const PROTOTYPE_NEARBY_THREAT_RADIUS = 230;
 const PROTOTYPE_REPOSITION_WINDOW_MS = 1000;
 const PROTOTYPE_REPOSITION_DISTANCE = 64;
@@ -186,6 +188,9 @@ export default class MainScene extends Phaser.Scene {
   private readonly gameFlow = new GameFlowStateMachine();
   private readonly titleStartController = new TitleStartController(this.gameFlow);
   private titleOverlay?: Phaser.GameObjects.Container;
+  private titleSelectedPlayerId: PlayerId = "guanyu";
+  private titleOptionFrames?: Record<PlayerId, Phaser.GameObjects.NineSlice>;
+  private autoStartSource?: TitleStartSource;
   private hud!: GameHud;
   private pauseController!: PauseController;
   private failureController!: FailureController;
@@ -193,8 +198,19 @@ export default class MainScene extends Phaser.Scene {
   private titleStartCount = 0;
   private pauseCount = 0;
   private resumeCount = 0;
-  private readonly handleTitleKeyboardStart = () => this.startGame("keyboard");
-  private readonly handleTitlePointerStart = () => this.startGame("pointer");
+  private readonly handleTitleKeyboardStart = (event: KeyboardEvent) => {
+    if (event.code === "ArrowLeft" || event.code === "KeyA") {
+      this.selectTitlePlayer("guanyu");
+      return;
+    }
+    if (event.code === "ArrowRight" || event.code === "KeyD") {
+      this.selectTitlePlayer("zhangfei");
+      return;
+    }
+    if (event.code === "Enter" || event.code === "Space" || event.code === "KeyJ") {
+      this.confirmTitlePlayer("keyboard");
+    }
+  };
   private debugText?: Phaser.GameObjects.Text;
   private get state(): PlayerState { return this.playerStateMachine.state; }
   private facing: 1 | -1 = 1;
@@ -317,23 +333,24 @@ export default class MainScene extends Phaser.Scene {
 
   getGameplayEvents() { return this.gameplayEvents; }
 
+  private configurePlayer(id: PlayerId) {
+    this.playerDefinition = getPlayerDefinition(id);
+    this.playerLifecycle = new PlayerLifecycle(this.playerDefinition.lifecycle.maxHp);
+    this.attackController = new PlayerAttackController(this.playerDefinition.attacks);
+    this.titleSelectedPlayerId = id;
+  }
+
+  init(data: MainSceneInitData = {}) {
+    if (data.playerId) this.configurePlayer(data.playerId);
+    this.autoStartSource = data.autoStartSource;
+  }
+
   preload() {
     queueRuntimeAssets(this.load);
     if (process.env.NODE_ENV !== "production") {
       const query = new URLSearchParams(window.location.search);
       const prototypePlayer = query.get("playerPrototype");
-      this.playerDefinition = prototypePlayer === "zhangfei"
-        ? ZHANGFEI_PLAYER_DEFINITION
-        : GUANYU_PLAYER_DEFINITION;
-      this.playerLifecycle = new PlayerLifecycle(this.playerDefinition.lifecycle.maxHp);
-      this.attackController = new PlayerAttackController(this.playerDefinition.attacks);
-      if (prototypePlayer === "zhangfei") {
-        this.load.atlas(
-          ZHANGFEI_PLAYER_DEFINITION.textureKey,
-          resolveRuntimeAssetUrl("/art/zhangfei-v2/zhangfei-v2.png"),
-          resolveRuntimeAssetUrl("/art/zhangfei-v2/zhangfei-v2.atlas.json"),
-        );
-      }
+      if (isPlayerId(prototypePlayer)) this.configurePlayer(prototypePlayer);
       if (query.get("previewZhangFei") === "1") {
         this.load.atlas(
           "zhangfei-v2-preview",
@@ -353,11 +370,19 @@ export default class MainScene extends Phaser.Scene {
         this.assetFailureListener = undefined;
       });
     }
+    if (this.playerDefinition.id === "zhangfei" && !this.textures.exists(ZHANGFEI_PLAYER_DEFINITION.textureKey)) {
+      this.load.atlas(
+        ZHANGFEI_PLAYER_DEFINITION.textureKey,
+        resolveRuntimeAssetUrl("/art/zhangfei-v2/zhangfei-v2.png"),
+        resolveRuntimeAssetUrl("/art/zhangfei-v2/zhangfei-v2.atlas.json"),
+      );
+    }
   }
 
   create() {
     const development = process.env.NODE_ENV !== "production";
     const query = new URLSearchParams(window.location.search);
+    this.titleSelectedPlayerId = isPlayerId(this.playerDefinition.id) ? this.playerDefinition.id : "guanyu";
     const localPrototypeHost = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost";
     this.enemyPreviewMode = development && query.get("previewEnemy") === "1";
     if (this.enemyPreviewMode) {
@@ -609,6 +634,11 @@ export default class MainScene extends Phaser.Scene {
     this.updateHud();
     if (this.bossClearedSmokeMode) this.startGame("smoke");
     if (this.playerPrototypeMode) this.startGame("smoke");
+    if (this.autoStartSource && this.gameFlow.state === "title") {
+      const source = this.autoStartSource;
+      this.autoStartSource = undefined;
+      this.startGame(source);
+    }
     this.prepareFailureSmokeCycle();
     this.prepareResultSmokeCycle();
 
@@ -641,6 +671,7 @@ export default class MainScene extends Phaser.Scene {
       keyboard.off("keydown", this.handleTitleKeyboardStart, this);
       this.titleOverlay?.destroy(true);
       this.titleOverlay = undefined;
+      this.titleOptionFrames = undefined;
     });
 
     if (this.resetSmokeMode) {
@@ -885,11 +916,11 @@ export default class MainScene extends Phaser.Scene {
   }
 
   private createCombatAnimations() {
-    if (this.anims.exists(this.playerDefinition.animations.walk.key)) return;
     for (const animation of Object.values(this.playerDefinition.animations)) {
-      this.createPlayerAnimation(animation);
+      if (!this.anims.exists(animation.key)) this.createPlayerAnimation(animation);
     }
     for (const attack of Object.values(this.playerDefinition.attacks)) {
+      if (this.anims.exists(attack.animationKey)) continue;
       this.anims.create({
         key: attack.animationKey,
         frames: attack.frames.map((frame, index) => ({
@@ -902,22 +933,30 @@ export default class MainScene extends Phaser.Scene {
       });
     }
     for (const config of [SOLDIER_ENEMY_CONFIG, MAULER_ENEMY_CONFIG, DUELIST_ENEMY_CONFIG, SHIELD_GUARD_ENEMY_CONFIG, CROSSBOW_ENEMY_CONFIG]) {
-      this.anims.create({ key: enemyAnimationKey(config, "idle"), frames: config.animations.idle.map(frame => ({ key: config.assetKey, frame })), frameRate: config.animationRates.idle, repeat: -1 });
-      this.anims.create({ key: enemyAnimationKey(config, "walk"), frames: config.animations.walk.map(frame => ({ key: config.assetKey, frame })), frameRate: config.animationRates.walk, repeat: -1 });
-      this.anims.create({
-        key: enemyAnimationKey(config, "attack"),
-        frames: config.animations.attack.map((frame, index) => ({
-          key: config.assetKey,
-          frame,
-          duration: config.attackFrameDurationsMs?.[index] ?? 0,
-        })),
-        frameRate: config.animationRates.attack,
-        repeat: 0,
-      });
-      this.anims.create({ key: enemyAnimationKey(config, "hurt"), frames: config.animations.hurt.map(frame => ({ key: config.assetKey, frame })), frameRate: config.animationRates.hurt, repeat: 0 });
-      this.anims.create({ key: enemyAnimationKey(config, "dead"), frames: config.animations.dead.map(frame => ({ key: config.assetKey, frame })), frameRate: config.animationRates.dead, repeat: 0 });
+      const idleKey = enemyAnimationKey(config, "idle");
+      const walkKey = enemyAnimationKey(config, "walk");
+      const attackKey = enemyAnimationKey(config, "attack");
+      const hurtKey = enemyAnimationKey(config, "hurt");
+      const deadKey = enemyAnimationKey(config, "dead");
+      if (!this.anims.exists(idleKey)) this.anims.create({ key: idleKey, frames: config.animations.idle.map(frame => ({ key: config.assetKey, frame })), frameRate: config.animationRates.idle, repeat: -1 });
+      if (!this.anims.exists(walkKey)) this.anims.create({ key: walkKey, frames: config.animations.walk.map(frame => ({ key: config.assetKey, frame })), frameRate: config.animationRates.walk, repeat: -1 });
+      if (!this.anims.exists(attackKey)) {
+        this.anims.create({
+          key: attackKey,
+          frames: config.animations.attack.map((frame, index) => ({
+            key: config.assetKey,
+            frame,
+            duration: config.attackFrameDurationsMs?.[index] ?? 0,
+          })),
+          frameRate: config.animationRates.attack,
+          repeat: 0,
+        });
+      }
+      if (!this.anims.exists(hurtKey)) this.anims.create({ key: hurtKey, frames: config.animations.hurt.map(frame => ({ key: config.assetKey, frame })), frameRate: config.animationRates.hurt, repeat: 0 });
+      if (!this.anims.exists(deadKey)) this.anims.create({ key: deadKey, frames: config.animations.dead.map(frame => ({ key: config.assetKey, frame })), frameRate: config.animationRates.dead, repeat: 0 });
     }
     for (const state of ["guard", "block", "recovery"] as const) {
+      if (this.anims.exists(shieldGuardAnimationKey(state))) continue;
       this.anims.create({
         key: shieldGuardAnimationKey(state),
         frames: SHIELD_GUARD_EXTRA_ANIMATIONS[state].map(frame => ({ key: SHIELD_GUARD_ENEMY_CONFIG.assetKey, frame })),
@@ -926,6 +965,7 @@ export default class MainScene extends Phaser.Scene {
       });
     }
     for (const state of ["aim", "locked", "reload"] as const) {
+      if (this.anims.exists(crossbowAnimationKey(state))) continue;
       this.anims.create({
         key: crossbowAnimationKey(state),
         frames: CROSSBOW_EXTRA_ANIMATIONS[state].map(frame => ({ key: CROSSBOW_ENEMY_CONFIG.assetKey, frame })),
@@ -940,6 +980,7 @@ export default class MainScene extends Phaser.Scene {
       landing: "leap-landing",
     };
     for (const phase of Object.keys(leapFrames) as DuelistLeapPhase[]) {
+      if (this.anims.exists(duelistLeapAnimationKey(phase))) continue;
       this.anims.create({
         key: duelistLeapAnimationKey(phase),
         frames: [{ key: "enemy-duelist-leap", frame: leapFrames[phase] }],
@@ -1433,17 +1474,62 @@ export default class MainScene extends Phaser.Scene {
 
   private createTitleOverlay(keyboard: Phaser.Input.Keyboard.KeyboardPlugin) {
     const shade = this.add.rectangle(VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2, VIEWPORT_WIDTH, VIEWPORT_HEIGHT, 0x07120d, 0.94)
-      .setScrollFactor(0)
-      .setInteractive();
-    const modal = addModalFrame(this, VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2, 760, 300);
-    const title = addUiText(this, VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2 - 78, "THREE KINGDOMS", 52, UI_COLORS.antiqueGold)
+      .setScrollFactor(0);
+    const modal = addModalFrame(this, VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2, 900, 470);
+    const title = addUiText(this, VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2 - 172, "SELECT FIGHTER", 46, UI_COLORS.antiqueGold)
       .setOrigin(0.5).setScrollFactor(0);
-    const prompt = addUiText(this, VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2 + 52, "PRESS ANY KEY / TAP TO START", 23)
+    const trial = addUiText(this, VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2 - 122, "ZHANG FEI - TRIAL BALANCE", 18, UI_COLORS.boneWhite)
       .setOrigin(0.5).setScrollFactor(0);
-    this.titleOverlay = this.add.container(0, 0, [shade, modal, title, prompt]).setDepth(20000);
-    shade.once("pointerdown", this.handleTitlePointerStart, this);
-    keyboard.once("keydown", this.handleTitleKeyboardStart, this);
+    const guanyuFrame = addButtonFrame(this, VIEWPORT_WIDTH / 2 - 205, VIEWPORT_HEIGHT / 2 + 6, 330, 180)
+      .setScrollFactor(0).setInteractive({ useHandCursor: true });
+    const zhangfeiFrame = addButtonFrame(this, VIEWPORT_WIDTH / 2 + 205, VIEWPORT_HEIGHT / 2 + 6, 330, 180)
+      .setScrollFactor(0).setInteractive({ useHandCursor: true });
+    const guanyuName = addUiText(this, VIEWPORT_WIDTH / 2 - 205, VIEWPORT_HEIGHT / 2 - 17, "GUAN YU", 34)
+      .setOrigin(0.5).setScrollFactor(0);
+    const guanyuRole = addUiText(this, VIEWPORT_WIDTH / 2 - 205, VIEWPORT_HEIGHT / 2 + 42, "BALANCED", 18, UI_COLORS.antiqueGold)
+      .setOrigin(0.5).setScrollFactor(0);
+    const zhangfeiName = addUiText(this, VIEWPORT_WIDTH / 2 + 205, VIEWPORT_HEIGHT / 2 - 17, "ZHANG FEI", 34)
+      .setOrigin(0.5).setScrollFactor(0);
+    const zhangfeiRole = addUiText(this, VIEWPORT_WIDTH / 2 + 205, VIEWPORT_HEIGHT / 2 + 42, "HEAVY TRIAL", 18, UI_COLORS.antiqueGold)
+      .setOrigin(0.5).setScrollFactor(0);
+    const prompt = addUiText(this, VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2 + 157, "TAP FIGHTER  /  LEFT RIGHT + ENTER", 20)
+      .setOrigin(0.5).setScrollFactor(0);
+    this.titleOptionFrames = { guanyu: guanyuFrame, zhangfei: zhangfeiFrame };
+    this.titleOverlay = this.add.container(0, 0, [
+      shade, modal, title, trial, guanyuFrame, zhangfeiFrame,
+      guanyuName, guanyuRole, zhangfeiName, zhangfeiRole, prompt,
+    ]).setDepth(20000);
+    guanyuFrame.on("pointerover", () => this.selectTitlePlayer("guanyu"));
+    zhangfeiFrame.on("pointerover", () => this.selectTitlePlayer("zhangfei"));
+    guanyuFrame.once("pointerdown", () => {
+      this.selectTitlePlayer("guanyu");
+      this.confirmTitlePlayer("pointer");
+    });
+    zhangfeiFrame.once("pointerdown", () => {
+      this.selectTitlePlayer("zhangfei");
+      this.confirmTitlePlayer("pointer");
+    });
+    keyboard.on("keydown", this.handleTitleKeyboardStart, this);
+    this.selectTitlePlayer(this.titleSelectedPlayerId);
     this.updateTitleDataset();
+  }
+
+  private selectTitlePlayer(id: PlayerId) {
+    if (this.gameFlow.state !== "title") return;
+    this.titleSelectedPlayerId = id;
+    this.titleOptionFrames?.guanyu.setTint(id === "guanyu" ? UI_COLORS.antiqueGold : 0x68655b);
+    this.titleOptionFrames?.zhangfei.setTint(id === "zhangfei" ? UI_COLORS.antiqueGold : 0x68655b);
+    this.updateTitleDataset();
+  }
+
+  private confirmTitlePlayer(source: Exclude<TitleStartSource, "smoke">) {
+    if (this.gameFlow.state !== "title") return;
+    if (this.titleSelectedPlayerId === this.playerDefinition.id) {
+      this.startGame(source);
+      return;
+    }
+    this.audioManager.requestUnlock();
+    this.scene.restart({ playerId: this.titleSelectedPlayerId, autoStartSource: source } satisfies MainSceneInitData);
   }
 
   private startGame(source: TitleStartSource) {
@@ -1456,6 +1542,7 @@ export default class MainScene extends Phaser.Scene {
     this.input.keyboard?.off("keydown", this.handleTitleKeyboardStart, this);
     this.titleOverlay?.destroy(true);
     this.titleOverlay = undefined;
+    this.titleOptionFrames = undefined;
     this.pauseController.consumeToggleRequest();
     this.pauseController.setFlowState(this.gameFlow.state);
     this.inputController.readSnapshot();
@@ -1720,6 +1807,8 @@ export default class MainScene extends Phaser.Scene {
     this.game.canvas.dataset.gameFlowState = this.gameFlow.state;
     this.game.canvas.dataset.titleVisible = String(this.gameFlow.state === "title");
     this.game.canvas.dataset.titleStartCount = String(this.titleStartCount);
+    this.game.canvas.dataset.titleSelectedPlayer = this.titleSelectedPlayerId;
+    this.game.canvas.dataset.activePlayerDefinition = this.playerDefinition.id;
     if (source) this.game.canvas.dataset.titleStartSource = source;
   }
 

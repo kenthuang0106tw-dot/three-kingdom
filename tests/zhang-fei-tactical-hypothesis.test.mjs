@@ -34,8 +34,8 @@ test("Task 10.5D preserves rejected evidence and keeps formal integration blocke
     readText("app/game/player/PlayerDefinition.ts"),
   ]);
 
-  assert.match(nextTask, /M11 \/ Task 11\.1 — Post-M10 Product Direction Selection/);
-  assert.match(nextTask, /Do not implement Zhang Fei, Zhao Yun, character selection, a second Stage/);
+  assert.match(nextTask, /M10 \/ Task 10\.6R — Zhang Fei Trial Play Review/);
+  assert.match(nextTask, /Do not implement another feature/);
   assert.match(roadmap, /10\.5R \| Zhang Fei tactical hypothesis revision — Completed 2026-08-01/);
   assert.match(roadmap, /10\.5P \| Zhang Fei formation-breaker combat prototype — Rejected 2026-08-01/);
   assert.match(roadmap, /10\.6 \| Phaser character select and formal integration — Deferred from active sequence/);
