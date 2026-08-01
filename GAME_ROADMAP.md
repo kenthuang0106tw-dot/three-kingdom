@@ -562,8 +562,9 @@ gameplay, art, balance, Stage, Camera, Audio, input, or UI behavior changed.
 | 10.2 | Player Definition boundary and Guan Yu freeze — Completed 2026-07-30 | P0 | High | 10.1 | Two-known-player data seam exists; Guan Yu runtime values/behavior remain exact; no Zhang Fei runtime or selection yet | player definition/actor/attack/MainScene/tests | Generic framework or Guan Yu regression |
 | 10.3 | Zhang Fei gameplay and production contract — Completed 2026-07-30 | P0 | Medium | 10.2 | Heavy-warrior goal, comparison plan, approved identity, frame budget, feet/scale/atlas rules are accepted before production | character production docs/asset plan | Art precedes gameplay decision |
 | 10.4 | Zhang Fei atlas and animation preview — Completed 2026-07-30 | P0 | High | 10.3 | Genuine idle/walk/attack1–3/hurt/dead frames; measured metadata; preview feet stable; no formal Stage integration | player assets/tool/preview/tests | Source frames incomplete or identity drift |
-| 10.5 | Zhang Fei combat prototype — In progress 2026-07-31 | P0 | High | 10.4 | Development-only comparison proves distinct commitment/reward without becoming dominant; existing combat contracts pass | player config/prototype/tests/report | Balance is only HP/damage |
-| 10.6 | Phaser character select and formal integration | P0 | High | 10.5 | Title selects exactly Guan Yu/Zhang Fei; either completes/fails/retries/replays existing Stage; React owns no selection | Title/player/MainScene/tests | Selection lifecycle or stale actor |
+| 10.5 | Zhang Fei combat prototype — Rejected 2026-08-01 | P0 | High | 10.4 | Complete paired evidence reaches an explicit decision without weakening accepted contracts | player config/prototype/tests/report | Balance is only HP/damage |
+| 10.5R | Zhang Fei tactical hypothesis revision | P0 | Medium | 10.5 rejected evidence | One revised role and measurable acceptance contract addresses the failed two-context Recovery criterion without Enemy/Boss tuning | planning/contract/tests | Repeating numeric tuning without a tactical change |
+| 10.6 | Phaser character select and formal integration — Blocked | P0 | High | accepted 10.5R prototype | Title selects exactly Guan Yu/Zhang Fei; either completes/fails/retries/replays existing Stage; React owns no selection | Title/player/MainScene/tests | Selection lifecycle or stale actor |
 | 10.7 | Second Vertical Slice acceptance | P0 | High | 10.6 | Two-character full QA at three viewports; 10 reset paths; performance/packaging/routes pass; no Critical/High defect | QA/release docs/tests | Asset memory or mobile readability |
 
 ### M10 / Task 10.1 — Second Vertical Slice Scope Lock (Completed 2026-07-30)
@@ -580,8 +581,9 @@ full QA. Zhao Yun, a second Stage, new enemies/Boss, new inputs/skills, Audio,
 progression, backend, and multiplayer remain excluded.
 
 **Dependency rule:** 10.2 freezes Guan Yu behind the minimum second-player seam;
-10.3 accepts gameplay and identity contracts before 10.4 art production; only
-an accepted 10.5 prototype may enter the formal Stage in 10.6.
+10.3 accepts gameplay and identity contracts before 10.4 art production. The
+rejected 10.5 evidence must be revised and accepted through 10.5R before any
+formal Stage or Title integration may begin in 10.6.
 
 ### M10 / Task 10.2 — Player Definition Boundary and Guan Yu Freeze (Completed 2026-07-30)
 
@@ -654,7 +656,7 @@ manifest, formal Title selection, Stage runtime, or production package.
 
 **Next:** M10 / Task 10.5 — Zhang Fei Combat Prototype.
 
-### M10 / Task 10.5 — Zhang Fei Combat Prototype (In progress 2026-07-31)
+### M10 / Task 10.5 — Zhang Fei Combat Prototype (Rejected 2026-08-01)
 
 **Implementation:** Added the development-only Guan Yu/Zhang Fei comparison
 entrance and three fixed contexts. Zhang Fei uses all approved poses and the
@@ -662,11 +664,23 @@ frozen 200 px/s, 96×58 body, 176×88 spear hitbox, attack phase, damage,
 displacement, and Hit Stop hypotheses. His weapon remains the Zhangba serpent
 spear (丈八蛇矛). Guan Yu and all shared combat owners remain unchanged.
 
-**Gate:** Automated definition, animation, composition, production isolation,
-and Desktop runtime evidence are complete. The required five paired tactical
-runs in Entry, Ambush, and Boss plus interactive mobile comparison are still
-unrecorded. No balance metrics were fabricated, no Accept/Adjust/Reject decision
-has been made, and Task 10.6 remains blocked.
+**Evidence:** Thirty final paired runs completed after two permitted Zhang Fei
+adjustments. Final medians were Entry 24.388s/5 damage versus Guan Yu
+24.851s/4, Ambush 21.121s/5 versus 19.429s/4, and Boss 6.056s/2 versus
+5.756s/2. Both characters completed every context; deliberate Attack 2 stops,
+Boss Attack 3 conversions, and all raw attack metrics are recorded in the
+combat report. Desktop, 844×390, and 390×844 interaction passed.
+
+**Decision:** Reject. Zhang Fei suffered more Recovery-frame hits only in
+Ambush (5 versus 0), not in the required two contexts; Entry and Boss were both
+0 versus 0. Damage was reduced from 3 to 2 and Attack 3 recovery increased from
+425ms to 600ms, but a third numeric rescue would risk passive waiting. The
+prototype remains development-only, production packaging stays frozen, and
+Task 10.6 remains blocked.
+
+**Next:** M10 / Task 10.5R — Zhang Fei Tactical Hypothesis Revision. This is a
+planning/contract task and may not tune enemies, implement formal selection, or
+start Zhao Yun.
 
 ## Task Status Update — 2026-07-12
 

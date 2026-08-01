@@ -12,7 +12,7 @@
 - Duration：3–4 weeks
 - Capacity：1 developer + AI，約 70–105 hours
 - Milestone：M10 — Zhang Fei Second Playable Vertical Slice
-- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M10 / 10.3
+- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M10 / 10.5R
 
 ## M10 Task List
 
@@ -21,10 +21,11 @@
 | 1 | ✅ 10.1 — Second Vertical Slice scope lock | 4–6h | 張飛單一目標、排除範圍、依賴與驗收矩陣 | documents + release baseline revalidation |
 | 2 | ✅ 10.2 — Player Definition boundary and Guan Yu freeze | 8–12h | 最小雙角色 seam；runtime 仍只有關羽 | contracts + full Guan Yu regression |
 | 3 | ✅ 10.3 — Zhang Fei gameplay and production contract | 6–10h | 重型定位、identity、frame/atlas 與比較規格 | document/identity acceptance |
-| 4 | 10.4 — Zhang Fei atlas and animation preview | 24–36h | genuine frames、atlas、metadata、QA preview | asset/tests/three-viewport preview |
-| 5 | 10.5 — Zhang Fei combat prototype | 12–18h | development-only heavy-warrior prototype | before/after playtest + combat regression |
-| 6 | 10.6 — Character select and formal integration | 12–18h | Phaser Title 雙角色選擇與完整關卡 | two-character full flows |
-| 7 | 10.7 — Second Vertical Slice acceptance | 8–12h | QA、performance、packaging、release evidence | full gates + three viewports + resets |
+| 4 | ✅ 10.4 — Zhang Fei atlas and animation preview | 24–36h | genuine frames、atlas、metadata、QA preview | asset/tests/three-viewport preview |
+| 5 | ❌ 10.5 — Zhang Fei combat prototype | 12–18h | development-only heavy-warrior prototype | 30 paired runs completed; hypothesis rejected |
+| 6 | 10.5R — Zhang Fei tactical hypothesis revision | 4–6h | revised role and measurable acceptance contract | planning/contract review only |
+| 7 | 10.6 — Character select and formal integration | 12–18h | Phaser Title 雙角色選擇與完整關卡 | blocked until 10.5R prototype acceptance |
+| 8 | 10.7 — Second Vertical Slice acceptance | 8–12h | QA、performance、packaging、release evidence | full gates + three viewports + resets |
 
 ## Historical Task List
 
@@ -1409,9 +1410,9 @@ The only next task is M10 / Task 10.5 — Zhang Fei Combat Prototype. It may
 compare the accepted heavy-warrior hypothesis in development, but it may not
 formally integrate Zhang Fei into Title selection or the production Stage.
 
-## M10 / Task 10.5 — Zhang Fei Combat Prototype — 2026-07-31
+## M10 / Task 10.5 — Zhang Fei Combat Prototype — 2026-08-01
 
-Status: implementation complete; paired combat acceptance pending.
+Status: rejected after complete paired combat acceptance.
 
 - [x] Added a development-only player/scenario query entrance for Guan Yu and
   Zhang Fei across Entry, Ambush, and Boss.
@@ -1423,9 +1424,14 @@ Status: implementation complete; paired combat acceptance pending.
   Stage, Camera, UI, Audio, and formal Title contracts.
 - [x] Added focused definition, animation, composition, and development-gate
   regression coverage.
-- [ ] Record five paired runs per player in Entry, Ambush, and Boss.
-- [ ] Record raw results, medians, three-viewport interactive evidence, and an
-  explicit Accept/Adjust/Reject decision.
+- [x] Recorded five paired runs per player in Entry, Ambush, and Boss.
+- [x] Recorded raw attack-stage metrics, medians, intentional Attack 2 stops,
+  Boss conversions, and Desktop/844×390/390×844 interaction evidence.
+- [x] Reduced Attack 3 damage from 3 to 2 and increased its recovery from
+  425ms to 600ms without changing Enemy/Boss/Combo contracts.
+- [x] Rejected the hypothesis because Zhang Fei had more Recovery-frame hits
+  in only Ambush, not the required two contexts.
 
-Task 10.6 remains blocked. The only next work is completion of Task 10.5's
-paired combat acceptance; do not begin formal character selection.
+Task 10.6 remains blocked. The only next task is M10 / Task 10.5R — Zhang Fei
+Tactical Hypothesis Revision; it is planning-only and may not implement formal
+selection or tune enemies to make the rejected prototype pass.

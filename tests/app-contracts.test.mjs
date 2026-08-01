@@ -1961,8 +1961,8 @@ test("the release closeouts identify one accepted runtime and one post-release t
   assert.match(m10Scope, /Zhao Yun/);
   assert.match(m10Scope, /A second Stage/);
   assert.match(m10Scope, /Player Definition Boundary and Guan Yu Freeze/);
-  assert.match(nextTask, /M10 \/ Task 10\.5 — Zhang Fei Combat Prototype/);
-  assert.match(nextTask, /development-only Zhang Fei player definition/);
-  assert.match(nextTask, /Do not implement formal character selection, Stage integration/);
-  assert.match(nextTask, /Guan Yu's frozen presentation and gameplay values remain exact/);
+  assert.match(nextTask, /M10 \/ Task 10\.5R — Zhang Fei Tactical Hypothesis Revision/);
+  assert.match(nextTask, /Task 10\.5 completed all 30 paired runs and was rejected/);
+  assert.match(nextTask, /Do not implement the revised combat prototype, Task 10\.6/);
+  assert.match(nextTask, /Guan Yu, production assets, formal Title selection/);
 });

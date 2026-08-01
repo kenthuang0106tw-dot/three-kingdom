@@ -1520,17 +1520,22 @@
 | Browser | Pass | Desktop one Canvas/no overflow/no error; mobile FIT contract unchanged |
 | Next task | Selected | M10 / Task 10.5 — Zhang Fei Combat Prototype |
 
-## M10 / Task 10.5 — Zhang Fei Combat Prototype — 2026-07-31 checkpoint
+## M10 / Task 10.5 — Zhang Fei Combat Prototype — 2026-08-01 final
 
 | Check | Result | Evidence |
 | --- | --- | --- |
 | Weapon identity | Pass | All runtime frames retain the Zhangba serpent spear (丈八蛇矛) |
-| Definition | Pass | 200 speed, 10 HP, 96×58 body, 176×88 hitbox, frozen phase/impact values |
+| Definition | Adjusted | 200 speed, 10 HP, 96×58 body, 176×88 hitbox; Attack 3 damage 2 and recovery 600ms |
 | Animation | Pass | 47 genuine frames; unique keys; no transform, duplication, per-state scale, or feet correction |
 | Guan Yu freeze | Pass | 235 speed, 86×54 body, 142×86 hitbox, 375/375/650ms and 1/1/2 damage unchanged |
 | Development entrance | Pass | `playerPrototype` + `prototypeScenario=entry/ambush/boss`; formal Title unchanged |
-| Desktop smoke | Pass | One 1280×720 Canvas, Zhang Fei + Entry composition, no overflow |
+| Desktop smoke | Pass | One 1280×720 Canvas, fixed scenarios, real movement/attack, no overflow |
 | Production isolation | Pass | No manifest registration or formal selection; v2 assets remain excluded |
-| Paired trials | Pending | Five runs per player/context and medians not yet recorded |
-| Mobile interaction | Pending | 844×390 and 390×844 comparison interaction not yet recorded |
-| Decision | Pending | Task remains open; Task 10.6 blocked |
+| Paired trials | Pass | 30/30 final runs completed with raw attacks, damage, duration, stops, displacement, and commitment data |
+| Mobile interaction | Pass | 844×390 fitted 693×390 and 390×844 fitted 325×182.81; joystick and touch Attack 1 succeeded |
+| Non-dominance | Pass | Entry: Zhang Fei faster but more damage; Ambush: slower and more damage; Boss: slower with equal damage |
+| Intentional stop | Pass | Both generals stopped after Attack 2 twice in Entry and twice in Ambush |
+| Recovery punishment | Fail | Zhang Fei exceeded Guan Yu only in Ambush (5 vs 0); Entry/Boss both 0 vs 0 |
+| Automated gates | Pass | 164/164 tests, typecheck, lint 0 errors/8 existing warnings, both builds, 52-file packaging |
+| Production runtime | Pass | Prototype query ignored; one 1280×720 Canvas, empty dataset, no overflow or captured error |
+| Decision | Reject | Task 10.6 remains blocked; next is planning-only Task 10.5R |

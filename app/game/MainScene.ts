@@ -40,6 +40,23 @@ type TitleStartSource = "keyboard" | "pointer" | "smoke";
 type FailureRestartSource = ExplicitFailureRestartSource | "smoke";
 type ResultReplaySource = ExplicitResultReplaySource | "smoke";
 type PlayerPrototypeScenario = "entry" | "ambush" | "boss";
+type PlayerPrototypeStrategy = "baseline" | "aware";
+type PrototypeAttackPhase = "idle" | "startup" | "active" | "recovery";
+type PrototypeTrialMetrics = {
+  attacksStarted: [number, number, number];
+  attacksHit: [number, number, number];
+  attacksMissed: [number, number, number];
+  attacksBlocked: [number, number, number];
+  attacksInterrupted: [number, number, number];
+  voluntaryStopsAfterAttack1: number;
+  voluntaryStopsAfterAttack2: number;
+  recoveryHitsReceived: number;
+  multiTargetHits: number;
+  confirmedAttacks: number;
+  displacedTargets: number;
+  commitmentMs: number;
+  bossAttack3Hits: number;
+};
 type PreviewFrame = {
   name: string; x: number; y: number; width: number; height: number;
   originY: number; offsetX: number; offsetY: number; classification: string;
@@ -203,6 +220,17 @@ export default class MainScene extends Phaser.Scene {
   private zhangFeiPreviewMode = false;
   private playerPrototypeMode = false;
   private playerPrototypeScenario?: PlayerPrototypeScenario;
+  private playerPrototypeStrategy?: PlayerPrototypeStrategy;
+  private prototypeNextAttackInputAt = 0;
+  private prototypeIntentionalStopUsed = false;
+  private prototypeStopCurrentCombo = false;
+  private prototypeTrialStartedAt = 0;
+  private prototypeTrialComplete = false;
+  private prototypeAttackPhase: PrototypeAttackPhase = "idle";
+  private prototypeCurrentAttackHitRecorded = false;
+  private prototypeCurrentAttackBlocked = false;
+  private prototypeCurrentAttackInterrupted = false;
+  private prototypeTrialMetrics: PrototypeTrialMetrics = this.createPrototypeTrialMetrics();
   private shieldGuardTestMode?: "A" | "B";
   private crossbowTestMode?: "A" | "B";
   private shieldCrossbowTestMode = false;
@@ -336,6 +364,11 @@ export default class MainScene extends Phaser.Scene {
       && (query.get("playerPrototype") === "guanyu" || query.get("playerPrototype") === "zhangfei")
       && (prototypeScenario === "entry" || prototypeScenario === "ambush" || prototypeScenario === "boss");
     this.playerPrototypeScenario = this.playerPrototypeMode ? prototypeScenario as PlayerPrototypeScenario : undefined;
+    const prototypeStrategy = query.get("prototypeStrategy");
+    this.playerPrototypeStrategy = this.playerPrototypeMode
+      && (prototypeStrategy === "baseline" || prototypeStrategy === "aware")
+      ? prototypeStrategy
+      : undefined;
     if (this.playerPrototypeMode) {
       this.game.canvas.tabIndex = 0;
       this.game.canvas.focus();
@@ -420,6 +453,7 @@ export default class MainScene extends Phaser.Scene {
     this.playerStateMachine.reset();
     this.playerLifecycle.reset();
     this.resetComboState();
+    this.resetPrototypeTrialMetrics();
     if (development) this.game.canvas.dataset.playerHp = String(this.playerHp);
     this.cameraLockState = createCameraLockState();
     this.stageExitState = resetStageExit();
@@ -636,8 +670,10 @@ export default class MainScene extends Phaser.Scene {
       return;
     }
     if (this.lifecycleClock.isPaused()) { this.updateDebugText(); return; }
+    this.updatePrototypeTrialMetrics();
     this.playerBody.setVelocity(0, 0);
     this.currentInput = this.touchInputController.readSnapshot(this.inputController.readSnapshot());
+    if (this.playerPrototypeStrategy) this.currentInput = this.createPrototypeActionSnapshot(this.playerPrototypeStrategy);
     if (!this.playerPrototypeMode && !this.shieldGuardTestMode && !this.crossbowTestMode && !this.shieldCrossbowTestMode && !this.duelistLeapTestMode && !this.bossSmokeMode && !this.bossCombatSmokeMode && !this.failureSmokeCycleActive) {
       this.updateEncounterSmoke();
       this.updateEncounterProgress();
@@ -675,6 +711,9 @@ export default class MainScene extends Phaser.Scene {
     }
 
     if (this.isAttackState(this.state)) {
+      if (this.playerPrototypeMode && this.prototypeAttackPhase === "recovery") {
+        this.prototypeTrialMetrics.commitmentMs += this.game.loop.delta;
+      }
       this.updateAttackState();
       this.syncVisualsToBody();
       this.updateCamera();
@@ -928,6 +967,10 @@ export default class MainScene extends Phaser.Scene {
       ) && !this.playerBlockedTargetIds.has(enemy.id));
       if (blocked.length) {
         this.playerBlockedTargetIds = new Set([...this.playerBlockedTargetIds, ...blocked.map(enemy => enemy.id)]);
+        if (this.playerPrototypeMode && !this.prototypeCurrentAttackBlocked) {
+          this.prototypeTrialMetrics.attacksBlocked[this.comboStep - 1] += 1;
+          this.prototypeCurrentAttackBlocked = true;
+        }
         blocked.forEach(enemy => this.applyBlockToEnemy(enemy));
       }
       const resolution = resolveAttack({
@@ -945,6 +988,7 @@ export default class MainScene extends Phaser.Scene {
       if (hits.length) {
         hitLanded = true;
         globalEffectsTriggered = true;
+        this.recordPrototypeConfirmedAttack(hits.length);
         hits.forEach((enemy, index) => this.applyHitToEnemy(enemy, index === 0));
       }
       const bossActor = this.bossActor;
@@ -958,6 +1002,8 @@ export default class MainScene extends Phaser.Scene {
         this.playerHitTargetIds = bossResolution.hitTargetIds;
         if (bossResolution.hits.length) {
           hitLanded = true;
+          this.recordPrototypeConfirmedAttack(1);
+          if (this.playerPrototypeMode && this.comboStep === 3) this.prototypeTrialMetrics.bossAttack3Hits += 1;
           this.applyHitToBoss(!globalEffectsTriggered);
         }
       }
@@ -979,6 +1025,14 @@ export default class MainScene extends Phaser.Scene {
     this.comboWindowOpen = false;
     this.comboWindowEndsAt = 0;
     this.playerAttackId += 1;
+    if (this.playerPrototypeMode) {
+      if (step === 1) this.prototypeStopCurrentCombo = false;
+      this.prototypeTrialMetrics.attacksStarted[step - 1] += 1;
+      this.prototypeAttackPhase = "startup";
+      this.prototypeCurrentAttackHitRecorded = false;
+      this.prototypeCurrentAttackBlocked = false;
+      this.prototypeCurrentAttackInterrupted = false;
+    }
     this.playerHitTargetIds = new Set();
     this.playerBlockedTargetIds = new Set();
     this.gameplayEvents.publish({ type: "player-attack-started", step, at: this.time.now });
@@ -992,12 +1046,29 @@ export default class MainScene extends Phaser.Scene {
     if (!this.attackController.isAttackAnimation(animation.key)) return;
     this.disableAttackHitbox();
     this.attackCompleteCount += 1;
+    if (this.playerPrototypeMode) {
+      if (!this.hitConfirmed && !this.prototypeCurrentAttackBlocked && !this.prototypeCurrentAttackInterrupted) {
+        this.prototypeTrialMetrics.attacksMissed[this.comboStep - 1] += 1;
+      }
+      if (this.comboStep < 3 && this.hitConfirmed && !this.comboBuffered) {
+        if (this.comboStep === 1) this.prototypeTrialMetrics.voluntaryStopsAfterAttack1 += 1;
+        else this.prototypeTrialMetrics.voluntaryStopsAfterAttack2 += 1;
+      }
+    }
     if (this.comboStep < 3 && this.hitConfirmed && this.comboBuffered) this.startAttack(this.comboStep + 1);
     else this.finishCombo();
   }
 
   private handleAnimationUpdate(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
-    if (this.attackController.isActiveFrame(animation.key, frame.index)) this.enableAttackHitbox(); else this.disableAttackHitbox();
+    if (!this.attackController.isAttackAnimation(animation.key)) return;
+    if (this.attackController.isActiveFrame(animation.key, frame.index)) {
+      this.prototypeAttackPhase = "active";
+      this.enableAttackHitbox();
+    } else {
+      const activeFrames = this.attackController.activeAttack?.activeFrames ?? [];
+      this.prototypeAttackPhase = activeFrames.length && frame.index > Math.max(...activeFrames) ? "recovery" : "startup";
+      this.disableAttackHitbox();
+    }
   }
 
   private finishCombo() {
@@ -1008,6 +1079,7 @@ export default class MainScene extends Phaser.Scene {
     this.comboWindowOpen = false;
     this.comboWindowEndsAt = 0;
     this.attackController.finish();
+    this.prototypeAttackPhase = "idle";
     this.transitionTo("idle");
   }
 
@@ -1020,6 +1092,7 @@ export default class MainScene extends Phaser.Scene {
     this.playerHitTargetIds = new Set();
     this.playerBlockedTargetIds = new Set();
     this.attackController.finish();
+    this.prototypeAttackPhase = "idle";
   }
 
   private currentAttackImpact() {
@@ -1091,6 +1164,11 @@ export default class MainScene extends Phaser.Scene {
 
   private applyHitToPlayer(attackerId: number, attackerFacing: 1 | -1, sourceId: string) {
     if (this.gameFlow.state !== "playing" || this.state === "hurt") return;
+    if (this.playerPrototypeMode && this.isAttackState(this.state)) {
+      this.prototypeTrialMetrics.attacksInterrupted[this.comboStep - 1] += 1;
+      if (this.prototypeAttackPhase === "recovery") this.prototypeTrialMetrics.recoveryHitsReceived += 1;
+      this.prototypeCurrentAttackInterrupted = true;
+    }
     const damage = this.playerLifecycle.applyDamage(1);
     if (!damage.applied) return;
     this.gameplayEvents.publish({ type: "player-hit", enemyId: attackerId, at: this.time.now });
@@ -1377,6 +1455,7 @@ export default class MainScene extends Phaser.Scene {
   }
 
   private spawnPlayerPrototypeScenario(scenario: PlayerPrototypeScenario) {
+    this.prototypeTrialStartedAt = this.time.now;
     if (scenario === "entry") {
       this.enemyManager.spawnPrototype([
         { id: "prototype-entry-soldier", x: 520, y: 560, enemyType: "soldier" },
@@ -1395,6 +1474,133 @@ export default class MainScene extends Phaser.Scene {
       this.activateBossArena(true);
     }
     this.game.canvas.dataset.playerPrototypeScenarioReady = scenario;
+  }
+
+  private createPrototypeTrialMetrics(): PrototypeTrialMetrics {
+    return {
+      attacksStarted: [0, 0, 0], attacksHit: [0, 0, 0], attacksMissed: [0, 0, 0],
+      attacksBlocked: [0, 0, 0], attacksInterrupted: [0, 0, 0],
+      voluntaryStopsAfterAttack1: 0, voluntaryStopsAfterAttack2: 0,
+      recoveryHitsReceived: 0, multiTargetHits: 0, confirmedAttacks: 0,
+      displacedTargets: 0, commitmentMs: 0, bossAttack3Hits: 0,
+    };
+  }
+
+  private resetPrototypeTrialMetrics() {
+    this.prototypeTrialStartedAt = 0;
+    this.prototypeTrialComplete = false;
+    this.prototypeAttackPhase = "idle";
+    this.prototypeCurrentAttackHitRecorded = false;
+    this.prototypeCurrentAttackBlocked = false;
+    this.prototypeCurrentAttackInterrupted = false;
+    this.prototypeNextAttackInputAt = 0;
+    this.prototypeIntentionalStopUsed = false;
+    this.prototypeStopCurrentCombo = false;
+    this.prototypeTrialMetrics = this.createPrototypeTrialMetrics();
+    if (process.env.NODE_ENV !== "production") delete this.game.canvas.dataset.prototypeTrialMetrics;
+  }
+
+  private recordPrototypeConfirmedAttack(targetCount: number) {
+    if (!this.playerPrototypeMode || this.prototypeCurrentAttackHitRecorded) return;
+    this.prototypeTrialMetrics.attacksHit[this.comboStep - 1] += 1;
+    this.prototypeTrialMetrics.confirmedAttacks += 1;
+    this.prototypeTrialMetrics.displacedTargets += targetCount;
+    if (targetCount > 1) this.prototypeTrialMetrics.multiTargetHits += 1;
+    this.prototypeCurrentAttackHitRecorded = true;
+  }
+
+  private updatePrototypeTrialMetrics() {
+    if (!this.playerPrototypeMode || !this.prototypeTrialStartedAt) return;
+    const scenarioComplete = this.playerPrototypeScenario === "boss"
+      ? this.bossArenaReleaseCount > 0 || this.bossActor?.hp === 0 || this.gameFlow.state === "cleared"
+      : this.enemyManager.getLivingEnemies().length === 0;
+    if (scenarioComplete) this.prototypeTrialComplete = true;
+    const durationMs = Math.max(0, this.time.now - this.prototypeTrialStartedAt);
+    const metrics = this.prototypeTrialMetrics;
+    this.game.canvas.dataset.prototypeTrialMetrics = JSON.stringify({
+      ...metrics,
+      commitmentMs: Math.round(metrics.commitmentMs),
+      averageEnemiesDisplaced: metrics.confirmedAttacks
+        ? Number((metrics.displacedTargets / metrics.confirmedAttacks).toFixed(2))
+        : 0,
+      playerDamageTaken: this.playerDefinition.lifecycle.maxHp - this.playerHp,
+      playerHp: this.playerHp,
+      durationMs: Math.round(durationMs),
+      complete: this.prototypeTrialComplete,
+    });
+  }
+
+  private createPrototypeActionSnapshot(strategy: PlayerPrototypeStrategy): ActionSnapshot {
+    const noInput = () => createActionSnapshot({ up: false, down: false, left: false, right: false });
+    if (this.state === "hurt" || this.state === "dead") return noInput();
+    if (this.isAttackState(this.state)) {
+      if (this.prototypeStopCurrentCombo) return noInput();
+      if (!this.comboWindowOpen || this.time.now < this.prototypeNextAttackInputAt) return noInput();
+      const otherThreat = this.enemyManager.getLivingEnemies().some(enemy =>
+        Math.hypot(enemy.bodyZone.x - this.playerBodyZone.x, enemy.bodyZone.y - this.playerBodyZone.y) < 230
+        && (enemy.state === "attack" || enemy.state === "aim" || enemy.state === "locked"),
+      );
+      const crowded = this.enemyManager.getLivingEnemies().length > 1;
+      if (strategy === "aware" && this.comboStep === 2 && (otherThreat || crowded) && !this.prototypeIntentionalStopUsed) {
+        this.prototypeIntentionalStopUsed = true;
+        this.prototypeStopCurrentCombo = true;
+        return noInput();
+      }
+      this.prototypeNextAttackInputAt = this.time.now + 120;
+      return createActionSnapshot({ up: false, down: false, left: false, right: false }, true);
+    }
+
+    const living = this.enemyManager.getLivingEnemies();
+    const boss = this.bossActor && this.bossActor.state !== "dead" && this.bossActor.state !== "cleaned"
+      ? this.bossActor
+      : undefined;
+    let targetX = boss?.bodyZone.x;
+    let targetY = boss?.bodyZone.y;
+    let targetEnemy: EnemyCombatant | undefined;
+    if (!boss && living.length) {
+      targetEnemy = strategy === "aware"
+        ? living.find(enemy => enemy.isCrossbow && (enemy.state === "aim" || enemy.state === "locked"))
+          ?? [...living].sort((a, b) => Phaser.Math.Distance.Between(this.playerBodyZone.x, this.playerBodyZone.y, a.bodyZone.x, a.bodyZone.y)
+            - Phaser.Math.Distance.Between(this.playerBodyZone.x, this.playerBodyZone.y, b.bodyZone.x, b.bodyZone.y))[0]
+        : [...living].sort((a, b) => Phaser.Math.Distance.Between(this.playerBodyZone.x, this.playerBodyZone.y, a.bodyZone.x, a.bodyZone.y)
+          - Phaser.Math.Distance.Between(this.playerBodyZone.x, this.playerBodyZone.y, b.bodyZone.x, b.bodyZone.y))[0];
+      targetX = targetEnemy.bodyZone.x;
+      targetY = targetEnemy.bodyZone.y;
+    }
+    if (targetX === undefined || targetY === undefined) return noInput();
+
+    const dx = targetX - this.playerBodyZone.x;
+    const dy = targetY - this.playerBodyZone.y;
+    if (strategy === "aware") {
+      const lineThreat = living.find(enemy =>
+        (enemy.state === "attack" || enemy.state === "locked")
+        && Math.abs(enemy.bodyZone.y - this.playerBodyZone.y) < 68,
+      );
+      if (lineThreat && Math.abs(lineThreat.bodyZone.x - this.playerBodyZone.x) > 115) {
+        const moveY = lineThreat.bodyZone.y <= this.playerBodyZone.y ? 1 : -1;
+        return createActionSnapshot({ up: moveY < 0, down: moveY > 0, left: false, right: false });
+      }
+    }
+
+    if (targetEnemy?.isShieldGuard && this.enemyManager.isGuardBlocking(targetEnemy, this.playerBodyZone.x, this.playerBodyZone.y)) {
+      if (Math.abs(dy) < 92) {
+        const moveY = dy <= 0 ? 1 : -1;
+        return createActionSnapshot({ up: moveY < 0, down: moveY > 0, left: false, right: false });
+      }
+      const moveX = dx > 0 ? 1 : -1;
+      return createActionSnapshot({ up: false, down: false, left: moveX < 0, right: moveX > 0 });
+    }
+    if (Math.abs(dy) > 30) {
+      const moveY = dy > 0 ? 1 : -1;
+      return createActionSnapshot({ up: moveY < 0, down: moveY > 0, left: false, right: false });
+    }
+    if (Math.abs(dx) > 105 || dx * this.facing < 0) {
+      const moveX = dx > 0 ? 1 : -1;
+      return createActionSnapshot({ up: false, down: false, left: moveX < 0, right: moveX > 0 });
+    }
+    if (this.time.now < this.prototypeNextAttackInputAt) return noInput();
+    this.prototypeNextAttackInputAt = this.time.now + 160;
+    return createActionSnapshot({ up: false, down: false, left: false, right: false }, true);
   }
 
   private spawnShieldGuardPrototype(mode: "A" | "B") {

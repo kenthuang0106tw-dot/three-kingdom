@@ -90,11 +90,11 @@ export const ZHANGFEI_PLAYER_DEFINITION = Object.freeze({
       animationKey: "zhangfei-attack3",
       frames: ZHANGFEI_ANIMATION_FRAMES.attack3,
       frameRate: 20,
-      extraFrameDurationsMs: [6.25, 6.25, 6.25, 6.25, 0, 0, 0, 275 / 3, 275 / 3, 275 / 3],
+      extraFrameDurationsMs: [6.25, 6.25, 6.25, 6.25, 0, 0, 0, 150, 150, 150],
       startupFrames: [1, 2, 3, 4],
       activeFrames: [5, 6, 7],
       recoveryFrames: [8, 9, 10],
-      impact: { damage: 3, knockbackDistance: 88, hitStopMs: EIGHT_FRAME_HIT_STOP },
+      impact: { damage: 2, knockbackDistance: 88, hitStopMs: EIGHT_FRAME_HIT_STOP },
     },
   },
 } satisfies PlayerDefinition);

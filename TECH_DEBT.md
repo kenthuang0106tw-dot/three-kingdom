@@ -813,12 +813,21 @@ fail.
 
 ## TD-M10.5 — Zhang Fei paired-play evidence gap
 
-- **Severity:** P0 acceptance evidence; not a production defect.
-- **Evidence:** The development actor, fixed Entry/Ambush/Boss entrances,
-  definition tests, Desktop load, and production isolation exist, but the
-  required five paired tactical runs per player/context and interactive mobile
-  comparison have not been recorded.
-- **Containment:** Task 10.5 remains in progress. No raw values or medians are
-  inferred, and Task 10.6 formal selection is blocked.
-- **Resolution:** Complete the documented paired protocol, record raw data and
-  medians, then make one explicit Accept/Adjust/Reject decision.
+- **Status:** Resolved 2026-08-01 by explicit rejection.
+- **Evidence:** Thirty final paired runs, raw attack metrics, medians, and
+  Desktop/844×390/390×844 interaction are recorded. No result was inferred.
+- **Decision:** Zhang Fei produced more Recovery-frame hits than Guan Yu only
+  in Ambush (5 versus 0); Entry and Boss were both 0 versus 0, so the required
+  two-context criterion failed after two permitted definition-only changes.
+
+## TD-M10.5R — Zhang Fei tactical role is not production-ready
+
+- **Severity:** P0 milestone blocker; not a released production defect.
+- **Evidence:** The rejected heavy-warrior hypothesis can be useful and
+  readable, but its long recovery is expressed as punishment in only one of
+  three fixed contexts. More raw timing inflation risks passive waiting.
+- **Containment:** The atlas, preview, prototype, telemetry, and report remain
+  development-only. Zhang Fei is absent from Title selection and production
+  packaging; Task 10.6 is blocked.
+- **Resolution:** Task 10.5R must revise the tactical hypothesis and acceptance
+  model without changing enemies, Boss, Combo Window, Stage, Camera, or input.

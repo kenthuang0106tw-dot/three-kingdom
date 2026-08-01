@@ -22,7 +22,7 @@ test("Zhang Fei prototype uses the accepted heavy serpent-spear contract", () =>
   const expected = [
     { duration: 450, startup: 150, active: 100, recovery: 200, impact: { damage: 1, knockbackDistance: 34, hitStopMs: (1000 / 60) * 5 } },
     { duration: 525, startup: 175, active: 125, recovery: 225, impact: { damage: 1, knockbackDistance: 42, hitStopMs: (1000 / 60) * 5 } },
-    { duration: 800, startup: 225, active: 150, recovery: 425, impact: { damage: 3, knockbackDistance: 88, hitStopMs: (1000 / 60) * 8 } },
+    { duration: 975, startup: 225, active: 150, recovery: 600, impact: { damage: 2, knockbackDistance: 88, hitStopMs: (1000 / 60) * 8 } },
   ];
   Object.values(ZHANGFEI_PLAYER_DEFINITION.attacks).forEach((attack, index) => {
     assert.ok(Math.abs(attackDurationMs(attack) - expected[index].duration) < 0.001);
@@ -67,4 +67,17 @@ test("comparison entrance is development-only and leaves formal Title selection 
   assert.match(source, /prototypeScenario === "entry" \|\| prototypeScenario === "ambush" \|\| prototypeScenario === "boss"/);
   assert.match(source, /if \(this\.playerPrototypeMode\) this\.startGame\("smoke"\)/);
   assert.doesNotMatch(source, /ZHANG FEI.*PRESS ANY KEY|SELECT ZHANG FEI/i);
+});
+
+test("comparison telemetry records the complete Task 10.5 evidence without changing production selection", async () => {
+  const source = await readFile(new URL("../app/game/MainScene.ts", import.meta.url), "utf8");
+  for (const field of [
+    "attacksStarted", "attacksHit", "attacksMissed", "attacksBlocked", "attacksInterrupted",
+    "voluntaryStopsAfterAttack1", "voluntaryStopsAfterAttack2", "recoveryHitsReceived",
+    "multiTargetHits", "averageEnemiesDisplaced", "commitmentMs", "bossAttack3Hits",
+    "playerDamageTaken", "durationMs", "complete",
+  ]) assert.match(source, new RegExp(field));
+  assert.match(source, /if \(!this\.playerPrototypeMode/);
+  assert.match(source, /dataset\.prototypeTrialMetrics = JSON\.stringify/);
+  assert.doesNotMatch(source, /playerPrototype.*production/i);
 });
