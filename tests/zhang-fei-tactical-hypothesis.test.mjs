@@ -25,19 +25,24 @@ test("Task 10.5R defines one measurable formation-breaker hypothesis", async () 
   assert.match(contract, /Only an accepted 10\.5P result may unblock 10\.6/);
 });
 
-test("Task 10.5R remains planning-only and keeps formal integration blocked", async () => {
-  const [nextTask, roadmap, manifest, definition] = await Promise.all([
+test("rejected Task 10.5P records complete evidence and keeps formal integration blocked", async () => {
+  const [nextTask, roadmap, report, manifest, definition] = await Promise.all([
     readText("NEXT_TASK.md"),
     readText("GAME_ROADMAP.md"),
+    readText("docs/combat/m10-5p-zhang-fei-formation-breaker.md"),
     readText("app/game/assets/AssetManifest.ts"),
     readText("app/game/player/PlayerDefinition.ts"),
   ]);
 
-  assert.match(nextTask, /M10 \/ Task 10\.5P — Zhang Fei Formation Breaker Combat Prototype/);
+  assert.match(nextTask, /M10 \/ Task 10\.5D — Zhang Fei Second-Player Direction Decision/);
   assert.match(nextTask, /Do not implement Task 10\.6/);
   assert.match(roadmap, /10\.5R \| Zhang Fei tactical hypothesis revision — Completed 2026-08-01/);
-  assert.match(roadmap, /10\.5P \| Zhang Fei formation-breaker combat prototype/);
+  assert.match(roadmap, /10\.5P \| Zhang Fei formation-breaker combat prototype — Rejected 2026-08-01/);
   assert.match(roadmap, /10\.6 \| Phaser character select and formal integration — Blocked/);
+  assert.match(report, /All 30 runs completed/);
+  assert.match(report, /1\.10×,\s+failing the required 1\.5×/);
+  assert.match(report, /\+0\.06, failing the required \+0\.20/);
+  assert.match(report, /\*\*Decision: Reject\.\*\*/);
   assert.doesNotMatch(manifest, /zhang[-_]?fei|zhangfei/i);
   assert.doesNotMatch(definition, /zhang[-_]?fei|zhangfei/i);
   const attack2 = ZHANGFEI_PLAYER_DEFINITION.attacks[2];
@@ -46,7 +51,7 @@ test("Task 10.5R remains planning-only and keeps formal integration blocked", as
     (total, frame) => total + (1000 / attack3.frameRate) + attack3.extraFrameDurationsMs[frame - 1],
     0,
   );
-  assert.equal(attack2.impact.knockbackDistance, 42);
+  assert.equal(attack2.impact.knockbackDistance, 56);
   assert.equal(attack3.impact.damage, 2);
-  assert.equal(recoveryMs, 600);
+  assert.ok(Math.abs(recoveryMs - 425) < 0.001);
 });

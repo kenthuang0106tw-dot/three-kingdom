@@ -42,6 +42,9 @@ type ResultReplaySource = ExplicitResultReplaySource | "smoke";
 type PlayerPrototypeScenario = "entry" | "ambush" | "boss";
 type PlayerPrototypeStrategy = "baseline" | "aware";
 type PrototypeAttackPhase = "idle" | "startup" | "active" | "recovery";
+const PROTOTYPE_NEARBY_THREAT_RADIUS = 230;
+const PROTOTYPE_REPOSITION_WINDOW_MS = 1000;
+const PROTOTYPE_REPOSITION_DISTANCE = 64;
 type PrototypeTrialMetrics = {
   attacksStarted: [number, number, number];
   attacksHit: [number, number, number];
@@ -56,6 +59,10 @@ type PrototypeTrialMetrics = {
   displacedTargets: number;
   commitmentMs: number;
   bossAttack3Hits: number;
+  groupedAttack2Confirms: number;
+  repositionAfterAttack2: number;
+  isolatedAttack3Starts: number;
+  unsafeAttack3Starts: number;
 };
 type PreviewFrame = {
   name: string; x: number; y: number; width: number; height: number;
@@ -222,7 +229,6 @@ export default class MainScene extends Phaser.Scene {
   private playerPrototypeScenario?: PlayerPrototypeScenario;
   private playerPrototypeStrategy?: PlayerPrototypeStrategy;
   private prototypeNextAttackInputAt = 0;
-  private prototypeIntentionalStopUsed = false;
   private prototypeStopCurrentCombo = false;
   private prototypeTrialStartedAt = 0;
   private prototypeTrialComplete = false;
@@ -230,6 +236,11 @@ export default class MainScene extends Phaser.Scene {
   private prototypeCurrentAttackHitRecorded = false;
   private prototypeCurrentAttackBlocked = false;
   private prototypeCurrentAttackInterrupted = false;
+  private prototypeGroupedAttack2Current = false;
+  private prototypeRepositionPending = false;
+  private prototypeRepositionStartedAt = 0;
+  private prototypeRepositionOrigin = { x: 0, y: 0 };
+  private prototypeRepositionDirection: -1 | 1 = -1;
   private prototypeTrialMetrics: PrototypeTrialMetrics = this.createPrototypeTrialMetrics();
   private shieldGuardTestMode?: "A" | "B";
   private crossbowTestMode?: "A" | "B";
@@ -1028,10 +1039,16 @@ export default class MainScene extends Phaser.Scene {
     if (this.playerPrototypeMode) {
       if (step === 1) this.prototypeStopCurrentCombo = false;
       this.prototypeTrialMetrics.attacksStarted[step - 1] += 1;
+      if (step === 3) {
+        const nearbyThreats = this.prototypeNearbyThreatCount();
+        if (nearbyThreats <= 1) this.prototypeTrialMetrics.isolatedAttack3Starts += 1;
+        else this.prototypeTrialMetrics.unsafeAttack3Starts += 1;
+      }
       this.prototypeAttackPhase = "startup";
       this.prototypeCurrentAttackHitRecorded = false;
       this.prototypeCurrentAttackBlocked = false;
       this.prototypeCurrentAttackInterrupted = false;
+      this.prototypeGroupedAttack2Current = false;
     }
     this.playerHitTargetIds = new Set();
     this.playerBlockedTargetIds = new Set();
@@ -1483,6 +1500,8 @@ export default class MainScene extends Phaser.Scene {
       voluntaryStopsAfterAttack1: 0, voluntaryStopsAfterAttack2: 0,
       recoveryHitsReceived: 0, multiTargetHits: 0, confirmedAttacks: 0,
       displacedTargets: 0, commitmentMs: 0, bossAttack3Hits: 0,
+      groupedAttack2Confirms: 0, repositionAfterAttack2: 0,
+      isolatedAttack3Starts: 0, unsafeAttack3Starts: 0,
     };
   }
 
@@ -1493,8 +1512,12 @@ export default class MainScene extends Phaser.Scene {
     this.prototypeCurrentAttackHitRecorded = false;
     this.prototypeCurrentAttackBlocked = false;
     this.prototypeCurrentAttackInterrupted = false;
+    this.prototypeGroupedAttack2Current = false;
+    this.prototypeRepositionPending = false;
+    this.prototypeRepositionStartedAt = 0;
+    this.prototypeRepositionOrigin = { x: 0, y: 0 };
+    this.prototypeRepositionDirection = -1;
     this.prototypeNextAttackInputAt = 0;
-    this.prototypeIntentionalStopUsed = false;
     this.prototypeStopCurrentCombo = false;
     this.prototypeTrialMetrics = this.createPrototypeTrialMetrics();
     if (process.env.NODE_ENV !== "production") delete this.game.canvas.dataset.prototypeTrialMetrics;
@@ -1506,7 +1529,43 @@ export default class MainScene extends Phaser.Scene {
     this.prototypeTrialMetrics.confirmedAttacks += 1;
     this.prototypeTrialMetrics.displacedTargets += targetCount;
     if (targetCount > 1) this.prototypeTrialMetrics.multiTargetHits += 1;
+    if (this.comboStep === 2 && targetCount > 1) {
+      this.prototypeTrialMetrics.groupedAttack2Confirms += 1;
+      this.prototypeGroupedAttack2Current = true;
+      if (this.playerPrototypeStrategy === "aware" && this.prototypeStopCurrentCombo) {
+        this.beginPrototypeReposition();
+      }
+    }
     this.prototypeCurrentAttackHitRecorded = true;
+  }
+
+  private prototypeNearbyThreatCount() {
+    const enemies = this.enemyManager.getLivingEnemies().filter(enemy =>
+      Phaser.Math.Distance.Between(
+        this.playerBodyZone.x,
+        this.playerBodyZone.y,
+        enemy.bodyZone.x,
+        enemy.bodyZone.y,
+      ) <= PROTOTYPE_NEARBY_THREAT_RADIUS,
+    ).length;
+    const bossNearby = this.bossActor
+      && this.bossActor.state !== "dead"
+      && this.bossActor.state !== "cleaned"
+      && Phaser.Math.Distance.Between(
+        this.playerBodyZone.x,
+        this.playerBodyZone.y,
+        this.bossActor.bodyZone.x,
+        this.bossActor.bodyZone.y,
+      ) <= PROTOTYPE_NEARBY_THREAT_RADIUS;
+    return enemies + (bossNearby ? 1 : 0);
+  }
+
+  private beginPrototypeReposition() {
+    if (this.prototypeRepositionPending) return;
+    this.prototypeRepositionPending = true;
+    this.prototypeRepositionStartedAt = this.time.now;
+    this.prototypeRepositionOrigin = { x: this.playerBodyZone.x, y: this.playerBodyZone.y };
+    this.prototypeRepositionDirection = this.playerBodyZone.y >= 540 ? -1 : 1;
   }
 
   private updatePrototypeTrialMetrics() {
@@ -1536,14 +1595,13 @@ export default class MainScene extends Phaser.Scene {
     if (this.isAttackState(this.state)) {
       if (this.prototypeStopCurrentCombo) return noInput();
       if (!this.comboWindowOpen || this.time.now < this.prototypeNextAttackInputAt) return noInput();
-      const otherThreat = this.enemyManager.getLivingEnemies().some(enemy =>
-        Math.hypot(enemy.bodyZone.x - this.playerBodyZone.x, enemy.bodyZone.y - this.playerBodyZone.y) < 230
-        && (enemy.state === "attack" || enemy.state === "aim" || enemy.state === "locked"),
-      );
-      const crowded = this.enemyManager.getLivingEnemies().length > 1;
-      if (strategy === "aware" && this.comboStep === 2 && (otherThreat || crowded) && !this.prototypeIntentionalStopUsed) {
-        this.prototypeIntentionalStopUsed = true;
+      const nearbyThreats = this.prototypeNearbyThreatCount();
+      if (strategy === "aware" && this.comboStep === 2
+        && (this.prototypeGroupedAttack2Current || nearbyThreats > 1)) {
         this.prototypeStopCurrentCombo = true;
+        if (this.prototypeGroupedAttack2Current) {
+          this.beginPrototypeReposition();
+        }
         return noInput();
       }
       this.prototypeNextAttackInputAt = this.time.now + 120;
@@ -1554,6 +1612,21 @@ export default class MainScene extends Phaser.Scene {
     const boss = this.bossActor && this.bossActor.state !== "dead" && this.bossActor.state !== "cleaned"
       ? this.bossActor
       : undefined;
+    if (strategy === "aware" && this.prototypeRepositionPending) {
+      const moved = Phaser.Math.Distance.Between(
+        this.prototypeRepositionOrigin.x,
+        this.prototypeRepositionOrigin.y,
+        this.playerBodyZone.x,
+        this.playerBodyZone.y,
+      );
+      if (moved >= PROTOTYPE_REPOSITION_DISTANCE) {
+        this.prototypeTrialMetrics.repositionAfterAttack2 += 1;
+        this.prototypeRepositionPending = false;
+      } else if (this.time.now - this.prototypeRepositionStartedAt <= PROTOTYPE_REPOSITION_WINDOW_MS) {
+        const moveY = this.prototypeRepositionDirection;
+        return createActionSnapshot({ up: moveY < 0, down: moveY > 0, left: false, right: false });
+      } else this.prototypeRepositionPending = false;
+    }
     let targetX = boss?.bodyZone.x;
     let targetY = boss?.bodyZone.y;
     let targetEnemy: EnemyCombatant | undefined;

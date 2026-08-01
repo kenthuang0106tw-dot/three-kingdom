@@ -1555,3 +1555,23 @@
 | Runtime scope | Pass | Planning/tests only; no gameplay, metadata, art, manifest, selection, or production change |
 | Formal integration | Blocked | Only an accepted Task 10.5P may unblock Task 10.6 |
 | Next task | Selected | M10 / Task 10.5P — Zhang Fei Formation Breaker Combat Prototype |
+
+## M10 / Task 10.5P — Zhang Fei Formation Breaker Combat Prototype — 2026-08-01
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Parameters | Pass | Attack 2 56px; Attack 3 225/150/425ms and damage 2; other values frozen |
+| Boundaries | Pass | 230px threat radius, 1000ms window, 64px real-input reposition fixed before trials |
+| Paired trials | Pass | 30/30 Entry/Ambush/Boss runs completed and recorded |
+| Reposition | Pass | Zhang Fei aware Ambush 5/5 grouped confirms repositioned in each run |
+| Attack 3 choice | Pass | Two isolated starts per aware Ambush run; zero unsafe starts |
+| Multi-target ratio | Fail | Zhang Fei 22 / Guan Yu 20 = 1.10×; required 1.5× |
+| Displacement advantage | Fail | Approx. +0.06 median advantage; required +0.20 |
+| Anti-waiting | Pass | Zhang Fei Ambush +0.8%, Boss +5.3%; both below 20% budget |
+| Boss conversion | Pass | Both generals converted two Attack 3 hits in every Boss run |
+| Adjustment | Not used | Permitted numeric changes did not directly address failed target-count distinction |
+| Viewports | Pass | Desktop plus real joystick/attack at 844×390 and 390×844; no overflow |
+| Automated gates | Pass | 166/166, typecheck, lint 0 errors/8 existing warnings, both builds |
+| Production isolation | Pass | One 1280×720 Canvas, empty dataset, no overflow/error, 52 packaged files |
+| Decision | Reject | Thresholds unchanged; production integration remains blocked |
+| Next task | Selected | M10 / Task 10.5D — Zhang Fei Second-Player Direction Decision |

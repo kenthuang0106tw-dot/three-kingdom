@@ -564,8 +564,9 @@ gameplay, art, balance, Stage, Camera, Audio, input, or UI behavior changed.
 | 10.4 | Zhang Fei atlas and animation preview — Completed 2026-07-30 | P0 | High | 10.3 | Genuine idle/walk/attack1–3/hurt/dead frames; measured metadata; preview feet stable; no formal Stage integration | player assets/tool/preview/tests | Source frames incomplete or identity drift |
 | 10.5 | Zhang Fei combat prototype — Rejected 2026-08-01 | P0 | High | 10.4 | Complete paired evidence reaches an explicit decision without weakening accepted contracts | player config/prototype/tests/report | Balance is only HP/damage |
 | 10.5R | Zhang Fei tactical hypothesis revision — Completed 2026-08-01 | P0 | Medium | 10.5 rejected evidence | One revised role and measurable acceptance contract addresses the failed two-context Recovery criterion without Enemy/Boss tuning | planning/contract/tests | Repeating numeric tuning without a tactical change |
-| 10.5P | Zhang Fei formation-breaker combat prototype | P0 | High | 10.5R | Thirty paired runs directly test group separation, Attack 2 repositioning, isolated Attack 3 use, and non-dominance | player config/prototype/tests/report | Tuning metrics instead of proving a decision |
-| 10.6 | Phaser character select and formal integration — Blocked | P0 | High | accepted 10.5P prototype | Title selects exactly Guan Yu/Zhang Fei; either completes/fails/retries/replays existing Stage; React owns no selection | Title/player/MainScene/tests | Selection lifecycle or stale actor |
+| 10.5P | Zhang Fei formation-breaker combat prototype — Rejected 2026-08-01 | P0 | High | 10.5R | Thirty paired runs directly test group separation, Attack 2 repositioning, isolated Attack 3 use, and non-dominance | player config/prototype/tests/report | Tuning metrics instead of proving a decision |
+| 10.5D | Zhang Fei second-player direction decision | P0 | Medium | 10.5 and 10.5P rejected evidence | Select one evidence-backed path: revise the character contract, defer Zhang Fei, or stop M10; no third numeric prototype | planning/decision/tests | Sunk-cost progression into formal selection |
+| 10.6 | Phaser character select and formal integration — Blocked | P0 | High | accepted successor prototype selected by 10.5D | Title selects exactly Guan Yu/Zhang Fei; either completes/fails/retries/replays existing Stage; React owns no selection | Title/player/MainScene/tests | Selection lifecycle or stale actor |
 | 10.7 | Second Vertical Slice acceptance | P0 | High | 10.6 | Two-character full QA at three viewports; 10 reset paths; performance/packaging/routes pass; no Critical/High defect | QA/release docs/tests | Asset memory or mobile readability |
 
 ### M10 / Task 10.1 — Second Vertical Slice Scope Lock (Completed 2026-07-30)
@@ -706,6 +707,23 @@ unchanged. Task 10.6 remains blocked.
 
 **Next:** M10 / Task 10.5P — Zhang Fei Formation Breaker Combat Prototype.
 Only an accepted 10.5P result may unblock formal integration.
+
+### M10 / Task 10.5P — Zhang Fei Formation Breaker Combat Prototype (Rejected 2026-08-01)
+
+**Evidence:** All 30 initial paired runs completed with the frozen 230px threat
+radius, 1000ms/64px reposition rule, Attack 2 knockback 56px, and restored
+800ms Attack 3. Both aware Zhang Fei Ambush runs completed every grouped Attack
+2 reposition, used isolated Attack 3, and recorded zero unsafe Attack 3 starts.
+
+**Decision:** Reject. Aware Ambush multi-target totals were 22 versus Guan Yu's
+20 (1.10×, below 1.5×), and median average targets displaced differed by about
++0.06 (below +0.20). The positional decision worked, but it was not sufficiently
+distinct from Guan Yu. No adjustment was used because the permitted knockback
+or phase values do not directly create the missing target-count distinction.
+Thresholds, enemies, Boss, and production contracts were not changed.
+
+**Next:** M10 / Task 10.5D — Zhang Fei Second-Player Direction Decision. It is
+planning-only; Task 10.6 remains blocked.
 
 ## Task Status Update — 2026-07-12
 

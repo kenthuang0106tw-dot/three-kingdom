@@ -1961,8 +1961,8 @@ test("the release closeouts identify one accepted runtime and one post-release t
   assert.match(m10Scope, /Zhao Yun/);
   assert.match(m10Scope, /A second Stage/);
   assert.match(m10Scope, /Player Definition Boundary and Guan Yu Freeze/);
-  assert.match(nextTask, /M10 \/ Task 10\.5P — Zhang Fei Formation Breaker Combat Prototype/);
-  assert.match(nextTask, /Task 10\.5R replaced the rejected global-Recovery hypothesis/);
+  assert.match(nextTask, /M10 \/ Task 10\.5D — Zhang Fei Second-Player Direction Decision/);
+  assert.match(nextTask, /Two complete Zhang Fei hypotheses have now been rejected/);
   assert.match(nextTask, /Do not implement Task 10\.6/);
-  assert.match(nextTask, /Keep production assets, formal Title selection/);
+  assert.match(nextTask, /planning-only/);
 });

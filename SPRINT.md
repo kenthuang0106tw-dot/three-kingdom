@@ -24,8 +24,9 @@
 | 4 | ✅ 10.4 — Zhang Fei atlas and animation preview | 24–36h | genuine frames、atlas、metadata、QA preview | asset/tests/three-viewport preview |
 | 5 | ❌ 10.5 — Zhang Fei combat prototype | 12–18h | development-only heavy-warrior prototype | 30 paired runs completed; hypothesis rejected |
 | 6 | ✅ 10.5R — Zhang Fei tactical hypothesis revision | 4–6h | formation-breaker role and measurable acceptance contract | planning/contract review only |
-| 7 | 10.5P — Zhang Fei formation-breaker combat prototype | 12–18h | grouped Attack 2, reposition, isolated Attack 3 comparison | 30 paired runs + explicit decision |
-| 8 | 10.6 — Character select and formal integration | 12–18h | Phaser Title 雙角色選擇與完整關卡 | blocked until 10.5P prototype acceptance |
+| 7 | ❌ 10.5P — Zhang Fei formation-breaker combat prototype | 12–18h | grouped Attack 2, reposition, isolated Attack 3 comparison | 30 runs complete; distinctness gates failed |
+| 8 | 10.5D — Zhang Fei second-player direction decision | 4–6h | decide revise, defer, or stop from two rejected hypotheses | planning-only decision |
+| 9 | 10.6 — Character select and formal integration | 12–18h | Phaser Title 雙角色選擇與完整關卡 | blocked pending 10.5D and accepted successor prototype |
 | 8 | 10.7 — Second Vertical Slice acceptance | 8–12h | QA、performance、packaging、release evidence | full gates + three viewports + resets |
 
 ## Historical Task List
@@ -1458,3 +1459,24 @@ Status: completed as a planning contract; no runtime implementation.
 Task 10.6 remains blocked. The only next task is M10 / Task 10.5P — Zhang Fei
 Formation Breaker Combat Prototype. It must gather the complete paired evidence
 before formal integration can advance.
+
+## M10 / Task 10.5P — Zhang Fei Formation Breaker Combat Prototype — 2026-08-01
+
+Status: rejected after complete initial comparison.
+
+- [x] Applied only Attack 2 knockback 56px and Attack 3 225/150/425ms.
+- [x] Fixed 230px threat radius, 1000ms reposition window, and 64px real-input
+  movement before any trial.
+- [x] Added grouped-confirm, reposition, isolated, and unsafe telemetry.
+- [x] Completed 30/30 Entry, Ambush, and Boss paired runs.
+- [x] Passed positioning behavior: aware Zhang Fei Ambush runs repositioned
+  5/5 grouped confirms each, used isolated Attack 3, and had zero unsafe starts.
+- [ ] Failed distinctness: aware Ambush multi-target ratio 1.10× versus 1.5×;
+  displaced-target median advantage about +0.06 versus +0.20.
+- [x] Used no numeric adjustment and did not weaken thresholds or tune enemies.
+- [x] Desktop, 844×390, and 390×844 development interaction passed.
+- [x] Passed 166/166 tests, typecheck, lint with zero errors/eight existing
+  warnings, both builds, 52-file packaging, and production-isolation smoke.
+
+Task 10.6 remains blocked. The only next task is planning-only M10 / Task 10.5D
+— Zhang Fei Second-Player Direction Decision.

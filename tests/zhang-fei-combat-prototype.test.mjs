@@ -21,8 +21,8 @@ test("Zhang Fei prototype uses the accepted heavy serpent-spear contract", () =>
   );
   const expected = [
     { duration: 450, startup: 150, active: 100, recovery: 200, impact: { damage: 1, knockbackDistance: 34, hitStopMs: (1000 / 60) * 5 } },
-    { duration: 525, startup: 175, active: 125, recovery: 225, impact: { damage: 1, knockbackDistance: 42, hitStopMs: (1000 / 60) * 5 } },
-    { duration: 975, startup: 225, active: 150, recovery: 600, impact: { damage: 2, knockbackDistance: 88, hitStopMs: (1000 / 60) * 8 } },
+    { duration: 525, startup: 175, active: 125, recovery: 225, impact: { damage: 1, knockbackDistance: 56, hitStopMs: (1000 / 60) * 5 } },
+    { duration: 800, startup: 225, active: 150, recovery: 425, impact: { damage: 2, knockbackDistance: 88, hitStopMs: (1000 / 60) * 8 } },
   ];
   Object.values(ZHANGFEI_PLAYER_DEFINITION.attacks).forEach((attack, index) => {
     assert.ok(Math.abs(attackDurationMs(attack) - expected[index].duration) < 0.001);
@@ -75,6 +75,7 @@ test("comparison telemetry records the complete Task 10.5 evidence without chang
     "attacksStarted", "attacksHit", "attacksMissed", "attacksBlocked", "attacksInterrupted",
     "voluntaryStopsAfterAttack1", "voluntaryStopsAfterAttack2", "recoveryHitsReceived",
     "multiTargetHits", "averageEnemiesDisplaced", "commitmentMs", "bossAttack3Hits",
+    "groupedAttack2Confirms", "repositionAfterAttack2", "isolatedAttack3Starts", "unsafeAttack3Starts",
     "playerDamageTaken", "durationMs", "complete",
   ]) assert.match(source, new RegExp(field));
   assert.match(source, /if \(!this\.playerPrototypeMode/);

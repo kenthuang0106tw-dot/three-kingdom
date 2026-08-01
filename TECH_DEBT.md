@@ -843,5 +843,17 @@ fail.
   425ms Attack 3 recovery have not completed the fixed 30-run protocol.
 - **Containment:** Zhang Fei remains development-only and absent from formal
   Title selection and production packaging. Task 10.6 remains blocked.
-- **Resolution:** Task 10.5P must Accept or Reject the role after at most one
-  definition-only adjustment; thresholds and Enemy/Boss behavior may not move.
+- **Status:** Resolved 2026-08-01 by explicit rejection.
+- **Result:** Thirty initial runs completed. Positioning worked, but Zhang Fei's
+  aware Ambush multi-target ratio was 1.10× instead of 1.5× and displaced-target
+  advantage was about +0.06 instead of +0.20. No numeric rescue was used.
+
+## TD-M10.5D — Second-player direction is unresolved
+
+- **Severity:** P0 M10 blocker; not a released production defect.
+- **Evidence:** Both the committed-controller and formation-breaker hypotheses
+  completed their paired protocols and failed distinct tactical acceptance.
+- **Containment:** Zhang Fei remains development-only; production selection and
+  packaging still contain Guan Yu only. Task 10.6 is blocked.
+- **Resolution:** Task 10.5D must choose revise/defer/stop without implementing a
+  third numeric prototype or changing Enemy/Boss contracts.

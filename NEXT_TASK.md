@@ -1,56 +1,42 @@
 # NEXT TASK
 
-## M10 / Task 10.5P — Zhang Fei Formation Breaker Combat Prototype
+## M10 / Task 10.5D — Zhang Fei Second-Player Direction Decision
 
 ### Why this task
 
-Task 10.5R replaced the rejected global-Recovery hypothesis with one role that
-is supported by the existing Ambush evidence: Zhang Fei uses the丈八蛇矛 to
-break clustered formations, then chooses between repositioning after Attack 2
-and finishing an isolated target with Attack 3. Formal character selection
-cannot begin until this decision is demonstrated rather than merely specified.
+Two complete Zhang Fei hypotheses have now been rejected. The first did not
+produce distinct Recovery risk in two contexts; the second produced valid
+stop/reposition/isolated-finisher behavior but only a 1.10× multi-target ratio
+and about +0.06 displacement advantage. A third numeric prototype would repeat
+the same mistake. Technical direction must be decided before more production
+work or formal selection.
 
 ### Completion conditions
 
-- Implement only the starting values frozen in
-  `docs/planning/m10-5r-zhang-fei-tactical-hypothesis.md`: Attack 2 knockback
-  56px and Attack 3 phase 225/150/425ms; retain damage 2 and every other frozen
-  Zhang Fei/Guan Yu value.
-- Extend development-only telemetry with grouped Attack 2 confirms,
-  reposition-after-Attack-2, and isolated/unsafe Attack 3 starts using one
-  radius and timing boundary fixed before running trials.
-- Preserve the identical baseline controller for paired runs 1–3 and add only
-  the contracted formation-breaker decisions to the identical aware controller
-  used for paired runs 4–5.
-- Complete five Guan Yu and five Zhang Fei runs in each unchanged Entry,
-  Ambush, and Boss context; record all raw metrics and medians.
-- Apply at most one permitted definition-only adjustment, repeat all 30 runs if
-  used, and publish the before/after evidence.
-- Produce an explicit Accept or Reject result against every hard gate. Task
-  10.6 remains blocked unless the result is Accept.
-- Keep production assets, formal Title selection, released Stage behavior,
-  Enemy/Boss values, Combo Window, input, art, Audio, UI, and Camera unchanged.
+- Compare the complete Task 10.5 and 10.5P evidence without rewriting either
+  acceptance threshold.
+- Select exactly one direction: revise the Player/art contract with a genuinely
+  different mechanic and explicit cost; defer Zhang Fei and close M10; or stop
+  the second-character milestone pending product-owner direction.
+- State why the other two directions are rejected.
+- If revision is selected, define only a new planning task and its discovery
+  questions; do not implement a mechanic, tune values, or modify art.
+- Keep Task 10.6 blocked and update Roadmap, Sprint, Checklist, Technical Debt,
+  and NEXT_TASK consistently.
+- Add focused contract coverage proving the decision task is planning-only.
 
 ### Validation
 
 - `pnpm test`
 - `pnpm typecheck`
 - `pnpm lint`
-- `pnpm build`
-- `pnpm build:github-pages`
-- Desktop development smoke for Entry, Ambush, and Boss telemetry.
-- 844×390 and 390×844 development interaction smoke.
-- Production smoke proving prototype queries are ignored, one 1280×720 Canvas
-  remains, no debug dataset is exposed, and no runtime error occurs.
-- Confirm the production packaged inventory remains 52 files and contains no
-  Zhang Fei v2 asset.
+- Confirm no runtime, gameplay, art, asset, Stage, Enemy, Boss, Camera, input,
+  Audio, UI, or production file changes.
 
 ### Expected files
 
-- `app/game/player/ZhangFeiAnimationMetadata.ts`
-- `app/game/MainScene.ts`
-- focused Zhang Fei prototype tests
-- `docs/combat/m10-5p-zhang-fei-formation-breaker.md`
+- focused M10 decision document
+- focused planning-contract test
 - `GAME_ROADMAP.md`
 - `SPRINT.md`
 - `CHECKLIST.md`
@@ -59,14 +45,12 @@ cannot begin until this decision is demonstrated rather than merely specified.
 
 ### Risks
 
-- Extra knockback creates safety without a real stop/reposition decision.
-- The aware controller manufactures the desired metric by writing gameplay
-  state instead of using normal inputs.
-- Thresholds are changed after observing results.
-- Attack 2 stopping becomes the only correct answer.
-- Zhang Fei dominates clustered and single-target contexts simultaneously.
-- A failed hypothesis is advanced to formal selection because it looks heavy.
+- Sunk-cost bias advances a rejected character.
+- A third timing/damage/knockback pass is mislabeled as a new role.
+- A new mechanic is implemented before its ownership and player decision are
+  accepted.
+- M10 is deferred without recording how it can be resumed.
 
-Do not implement Task 10.6, formal Title selection, Zhao Yun, new Stage content,
-Enemy/Boss tuning, Combo Window changes, new input, skills, progression, Audio,
-UI, Camera, or new art in this task.
+Do not implement Task 10.6, formal Title selection, a third combat prototype,
+new mechanics, Zhao Yun, Stage content, Enemy/Boss tuning, input, Audio, UI,
+Camera, or art in this task.
