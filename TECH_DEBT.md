@@ -862,7 +862,7 @@ fail.
   commitment, locked startup facing, and no armor, extra damage, HP, Combo
   Window, or cancel benefit. No runtime contract changed in Task 10.5D.
 
-## TD-M10.5H — Attack-specific hitbox ownership is undefined
+## TD-M10.5H Resolved — Attack-specific hitbox ownership
 
 - **Severity:** P0 M10 blocker; not a released production defect.
 - **Evidence:** `PlayerDefinition` currently owns one actor-level
@@ -873,9 +873,25 @@ fail.
 - **Risk:** Adding an ad hoc Zhang Fei branch in `MainScene`, multiple Arcade
   zones, or per-frame geometry would couple identity, animation, physics, and
   combat ownership and create reset/listener regressions.
-- **Containment:** Task 10.5H is planning/discovery only. Runtime types,
-  metadata, hitboxes, art, selection, and production packaging remain frozen;
-  Task 10.6 remains blocked.
-- **Resolution condition:** Approve or reject one minimum identity-agnostic
-  ownership/schema, fixed geometry limits, explicit cost, rollback boundary,
-  and measurable future prototype protocol.
+- **Resolved:** 2026-08-01 as a planning/architecture contract.
+- **Resolution:** Each attack metadata entry will own one required immutable
+  rectangular hitbox. A future migration removes the actor-level field and
+  keeps one Scene-owned Zone, generic selected-metadata consumption, existing
+  phase events, hit-once, block, effects, and lifecycle owners. No runtime file
+  changed in Task 10.5H.
+
+## TD-M10.5HP — Attack 2 lane-coverage evidence is pending
+
+- **Severity:** P0 M10 blocker; not a released production defect.
+- **Evidence gap:** The proposed `176×128 @ (132,-48)` Zhang Fei Attack 2
+  profile has not yet passed deterministic lane probes or the fixed 30-run
+  Entry/Ambush/Boss comparison.
+- **Containment:** Guan Yu, current runtime types/metadata, production assets,
+  and formal selection remain unchanged. Task 10.6 is blocked.
+- **Risk:** Broader vertical coverage may become a universal answer, retain too
+  little practical distinction, leak between combo steps, or weaken Shield
+  Guard and lifecycle contracts.
+- **Resolution condition:** Task 10.5HP must pass unchanged 1.5× multi-target
+  and +0.20 displacement gates, explicit commitment/non-dominance behavior,
+  hit-once/block/reset/Pause/Hurt isolation, three viewports, builds, packaging,
+  and rollback rules without tuning the proposed geometry.

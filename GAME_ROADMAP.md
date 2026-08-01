@@ -566,8 +566,9 @@ gameplay, art, balance, Stage, Camera, Audio, input, or UI behavior changed.
 | 10.5R | Zhang Fei tactical hypothesis revision — Completed 2026-08-01 | P0 | Medium | 10.5 rejected evidence | One revised role and measurable acceptance contract addresses the failed two-context Recovery criterion without Enemy/Boss tuning | planning/contract/tests | Repeating numeric tuning without a tactical change |
 | 10.5P | Zhang Fei formation-breaker combat prototype — Rejected 2026-08-01 | P0 | High | 10.5R | Thirty paired runs directly test group separation, Attack 2 repositioning, isolated Attack 3 use, and non-dominance | player config/prototype/tests/report | Tuning metrics instead of proving a decision |
 | 10.5D | Zhang Fei second-player direction decision — Completed 2026-08-01 | P0 | Medium | 10.5 and 10.5P rejected evidence | Select one evidence-backed path: revise the character contract, defer Zhang Fei, or stop M10; no third numeric prototype | planning/decision/tests | Sunk-cost progression into formal selection |
-| 10.5H | Zhang Fei attack-specific hitbox contract | P0 | Medium | 10.5D | Decide the minimum ownership/schema, geometry limits, cost, and acceptance protocol for one Attack 2 lane-coverage prototype; no implementation | planning/architecture/tests | A character exception leaks into Scene or becomes per-frame geometry |
-| 10.6 | Phaser character select and formal integration — Blocked | P0 | High | accepted successor prototype after 10.5H | Title selects exactly Guan Yu/Zhang Fei; either completes/fails/retries/replays existing Stage; React owns no selection | Title/player/MainScene/tests | Selection lifecycle or stale actor |
+| 10.5H | Zhang Fei attack-specific hitbox contract — Completed 2026-08-01 | P0 | Medium | 10.5D | Decide the minimum ownership/schema, geometry limits, cost, and acceptance protocol for one Attack 2 lane-coverage prototype; no implementation | planning/architecture/tests | A character exception leaks into Scene or becomes per-frame geometry |
+| 10.5HP | Zhang Fei Attack 2 lane-coverage prototype | P0 | High | 10.5H | One-Zone per-attack metadata migration plus 30-run evidence passes unchanged distinctness, cost, lifecycle, mobile, and rollback gates | player metadata/MainScene/tests/report | Broad hitbox becomes universal answer or leaks across attacks |
+| 10.6 | Phaser character select and formal integration — Blocked | P0 | High | accepted 10.5HP | Title selects exactly Guan Yu/Zhang Fei; either completes/fails/retries/replays existing Stage; React owns no selection | Title/player/MainScene/tests | Selection lifecycle or stale actor |
 | 10.7 | Second Vertical Slice acceptance | P0 | High | 10.6 | Two-character full QA at three viewports; 10 reset paths; performance/packaging/routes pass; no Critical/High defect | QA/release docs/tests | Asset memory or mobile readability |
 
 ### M10 / Task 10.1 — Second Vertical Slice Scope Lock (Completed 2026-07-30)
@@ -750,6 +751,35 @@ the product goal.
 planning/discovery only and must settle ownership, schema, geometry limits,
 cost, rollback, and acceptance before any code change. Task 10.6 remains
 blocked pending an accepted later prototype.
+
+### M10 / Task 10.5H — Zhang Fei Attack-Specific Hitbox Contract (Completed 2026-08-01)
+
+**Decision:** Approve one required fixed rectangle on each
+`PlayerAttackMetadata`. A future migration removes the actor-level
+`PlayerDefinition.attackHitbox` after all six attacks define geometry. The
+Scene continues to own exactly one disabled Arcade Zone, applies the selected
+profile once at attack start, and uses existing active-frame events only to
+enable or disable it. No identity branch, second body, per-frame shape, timer,
+listener, or resolver change is permitted.
+
+**Prototype geometry:** Guan Yu Attack 1–3 remain `142×86 @ (104,-48)`.
+Zhang Fei Attack 1/3 remain `176×88 @ (132,-48)`; only Attack 2 proposes
+`176×128 @ (132,-48)`. Its 525ms commitment, locked facing, damage, knockback,
+Hit Stop, hit-confirm, and all other gameplay remain fixed. The next prototype
+has no tuning pass.
+
+**Evidence contract:** Task 10.5HP must pass deterministic lane probes and the
+same 30-run Entry/Ambush/Boss comparison. It retains the rejected 1.5×
+multi-target and +0.20 displacement thresholds, stop/reposition/isolated-
+finisher behavior, non-dominance, interruption, hit-once, block, lifecycle,
+three-viewport, build, packaging, and rollback gates.
+
+**Scope:** Documentation, architecture, and focused planning tests only. Runtime
+types, metadata, hitboxes, gameplay, art, assets, Stage, Enemy, Boss, Camera,
+input, Audio, UI, React, and production files are unchanged.
+
+**Next:** M10 / Task 10.5HP — Zhang Fei Attack 2 Lane-Coverage Prototype. Task
+10.6 remains blocked unless 10.5HP is explicitly accepted.
 
 ## Task Status Update — 2026-07-12
 

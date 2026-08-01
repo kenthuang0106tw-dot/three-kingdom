@@ -12,7 +12,7 @@
 - Duration：3–4 weeks
 - Capacity：1 developer + AI，約 70–105 hours
 - Milestone：M10 — Zhang Fei Second Playable Vertical Slice
-- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M10 / 10.5H
+- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M10 / 10.5HP
 
 ## M10 Task List
 
@@ -26,9 +26,10 @@
 | 6 | ✅ 10.5R — Zhang Fei tactical hypothesis revision | 4–6h | formation-breaker role and measurable acceptance contract | planning/contract review only |
 | 7 | ❌ 10.5P — Zhang Fei formation-breaker combat prototype | 12–18h | grouped Attack 2, reposition, isolated Attack 3 comparison | 30 runs complete; distinctness gates failed |
 | 8 | ✅ 10.5D — Zhang Fei second-player direction decision | 4–6h | revise Player/art contract through one bounded geometry discovery | planning-only decision complete |
-| 9 | 10.5H — Zhang Fei attack-specific hitbox contract | 4–6h | ownership, schema, cost, geometry and future acceptance protocol | planning/discovery only |
-| 10 | 10.6 — Character select and formal integration | 12–18h | Phaser Title 雙角色選擇與完整關卡 | blocked pending accepted post-10.5H prototype |
-| 11 | 10.7 — Second Vertical Slice acceptance | 8–12h | QA、performance、packaging、release evidence | full gates + three viewports + resets |
+| 9 | ✅ 10.5H — Zhang Fei attack-specific hitbox contract | 4–6h | ownership, schema, cost, geometry and future acceptance protocol | planning contract accepted |
+| 10 | 10.5HP — Zhang Fei Attack 2 lane-coverage prototype | 12–18h | one-Zone metadata migration and 30 paired runs | implementation/evidence gate |
+| 11 | 10.6 — Character select and formal integration | 12–18h | Phaser Title 雙角色選擇與完整關卡 | blocked pending accepted 10.5HP |
+| 12 | 10.7 — Second Vertical Slice acceptance | 8–12h | QA、performance、packaging、release evidence | full gates + three viewports + resets |
 
 ## Historical Task List
 
@@ -1502,3 +1503,29 @@ Status: completed as a planning decision; no runtime implementation.
 
 Task 10.6 remains blocked. The only next task is planning/discovery-only M10 /
 Task 10.5H — Zhang Fei Attack-Specific Hitbox Contract.
+
+## M10 / Task 10.5H — Zhang Fei Attack-Specific Hitbox Contract — 2026-08-01
+
+Status: completed as a planning/architecture contract; no runtime change.
+
+- [x] Audited Player definition/controller/actor, one Scene-owned Arcade Zone,
+  CombatResolver, Shield Guard block, hit-once, effects, Pause, Hurt, reset, and
+  shutdown ownership.
+- [x] Selected one required fixed rectangle on each attack metadata entry;
+  future migration removes the legacy actor-level field and keeps no fallback.
+- [x] Preserved one Zone, one animation-update listener, one completion
+  listener, and identity-agnostic Scene orchestration.
+- [x] Froze Guan Yu at `142×86 @ (104,-48)`, Zhang Fei Attack 1/3 at
+  `176×88 @ (132,-48)`, and proposed only Attack 2 at
+  `176×128 @ (132,-48)`.
+- [x] Preserved Attack 2's 525ms commitment, damage 1, knockback 56px,
+  five-frame Hit Stop, facing lock, miss/block Combo behavior, and lack of
+  armor/cancel benefit.
+- [x] Defined deterministic lane probes, unchanged 1.5×/+0.20 distinction
+  gates, 30 paired runs, non-dominance, interruption, lifecycle, mobile,
+  production-isolation, and rollback acceptance.
+- [x] Changed documentation and focused contract tests only; no runtime type,
+  metadata, hitbox, gameplay, or asset file changed.
+
+Task 10.6 remains blocked. The only next task is M10 / Task 10.5HP — Zhang Fei
+Attack 2 Lane-Coverage Prototype.

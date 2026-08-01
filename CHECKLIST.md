@@ -1591,3 +1591,21 @@
 | Runtime scope | Pass | Planning documents and focused contract test only |
 | Formal integration | Blocked | Requires an accepted prototype after the 10.5H contract gate |
 | Next task | Selected | M10 / Task 10.5H — Zhang Fei Attack-Specific Hitbox Contract |
+
+## M10 / Task 10.5H — Zhang Fei Attack-Specific Hitbox Contract — 2026-08-01
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Previous task | Pass | 167/167, typecheck, lint 0 errors/8 existing warnings |
+| Ownership audit | Pass | Definition/controller/actor/Scene/Resolver/block/effects/lifecycle paths documented |
+| Schema | Accepted | One required immutable `hitbox` per attack; legacy actor field removed in future migration |
+| Physics owner | Preserved | One Scene-owned disabled Arcade Zone; no extra body/collider/listener/timer |
+| Identity isolation | Pass | Generic selected metadata; no Guan Yu/Zhang Fei branch in Scene or resolver |
+| Control geometry | Frozen | Guan Yu all `142×86 @ (104,-48)`; Zhang Fei Attack 1/3 `176×88 @ (132,-48)` |
+| Prototype geometry | Frozen | Zhang Fei Attack 2 only: `176×128 @ (132,-48)`; no tuning pass |
+| Explicit cost | Pass | 525ms, 175/125/225ms phases, locked facing, damage 1, no armor/cancel benefit |
+| Direct probes | Defined | Same-lane plus target foot deltas `+60` and `-100`, both facing directions |
+| Evidence protocol | Defined | 30 paired runs; unchanged 1.5× and +0.20 gates; non-dominance and rollback |
+| Runtime scope | Pass | Documentation/architecture/tests only; no runtime or asset change |
+| Formal integration | Blocked | Requires explicit acceptance of Task 10.5HP |
+| Next task | Selected | M10 / Task 10.5HP — Zhang Fei Attack 2 Lane-Coverage Prototype |

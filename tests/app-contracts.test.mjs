@@ -1961,8 +1961,8 @@ test("the release closeouts identify one accepted runtime and one post-release t
   assert.match(m10Scope, /Zhao Yun/);
   assert.match(m10Scope, /A second Stage/);
   assert.match(m10Scope, /Player Definition Boundary and Guan Yu Freeze/);
-  assert.match(nextTask, /M10 \/ Task 10\.5H — Zhang Fei Attack-Specific Hitbox Contract/);
-  assert.match(nextTask, /two complete numeric prototypes\s+failed distinct tactical acceptance/);
-  assert.match(nextTask, /Do not implement hitbox geometry/);
-  assert.match(nextTask, /planning\/discovery only/);
+  assert.match(nextTask, /M10 \/ Task 10\.5HP — Zhang Fei Attack 2 Lane-Coverage Prototype/);
+  assert.match(nextTask, /Each attack will own\s+one fixed rectangle/);
+  assert.match(nextTask, /Do not change art, animation frames, timing, damage, knockback/);
+  assert.match(nextTask, /30\s+total/);
 });

@@ -1024,10 +1024,22 @@ same boundary.
 Task 10.3 freezes that future consumer in
 `docs/planning/m10-zhang-fei-production-contract.md`. Zhang Fei remains a data
 consumer of the existing seam: one texture/atlas identity, one feet/origin/scale
-contract, one ground body, one movement value, one actor-level attack hitbox,
-and three attack metadata entries. The contract does not justify per-frame
-hitbox geometry, weapon entities, skills, equipment, inheritance, or identity
+contract, one ground body, one movement value, and three attack metadata
+entries. Task 10.5H revises only the previously actor-level hitbox boundary:
+each attack metadata entry may own exactly one immutable rectangular hitbox.
+The contract still does not justify per-frame geometry, polygons, weapon
+entities, multiple attack bodies, skills, equipment, inheritance, or identity
 branches in `MainScene`.
+
+The accepted future migration removes `PlayerDefinition.attackHitbox` after all
+known attacks receive a required `hitbox`; it must not retain parallel fallback
+paths. `MainScene` continues to own one independent Arcade Zone and applies the
+selected metadata once at attack start while the Zone is disabled. Existing
+animation phase events only enable or disable that same Zone. PlayerActor,
+PlayerAttackController, CombatResolver, Enemy/Shield Guard, effects, Pause, and
+reset ownership remain unchanged. This contract is documented in
+`docs/planning/m10-5h-zhang-fei-attack-hitbox-contract.md`; runtime migration is
+deferred to Task 10.5HP.
 
 Task 10.4 may create source derivatives, atlas metadata, QA sheets, and a
 development-only animation preview. It must not register Zhang Fei in

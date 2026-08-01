@@ -1,57 +1,69 @@
 # NEXT TASK
 
-## M10 / Task 10.5H — Zhang Fei Attack-Specific Hitbox Contract
+## M10 / Task 10.5HP — Zhang Fei Attack 2 Lane-Coverage Prototype
 
 ### Why this task
 
-Task 10.5D selected contract revision after two complete numeric prototypes
-failed distinct tactical acceptance. Zhang Fei's existing Attack 2 art and
-positioning evidence support one bounded question: can a broader front-facing
-2.5D lane-coverage profile create a real formation-breaking choice while its
-current commitment and exposure remain the cost? The current architecture owns
-one shared actor-level rectangle and explicitly forbids per-attack geometry, so
-ownership and limits must be accepted before any code change.
-
-This task is **planning/discovery only**.
+Task 10.5H accepted the smallest identity-agnostic contract that directly
+tests the distinction missed by both rejected prototypes. Each attack will own
+one fixed rectangle while the Scene reuses its existing single Arcade Zone.
+Only Zhang Fei Attack 2 proposes broader vertical lane coverage; its existing
+commitment and exposure remain the cost. Formal character selection cannot
+advance until real comparison evidence accepts or rejects this mechanic.
 
 ### Completion conditions
 
-- Audit the existing `PlayerDefinition`, `PlayerAttackController`,
-  `PlayerActor`, `MainScene`, independent Arcade attack zone, hit-once,
-  CombatResolver, block, reset, Pause, Hit Stop, Hurt, and production-isolation
-  ownership paths.
-- Choose exactly one minimum identity-agnostic schema for fixed per-attack
-  geometry, or reject the mechanic if it cannot preserve those owners.
-- Define how one existing attack zone would consume a profile without
-  per-frame shapes, identity branches, extra bodies, duplicate listeners, or
-  Scene-owned character data.
-- Freeze a proposed Attack 2 geometry range relative to feet and facing; Attack
-  1 and Attack 3 remain narrow controls. Do not apply the values.
-- Preserve the explicit cost: current 525ms Attack 2 commitment, startup facing
-  lock, front-only exposure, no armor, invulnerability, extra damage, HP,
-  Combo Window, or cancel benefit.
-- Define one future prototype protocol with fixed Guan Yu control, Entry,
-  Ambush, and Boss contexts; direct lane-coverage, multi-target,
-  stop/reposition, punishment, dominance, mobile-readability, lifecycle, and
-  rollback gates.
-- State the exact architecture document amendment and expected implementation
-  files a later prototype would require, without modifying them now.
-- Keep Task 10.6 blocked and update Roadmap, Sprint, Checklist, Technical Debt,
-  and NEXT_TASK consistently.
-- Add focused contract coverage proving this task is documentation/tests only.
+- Add one required immutable hitbox to `PlayerAttackMetadata`; migrate all six
+  known attacks and remove the legacy actor-level `attackHitbox` with no
+  optional or fallback path.
+- Keep Guan Yu Attack 1–3 at `142×86 @ (104,-48)`.
+- Keep Zhang Fei Attack 1/3 at `176×88 @ (132,-48)` and set only Attack 2 to
+  `176×128 @ (132,-48)`.
+- Reuse exactly one Scene-owned Arcade Zone. Apply its Zone/body size and
+  feet-relative offset once at attack start while disabled; active-frame events
+  only enable/reposition it.
+- Do not add identity branches, per-frame geometry, extra bodies, colliders,
+  listeners, timers, or resolver behavior.
+- Preserve Zhang Fei Attack 2 at 525ms (175/125/225ms), damage 1, knockback
+  56px, five-frame Hit Stop, facing lock, hit-once, miss/block Combo behavior,
+  and no armor/cancel/movement benefit. Preserve every other gameplay value.
+- Add focused tests for same-lane reach, target foot deltas `+60` and `-100`,
+  both facings, Attack 1/3 narrow controls, geometry reset between combo steps,
+  block, hit-once, Hurt, completion, Scene reset, and shutdown.
+- Complete five deterministic runs per player in Entry, Ambush, and Boss: 30
+  total, using the existing aware strategy and raw telemetry.
+- Accept only if the unchanged **1.5×** aware-Ambush multi-target and **+0.20**
+  displacement gates pass together with reposition/isolated-finisher,
+  intentional-stop, non-dominance, interruption, lifecycle, and production
+  isolation gates documented in the 10.5H contract.
+- Make no geometry adjustment. If any gate fails or Attack 2 becomes a
+  universal answer, reject and roll back runtime gameplay changes while
+  retaining the report.
+- Keep Task 10.6 blocked unless this prototype is explicitly accepted.
+- Update Roadmap, Sprint, Checklist, Technical Debt, NEXT_TASK, and a complete
+  before/after combat report.
 
 ### Validation
 
+- focused hitbox/definition/prototype tests
 - `pnpm test`
 - `pnpm typecheck`
 - `pnpm lint`
-- Confirm no runtime type, gameplay, hitbox, metadata, art, asset, Stage,
-  Enemy, Boss, Camera, input, Audio, UI, or production file changes.
+- `pnpm build`
+- `pnpm build:github-pages`
+- Development Desktop, 844×390, and 390×844 Entry/Ambush/Boss smoke with real
+  movement and attacks.
+- Production smoke: one intrinsic 1280×720 Canvas, no prototype/debug dataset,
+  no overflow or captured runtime error, and unchanged packaged inventory.
 
 ### Expected files
 
-- focused M10 hitbox-contract document
-- focused planning-contract test
+- `app/game/player/PlayerDefinition.ts`
+- `app/game/player/GuanYuAnimationMetadata.ts`
+- `app/game/player/ZhangFeiAnimationMetadata.ts`
+- `app/game/MainScene.ts`
+- focused player/combat/prototype tests
+- Task 10.5HP combat report
 - `ARCHITECTURE.md`
 - `GAME_ROADMAP.md`
 - `SPRINT.md`
@@ -61,16 +73,14 @@ This task is **planning/discovery only**.
 
 ### Risks
 
-- The proposal becomes per-frame weapon collision instead of one fixed
-  per-attack profile.
-- Zhang Fei identity leaks into `MainScene` or combat resolution.
-- Broader coverage removes Attack 2 positioning decisions and becomes a
-  universal answer.
-- A future prototype is authorized without numeric rejection and rollback
-  gates.
-- Planning silently changes current runtime metadata or production packaging.
+- Resizing the Zone but not its Arcade body creates visual/physics drift.
+- Attack 2 geometry leaks into Attack 3, Hurt, restart, or a new run.
+- Broader coverage becomes a universal answer instead of a positional choice.
+- Shield Guard blocks or Boss overlap differ because hit-once ordering changes.
+- A failed comparison is rescued by tuning geometry or enemies.
+- Prototype-only Zhang Fei assets leak into production packaging.
 
-Do not implement hitbox geometry, modify `PlayerDefinition`, tune Zhang Fei,
-change animation/art, run a third combat prototype, implement Task 10.6, add
-formal Title selection, Zhao Yun, Stage content, Enemy/Boss tuning, input,
-Audio, UI, or Camera behavior in this task.
+Do not change art, animation frames, timing, damage, knockback, Hit Stop, Combo
+Window, Enemy/Boss/Stage/Camera/input/Audio/UI/React behavior, add another Zone
+or shape system, implement Task 10.6, add formal character selection, or begin
+Zhao Yun in this task.

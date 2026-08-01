@@ -21,9 +21,9 @@ test("Task 10.5D selects contract discovery without implementing attack geometry
   assert.match(decision, /Do not defer Zhang Fei and close M10 yet/);
   assert.match(decision, /Do not stop pending product-owner direction/);
   assert.match(decision, /not authorized for implementation/);
-  assert.match(nextTask, /M10 \/ Task 10\.5H — Zhang Fei Attack-Specific Hitbox Contract/);
-  assert.match(nextTask, /planning\/discovery only/);
-  assert.match(nextTask, /Do not implement/);
+  assert.match(nextTask, /M10 \/ Task 10\.5HP — Zhang Fei Attack 2 Lane-Coverage Prototype/);
+  assert.match(nextTask, /Each attack will own\s+one fixed rectangle/);
+  assert.match(nextTask, /Do not change art/);
   assert.match(roadmap, /10\.5D \| Zhang Fei second-player direction decision — Completed 2026-08-01/);
   assert.match(roadmap, /10\.5H \| Zhang Fei attack-specific hitbox contract/);
   assert.match(roadmap, /10\.6 \| Phaser character select and formal integration — Blocked/);
