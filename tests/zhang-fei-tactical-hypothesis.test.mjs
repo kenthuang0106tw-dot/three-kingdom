@@ -25,7 +25,7 @@ test("Task 10.5R defines one measurable formation-breaker hypothesis", async () 
   assert.match(contract, /Only an accepted 10\.5P result may unblock 10\.6/);
 });
 
-test("rejected Task 10.5P records complete evidence and keeps formal integration blocked", async () => {
+test("Task 10.5D preserves rejected evidence and keeps formal integration blocked", async () => {
   const [nextTask, roadmap, report, manifest, definition] = await Promise.all([
     readText("NEXT_TASK.md"),
     readText("GAME_ROADMAP.md"),
@@ -34,8 +34,8 @@ test("rejected Task 10.5P records complete evidence and keeps formal integration
     readText("app/game/player/PlayerDefinition.ts"),
   ]);
 
-  assert.match(nextTask, /M10 \/ Task 10\.5D — Zhang Fei Second-Player Direction Decision/);
-  assert.match(nextTask, /Do not implement Task 10\.6/);
+  assert.match(nextTask, /M10 \/ Task 10\.5H — Zhang Fei Attack-Specific Hitbox Contract/);
+  assert.match(nextTask, /Do not implement hitbox geometry/);
   assert.match(roadmap, /10\.5R \| Zhang Fei tactical hypothesis revision — Completed 2026-08-01/);
   assert.match(roadmap, /10\.5P \| Zhang Fei formation-breaker combat prototype — Rejected 2026-08-01/);
   assert.match(roadmap, /10\.6 \| Phaser character select and formal integration — Blocked/);

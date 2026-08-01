@@ -1575,3 +1575,19 @@
 | Production isolation | Pass | One 1280×720 Canvas, empty dataset, no overflow/error, 52 packaged files |
 | Decision | Reject | Thresholds unchanged; production integration remains blocked |
 | Next task | Selected | M10 / Task 10.5D — Zhang Fei Second-Player Direction Decision |
+
+## M10 / Task 10.5D — Zhang Fei Second-Player Direction Decision — 2026-08-01
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Previous task | Pass | 166/166, typecheck, lint, both production builds |
+| Evidence integrity | Pass | Task 10.5 and 10.5P thresholds/results remain unchanged |
+| Direction | Selected | Revise Player/art contract before another prototype |
+| Mechanic candidate | Selected | Attack-specific Attack 2 profile with broader front-facing Y-lane coverage |
+| Explicit cost | Pass | Existing 525ms commitment, startup facing lock, front-only exposure, no armor/damage/HP/cancel benefit |
+| Defer alternative | Rejected | Accepted art plus two datasets identify one bounded geometry question |
+| Owner-stop alternative | Rejected | Discovery requires no new product authority and authorizes no integration |
+| Architecture safety | Pass | Current single `attackHitbox` runtime and M10 boundary remain unchanged |
+| Runtime scope | Pass | Planning documents and focused contract test only |
+| Formal integration | Blocked | Requires an accepted prototype after the 10.5H contract gate |
+| Next task | Selected | M10 / Task 10.5H — Zhang Fei Attack-Specific Hitbox Contract |

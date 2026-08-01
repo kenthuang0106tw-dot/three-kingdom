@@ -848,12 +848,34 @@ fail.
   aware Ambush multi-target ratio was 1.10× instead of 1.5× and displaced-target
   advantage was about +0.06 instead of +0.20. No numeric rescue was used.
 
-## TD-M10.5D — Second-player direction is unresolved
+## TD-M10.5D Resolved — Second-player direction
 
 - **Severity:** P0 M10 blocker; not a released production defect.
 - **Evidence:** Both the committed-controller and formation-breaker hypotheses
   completed their paired protocols and failed distinct tactical acceptance.
 - **Containment:** Zhang Fei remains development-only; production selection and
   packaging still contain Guan Yu only. Task 10.6 is blocked.
-- **Resolution:** Task 10.5D must choose revise/defer/stop without implementing a
-  third numeric prototype or changing Enemy/Boss contracts.
+- **Resolved:** 2026-08-01 as a planning decision.
+- **Resolution:** Revise the Player/art contract through one bounded
+  attack-specific hitbox discovery. The candidate is broader front-facing
+  vertical lane coverage on Zhang Fei Attack 2 with its existing 525ms
+  commitment, locked startup facing, and no armor, extra damage, HP, Combo
+  Window, or cancel benefit. No runtime contract changed in Task 10.5D.
+
+## TD-M10.5H — Attack-specific hitbox ownership is undefined
+
+- **Severity:** P0 M10 blocker; not a released production defect.
+- **Evidence:** `PlayerDefinition` currently owns one actor-level
+  `attackHitbox`, and the accepted M10 architecture explicitly forbids
+  per-attack geometry. Both rejected Zhang Fei prototypes changed numeric
+  timing/impact through that shared rectangle and failed distinct coverage
+  gates.
+- **Risk:** Adding an ad hoc Zhang Fei branch in `MainScene`, multiple Arcade
+  zones, or per-frame geometry would couple identity, animation, physics, and
+  combat ownership and create reset/listener regressions.
+- **Containment:** Task 10.5H is planning/discovery only. Runtime types,
+  metadata, hitboxes, art, selection, and production packaging remain frozen;
+  Task 10.6 remains blocked.
+- **Resolution condition:** Approve or reject one minimum identity-agnostic
+  ownership/schema, fixed geometry limits, explicit cost, rollback boundary,
+  and measurable future prototype protocol.

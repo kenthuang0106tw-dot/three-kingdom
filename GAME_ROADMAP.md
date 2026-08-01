@@ -565,8 +565,9 @@ gameplay, art, balance, Stage, Camera, Audio, input, or UI behavior changed.
 | 10.5 | Zhang Fei combat prototype — Rejected 2026-08-01 | P0 | High | 10.4 | Complete paired evidence reaches an explicit decision without weakening accepted contracts | player config/prototype/tests/report | Balance is only HP/damage |
 | 10.5R | Zhang Fei tactical hypothesis revision — Completed 2026-08-01 | P0 | Medium | 10.5 rejected evidence | One revised role and measurable acceptance contract addresses the failed two-context Recovery criterion without Enemy/Boss tuning | planning/contract/tests | Repeating numeric tuning without a tactical change |
 | 10.5P | Zhang Fei formation-breaker combat prototype — Rejected 2026-08-01 | P0 | High | 10.5R | Thirty paired runs directly test group separation, Attack 2 repositioning, isolated Attack 3 use, and non-dominance | player config/prototype/tests/report | Tuning metrics instead of proving a decision |
-| 10.5D | Zhang Fei second-player direction decision | P0 | Medium | 10.5 and 10.5P rejected evidence | Select one evidence-backed path: revise the character contract, defer Zhang Fei, or stop M10; no third numeric prototype | planning/decision/tests | Sunk-cost progression into formal selection |
-| 10.6 | Phaser character select and formal integration — Blocked | P0 | High | accepted successor prototype selected by 10.5D | Title selects exactly Guan Yu/Zhang Fei; either completes/fails/retries/replays existing Stage; React owns no selection | Title/player/MainScene/tests | Selection lifecycle or stale actor |
+| 10.5D | Zhang Fei second-player direction decision — Completed 2026-08-01 | P0 | Medium | 10.5 and 10.5P rejected evidence | Select one evidence-backed path: revise the character contract, defer Zhang Fei, or stop M10; no third numeric prototype | planning/decision/tests | Sunk-cost progression into formal selection |
+| 10.5H | Zhang Fei attack-specific hitbox contract | P0 | Medium | 10.5D | Decide the minimum ownership/schema, geometry limits, cost, and acceptance protocol for one Attack 2 lane-coverage prototype; no implementation | planning/architecture/tests | A character exception leaks into Scene or becomes per-frame geometry |
+| 10.6 | Phaser character select and formal integration — Blocked | P0 | High | accepted successor prototype after 10.5H | Title selects exactly Guan Yu/Zhang Fei; either completes/fails/retries/replays existing Stage; React owns no selection | Title/player/MainScene/tests | Selection lifecycle or stale actor |
 | 10.7 | Second Vertical Slice acceptance | P0 | High | 10.6 | Two-character full QA at three viewports; 10 reset paths; performance/packaging/routes pass; no Critical/High defect | QA/release docs/tests | Asset memory or mobile readability |
 
 ### M10 / Task 10.1 — Second Vertical Slice Scope Lock (Completed 2026-07-30)
@@ -584,8 +585,9 @@ progression, backend, and multiplayer remain excluded.
 
 **Dependency rule:** 10.2 freezes Guan Yu behind the minimum second-player seam;
 10.3 accepts gameplay and identity contracts before 10.4 art production. The
-rejected 10.5 evidence must be revised in 10.5R and accepted through the 10.5P
-prototype before any formal Stage or Title integration may begin in 10.6.
+rejected 10.5 and 10.5P evidence is resolved through the 10.5D direction
+decision and the 10.5H contract gate. A later explicitly authorized prototype
+must be accepted before formal Stage or Title integration may begin in 10.6.
 
 ### M10 / Task 10.2 — Player Definition Boundary and Guan Yu Freeze (Completed 2026-07-30)
 
@@ -724,6 +726,30 @@ Thresholds, enemies, Boss, and production contracts were not changed.
 
 **Next:** M10 / Task 10.5D — Zhang Fei Second-Player Direction Decision. It is
 planning-only; Task 10.6 remains blocked.
+
+### M10 / Task 10.5D — Zhang Fei Second-Player Direction Decision (Completed 2026-08-01)
+
+**Evidence:** Task 10.5 and Task 10.5P each completed 30 paired runs and failed
+their unchanged distinction gates. Timing/recovery created extra punishment in
+only Ambush, while the formation-breaker pass produced valid repositioning but
+only a 1.10× multi-target ratio and about +0.06 displacement advantage.
+
+**Decision:** Revise the Player/art contract before another prototype. The only
+candidate advanced to discovery is an attack-specific hitbox profile: Zhang
+Fei Attack 2 may gain broader front-facing vertical lane coverage while
+retaining its 525ms commitment, locked startup facing, front-only exposure, and
+no armor, extra damage, HP, Combo Window, or cancel benefit. Task 10.5D changes
+no runtime type, metadata, hitbox, art, or gameplay.
+
+**Alternatives:** Deferral is premature because the accepted art and both
+datasets expose one testable geometry limitation. Product-owner escalation is
+unnecessary because contract discovery does not authorize integration or alter
+the product goal.
+
+**Next:** M10 / Task 10.5H — Zhang Fei Attack-Specific Hitbox Contract. It is
+planning/discovery only and must settle ownership, schema, geometry limits,
+cost, rollback, and acceptance before any code change. Task 10.6 remains
+blocked pending an accepted later prototype.
 
 ## Task Status Update — 2026-07-12
 
