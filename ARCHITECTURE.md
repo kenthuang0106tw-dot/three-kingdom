@@ -1039,7 +1039,12 @@ animation phase events only enable or disable that same Zone. PlayerActor,
 PlayerAttackController, CombatResolver, Enemy/Shield Guard, effects, Pause, and
 reset ownership remain unchanged. This contract is documented in
 `docs/planning/m10-5h-zhang-fei-attack-hitbox-contract.md`; runtime migration is
-deferred to Task 10.5HP.
+deferred to Task 10.5HP. Task 10.5HP implemented that migration only as a
+bounded prototype, failed both fixed gameplay-distinction gates, and rolled the
+runtime back. The current authoritative runtime therefore still owns one
+actor-level `PlayerDefinition.attackHitbox`; the attack-owned schema remains a
+documented candidate, not production architecture. Reopening it requires a new
+accepted feasibility direction rather than another geometry adjustment.
 
 Task 10.4 may create source derivatives, atlas metadata, QA sheets, and a
 development-only animation preview. It must not register Zhang Fei in

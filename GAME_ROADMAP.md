@@ -567,8 +567,9 @@ gameplay, art, balance, Stage, Camera, Audio, input, or UI behavior changed.
 | 10.5P | Zhang Fei formation-breaker combat prototype — Rejected 2026-08-01 | P0 | High | 10.5R | Thirty paired runs directly test group separation, Attack 2 repositioning, isolated Attack 3 use, and non-dominance | player config/prototype/tests/report | Tuning metrics instead of proving a decision |
 | 10.5D | Zhang Fei second-player direction decision — Completed 2026-08-01 | P0 | Medium | 10.5 and 10.5P rejected evidence | Select one evidence-backed path: revise the character contract, defer Zhang Fei, or stop M10; no third numeric prototype | planning/decision/tests | Sunk-cost progression into formal selection |
 | 10.5H | Zhang Fei attack-specific hitbox contract — Completed 2026-08-01 | P0 | Medium | 10.5D | Decide the minimum ownership/schema, geometry limits, cost, and acceptance protocol for one Attack 2 lane-coverage prototype; no implementation | planning/architecture/tests | A character exception leaks into Scene or becomes per-frame geometry |
-| 10.5HP | Zhang Fei Attack 2 lane-coverage prototype | P0 | High | 10.5H | One-Zone per-attack metadata migration plus 30-run evidence passes unchanged distinctness, cost, lifecycle, mobile, and rollback gates | player metadata/MainScene/tests/report | Broad hitbox becomes universal answer or leaks across attacks |
-| 10.6 | Phaser character select and formal integration — Blocked | P0 | High | accepted 10.5HP | Title selects exactly Guan Yu/Zhang Fei; either completes/fails/retries/replays existing Stage; React owns no selection | Title/player/MainScene/tests | Selection lifecycle or stale actor |
+| 10.5HP | Zhang Fei Attack 2 lane-coverage prototype — Rejected 2026-08-01 | P0 | High | 10.5H | Thirty paired runs directly test the frozen geometry and either accept it or restore the prior runtime | player metadata/MainScene/tests/report | Broad hitbox lacks practical distinction |
+| 10.5F | Zhang Fei second-player feasibility closeout | P0 | Medium | rejected 10.5, 10.5P, and 10.5HP evidence | One planning decision defers Zhang Fei, revises the product/identity contract with explicit authority, or closes M10; no fourth rescue prototype | planning/decision/tests | Sunk-cost continuation without a new product decision |
+| 10.6 | Phaser character select and formal integration — Blocked | P0 | High | accepted future feasibility direction | Title selects exactly Guan Yu/Zhang Fei; either completes/fails/retries/replays existing Stage; React owns no selection | Title/player/MainScene/tests | Selection lifecycle or stale actor |
 | 10.7 | Second Vertical Slice acceptance | P0 | High | 10.6 | Two-character full QA at three viewports; 10 reset paths; performance/packaging/routes pass; no Critical/High defect | QA/release docs/tests | Asset memory or mobile readability |
 
 ### M10 / Task 10.1 — Second Vertical Slice Scope Lock (Completed 2026-07-30)
@@ -780,6 +781,28 @@ input, Audio, UI, React, and production files are unchanged.
 
 **Next:** M10 / Task 10.5HP — Zhang Fei Attack 2 Lane-Coverage Prototype. Task
 10.6 remains blocked unless 10.5HP is explicitly accepted.
+
+### M10 / Task 10.5HP — Zhang Fei Attack 2 Lane-Coverage Prototype (Rejected 2026-08-01)
+
+**Implementation and evidence:** Temporarily migrated all six attacks to one
+required attack-owned rectangle while retaining one Scene Arcade Zone. Only
+Zhang Fei Attack 2 changed from `176×88` to `176×128`; all gameplay costs and
+control values remained frozen. Deterministic probes passed, followed by 30
+Entry/Ambush/Boss comparison runs.
+
+**Result:** Aware Ambush multi-target totals were Zhang Fei 19 and Guan Yu 18
+(1.06× versus the required 1.5×). Median displaced-target advantage was only
++0.015 (required +0.20). Repositioning, intentional stops, isolated finishers,
+and non-dominance remained valid, but neither mandatory tactical distinction
+gate passed.
+
+**Decision:** Reject without tuning. Runtime types, metadata, Scene resizing,
+and focused prototype geometry tests were rolled back to the accepted 10.5H
+pre-migration state. Zhang Fei remains development-only, production remains
+Guan Yu-only, and Task 10.6 remains blocked.
+
+**Next:** Planning-only M10 / Task 10.5F — Zhang Fei Second-Player Feasibility
+Closeout. It may not implement a fourth numeric or hitbox rescue.
 
 ## Task Status Update — 2026-07-12
 

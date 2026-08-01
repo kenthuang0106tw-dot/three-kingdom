@@ -12,7 +12,7 @@
 - Duration：3–4 weeks
 - Capacity：1 developer + AI，約 70–105 hours
 - Milestone：M10 — Zhang Fei Second Playable Vertical Slice
-- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M10 / 10.5HP
+- Scope rule：一次只做一個 Task；下一個唯一 Task 是 planning-only M10 / 10.5F
 
 ## M10 Task List
 
@@ -27,8 +27,9 @@
 | 7 | ❌ 10.5P — Zhang Fei formation-breaker combat prototype | 12–18h | grouped Attack 2, reposition, isolated Attack 3 comparison | 30 runs complete; distinctness gates failed |
 | 8 | ✅ 10.5D — Zhang Fei second-player direction decision | 4–6h | revise Player/art contract through one bounded geometry discovery | planning-only decision complete |
 | 9 | ✅ 10.5H — Zhang Fei attack-specific hitbox contract | 4–6h | ownership, schema, cost, geometry and future acceptance protocol | planning contract accepted |
-| 10 | 10.5HP — Zhang Fei Attack 2 lane-coverage prototype | 12–18h | one-Zone metadata migration and 30 paired runs | implementation/evidence gate |
-| 11 | 10.6 — Character select and formal integration | 12–18h | Phaser Title 雙角色選擇與完整關卡 | blocked pending accepted 10.5HP |
+| 10 | ❌ 10.5HP — Zhang Fei Attack 2 lane-coverage prototype | 12–18h | one-Zone metadata migration and 30 paired runs | 30 runs complete; both distinction gates failed; runtime rolled back |
+| 11 | 10.5F — Zhang Fei second-player feasibility closeout | 4–6h | decide defer/revise/close from all rejected evidence | planning-only decision |
+| 12 | 10.6 — Character select and formal integration | 12–18h | Phaser Title 雙角色選擇與完整關卡 | blocked pending accepted future direction |
 | 12 | 10.7 — Second Vertical Slice acceptance | 8–12h | QA、performance、packaging、release evidence | full gates + three viewports + resets |
 
 ## Historical Task List
@@ -1529,3 +1530,28 @@ Status: completed as a planning/architecture contract; no runtime change.
 
 Task 10.6 remains blocked. The only next task is M10 / Task 10.5HP — Zhang Fei
 Attack 2 Lane-Coverage Prototype.
+
+## M10 / Task 10.5HP — Zhang Fei Attack 2 Lane-Coverage Prototype — 2026-08-01
+
+Status: rejected after the fixed comparison; runtime migration rolled back.
+
+- [x] Implemented the required per-attack rectangle and single-Zone resize
+  prototype without identity branches, extra bodies, listeners, or timers.
+- [x] Passed deterministic same-lane, `+60`/`-100` foot-delta, both-facing,
+  narrow-control, hit-once, block, Hurt, completion, reset, and shutdown tests.
+- [x] Completed 30/30 fixed Entry, Ambush, and Boss runs.
+- [ ] Failed aware Ambush multi-target distinction: 19/18 = 1.06× versus 1.5×.
+- [ ] Failed displaced-target distinction: +0.015 versus +0.20.
+- [x] Preserved repositioning (10/10), voluntary stops, isolated finishers,
+  zero unsafe aware-Ambush Attack 3 starts, and non-dominance.
+- [x] Used no geometry adjustment and changed no Enemy, Boss, Stage, Camera,
+  input, art, Audio, UI, React, or production asset.
+- [x] Rolled back runtime metadata/Scene geometry after rejection and retained
+  the complete before/after report.
+- [x] Passed final 168/168 tests, typecheck, lint (0 errors/8 existing
+  warnings), both 52-file production builds, three-viewport real input smoke,
+  and production isolation with an empty dataset and zero runtime errors.
+
+Task 10.6 remains blocked. The only next task is planning-only M10 / Task 10.5F
+— Zhang Fei Second-Player Feasibility Closeout. No fourth rescue prototype is
+authorized.

@@ -1609,3 +1609,22 @@
 | Runtime scope | Pass | Documentation/architecture/tests only; no runtime or asset change |
 | Formal integration | Blocked | Requires explicit acceptance of Task 10.5HP |
 | Next task | Selected | M10 / Task 10.5HP — Zhang Fei Attack 2 Lane-Coverage Prototype |
+
+## M10 / Task 10.5HP — Zhang Fei Attack 2 Lane-Coverage Prototype — 2026-08-01
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Fixed geometry | Pass | Guan Yu 142×86; Zhang Fei A1/A3 176×88; only A2 176×128 |
+| Physics ownership | Pass | One Scene Arcade Zone; no extra collider/listener/timer or identity branch |
+| Focused probes | Pass | Same lane, +60/-100 foot deltas, both facings, narrow controls and lifecycle |
+| Paired trials | Pass | 30/30 Entry/Ambush/Boss runs completed and recorded |
+| Reposition and choice | Pass | 10/10 aware grouped A2 repositions; 12 stops; 8 isolated and 0 unsafe A3 starts |
+| Multi-target ratio | Fail | Zhang Fei 19 / Guan Yu 18 = 1.06×; required 1.5× |
+| Displacement advantage | Fail | 1.405 - 1.39 = +0.015; required +0.20 |
+| Adjustment | Not used | Frozen geometry and Enemy/Boss values were not tuned |
+| Rollback | Pass | Runtime metadata, Scene resize, and prototype geometry tests removed after rejection |
+| Automated gates | Pass | 168/168, typecheck, lint 0 errors/8 existing warnings, both builds |
+| Viewports | Pass | Desktop, 844×390, 390×844 real joystick/attack; no overflow |
+| Production isolation | Pass | Final runtime remains actor-hitbox/Guan-Yu production contract |
+| Decision | Reject | Task 10.6 remains blocked |
+| Next task | Selected | Planning-only M10 / Task 10.5F — Zhang Fei Second-Player Feasibility Closeout |

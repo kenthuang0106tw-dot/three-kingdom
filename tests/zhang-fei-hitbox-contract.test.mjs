@@ -7,10 +7,12 @@ import { ZHANGFEI_PLAYER_DEFINITION } from "../app/game/player/ZhangFeiAnimation
 const root = new URL("../", import.meta.url);
 const readText = path => readFile(new URL(path, root), "utf8");
 
-test("Task 10.5H fixes one identity-agnostic single-Zone contract without runtime migration", async () => {
-  const [contract, architecture, nextTask, definition, mainScene, manifest] = await Promise.all([
+test("Task 10.5HP retains rejected evidence and restores the actor-level runtime", async () => {
+  const [contract, report, architecture, roadmap, nextTask, definition, mainScene, manifest] = await Promise.all([
     readText("docs/planning/m10-5h-zhang-fei-attack-hitbox-contract.md"),
+    readText("docs/combat/m10-5hp-zhang-fei-lane-coverage.md"),
     readText("ARCHITECTURE.md"),
+    readText("GAME_ROADMAP.md"),
     readText("NEXT_TASK.md"),
     readText("app/game/player/PlayerDefinition.ts"),
     readText("app/game/MainScene.ts"),
@@ -32,8 +34,12 @@ test("Task 10.5H fixes one identity-agnostic single-Zone contract without runtim
   assert.match(contract, /30 total/);
   assert.match(contract, /Reject without further numeric rescue/);
   assert.match(architecture, /each attack metadata entry may own exactly one immutable rectangular hitbox/);
-  assert.match(architecture, /runtime migration is\s+deferred to Task 10\.5HP/);
-  assert.match(nextTask, /M10 \/ Task 10\.5HP — Zhang Fei Attack 2 Lane-Coverage Prototype/);
+  assert.match(report, /Status: \*\*Rejected; runtime gameplay migration rolled back\*\*/);
+  assert.match(report, /1\.06×, failing the required 1\.5×/);
+  assert.match(report, /\+0\.015, failing the required \+0\.20/);
+  assert.match(architecture, /failed both fixed gameplay-distinction gates/);
+  assert.match(roadmap, /10\.5HP \| Zhang Fei Attack 2 lane-coverage prototype — Rejected 2026-08-01/);
+  assert.match(nextTask, /M10 \/ Task 10\.5F — Zhang Fei Second-Player Feasibility Closeout/);
 
   assert.match(definition, /attackHitbox: Readonly/);
   assert.doesNotMatch(definition, /hitbox: PlayerAttackHitbox/);

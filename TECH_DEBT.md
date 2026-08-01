@@ -880,18 +880,21 @@ fail.
   phase events, hit-once, block, effects, and lifecycle owners. No runtime file
   changed in Task 10.5H.
 
-## TD-M10.5HP — Attack 2 lane-coverage evidence is pending
+## TD-M10.5HP — Attack 2 lane-coverage evidence rejected
 
 - **Severity:** P0 M10 blocker; not a released production defect.
-- **Evidence gap:** The proposed `176×128 @ (132,-48)` Zhang Fei Attack 2
-  profile has not yet passed deterministic lane probes or the fixed 30-run
-  Entry/Ambush/Boss comparison.
+- **Status:** Resolved 2026-08-01 by explicit rejection and runtime rollback.
+- **Evidence:** Deterministic lane probes passed and all 30 fixed
+  Entry/Ambush/Boss runs completed. Aware Ambush produced 19 Zhang Fei versus
+  18 Guan Yu multi-target hits (1.06×, required 1.5×) and only +0.015 median
+  displaced-target advantage (required +0.20).
 - **Containment:** Guan Yu, current runtime types/metadata, production assets,
   and formal selection remain unchanged. Task 10.6 is blocked.
 - **Risk:** Broader vertical coverage may become a universal answer, retain too
   little practical distinction, leak between combo steps, or weaken Shield
   Guard and lifecycle contracts.
-- **Resolution condition:** Task 10.5HP must pass unchanged 1.5× multi-target
-  and +0.20 displacement gates, explicit commitment/non-dominance behavior,
-  hit-once/block/reset/Pause/Hurt isolation, three viewports, builds, packaging,
-  and rollback rules without tuning the proposed geometry.
+- **Resolution:** No geometry rescue was used. The per-attack metadata and Scene
+  resizing prototype were rolled back; the production runtime retains the
+  actor-level hitbox. Task 10.6 remains blocked pending planning-only Task
+  10.5F, which must decide whether to defer Zhang Fei, revise the product
+  contract with explicit authority, or close M10.

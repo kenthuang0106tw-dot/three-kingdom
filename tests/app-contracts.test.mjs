@@ -1961,8 +1961,7 @@ test("the release closeouts identify one accepted runtime and one post-release t
   assert.match(m10Scope, /Zhao Yun/);
   assert.match(m10Scope, /A second Stage/);
   assert.match(m10Scope, /Player Definition Boundary and Guan Yu Freeze/);
-  assert.match(nextTask, /M10 \/ Task 10\.5HP — Zhang Fei Attack 2 Lane-Coverage Prototype/);
-  assert.match(nextTask, /Each attack will own\s+one fixed rectangle/);
-  assert.match(nextTask, /Do not change art, animation frames, timing, damage, knockback/);
-  assert.match(nextTask, /30\s+total/);
+  assert.match(nextTask, /M10 \/ Task 10\.5F — Zhang Fei Second-Player Feasibility Closeout/);
+  assert.match(nextTask, /planning closeout/);
+  assert.match(nextTask, /Do not implement character selection, another Zhang Fei prototype/);
 });
