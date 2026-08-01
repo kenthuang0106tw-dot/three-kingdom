@@ -12,7 +12,7 @@
 - Duration：3–4 weeks
 - Capacity：1 developer + AI，約 70–105 hours
 - Milestone：M10 — Zhang Fei Second Playable Vertical Slice
-- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M10 / 10.5R
+- Scope rule：一次只做一個 Task；下一個唯一 Task 是 M10 / 10.5P
 
 ## M10 Task List
 
@@ -23,8 +23,9 @@
 | 3 | ✅ 10.3 — Zhang Fei gameplay and production contract | 6–10h | 重型定位、identity、frame/atlas 與比較規格 | document/identity acceptance |
 | 4 | ✅ 10.4 — Zhang Fei atlas and animation preview | 24–36h | genuine frames、atlas、metadata、QA preview | asset/tests/three-viewport preview |
 | 5 | ❌ 10.5 — Zhang Fei combat prototype | 12–18h | development-only heavy-warrior prototype | 30 paired runs completed; hypothesis rejected |
-| 6 | 10.5R — Zhang Fei tactical hypothesis revision | 4–6h | revised role and measurable acceptance contract | planning/contract review only |
-| 7 | 10.6 — Character select and formal integration | 12–18h | Phaser Title 雙角色選擇與完整關卡 | blocked until 10.5R prototype acceptance |
+| 6 | ✅ 10.5R — Zhang Fei tactical hypothesis revision | 4–6h | formation-breaker role and measurable acceptance contract | planning/contract review only |
+| 7 | 10.5P — Zhang Fei formation-breaker combat prototype | 12–18h | grouped Attack 2, reposition, isolated Attack 3 comparison | 30 paired runs + explicit decision |
+| 8 | 10.6 — Character select and formal integration | 12–18h | Phaser Title 雙角色選擇與完整關卡 | blocked until 10.5P prototype acceptance |
 | 8 | 10.7 — Second Vertical Slice acceptance | 8–12h | QA、performance、packaging、release evidence | full gates + three viewports + resets |
 
 ## Historical Task List
@@ -1435,3 +1436,25 @@ Status: rejected after complete paired combat acceptance.
 Task 10.6 remains blocked. The only next task is M10 / Task 10.5R — Zhang Fei
 Tactical Hypothesis Revision; it is planning-only and may not implement formal
 selection or tune enemies to make the rejected prototype pass.
+
+## M10 / Task 10.5R — Zhang Fei Tactical Hypothesis Revision — 2026-08-01
+
+Status: completed as a planning contract; no runtime implementation.
+
+- [x] Diagnosed the rejected recovery criterion against all 30 raw runs instead
+  of increasing recovery again.
+- [x] Selected one revised role: formation breaker using the丈八蛇矛 to split a
+  clustered line, stop after Attack 2 to reposition, or use Attack 3 only on an
+  isolated opening.
+- [x] Limited the starting hypothesis to Attack 2 knockback 56px and restoration
+  of Attack 3 recovery from the failed 600ms rescue to 425ms.
+- [x] Added grouped Attack 2, reposition, isolated/unsafe Attack 3, displacement,
+  non-dominance, anti-waiting, and lifecycle acceptance gates.
+- [x] Fixed five paired Entry/Ambush/Boss runs per general, raw metrics, one
+  maximum adjustment, and explicit Accept/Adjust/Reject rules.
+- [x] Kept Guan Yu, runtime metadata, art, Enemy, Boss, Combo Window, Stage,
+  Camera, input, Audio, UI, production assets, and formal selection unchanged.
+
+Task 10.6 remains blocked. The only next task is M10 / Task 10.5P — Zhang Fei
+Formation Breaker Combat Prototype. It must gather the complete paired evidence
+before formal integration can advance.

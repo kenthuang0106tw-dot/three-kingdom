@@ -829,5 +829,19 @@ fail.
 - **Containment:** The atlas, preview, prototype, telemetry, and report remain
   development-only. Zhang Fei is absent from Title selection and production
   packaging; Task 10.6 is blocked.
-- **Resolution:** Task 10.5R must revise the tactical hypothesis and acceptance
-  model without changing enemies, Boss, Combo Window, Stage, Camera, or input.
+- **Resolved:** 2026-08-01 as a planning contract, not as production gameplay.
+- **Resolution:** Task 10.5R replaced global Recovery punishment with a
+  formation-breaker hypothesis measured through grouped Attack 2 confirms,
+  repositioning, isolated Attack 3 starts, multi-target hits, and displacement.
+  It changes no runtime, enemies, Boss, Combo Window, Stage, Camera, or input.
+
+## TD-M10.5P — Formation-breaker evidence is pending
+
+- **Severity:** P0 milestone blocker; not a released production defect.
+- **Evidence gap:** The revised contract is based on the strong Ambush separation
+  signal in Task 10.5, but the proposed 56px Attack 2 displacement and restored
+  425ms Attack 3 recovery have not completed the fixed 30-run protocol.
+- **Containment:** Zhang Fei remains development-only and absent from formal
+  Title selection and production packaging. Task 10.6 remains blocked.
+- **Resolution:** Task 10.5P must Accept or Reject the role after at most one
+  definition-only adjustment; thresholds and Enemy/Boss behavior may not move.

@@ -1539,3 +1539,19 @@
 | Automated gates | Pass | 164/164 tests, typecheck, lint 0 errors/8 existing warnings, both builds, 52-file packaging |
 | Production runtime | Pass | Prototype query ignored; one 1280×720 Canvas, empty dataset, no overflow or captured error |
 | Decision | Reject | Task 10.6 remains blocked; next is planning-only Task 10.5R |
+
+## M10 / Task 10.5R — Zhang Fei Tactical Hypothesis Revision — 2026-08-01
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Previous task | Pass | Revalidated 164/164, typecheck, lint 0 errors/8 existing warnings, and both builds |
+| Diagnosis | Pass | Entry/Boss produced 0 recovery hits for both actors; Ambush separation evidence was retained |
+| Revised role | Pass | Formation breaker: grouped Attack 2 separates, then reposition or isolated Attack 3 |
+| Identity | Pass | Approved 47 frames and Zhangba serpent spear (丈八蛇矛) remain authoritative |
+| Allowed values | Pass | Starting hypothesis changes Attack 2 knockback and restores pre-rescue Attack 3 recovery only |
+| Direct metrics | Pass | Grouped confirms, repositioning, isolated/unsafe Attack 3, multi-hit and displacement defined |
+| Comparison | Pass | Five paired runs per player in unchanged Entry/Ambush/Boss contexts |
+| Decision gate | Pass | Numeric thresholds, non-dominance, anti-waiting, one-adjustment maximum, explicit Reject |
+| Runtime scope | Pass | Planning/tests only; no gameplay, metadata, art, manifest, selection, or production change |
+| Formal integration | Blocked | Only an accepted Task 10.5P may unblock Task 10.6 |
+| Next task | Selected | M10 / Task 10.5P — Zhang Fei Formation Breaker Combat Prototype |

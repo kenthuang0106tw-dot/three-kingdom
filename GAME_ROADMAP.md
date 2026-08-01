@@ -563,8 +563,9 @@ gameplay, art, balance, Stage, Camera, Audio, input, or UI behavior changed.
 | 10.3 | Zhang Fei gameplay and production contract — Completed 2026-07-30 | P0 | Medium | 10.2 | Heavy-warrior goal, comparison plan, approved identity, frame budget, feet/scale/atlas rules are accepted before production | character production docs/asset plan | Art precedes gameplay decision |
 | 10.4 | Zhang Fei atlas and animation preview — Completed 2026-07-30 | P0 | High | 10.3 | Genuine idle/walk/attack1–3/hurt/dead frames; measured metadata; preview feet stable; no formal Stage integration | player assets/tool/preview/tests | Source frames incomplete or identity drift |
 | 10.5 | Zhang Fei combat prototype — Rejected 2026-08-01 | P0 | High | 10.4 | Complete paired evidence reaches an explicit decision without weakening accepted contracts | player config/prototype/tests/report | Balance is only HP/damage |
-| 10.5R | Zhang Fei tactical hypothesis revision | P0 | Medium | 10.5 rejected evidence | One revised role and measurable acceptance contract addresses the failed two-context Recovery criterion without Enemy/Boss tuning | planning/contract/tests | Repeating numeric tuning without a tactical change |
-| 10.6 | Phaser character select and formal integration — Blocked | P0 | High | accepted 10.5R prototype | Title selects exactly Guan Yu/Zhang Fei; either completes/fails/retries/replays existing Stage; React owns no selection | Title/player/MainScene/tests | Selection lifecycle or stale actor |
+| 10.5R | Zhang Fei tactical hypothesis revision — Completed 2026-08-01 | P0 | Medium | 10.5 rejected evidence | One revised role and measurable acceptance contract addresses the failed two-context Recovery criterion without Enemy/Boss tuning | planning/contract/tests | Repeating numeric tuning without a tactical change |
+| 10.5P | Zhang Fei formation-breaker combat prototype | P0 | High | 10.5R | Thirty paired runs directly test group separation, Attack 2 repositioning, isolated Attack 3 use, and non-dominance | player config/prototype/tests/report | Tuning metrics instead of proving a decision |
+| 10.6 | Phaser character select and formal integration — Blocked | P0 | High | accepted 10.5P prototype | Title selects exactly Guan Yu/Zhang Fei; either completes/fails/retries/replays existing Stage; React owns no selection | Title/player/MainScene/tests | Selection lifecycle or stale actor |
 | 10.7 | Second Vertical Slice acceptance | P0 | High | 10.6 | Two-character full QA at three viewports; 10 reset paths; performance/packaging/routes pass; no Critical/High defect | QA/release docs/tests | Asset memory or mobile readability |
 
 ### M10 / Task 10.1 — Second Vertical Slice Scope Lock (Completed 2026-07-30)
@@ -582,8 +583,8 @@ progression, backend, and multiplayer remain excluded.
 
 **Dependency rule:** 10.2 freezes Guan Yu behind the minimum second-player seam;
 10.3 accepts gameplay and identity contracts before 10.4 art production. The
-rejected 10.5 evidence must be revised and accepted through 10.5R before any
-formal Stage or Title integration may begin in 10.6.
+rejected 10.5 evidence must be revised in 10.5R and accepted through the 10.5P
+prototype before any formal Stage or Title integration may begin in 10.6.
 
 ### M10 / Task 10.2 — Player Definition Boundary and Guan Yu Freeze (Completed 2026-07-30)
 
@@ -681,6 +682,30 @@ Task 10.6 remains blocked.
 **Next:** M10 / Task 10.5R — Zhang Fei Tactical Hypothesis Revision. This is a
 planning/contract task and may not tune enemies, implement formal selection, or
 start Zhao Yun.
+
+### M10 / Task 10.5R — Zhang Fei Tactical Hypothesis Revision (Completed 2026-08-01)
+
+**Decision:** Replaced the failed globally unsafe committed-controller role
+with one evidence-backed **formation breaker** hypothesis. The existing Ambush
+evidence showed Zhang Fei creating 10/11 multi-target hits and 1.53/1.65 average
+targets displaced versus Guan Yu's 5/5 and 1.22, while the rejected Entry and
+Boss recovery criterion could not discriminate either actor.
+
+**Contract:** The next prototype may increase only Attack 2 displacement for
+the starting hypothesis and restore Attack 3 from the failed 600ms recovery
+rescue to its 425ms phase. It directly measures grouped Attack 2 confirms,
+repositioning before the next attack, isolated versus unsafe Attack 3 starts,
+multi-target hits, displacement, completion, damage, and duration. It allows
+at most one definition-only adjustment and retains strict non-dominance and
+anti-waiting gates.
+
+**Scope:** Planning and contract tests only. Guan Yu, Zhang Fei runtime metadata,
+the approved 47 frames and丈八蛇矛 identity, Enemy, Boss, Combo Window, Stage,
+Camera, input, Audio, UI, production assets, and formal Title selection are
+unchanged. Task 10.6 remains blocked.
+
+**Next:** M10 / Task 10.5P — Zhang Fei Formation Breaker Combat Prototype.
+Only an accepted 10.5P result may unblock formal integration.
 
 ## Task Status Update — 2026-07-12
 
